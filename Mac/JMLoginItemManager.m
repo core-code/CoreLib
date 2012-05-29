@@ -25,7 +25,7 @@ BOOL IsLoginItem_SM(void)
     jobDicts = (NSArray *)SMCopyAllJobDictionaries( kSMDomainUserLaunchd );
     // Note: Sandbox issue when using SMJobCopyDictionary()
 	
-    if ( (jobDicts != nil) && [jobDicts count] > 0 )
+    if (jobDicts != nil)
 	{
         BOOL bOnDemand = NO;
 		

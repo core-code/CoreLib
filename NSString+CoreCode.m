@@ -23,6 +23,11 @@
 	return ([self rangeOfString:otherString].location != NSNotFound);
 }
 
+- (NSArray *)lines
+{
+	return [self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+}
+
 - (NSString *)trimmed
 {
 	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];

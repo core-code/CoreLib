@@ -21,6 +21,7 @@
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 - (NSString *)trimmed;
+- (NSArray *)lines;
 #ifdef STRING_SHA1
 - (NSString *)sha1;
 #endif
