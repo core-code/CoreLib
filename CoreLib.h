@@ -23,6 +23,7 @@ typedef void (^IntInBlock)(int input);
 #import "NSString+CoreCode.h"
 #endif
 
+#define $appbundleid		([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
 #define $appname			([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
 #define $earray             ([NSArray array])
 #define $emarray            ([NSMutableArray array])

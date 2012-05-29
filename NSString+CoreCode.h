@@ -13,11 +13,15 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSDictionary.h>
 
+#define STRING_SHA1 1
+
 @interface NSString (CoreCode)
 
 - (BOOL)contains:(NSString *)otherString;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 - (NSString *)trimmed;
-
+#ifdef STRING_SHA1
+- (NSString *)sha1;
+#endif
 @end

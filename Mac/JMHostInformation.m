@@ -401,11 +401,9 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																			while ((ggparent = IOIteratorNext(ggparents)))
 																			{
 																				
-																				CFTypeRef	data;
-																				
+																				CFTypeRef	data = NULL;
 																				NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
-																				
-																				NSString *serial;
+																				NSString *serial = nil;
 																				
 																				
 																				data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
@@ -415,16 +413,11 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																					{
 																						NSInteger num = [[(NSString *)data substringFromIndex:4] integerValue];
 																						[diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
-																						
-																						
-																						CFRelease(data);
-																						
 																					}
 																					else
 																						asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (NSString *) data);
 																					
-																					
-																					
+																					CFRelease(data);
 																					data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																					if (data)
 																					{
@@ -462,6 +455,8 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																						[nonRemovableVolumes addObject:diskDict2];  
 																						//	NSLog(@"disk Dict %@", diskDict2);
 																					}
+																					
+																					[serial release];
 																				}
 																				else
 																					asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
