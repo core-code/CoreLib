@@ -68,11 +68,11 @@ BOOL IsLoginItem_LS(void)
 				
 				if (status == noErr)
 				{
-					asl_NSLog_debug(@"isLoginItem: current login item: %@", [url path]);
+					//asl_NSLog_debug(@"isLoginItem: current login item: %@", [url path]);
 					
 					if (NSOrderedSame == [[url path] compare:bp]) // the path is the same as ours => return true
 					{
-						asl_NSLog_debug(@"isLoginItem: FOUND US");
+						//asl_NSLog_debug(@"isLoginItem: FOUND US");
 						CFRelease(url);
 						CFRelease(array);
 						CFRelease(list);
@@ -80,7 +80,7 @@ BOOL IsLoginItem_LS(void)
 					}
 					else if (NSOrderedSame == [[[url path] lastPathComponent] compare:[[[NSBundle mainBundle] bundlePath] lastPathComponent]]) // another entry of us, must be valid since on 10.5 invalid entries are erased automatically
 					{
-						asl_NSLog_debug(@"isLoginItem: found similar");
+						//asl_NSLog_debug(@"isLoginItem: found similar");
 					}
 				}
 				
@@ -121,7 +121,7 @@ void AddLoginItem_SM(void)
 
 void AddLoginItem_LS(void)
 {
-	asl_NSLog_debug(@"addLoginItem: bundle path: %@", [[NSBundle mainBundle] bundlePath]);
+	//asl_NSLog_debug(@"addLoginItem: bundle path: %@", [[NSBundle mainBundle] bundlePath]);
 	LSSharedFileListRef list = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
 	
 	if (list)

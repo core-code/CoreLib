@@ -444,14 +444,18 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																								
 																								CFRelease(data);
 																							}
-																							else
-																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
+//																							else
+//																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
 																						}
 																					}
 																					
 																					if ([diskDict2 objectForKey:kDiskNumberKey])
 																					{
-																						[diskDict2 setObject:$stringf(@"%@ (%@)", (NSString *)volNameAsCFString, [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]) forKey:kDiskNameKey];                    
+																						NSString *info = serial ? [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"NOSERIAL";
+																						
+																						[diskDict2 setObject:$stringf(@"%@ (%@)", (NSString *)volNameAsCFString, info) 
+																									  forKey:kDiskNameKey];   
+																						
 																						[nonRemovableVolumes addObject:diskDict2];  
 																						//	NSLog(@"disk Dict %@", diskDict2);
 																					}
