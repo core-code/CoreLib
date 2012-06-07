@@ -15,10 +15,6 @@
 
 @synthesize otherBlock, cancelBlock;
 
-#if ! __has_feature(objc_arc)
-#error this code leaks now in non-ARC mode
-#endif
-
 - (void)show
 {
     self.delegate = self;
@@ -29,7 +25,9 @@
     textField.borderStyle = UITextBorderStyleRoundedRect;
     [textField becomeFirstResponder];
     [self addSubview:textField];
-    
+#if ! __has_feature(objc_arc)
+	[textField release];
+#endif
     [super show];
 }
 
@@ -48,4 +46,13 @@
     }
 }
 
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+	self.cancelBlock = nil;
+	self.otherBlock = nil;
+	
+	[super dealloc];
+}
+#endif
 @end

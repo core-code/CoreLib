@@ -47,6 +47,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 		//	printf("new path: %s\n", newPath);
 
 			NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%s", newPath]];
+			free(newPath);
 			LSLaunchURLSpec launchSpec;
 			launchSpec.appURL = (CFURLRef)url;
 			launchSpec.itemURLs = NULL;

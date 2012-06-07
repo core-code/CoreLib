@@ -12,9 +12,6 @@
 
 #import "JMAlertView.h"
 
-#if ! __has_feature(objc_arc)
-#error this code leaks now in non-ARC mode
-#endif
 
 @implementation JMAlertView
 
@@ -41,4 +38,13 @@
     }
 }
 
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+	self.cancelBlock = nil;
+	self.otherBlock = nil;
+	
+	[super dealloc];
+}
+#endif
 @end

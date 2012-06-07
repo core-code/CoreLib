@@ -26,9 +26,6 @@
 @synthesize normalGradient, highlightGradient, disabledGradient;
 #pragma mark -
 
-#if ! __has_feature(objc_arc)
-#error this code leaks now in non-ARC mode
-#endif
 
 - (CGGradientRef)disabledGradient
 {
@@ -657,5 +654,21 @@
     if (highlightGradient != NULL)
         CGGradientRelease(highlightGradient);
 }
+
+
+#if ! __has_feature(objc_arc)
+- (void)dealloc 
+{
+    [normalGradientColors release];
+    [normalGradientLocations release];
+    [highlightGradientColors release];
+    [highlightGradientLocations release];
+    [strokeColor release];
+    
+	[self finalize];
+    
+    [super dealloc];
+}
+#endif
 
 @end

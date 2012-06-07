@@ -56,7 +56,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	NSString *result = @"";
 	kern_return_t kernResult = KERN_SUCCESS;
 
-	io_iterator_t intfIterator;
+	io_iterator_t intfIterator = NULL;
 	UInt8 MACAddress[kIOEthernetAddressSize];
 
 	kernResult = FindEthernetInterfaces(&intfIterator);

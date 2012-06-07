@@ -8,6 +8,7 @@
 
 #import "proAlertView.h"
 
+
 @interface proAlertView (Private)
 
 - (void) drawRoundedRect:(CGRect) rect inContext:(CGContextRef) 
@@ -15,9 +16,6 @@ context withRadius:(CGFloat) radius;
 
 @end
 
-#if ! __has_feature(objc_arc)
-#error this code leaks now in non-ARC mode
-#endif
 
 @implementation proAlertView
 
@@ -36,6 +34,16 @@ context withRadius:(CGFloat) radius;
 	
     return self;
 }
+
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+	[fillColor release];
+	[borderColor release];
+	
+	[super dealloc];
+}
+#endif
 
 - (void)layoutSubviews
 {
