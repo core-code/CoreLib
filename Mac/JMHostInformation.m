@@ -56,7 +56,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	NSString *result = @"";
 	kern_return_t kernResult = KERN_SUCCESS;
 
-	io_iterator_t intfIterator = NULL;
+	io_iterator_t intfIterator = 0;
 	UInt8 MACAddress[kIOEthernetAddressSize];
 
 	kernResult = FindEthernetInterfaces(&intfIterator);
@@ -346,88 +346,81 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 								if ([props objectForKey:@"DAMediaLeaf"] && [[props objectForKey:@"DAMediaLeaf"] intValue])
 								{
 									CFUUIDRef DAMediaUUID = (CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
-									NSString *uuid = [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, DAMediaUUID) autorelease];
-									
-
-									kern_return_t				kernResult;
-									CFMutableDictionaryRef		matchingDict;
-									io_iterator_t				iter;
-									
-									
-									matchingDict = IOServiceMatching(kIOMediaClass);
-									if (matchingDict != NULL)
+									if (DAMediaUUID)
 									{
-										kernResult = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iter);
+										NSString *uuid = [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, DAMediaUUID) autorelease];
 										
-										if ((KERN_SUCCESS == kernResult) && (iter != 0))
+
+										kern_return_t				kernResult;
+										CFMutableDictionaryRef		matchingDict;
+										io_iterator_t				iter;
+										
+										
+										matchingDict = IOServiceMatching(kIOMediaClass);
+										if (matchingDict != NULL)
 										{
-											io_object_t object;
+											kernResult = IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, &iter);
 											
-											while ((object = IOIteratorNext(iter)))
+											if ((KERN_SUCCESS == kernResult) && (iter != 0))
 											{
-												CFTypeRef	ourUUID = IORegistryEntryCreateCFProperty(object, CFSTR(kIOMediaUUIDKey), kCFAllocatorDefault, 0);
-												if (ourUUID)
+												io_object_t object;
+												
+												while ((object = IOIteratorNext(iter)))
 												{
-
-													if ([(NSString *)ourUUID isEqualToString:uuid])
+													CFTypeRef	ourUUID = IORegistryEntryCreateCFProperty(object, CFSTR(kIOMediaUUIDKey), kCFAllocatorDefault, 0);
+													if (ourUUID)
 													{
-														io_iterator_t           parents = MACH_PORT_NULL;
-														kern_return_t res = IORegistryEntryGetParentIterator (object, kIOServicePlane, &parents);
 
-														if ((KERN_SUCCESS == res) && (parents != 0))
+														if ([(NSString *)ourUUID isEqualToString:uuid])
 														{
-															io_object_t parent;
-															
-															while ((parent = IOIteratorNext(parents)))
+															io_iterator_t           parents = MACH_PORT_NULL;
+															kern_return_t res = IORegistryEntryGetParentIterator (object, kIOServicePlane, &parents);
+
+															if ((KERN_SUCCESS == res) && (parents != 0))
 															{
-																io_iterator_t gparents = MACH_PORT_NULL;
+																io_object_t parent;
 																
-																kern_return_t res2 = IORegistryEntryGetParentIterator (parent, kIOServicePlane, &gparents);
-																
-																if ((KERN_SUCCESS == res2) && (gparents != 0))
+																while ((parent = IOIteratorNext(parents)))
 																{
-																	io_object_t gparent;
+																	io_iterator_t gparents = MACH_PORT_NULL;
 																	
-																	while ((gparent = IOIteratorNext(gparents)))
+																	kern_return_t res2 = IORegistryEntryGetParentIterator (parent, kIOServicePlane, &gparents);
+																	
+																	if ((KERN_SUCCESS == res2) && (gparents != 0))
 																	{
-																		io_iterator_t ggparents = MACH_PORT_NULL;
+																		io_object_t gparent;
 																		
-																		kern_return_t res3 = IORegistryEntryGetParentIterator (gparent, kIOServicePlane, &ggparents);
-																		
-																		if ((KERN_SUCCESS == res3) && (ggparents != 0))
+																		while ((gparent = IOIteratorNext(gparents)))
 																		{
-																			io_object_t ggparent;
+																			io_iterator_t ggparents = MACH_PORT_NULL;
 																			
-																			while ((ggparent = IOIteratorNext(ggparents)))
+																			kern_return_t res3 = IORegistryEntryGetParentIterator (gparent, kIOServicePlane, &ggparents);
+																			
+																			if ((KERN_SUCCESS == res3) && (ggparents != 0))
 																			{
+																				io_object_t ggparent;
 																				
-																				CFTypeRef	data = NULL;
-																				NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
-																				NSString *serial = nil;
-																				
-																				
-																				data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
-																				if (data)
-																				{																			
-																					if ([(NSString *)data hasPrefix:@"disk"] && ([(NSString *)data length] >= 5))
-																					{
-																						NSInteger num = [[(NSString *)data substringFromIndex:4] integerValue];
-																						[diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
-																					}
-																					else
-																						asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (NSString *) data);
+																				while ((ggparent = IOIteratorNext(ggparents)))
+																				{
 																					
-																					CFRelease(data);
-																					data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																					CFTypeRef	data = NULL;
+																					NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
+																					NSString *serial = nil;
+																					
+																					
+																					data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																					if (data)
-																					{
-																						asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
-																						serial = [(NSString *)data copy];
+																					{																			
+																						if ([(NSString *)data hasPrefix:@"disk"] && ([(NSString *)data length] >= 5))
+																						{
+																							NSInteger num = [[(NSString *)data substringFromIndex:4] integerValue];
+																							[diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
+																						}
+																						else
+																							asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (NSString *) data);
+																						
 																						CFRelease(data);
-																					}
-																					else
-																					{
-																						data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																						data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																						if (data)
 																						{
 																							asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
@@ -435,58 +428,68 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																							CFRelease(data);
 																						}
 																						else
-																						{	
-																							data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																						{
+																							data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																							if (data)
 																							{
-																								asl_NSLog_debug(@"USB Serial Number: %@", (NSString *) data);
+																								asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
 																								serial = [(NSString *)data copy];
-																								
 																								CFRelease(data);
 																							}
-//																							else
-//																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
+																							else
+																							{	
+																								data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																								if (data)
+																								{
+																									asl_NSLog_debug(@"USB Serial Number: %@", (NSString *) data);
+																									serial = [(NSString *)data copy];
+																									
+																									CFRelease(data);
+																								}
+	//																							else
+	//																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
+																							}
 																						}
-																					}
-																					
-																					if ([diskDict2 objectForKey:kDiskNumberKey])
-																					{
-																						NSString *info = serial ? [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"NOSERIAL";
 																						
-																						[diskDict2 setObject:$stringf(@"%@ (%@)", (NSString *)volNameAsCFString, info) 
-																									  forKey:kDiskNameKey];   
+																						if ([diskDict2 objectForKey:kDiskNumberKey])
+																						{
+																							NSString *info = serial ? [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"NOSERIAL";
+																							
+																							[diskDict2 setObject:$stringf(@"%@ (%@)", (NSString *)volNameAsCFString, info) 
+																										  forKey:kDiskNameKey];   
+																							
+																							[nonRemovableVolumes addObject:diskDict2];  
+																							//	NSLog(@"disk Dict %@", diskDict2);
+																						}
 																						
-																						[nonRemovableVolumes addObject:diskDict2];  
-																						//	NSLog(@"disk Dict %@", diskDict2);
+																						[serial release];
 																					}
+																					else
+																						asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
 																					
-																					[serial release];
-																				}
-																				else
-																					asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
-																				
 
-																				
-																				IOObjectRelease(ggparent);
+																					
+																					IOObjectRelease(ggparent);
+																				}
 																			}
+																			IOObjectRelease(gparent);
 																		}
-																		IOObjectRelease(gparent);
+																		IOObjectRelease(gparents);
 																	}
-																	IOObjectRelease(gparents);
+																	IOObjectRelease(parent);
 																}
-																IOObjectRelease(parent);
 															}
+															IOObjectRelease(parents);
 														}
-														IOObjectRelease(parents);
+														CFRelease(ourUUID);
 													}
-													CFRelease(ourUUID);
+													IOObjectRelease(object);
 												}
-												IOObjectRelease(object);
+												IOObjectRelease(iter);
 											}
-											IOObjectRelease(iter);
 										}
-									}
-								}	
+									}	
+								}
 							}
                         }
                     }

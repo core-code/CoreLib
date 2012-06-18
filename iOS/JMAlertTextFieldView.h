@@ -10,9 +10,8 @@
  */
 
 #import "CoreLib.h"
-#import "proAlertView.h"
 
-@interface JMAlertTextFieldView : proAlertView <UIAlertViewDelegate, UITextFieldDelegate>
+@interface JMAlertTextFieldView : UIAlertView <UIAlertViewDelegate, UITextFieldDelegate>
 {
     StringInBlock cancelBlock;  
     StringInBlock otherBlock;  

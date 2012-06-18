@@ -53,6 +53,7 @@ typedef void (^IntInBlock)(int input);
 #define $defaultsync        ([[NSUserDefaults standardUserDefaults] synchronize])
 #define $color(r,g,b,a)     ([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
 #define $predf(format...)   ([NSPredicate predicateWithFormat:format])
+#define $alert(format...)   ({[NSApp activateIgnoringOtherApps:YES]; NSRunAlertPanel(format);})
 
 #endif
 

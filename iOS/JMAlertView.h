@@ -11,10 +11,9 @@
 
 
 #import "CoreLib.h"
-#import "proAlertView.h"
 
 
-@interface JMAlertView : proAlertView <UIAlertViewDelegate>
+@interface JMAlertView : UIAlertView <UIAlertViewDelegate>
 {
     BasicBlock cancelBlock;  
     BasicBlock otherBlock;  

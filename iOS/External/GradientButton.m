@@ -26,6 +26,11 @@
 @synthesize normalGradient, highlightGradient, disabledGradient;
 #pragma mark -
 
+#if  __has_feature(objc_arc)
+#define BRIDGE (__bridge CFArrayRef)
+#else
+#define BRIDGE (CFArrayRef)
+#endif
 
 - (CGGradientRef)disabledGradient
 {
@@ -49,7 +54,7 @@
             color = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
             [disabled addObject:(id)[color CGColor]];
             
-            disabledGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)disabled, locations);
+            disabledGradient = CGGradientCreateWithColors(space, BRIDGE disabled, locations);
 
         CGColorSpaceRelease(space);
     }
@@ -68,7 +73,7 @@
         }
         CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
         
-        normalGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)normalGradientColors, locations);
+        normalGradient = CGGradientCreateWithColors(space, BRIDGE normalGradientColors, locations);
         
         CGColorSpaceRelease(space);
     }
@@ -87,7 +92,7 @@
         }
         CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
         
-        highlightGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)highlightGradientColors, locations);
+        highlightGradient = CGGradientCreateWithColors(space, BRIDGE highlightGradientColors, locations);
         CGColorSpaceRelease(space);
     }
     return highlightGradient;
