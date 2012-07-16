@@ -79,11 +79,13 @@ extern aslclient client;
     #define NSAppKitVersionNumber10_7 1138
 #endif
 #ifndef NSAppKitVersionNumber10_8
-    #define NSAppKitVersionNumber10_8 1157.7
+    #define NSAppKitVersionNumber10_8 1187
 #endif
 
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 
+#define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
+
 #define USING_SANDBOX		(OS_IS_POST_SNOW) && (SANDBOX)
 
