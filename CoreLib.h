@@ -23,6 +23,9 @@ typedef void (^IntInBlock)(int input);
 #import "NSString+CoreCode.h"
 #endif
 
+static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...) 
+{[NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton);}
+
 #define $appbundleid		([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
 #define $appname			([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
 #define $stringcu8(x)       ([NSString stringWithUTF8String:x])
@@ -41,7 +44,7 @@ typedef void (^IntInBlock)(int input);
 #define $defaultsync        ([[NSUserDefaults standardUserDefaults] synchronize])
 #define $color(r,g,b,a)     ([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
 #define $predf(format...)   ([NSPredicate predicateWithFormat:format])
-#define $alert(format...)   ({[NSApp activateIgnoringOtherApps:YES]; NSRunAlertPanel(format);})
+#define $alert(format...)   (alert(format))
 
 #define $md(dict)			([NSMutableDictionary dictionaryWithDictionary:dict])
 #define $ma(array)			([NSMutableArray arrayWithArray:array])
