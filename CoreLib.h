@@ -115,3 +115,8 @@ extern aslclient client;
 
 #define USING_SANDBOX		(OS_IS_POST_SNOW) && (SANDBOX)
 
+
+#define OBJECT_OR(x,y) ((x) ? (x) : (y))
+
+#define LOGSUCC NSLog(@"success")
+#define LOGFAIL NSLog(@"failure")

@@ -17,6 +17,7 @@
 
 @interface NSString (CoreCode)
 
+- (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;

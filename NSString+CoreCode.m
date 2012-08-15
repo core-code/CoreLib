@@ -18,6 +18,11 @@
 
 @implementation NSString (CoreCode)
 
+- (NSUInteger)countOccurencesOfString:(NSString *)str
+{
+    return [[self componentsSeparatedByString:str] count] - 1;
+}
+
 - (BOOL)contains:(NSString *)otherString
 {
 	return ([self rangeOfString:otherString].location != NSNotFound);
@@ -33,21 +38,21 @@
 	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
-- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
-{
-	NSString *ret = self;
-	for (NSString *key in replacements) 
-		ret = [ret stringByReplacingOccurrencesOfString:key withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
-	
-	for (NSString *key in replacements) 
-		ret = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"] withString:[replacements objectForKey:key]];
-	
-	return ret;
-}
-
 - (NSString *)clamp:(NSUInteger)maximumLength
 {
     return (([self length] <= maximumLength) ? self : [self substringToIndex:maximumLength]);
+}
+
+- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
+{
+	NSString *ret = self;
+	for (NSString *key in replacements)
+		ret = [ret stringByReplacingOccurrencesOfString:key withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
+	
+	for (NSString *key in replacements)
+		ret = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"] withString:[replacements objectForKey:key]];
+	
+	return ret;
 }
 
 #ifdef STRING_SHA1

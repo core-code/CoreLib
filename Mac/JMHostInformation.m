@@ -336,7 +336,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 							
 							if (includeRAIDBackingDevices)
 							{
-								NSString *bsdname = $stringf(@"/dev/disk%i", bsdNum);
+								NSString *bsdname = $stringf(@"/dev/disk%li", bsdNum);
 								
 								DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdname UTF8String]);
 								NSDictionary *props = [(NSDictionary *)DADiskCopyDescription(disk) autorelease];
