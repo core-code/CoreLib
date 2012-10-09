@@ -240,9 +240,39 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	return num;
 }
 
++ (void)_addDiskToList:(NSMutableArray *)array number:(NSNumber *)num name:(NSString *)name detail:(NSString *)detail
+{
+	BOOL found = FALSE;
+	
+	for (NSMutableDictionary *disk in array)  
+	{
+		if ([[disk objectForKey:kDiskNumberKey] isEqualToNumber:num])
+		{
+			NSString *currentName = [disk objectForKey:kDiskNameKey];
+			[disk setObject:[name stringByAppendingFormat:@", %@", currentName] forKey:kDiskNameKey];
+			
+			asl_NSLog_debug(@"_addDiskToList replace name unique %@\n", [disk description]);
+
+			found = TRUE;
+		}
+	}
+
+	if (!found)
+	{
+		NSMutableDictionary *diskDict = [NSMutableDictionary dictionary];
+
+		[diskDict setObject:num forKey:kDiskNumberKey];
+		[diskDict setObject:((detail) ? $stringf(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
+		
+		asl_NSLog_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
+		
+		[array addObject:diskDict];
+	}
+}
+
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
-    NSArray         *removableVolumeNamesSrc = [[NSWorkspace sharedWorkspace] mountedRemovableMedia]; 
+    NSArray         *removableVolumeNamesSrc = [[NSWorkspace sharedWorkspace] mountedRemovableMedia];
 	OSErr           result = noErr;
 	ItemCount       volumeIndex;
     NSMutableArray  *nonRemovableVolumes = [NSMutableArray array];
@@ -260,7 +290,8 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	if (includeRAIDBackingDevices)
 		session = DASessionCreate(kCFAllocatorDefault);
 
-    
+	asl_NSLog_debug(@"mountedHarddisks removableVolumeNames %@", ([removableVolumeNames description]));
+
 	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
 	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
 	for (volumeIndex = 1; result == noErr || result != nsvErr; volumeIndex++)
@@ -303,10 +334,15 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
                     
 					[(NSString *)volNameAsCFString autorelease];
                     //NSLog((NSString *)volNameAsCFString);
-                    
+					asl_NSLog_debug(@"mountedHarddisks found IOKit name %@", (NSString *)volNameAsCFString);
+
                     if ([removableVolumeNames indexOfObject:(NSString *)volNameAsCFString] == NSNotFound) // not removable
-                    {   
+                    {
+						
 						NSString *bsdName = [NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID];
+						
+						asl_NSLog_debug(@"mountedHarddisks has BSD name %@", bsdName);
+
 						if (![bsdName hasPrefix:@"disk"])
 							continue;
                         NSString *bsdNumStr = [[[bsdName substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0];
@@ -325,13 +361,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
                         
                         if (!found) // new disk
                         {
-                            NSMutableDictionary *diskDict = [NSMutableDictionary dictionary];
-                            
-                            
-                            [diskDict setObject:(NSString *)volNameAsCFString forKey:kDiskNameKey];                    
-                            [diskDict setObject:[NSNumber numberWithInteger:bsdNum] forKey:kDiskNumberKey];
-                            
-                            [nonRemovableVolumes addObject:diskDict];                    
+							BOOL foundBacking = false;
 							
 							
 							if (includeRAIDBackingDevices)
@@ -343,13 +373,19 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 								CFRelease(disk);
 								disk = NULL;
 								
+								asl_NSLog_debug(@"mountedHarddisks checking for raid backing %@", bsdName);
+
 								if ([props objectForKey:@"DAMediaLeaf"] && [[props objectForKey:@"DAMediaLeaf"] intValue])
 								{
+									asl_NSLog_debug(@"mountedHarddisks found props %@", bsdName);
+
 									CFUUIDRef DAMediaUUID = (CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
 									if (DAMediaUUID)
 									{
+
 										NSString *uuid = [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, DAMediaUUID) autorelease];
-										
+										asl_NSLog_debug(@"mountedHarddisks found UUID %@ %@", bsdName, uuid);
+
 
 										kern_return_t				kernResult;
 										CFMutableDictionaryRef		matchingDict;
@@ -373,63 +409,88 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 														if ([(NSString *)ourUUID isEqualToString:uuid])
 														{
-															io_iterator_t           parents = MACH_PORT_NULL;
-															kern_return_t res = IORegistryEntryGetParentIterator (object, kIOServicePlane, &parents);
+															asl_NSLog_debug(@"mountedHarddisks found matching UUID %@", bsdName);
 
-															if ((KERN_SUCCESS == res) && (parents != 0))
+															
+															CFTypeRef	d = NULL;
+															d = IORegistryEntryCreateCFProperty(object, CFSTR("SoftRAID Provider Array"), kCFAllocatorDefault, 0);
+															if (d)
 															{
-																io_object_t parent;
-																
-																while ((parent = IOIteratorNext(parents)))
-																{
-																	io_iterator_t gparents = MACH_PORT_NULL;
-																	
-																	kern_return_t res2 = IORegistryEntryGetParentIterator (parent, kIOServicePlane, &gparents);
-																	
-																	if ((KERN_SUCCESS == res2) && (gparents != 0))
+																asl_NSLog_debug(@"mountedHarddisks SOFTRAID");
+
+																for (NSString *name in (NSArray *)d)
+																{	
+																	if ([name hasPrefix:@"disk"] && ([name length] >= 5))
 																	{
-																		io_object_t gparent;
+																		NSString *numStr = [(NSString *)name substringFromIndex:4];
+																		NSInteger num;
+																		if ([numStr contains:@"s"])
+																			num = [[[numStr componentsSeparatedByString:@"s"] objectAtIndex:0] integerValue];
+																		else
+																			num = [numStr integerValue];
 																		
-																		while ((gparent = IOIteratorNext(gparents)))
+																		[self _addDiskToList:nonRemovableVolumes number:[NSNumber numberWithInteger:num] name:(NSString *)volNameAsCFString detail:name];
+																		
+																		asl_NSLog_debug(@"mountedHarddisks found1\n");
+																		
+																		foundBacking = true;
+																	}
+																	else
+																		asl_NSLog(ASL_LEVEL_ERR, @"Error: 1bsd name doesn't look good %@", (NSString *) name);
+																	
+																}
+																CFRelease(d);
+															}
+															else
+															{
+																io_iterator_t           parents = MACH_PORT_NULL;
+																kern_return_t res = IORegistryEntryGetParentIterator (object, kIOServicePlane, &parents);
+
+																if ((KERN_SUCCESS == res) && (parents != 0))
+																{
+																	io_object_t parent;
+																	
+																	while ((parent = IOIteratorNext(parents)))
+																	{
+																		io_iterator_t gparents = MACH_PORT_NULL;
+																		
+																		kern_return_t res2 = IORegistryEntryGetParentIterator (parent, kIOServicePlane, &gparents);
+																		
+																		if ((KERN_SUCCESS == res2) && (gparents != 0))
 																		{
-																			io_iterator_t ggparents = MACH_PORT_NULL;
+																			io_object_t gparent;
 																			
-																			kern_return_t res3 = IORegistryEntryGetParentIterator (gparent, kIOServicePlane, &ggparents);
-																			
-																			if ((KERN_SUCCESS == res3) && (ggparents != 0))
+																			while ((gparent = IOIteratorNext(gparents)))
 																			{
-																				io_object_t ggparent;
+																				io_iterator_t ggparents = MACH_PORT_NULL;
 																				
-																				while ((ggparent = IOIteratorNext(ggparents)))
+																				kern_return_t res3 = IORegistryEntryGetParentIterator (gparent, kIOServicePlane, &ggparents);
+																				
+																				if ((KERN_SUCCESS == res3) && (ggparents != 0))
 																				{
+																					io_object_t ggparent;
 																					
-																					CFTypeRef	data = NULL;
-																					NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
-																					NSString *serial = nil;
-																					
-																					
-																					data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
-																					if (data)
-																					{																			
-																						if ([(NSString *)data hasPrefix:@"disk"] && ([(NSString *)data length] >= 5))
-																						{
-																							NSInteger num = [[(NSString *)data substringFromIndex:4] integerValue];
-																							[diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
-																						}
-																						else
-																							asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (NSString *) data);
+																					while ((ggparent = IOIteratorNext(ggparents)))
+																					{
 																						
-																						CFRelease(data);
-																						data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																						CFTypeRef	data = NULL;
+																						NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
+																						NSString *serial = nil;
+																						
+																						
+																						data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																						if (data)
-																						{
-																							asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
-																							serial = [(NSString *)data copy];
+																						{																			
+																							if ([(NSString *)data hasPrefix:@"disk"] && ([(NSString *)data length] >= 5))
+																							{
+																								NSInteger num = [[(NSString *)data substringFromIndex:4] integerValue];
+																								[diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
+																							}
+																							else
+																								asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (NSString *) data);
+																							
 																							CFRelease(data);
-																						}
-																						else
-																						{
-																							data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																							data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																							if (data)
 																							{
 																								asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
@@ -437,49 +498,64 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																								CFRelease(data);
 																							}
 																							else
-																							{	
-																								data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																							{
+																								data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																								if (data)
 																								{
-																									asl_NSLog_debug(@"USB Serial Number: %@", (NSString *) data);
+																									asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
 																									serial = [(NSString *)data copy];
-																									
 																									CFRelease(data);
 																								}
-	//																							else
-	//																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
+																								else
+																								{	
+																									data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
+																									if (data)
+																									{
+																										asl_NSLog_debug(@"USB Serial Number: %@", (NSString *) data);
+																										serial = [(NSString *)data copy];
+																										
+																										CFRelease(data);
+																									}
+		//																							else
+		//																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
+																								}
 																							}
-																						}
-																						
-																						if ([diskDict2 objectForKey:kDiskNumberKey])
-																						{
-																							NSString *info = serial ? [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"NOSERIAL";
 																							
-																							[diskDict2 setObject:$stringf(@"%@ (%@)", (NSString *)volNameAsCFString, info) 
-																										  forKey:kDiskNameKey];   
-																							
-																							[nonRemovableVolumes addObject:diskDict2];  
-																							//	NSLog(@"disk Dict %@", diskDict2);
-																						}
-																						
-																						[serial release];
-																					}
-																					else
-																						asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
-																					
+																							if ([diskDict2 objectForKey:kDiskNumberKey])
+																							{
+																								NSString *info = serial ? [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"NOSERIAL";
+																								
+																								
+																								[self _addDiskToList:nonRemovableVolumes
+																											  number:[diskDict2 objectForKey:kDiskNumberKey]
+																												name:(NSString *)volNameAsCFString
+																											  detail:info];
 
-																					
-																					IOObjectRelease(ggparent);
+																								asl_NSLog_debug(@"mountedHarddisks found %@", [diskDict2 description]);
+
+																								foundBacking = true;
+																								//	NSLog(@"disk Dict %@", diskDict2);
+																							}
+																							
+																							[serial release];
+																						}
+																						else
+																							asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
+																						
+
+																						
+																						IOObjectRelease(ggparent);
+																					}
 																				}
+																				IOObjectRelease(gparent);
 																			}
-																			IOObjectRelease(gparent);
+																			IOObjectRelease(gparents);
 																		}
-																		IOObjectRelease(gparents);
+																		IOObjectRelease(parent);
 																	}
-																	IOObjectRelease(parent);
 																}
+																IOObjectRelease(parents);
 															}
-															IOObjectRelease(parents);
 														}
 														CFRelease(ourUUID);
 													}
@@ -491,9 +567,22 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 									}	
 								}
 							}
+							
+							if (!foundBacking)
+							{
+								[self _addDiskToList:nonRemovableVolumes
+											  number:[NSNumber numberWithInteger:bsdNum]
+												name:(NSString *)volNameAsCFString
+											  detail:nil];
+
+								
+								asl_NSLog_debug(@"mountedHarddisks is new disk without backing %@", bsdName);
+							}
+							else
+								asl_NSLog_debug(@"mountedHarddisks ignoring volume with raid backing %@", bsdName);
                         }
                     }
-                    
+            
 				}
 				else
 					asl_NSLog(ASL_LEVEL_ERR, @"Error:	volumeParms.vMDeviceID == NULL");

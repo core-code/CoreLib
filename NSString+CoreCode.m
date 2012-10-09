@@ -28,6 +28,11 @@
 	return ([self rangeOfString:otherString].location != NSNotFound);
 }
 
+- (BOOL)insensitiveContains:(NSString *)otherString
+{
+	return ([self rangeOfString:otherString options:NSCaseInsensitiveSearch].location != NSNotFound);
+}
+
 - (NSArray *)lines
 {
 	return [self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];

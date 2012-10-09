@@ -14,6 +14,7 @@ typedef enum
 {
 	kSuccess = 0,
 	kScriptingBridgeFailure,
+	kCGIFailure,
 	kMailCoreFailure,
 	kToNilFailure,
 	kFromNilFailure
