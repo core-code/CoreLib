@@ -27,6 +27,11 @@ typedef void (^IntInBlock)(int input);
 	static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...)
 {[NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton);}
 	#define $alert(format...)   (alert(format))
+	#define $color(r,g,b,a)			([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
+	#define $color255(r,g,b,a)		([NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
+#else
+	#define $color(r,g,b,a)			([UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)])
+	#define $color255(r,g,b,a)		([UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
 #endif
 
 #define $appbundleid	([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
@@ -47,12 +52,14 @@ typedef void (^IntInBlock)(int input);
 #define $setdefaulti(i, key)	([[NSUserDefaults standardUserDefaults] setInteger:i forKey:key])
 #define $setdefaultf(f, key)	([[NSUserDefaults standardUserDefaults] setFloat:f forKey:key])
 #define $defaultsync			([[NSUserDefaults standardUserDefaults] synchronize])
-#define $color(r,g,b,a)			([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
 #define $predf(format...)		([NSPredicate predicateWithFormat:format])
 
 #define $md(dict)				((NSMutableDictionary *)[NSMutableDictionary dictionaryWithDictionary:dict])
 #define $ma(array)				((NSMutableArray *)[NSMutableArray arrayWithArray:array])
 #define $ms(str)				((NSMutableString *)[NSMutableString stringWithString:str])
+#define $d(dict)				((NSDictionary *)[NSDictionary dictionaryWithDictionary:dict])
+#define $a(array)				((NSArray *)[NSrray arrayWithArray:array])
+#define $s(str)					((NSString *)[NSString stringWithString:str])
 
 // made obsolete by obj-c literals in xcode 4.4
 #define $earray				([NSArray array])
