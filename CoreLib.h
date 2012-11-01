@@ -128,6 +128,7 @@ extern aslclient client;
 
 
 #define OBJECT_OR(x,y) ((x) ? (x) : (y))
+#define NON_NIL_STR(x) ((x) ? (x) : @"")
 
 #define LOGSUCC NSLog(@"success")
 #define LOGFAIL NSLog(@"failure")
