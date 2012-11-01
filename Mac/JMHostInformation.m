@@ -272,25 +272,44 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
-    NSArray         *removableVolumeNamesSrc = [[NSWorkspace sharedWorkspace] mountedRemovableMedia];
 	OSErr           result = noErr;
 	ItemCount       volumeIndex;
+    NSMutableArray	*volumeNamesToIgnore = [NSMutableArray array];
+    NSMutableArray	*volumePathsToIgnore = [NSMutableArray array];
     NSMutableArray  *nonRemovableVolumes = [NSMutableArray array];
-    
-    NSMutableArray *removableVolumeNames = [NSMutableArray array];
-    for (NSString *name in removableVolumeNamesSrc)
+	
+    for (NSString *name in [[NSWorkspace sharedWorkspace] mountedRemovableMedia])
     {
         if ([name hasPrefix:@"/Volumes/"])
-            [removableVolumeNames addObject:[name substringFromIndex:[@"/Volumes/" length]]];
+            [volumeNamesToIgnore addObject:[name substringFromIndex:[@"/Volumes/" length]]];
         else
-            [removableVolumeNames addObject:name];            
+            [volumeNamesToIgnore addObject:name];
+		
+		[volumePathsToIgnore addObject:name];
     }
+	
+	for (NSString *path in [[NSWorkspace sharedWorkspace] mountedLocalVolumePaths])
+	{		
+		NSString *description, *type;
+		BOOL removable = NO, writable, unmountable;
+		
+		[[NSWorkspace sharedWorkspace] getFileSystemInfoForPath:path
+		                                            isRemovable:&removable
+				                                     isWritable:&writable
+							                      isUnmountable:&unmountable
+										            description:&description
+													       type:&type];
+		
+		if (removable)
+			[volumePathsToIgnore addObject:path];
+	}
+
 	
 	DASessionRef session = NULL;
 	if (includeRAIDBackingDevices)
 		session = DASessionCreate(kCFAllocatorDefault);
 
-	asl_NSLog_debug(@"mountedHarddisks removableVolumeNames %@", ([removableVolumeNames description]));
+	asl_NSLog_debug(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
 
 	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
 	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
@@ -299,30 +318,34 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 		FSVolumeRefNum	actualVolume;
 		HFSUniStr255	volumeName;
 		FSVolumeInfo	volumeInfo;
-        
+		FSRef			volumeFSRef;
+
 		bzero((void *) &volumeInfo, sizeof(volumeInfo));
         
 		// We're mostly interested in the volume reference number (actualVolume)
+		// TODO: deprecated in 10.8 use NSFileManager's mountedVolumeURLsIncludingResourceValuesForKeys:options:
 		result = FSGetVolumeInfo(kFSInvalidVolumeRefNum,
 								 volumeIndex,
 								 &actualVolume,
 								 kFSVolInfoFSInfo,
 								 &volumeInfo,
 								 &volumeName,
-								 NULL);
+								 &volumeFSRef);
         
 		if (result == noErr)
 		{
 			GetVolParmsInfoBuffer volumeParms;
 			result = FSGetVolumeParms (actualVolume, &volumeParms, sizeof(volumeParms));
             
-            
+
 			if (result != noErr)
 				asl_NSLog(ASL_LEVEL_ERR, @"Error:	FSGetVolumeParms returned %d", result);
 			else
 			{
 				if ((char *)volumeParms.vMDeviceID != NULL)
 				{
+					NSURL *mountURL = [(NSURL *)CFURLCreateFromFSRef(NULL, &volumeFSRef) autorelease];
+
 					// This code is just to convert the volume name from a HFSUniCharStr to
 					// a plain C string so we can print it with printf. It'd be preferable to
 					// use CoreFoundation to work with the volume name in its Unicode form.
@@ -336,7 +359,8 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
                     //NSLog((NSString *)volNameAsCFString);
 					asl_NSLog_debug(@"mountedHarddisks found IOKit name %@", (NSString *)volNameAsCFString);
 
-                    if ([removableVolumeNames indexOfObject:(NSString *)volNameAsCFString] == NSNotFound) // not removable
+                    if ([volumeNamesToIgnore indexOfObject:(NSString *)volNameAsCFString] == NSNotFound &&
+						[volumePathsToIgnore indexOfObject:[mountURL path]] == NSNotFound) // not removable
                     {
 						
 						NSString *bsdName = [NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID];
@@ -593,6 +617,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	if (includeRAIDBackingDevices)
 		CFRelease(session);
 
+	
 	if ([nonRemovableVolumes count] >= 2) // move boot volume to first spot
 	{
 		NSInteger bootDisk = [self bootDiskBSDNum];
