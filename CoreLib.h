@@ -26,12 +26,13 @@ typedef void (^IntInBlock)(int input);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...)
 {[NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton);}
-	#define $alert(format...)   (alert(format))
+	#define $alert(format...)		(alert(format))
 	#define $color(r,g,b,a)			([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
 	#define $color255(r,g,b,a)		([NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
 #else
 	#define $color(r,g,b,a)			([UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)])
 	#define $color255(r,g,b,a)		([UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
+	 #define $apppath(x,y)			([[NSFileManager defaultManager] fileExistsAtPath:[$stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath]] ? [$stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath] : [[NSBundle mainBundle] pathForResource:(x) ofType:(y)])
 #endif
 
 #define $appbundleid	([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])

@@ -38,6 +38,23 @@
     }
 }
 
+
++ (void)performBlock:(BasicBlock)block withProgressAlertTitled:(NSString *)title
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:@" " delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
+    UIActivityIndicatorView *progress = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(125, 70, 30, 30)];
+    progress.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    [alert addSubview:progress];
+    [progress startAnimating];
+
+    [alert show];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+        block();
+        [alert dismissWithClickedButtonIndex:0 animated:NO];
+    });
+}
+
 #if ! __has_feature(objc_arc)
 - (void)dealloc
 {

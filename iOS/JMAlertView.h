@@ -22,4 +22,6 @@
 @property (copy, nonatomic) BasicBlock cancelBlock;
 @property (copy, nonatomic) BasicBlock otherBlock;
 
++ (void)performBlock:(BasicBlock)block withProgressAlertTitled:(NSString *)title;
+
 @end
