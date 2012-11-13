@@ -49,4 +49,23 @@
         return @"";
 }
 
+- (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value
+{
+	for (NSDictionary *dict in self)
+		if ([dict[key] isEqual:value])
+			return TRUE;
+
+	return FALSE;
+}
+
+- (NSArray *)sortedArrayByKey:(NSString *)key
+{
+	return [self sortedArrayByKey:key ascending:YES];
+}
+
+- (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending
+{
+	return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:key ascending:ascending]]];
+}
+
 @end

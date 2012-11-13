@@ -17,5 +17,8 @@
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (id)safeObjectAtIndex:(NSUInteger)index;
 - (NSString *)safeStringAtIndex:(NSUInteger)index;
+- (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
+- (NSArray *)sortedArrayByKey:(NSString *)key;
+- (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
 
 @end

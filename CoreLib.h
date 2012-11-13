@@ -23,57 +23,76 @@ typedef void (^IntInBlock)(int input);
 #import "NSString+CoreCode.h"
 #endif
 
+
+
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...)
 {[NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton);}
-	#define $alert(format...)		(alert(format))
-	#define $color(r,g,b,a)			([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
-	#define $color255(r,g,b,a)		([NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
+	#define _alert(format...)		(alert(format))
+	#define _color(r,g,b,a)			([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
+	#define _color255(r,g,b,a)		([NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
 #else
-	#define $color(r,g,b,a)			([UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)])
-	#define $color255(r,g,b,a)		([UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
-	 #define $apppath(x,y)			([[NSFileManager defaultManager] fileExistsAtPath:[$stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath]] ? [$stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath] : [[NSBundle mainBundle] pathForResource:(x) ofType:(y)])
+	#define _color(r,g,b,a)			([UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)])
+	#define _color255(r,g,b,a)		([UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
+	#define _appfile(x,y)			([[NSFileManager defaultManager] fileExistsAtPath:[_stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath]] ? [_stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath] : [[NSBundle mainBundle] pathForResource:(x) ofType:(y)])
 #endif
 
-#define $appbundleid	([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
-#define $appname		([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
-#define $appsuppdir			([[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:$appname])
+#define _appbundleid			([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
+#define _appname				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
 
-#define $stringcu8(x)			((NSString *)[NSString stringWithUTF8String:x])
-#define $stringf(format...)		((NSString *)[NSString stringWithFormat:format])
-#define $mstringf(format...)	((NSMutableString *)[NSMutableString stringWithFormat:format])
-#define $default(key)			([[NSUserDefaults standardUserDefaults] objectForKey:key])
-#define $defaults(key)			([[NSUserDefaults standardUserDefaults] stringForKey:key])
-#define $defaultu(key)			([[NSUserDefaults standardUserDefaults] URLForKey:key])
-#define $defaulti(key)			([[NSUserDefaults standardUserDefaults] integerForKey:key])
-#define $defaultf(key)			([[NSUserDefaults standardUserDefaults] floatForKey:key])
-#define $remdefault(key)		([[NSUserDefaults standardUserDefaults] removeObjectForKey:key])
-#define $setdefault(o, key)		([[NSUserDefaults standardUserDefaults] setObject:o forKey:key])
-#define $setdefaultu(o, key)	([[NSUserDefaults standardUserDefaults] setURL:o forKey:key])
-#define $setdefaulti(i, key)	([[NSUserDefaults standardUserDefaults] setInteger:i forKey:key])
-#define $setdefaultf(f, key)	([[NSUserDefaults standardUserDefaults] setFloat:f forKey:key])
-#define $defaultsync			([[NSUserDefaults standardUserDefaults] synchronize])
-#define $predf(format...)		([NSPredicate predicateWithFormat:format])
+#define _docdir					([@"~/Documents/" stringByExpandingTildeInPath])
+#define _appsuppdir				([[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:_appname])
 
-#define $md(dict)				((NSMutableDictionary *)[NSMutableDictionary dictionaryWithDictionary:dict])
-#define $ma(array)				((NSMutableArray *)[NSMutableArray arrayWithArray:array])
-#define $ms(str)				((NSMutableString *)[NSMutableString stringWithString:str])
-#define $d(dict)				((NSDictionary *)[NSDictionary dictionaryWithDictionary:dict])
-#define $a(array)				((NSArray *)[NSrray arrayWithArray:array])
-#define $s(str)					((NSString *)[NSString stringWithString:str])
+#define _dir_contents(x)		([[NSFileManager defaultManager] contentsOfDirectoryAtPath:(x) error:NULL])
+#define _dir_contents_rec(x)	([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:dstPath error:NULL])
+#define _unique_file(file)	(unique(file))
 
-// made obsolete by obj-c literals in xcode 4.4
-#define $earray				([NSArray array])
-#define $emarray			([NSMutableArray array])
-#define $array(OBJS...)		((NSArray *)([NSArray arrayWithObjects:OBJS, nil]))
-#define $marray(OBJS...)	([NSMutableArray arrayWithObjects:OBJS, nil])
-#define $dict(PAIRS...)		([NSDictionary dictionaryWithObjectsAndKeys:PAIRS, nil])
-#define $mdict(PAIRS...)	([NSMutableDictionary dictionaryWithObjectsAndKeys:PAIRS, nil])
-#define $num(num)			([NSNumber numberWithFloat:num])
-#define $numd(num)			([NSNumber numberWithDouble:num])
-#define $numi(num)			([NSNumber numberWithInteger:num])
-#define $numui(num)			([NSNumber numberWithUnsignedInt:num])
+#define _url(x)					((NSURL *)[NSURL URLWithString:(x)])
+#define _stringcu8(x)			((NSString *)[NSString stringWithUTF8String:x])
+#define _stringf(format...)		((NSString *)[NSString stringWithFormat:format])
+#define _mstringf(format...)	((NSMutableString *)[NSMutableString stringWithFormat:format])
+#define _default(key)			([[NSUserDefaults standardUserDefaults] objectForKey:key])
+#define _defaults(key)			([[NSUserDefaults standardUserDefaults] stringForKey:key])
+#define _defaultu(key)			([[NSUserDefaults standardUserDefaults] URLForKey:key])
+#define _defaulti(key)			([[NSUserDefaults standardUserDefaults] integerForKey:key])
+#define _defaultf(key)			([[NSUserDefaults standardUserDefaults] floatForKey:key])
+#define _remdefault(key)		([[NSUserDefaults standardUserDefaults] removeObjectForKey:key])
+#define _setdefault(o, key)		([[NSUserDefaults standardUserDefaults] setObject:o forKey:key])
+#define _setdefaultu(o, key)	([[NSUserDefaults standardUserDefaults] setURL:o forKey:key])
+#define _setdefaulti(i, key)	([[NSUserDefaults standardUserDefaults] setInteger:i forKey:key])
+#define _setdefaultf(f, key)	([[NSUserDefaults standardUserDefaults] setFloat:f forKey:key])
+#define _defaultsync			([[NSUserDefaults standardUserDefaults] synchronize])
+#define _predf(format...)		([NSPredicate predicateWithFormat:format])
 
+#define _md(dict)				((NSMutableDictionary *)[NSMutableDictionary dictionaryWithDictionary:dict])
+#define _ma(array)				((NSMutableArray *)[NSMutableArray arrayWithArray:array])
+#define _ms(str)				((NSMutableString *)[NSMutableString stringWithString:str])
+#define _d(dict)				((NSDictionary *)[NSDictionary dictionaryWithDictionary:dict])
+#define _a(array)				((NSArray *)[NSArray arrayWithArray:array])
+#define _s(str)					((NSString *)[NSString stringWithString:str])
+
+#define _object_or(x,y)			((x) ? (x) : (y))
+#define _non_nil_str(x)			((x) ? (x) : @"")
+#define _logsuc					NSLog(@"success")
+#define _logfail				NSLog(@"failure")
+#define _log(x)					NSLog(@"%@", [(x) description]);
+
+
+
+static inline NSString * unique(NSString *filename)
+{
+	if (![[NSFileManager defaultManager] fileExistsAtPath:filename])
+		return filename;
+	else
+	{
+		int i = 0;
+		
+		while ([[NSFileManager defaultManager] fileExistsAtPath:_stringf(@"%@-%i", filename, i)]) i++;
+		
+		return _stringf(@"%@-%i", filename, i);
+	}
+}
 #endif
 
 // lets you define custom types for collection classes that so that the compiler knows what type they return
@@ -122,14 +141,9 @@ extern aslclient client;
 
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
-
 #define USING_SANDBOX		(OS_IS_POST_SNOW) && (SANDBOX)
 
 
-#define OBJECT_OR(x,y) ((x) ? (x) : (y))
-#define NON_NIL_STR(x) ((x) ? (x) : @"")
-
-#define LOGSUCC NSLog(@"success")
-#define LOGFAIL NSLog(@"failure")

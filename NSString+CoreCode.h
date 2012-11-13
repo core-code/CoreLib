@@ -18,12 +18,14 @@
 @interface NSString (CoreCode)
 
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
-- (BOOL)insensitiveContains:(NSString *)otherString;
+- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 - (NSString *)trimmed;
 - (NSArray *)lines;
+- (NSData *)download;
+
 #ifdef STRING_SHA1
 - (NSString *)sha1;
 #endif

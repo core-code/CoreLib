@@ -28,9 +28,9 @@
 	return ([self rangeOfString:otherString].location != NSNotFound);
 }
 
-- (BOOL)insensitiveContains:(NSString *)otherString
+- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive
 {
-	return ([self rangeOfString:otherString options:NSCaseInsensitiveSearch].location != NSNotFound);
+	return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
 }
 
 - (NSArray *)lines
@@ -58,6 +58,11 @@
 		ret = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"] withString:[replacements objectForKey:key]];
 	
 	return ret;
+}
+
+- (NSData *)download
+{
+	return [[NSData alloc] initWithContentsOfURL:_url(self)];
 }
 
 #ifdef STRING_SHA1
