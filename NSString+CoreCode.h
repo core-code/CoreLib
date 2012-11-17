@@ -10,9 +10,6 @@
  */
 
 
-#import <Foundation/NSString.h>
-#import <Foundation/NSDictionary.h>
-
 #define STRING_SHA1 1
 
 @interface NSString (CoreCode)

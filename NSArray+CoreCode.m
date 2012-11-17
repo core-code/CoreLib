@@ -52,7 +52,7 @@
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value
 {
 	for (NSDictionary *dict in self)
-		if ([dict[key] isEqual:value])
+		if ([[dict valueForKey:key] isEqual:value])
 			return TRUE;
 
 	return FALSE;
@@ -65,7 +65,11 @@
 
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending
 {
-	return [self sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:key ascending:ascending]]];
+	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:key ascending:ascending];
+#if ! __has_feature(objc_arc)
+	[sd autorelease];
+#endif
+	return [self sortedArrayUsingDescriptors:[NSArray arrayWithObject:sd]];
 }
 
 @end

@@ -62,7 +62,11 @@
 
 - (NSData *)download
 {
-	return [[NSData alloc] initWithContentsOfURL:_url(self)];
+	NSData *d = [[NSData alloc] initWithContentsOfURL:_url(self)];
+#if ! __has_feature(objc_arc)
+	[d autorelease];
+#endif
+	return d;
 }
 
 #ifdef STRING_SHA1

@@ -24,9 +24,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define HOSTINFORMATION_MACADDRESS 1
 
-extern CFStringRef IOPSGetProvidingPowerSourceType(CFTypeRef ps_blob);
-extern CFBooleanRef IOPSPowerSourceSupported(CFTypeRef ps_blob, CFStringRef ps_type);
-#define kIOPMBatteryPowerKey "Battery Power"
 static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices);
 static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress);
 
@@ -262,7 +259,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 		NSMutableDictionary *diskDict = [NSMutableDictionary dictionary];
 
 		[diskDict setObject:num forKey:kDiskNumberKey];
-		[diskDict setObject:((detail) ? $stringf(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
+		[diskDict setObject:((detail) ? _stringf(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
 		
 		asl_NSLog_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
 		
@@ -390,7 +387,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 							
 							if (includeRAIDBackingDevices)
 							{
-								NSString *bsdname = $stringf(@"/dev/disk%li", bsdNum);
+								NSString *bsdname = _stringf(@"/dev/disk%li", bsdNum);
 								
 								DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdname UTF8String]);
 								NSDictionary *props = [(NSDictionary *)DADiskCopyDescription(disk) autorelease];
@@ -765,40 +762,26 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 + (BOOL)runsOnBattery
 {
-	CFTypeRef		ps_info = IOPSCopyPowerSourcesInfo();
-	CFStringRef		ps_name = NULL;
-	BOOL			ret;
+	CFTypeRef		blob = IOPSCopyPowerSourcesInfo();
+	if (!blob)		return FALSE;
+	CFArrayRef		array = IOPSCopyPowerSourcesList(blob);
+	BOOL			ret = FALSE;
+	
+	if (array)
+	{
+		for (int i = 0 ; i < CFArrayGetCount(array); i++)
+		{
+			CFDictionaryRef	dict = IOPSGetPowerSourceDescription(blob, CFArrayGetValueAtIndex(array, i));
+			CFStringRef		str = (CFStringRef)CFDictionaryGetValue(dict, CFSTR(kIOPSPowerSourceStateKey));
 
-	if (!ps_info)
-		return FALSE;
-
-	ps_name = (CFStringRef)IOPSGetProvidingPowerSourceType(ps_info);
-
-	ret = CFEqual(CFSTR(kIOPMBatteryPowerKey), ps_name);
-
-	CFRelease(ps_info);
+			if (CFEqual(str, CFSTR(kIOPSBatteryPowerValue)))
+				ret = TRUE;
+		}
+		CFRelease(array);
+	}
+	CFRelease(blob);
 
 	return ret;
-}
-
-+ (BOOL)hasBattery
-{
-	static BOOL		checked = FALSE, result;
-	CFTypeRef		ps_info = IOPSCopyPowerSourcesInfo();
-
-	if (checked == FALSE)
-	{
-		checked = TRUE;
-
-		if (kCFBooleanTrue == IOPSPowerSourceSupported(ps_info, CFSTR(kIOPMBatteryPowerKey)))
-			result = TRUE;
-		else
-			result = FALSE;
-	}
-
-	CFRelease(ps_info);
-
-	return result;
 }
 @end
 

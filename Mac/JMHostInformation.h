@@ -35,5 +35,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices;
 
 + (BOOL)runsOnBattery;
-+ (BOOL)hasBattery;
 @end
