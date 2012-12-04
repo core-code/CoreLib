@@ -1,8 +1,8 @@
 //
-//  NSArray+CoreCode.h
+//  NSDictionary+CoreCode.h
 //  CoreLib
 //
-//  Created by CoreCode on 24.04.12.
+//  Created by CoreCode on 04.12.12.
 /*	Copyright (c) 2012 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -11,23 +11,15 @@
 
 
 
-@interface NSArray (CoreCode)
+@interface NSDictionary (CoreCode)
 
-@property (readonly, nonatomic) NSMutableArray *mutable;
-
-- (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
-- (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
-- (id)safeObjectAtIndex:(NSUInteger)index;
-- (NSString *)safeStringAtIndex:(NSUInteger)index;
-- (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
-- (NSArray *)sortedArrayByKey:(NSString *)key;
-- (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
+@property (readonly, nonatomic) NSMutableDictionary *mutable;
 
 @end
 
 
-@interface NSMutableArray (CoreCode)
+@interface NSMutableDictionary (CoreCode)
 
-@property (readonly, nonatomic) NSArray *immutable;
+@property (readonly, nonatomic) NSDictionary *immutable;
 
 @end

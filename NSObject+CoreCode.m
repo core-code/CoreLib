@@ -1,8 +1,8 @@
 //
-//  NSArray+CoreCode.h
+//  NSObject+CoreCode.m
 //  CoreLib
 //
-//  Created by CoreCode on 24.04.12.
+//  Created by CoreCode on 15.03.12.
 /*	Copyright (c) 2012 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -10,24 +10,19 @@
  */
 
 
-
-@interface NSArray (CoreCode)
-
-@property (readonly, nonatomic) NSMutableArray *mutable;
-
-- (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
-- (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
-- (id)safeObjectAtIndex:(NSUInteger)index;
-- (NSString *)safeStringAtIndex:(NSUInteger)index;
-- (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
-- (NSArray *)sortedArrayByKey:(NSString *)key;
-- (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
-
-@end
+#import "NSObject+CoreCode.h"
 
 
-@interface NSMutableArray (CoreCode)
+@implementation NSObject (CoreCode)
 
-@property (readonly, nonatomic) NSArray *immutable;
+- (void)setAssociatedValue:(id)value forKey:(NSString *)key
+{
+    objc_setAssociatedObject(self, (__bridge const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (id)associatedValueForKey:(NSString *)key
+{
+    return objc_getAssociatedObject(self, (__bridge const void *)(key));
+}
 
 @end

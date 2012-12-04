@@ -14,6 +14,8 @@
 
 @interface NSString (CoreCode)
 
+@property (readonly, nonatomic) NSMutableString *mutable;
+
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;

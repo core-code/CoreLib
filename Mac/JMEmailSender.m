@@ -82,7 +82,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	}
 	@catch (NSException *e)
 	{
-		asl_NSLog_debug(@"sendMailWithScriptingBridge, exception %@", [e description]);
+		asl_NSLog(ASL_LEVEL_WARNING, @"sendMailWithScriptingBridge, exception %@", [e description]);
 
 		return kScriptingBridgeFailure;
 	}

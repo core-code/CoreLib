@@ -15,6 +15,8 @@
 
 @implementation NSArray (CoreCode)
 
+@dynamic mutable;
+
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
 	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
@@ -72,4 +74,20 @@
 	return [self sortedArrayUsingDescriptors:[NSArray arrayWithObject:sd]];
 }
 
+- (NSMutableArray *)mutable
+{
+	return [NSMutableArray arrayWithArray:self];
+}
+
+@end
+
+
+@implementation  NSMutableArray (CoreCode)
+
+@dynamic immutable;
+
+- (NSArray *)immutable
+{
+	return [NSArray arrayWithArray:self];
+}
 @end

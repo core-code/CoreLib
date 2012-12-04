@@ -24,6 +24,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define HOSTINFORMATION_MACADDRESS 1
 
+#pragma GCC diagnostic ignored "-Wcast-align"
+
 static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices);
 static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress);
 

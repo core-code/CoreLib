@@ -12,6 +12,11 @@
 
 #ifdef __OBJC__
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wvariadic-macros"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+
+
 #import "NSString+CoreCode.h"
 #import "NSArray+CoreCode.h"
 
@@ -74,14 +79,6 @@ typedef void (^IntInBlock)(int input);
 #define _setdefaulti(i, key)	([[NSUserDefaults standardUserDefaults] setInteger:i forKey:key])
 #define _setdefaultf(f, key)	([[NSUserDefaults standardUserDefaults] setFloat:f forKey:key])
 #define _defaultsync			([[NSUserDefaults standardUserDefaults] synchronize])
-
-// mutability conversion convenience
-#define _md(dict)				((NSMutableDictionary *)[NSMutableDictionary dictionaryWithDictionary:(dict)])
-#define _ma(array)				((NSMutableArray *)[NSMutableArray arrayWithArray:array])
-#define _ms(str)				((NSMutableString *)[NSMutableString stringWithString:str])
-#define _d(dict)				((NSDictionary *)[NSDictionary dictionaryWithDictionary:dict])
-#define _a(array)				((NSArray *)[NSArray arrayWithArray:array])
-#define _s(str)					((NSString *)[NSString stringWithString:str])
 
 
 
@@ -149,5 +146,8 @@ extern aslclient client;
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
+
+
+#pragma clang diagnostic pop
 
 #endif

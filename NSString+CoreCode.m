@@ -87,4 +87,9 @@
     return s;
 }
 #endif
+
+- (NSMutableString *)mutable
+{
+	return [NSMutableString stringWithString:self];
+}
 @end

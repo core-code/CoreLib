@@ -18,6 +18,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define USING_SANDBOX		(OS_IS_POST_SNOW) && (SANDBOX)
 
+#pragma GCC diagnostic ignored "-Wunreachable-code"
 
 BOOL IsLoginItem_SM(void)
 {

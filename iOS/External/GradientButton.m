@@ -631,7 +631,7 @@
 
 - (id)initWithCoder:(NSCoder *)decoder 
 {
-    if (self = [super initWithCoder:decoder]) 
+    if ((self = [super initWithCoder:decoder])) 
     {
         [self setNormalGradientColors:[decoder decodeObjectForKey:@"normalGradientColors"]];
         [self setNormalGradientLocations:[decoder decodeObjectForKey:@"normalGradientLocations"]];
