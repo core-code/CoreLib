@@ -14,6 +14,7 @@
 @interface NSArray (CoreCode)
 
 @property (readonly, nonatomic) NSMutableArray *mutable;
+@property (readonly, nonatomic) BOOL empty;
 
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;

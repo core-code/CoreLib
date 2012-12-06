@@ -18,6 +18,11 @@
 
 @implementation NSString (CoreCode)
 
+@dynamic lines, trimmed, URL, fileURL, download, escapedURL;
+#ifdef STRING_SHA1
+@dynamic SHA1;
+#endif
+
 - (NSUInteger)countOccurencesOfString:(NSString *)str
 {
     return [[self componentsSeparatedByString:str] count] - 1;
@@ -31,6 +36,25 @@
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive
 {
 	return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
+}
+
+- (NSURL *)URL
+{
+	return [NSURL URLWithString:self];
+}
+
+- (NSURL *)escapedURL
+{
+#if  __has_feature(objc_arc)
+	return [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8))];
+#else
+	return [NSURL URLWithString:[(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)path, NULL, NULL, kCFStringEncodingUTF8) autorelease]];
+#endif
+}
+
+- (NSURL *)fileURL
+{
+	return [NSURL fileURLWithPath:self];
 }
 
 - (NSArray *)lines
@@ -62,7 +86,7 @@
 
 - (NSData *)download
 {
-	NSData *d = [[NSData alloc] initWithContentsOfURL:_url(self)];
+	NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
 #if ! __has_feature(objc_arc)
 	[d autorelease];
 #endif
@@ -70,7 +94,7 @@
 }
 
 #ifdef STRING_SHA1
-- (NSString *)sha1
+- (NSString *)SHA1
 {
 	const char *cStr = [self UTF8String];
 	unsigned char result[CC_SHA1_DIGEST_LENGTH];

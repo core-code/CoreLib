@@ -14,18 +14,22 @@
 
 @interface NSString (CoreCode)
 
+@property (readonly, nonatomic) NSURL *fileURL;
+@property (readonly, nonatomic) NSURL *URL;
+@property (readonly, nonatomic) NSURL *escapedURL;
+@property (readonly, nonatomic) NSArray *lines;
+@property (readonly, nonatomic) NSString *trimmed;
+@property (readonly, nonatomic) NSData *download;
 @property (readonly, nonatomic) NSMutableString *mutable;
+#ifdef STRING_SHA1
+@property (readonly, nonatomic) NSString *SHA1;
+#endif
 
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
-- (NSString *)trimmed;
-- (NSArray *)lines;
-- (NSData *)download;
 
-#ifdef STRING_SHA1
-- (NSString *)sha1;
-#endif
+
 @end

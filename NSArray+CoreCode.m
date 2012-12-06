@@ -15,7 +15,7 @@
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutable;
+@dynamic mutable, empty;
 
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
@@ -79,6 +79,10 @@
 	return [NSMutableArray arrayWithArray:self];
 }
 
+- (BOOL)empty
+{
+	return [self count] == 0;
+}
 @end
 
 

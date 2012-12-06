@@ -52,6 +52,7 @@ typedef void (^IntInBlock)(int input);
 // info bundle key convenience
 #define _appbundleid			([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
 #define _appname				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
+#define _appversion				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 
 // path convenience
 #define _docdir					([@"~/Documents/" stringByExpandingTildeInPath])
@@ -62,7 +63,6 @@ typedef void (^IntInBlock)(int input);
 
 // obj creation convenience
 #define _predf(format...)		([NSPredicate predicateWithFormat:format])
-#define _url(x)					((NSURL *)[NSURL URLWithString:(x)])
 #define _stringcu8(x)			((NSString *)[NSString stringWithUTF8String:x])
 #define _stringf(format...)		((NSString *)[NSString stringWithFormat:format])
 #define _mstringf(format...)	((NSMutableString *)[NSMutableString stringWithFormat:format])
