@@ -23,7 +23,8 @@
 #import "NSFileHandle+CoreCode.h"
 #import "NSObject+CoreCode.h"
 #import "NSString+CoreCode.h"
-
+#import "NSLocale+CoreCode.h"
+#import "NSDate+CoreCode.h"
 
 // basic block types
 #ifdef __BLOCKS__

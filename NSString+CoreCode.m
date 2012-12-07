@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic lines, trimmed, URL, fileURL, download, escapedURL;
+@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized;
 #ifdef STRING_SHA1
 @dynamic SHA1;
 #endif
@@ -36,6 +36,21 @@
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive
 {
 	return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
+}
+
+- (NSString *)localized
+{
+	return NSLocalizedString(self, nil);
+}
+
+- (NSString *)resourcePath
+{
+	return [[NSBundle mainBundle] pathForResource:self ofType:nil];
+}
+
+- (NSURL *)resourceURL
+{
+	return [[NSBundle mainBundle] URLForResource:self withExtension:nil];
 }
 
 - (NSURL *)URL

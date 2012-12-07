@@ -1,8 +1,8 @@
 //
-//  NSString+CoreCode.h
+//  NSLocale+CoreCode.h
 //  CoreLib
 //
-//  Created by CoreCode on 15.03.12.
+//  Created by CoreCode on 07.12.12.
 /*	Copyright (c) 2012 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -10,29 +10,10 @@
  */
 
 
-#define STRING_SHA1 1
 
-@interface NSString (CoreCode)
+@interface NSLocale (CoreCode)
 
-@property (readonly, nonatomic) NSString *localized;
-@property (readonly, nonatomic) NSString *resourcePath;
-@property (readonly, nonatomic) NSURL *resourceURL;
-@property (readonly, nonatomic) NSURL *fileURL;
-@property (readonly, nonatomic) NSURL *URL;
-@property (readonly, nonatomic) NSURL *escapedURL;
-@property (readonly, nonatomic) NSArray *lines;
-@property (readonly, nonatomic) NSString *trimmed;
-@property (readonly, nonatomic) NSData *download;
-@property (readonly, nonatomic) NSMutableString *mutable;
-#ifdef STRING_SHA1
-@property (readonly, nonatomic) NSString *SHA1;
-#endif
-
-- (NSUInteger)countOccurencesOfString:(NSString *)str;
-- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
-- (BOOL)contains:(NSString *)otherString;
-- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
-- (NSString *)clamp:(NSUInteger)maximumLength;
-
++ (NSArray *)preferredLanguages3Letter;
 
 @end
+
