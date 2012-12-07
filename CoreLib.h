@@ -17,8 +17,13 @@
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
 
 
-#import "NSString+CoreCode.h"
 #import "NSArray+CoreCode.h"
+#import "NSData+CoreCode.h"
+#import "NSDictionary+CoreCode.h"
+#import "NSFileHandle+CoreCode.h"
+#import "NSObject+CoreCode.h"
+#import "NSString+CoreCode.h"
+
 
 // basic block types
 #ifdef __BLOCKS__
@@ -51,6 +56,7 @@ typedef void (^IntInBlock)(int input);
 
 // info bundle key convenience
 #define _appbundleid			([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
+#define _appbundleversion		([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"])
 #define _appname				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
 #define _appversion				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 
@@ -87,9 +93,11 @@ static inline NSString * unique(NSString *filename)
 	if (![[NSFileManager defaultManager] fileExistsAtPath:filename])	return filename;
 	else
 	{
+		NSString *ext = [filename pathExtension];
+		NSString *namewithoutext = [filename stringByDeletingPathExtension];
 		int i = 0;
-		while ([[NSFileManager defaultManager] fileExistsAtPath:_stringf(@"%@-%i", filename, i)]) i++;
-		return _stringf(@"%@-%i", filename, i);
+		while ([[NSFileManager defaultManager] fileExistsAtPath:_stringf(@"%@-%i.%@", namewithoutext, i,ext)]) i++;
+		return _stringf(@"%@-%i.%@", namewithoutext, i,ext);
 	}
 }
 
