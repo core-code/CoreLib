@@ -19,7 +19,7 @@
 
 - (NSMutableDictionary *)mutable
 {
-	return [NSMutableDictionary dictionaryWithDict:self];
+	return [NSMutableDictionary dictionaryWithDictionary:self];
 }
 @end
 
@@ -30,6 +30,6 @@
 
 - (NSDictionary *)immutable
 {
-	return [NSDictionary dictionaryWithDict:self];
+	return [NSDictionary dictionaryWithDictionary:self];
 }
 @end
