@@ -33,6 +33,7 @@
 - (BOOL)contains:(NSString *)otherString;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
+//- (NSString *)arg:(id)arg, ...;
 
 
 @end

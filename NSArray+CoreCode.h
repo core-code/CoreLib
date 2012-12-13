@@ -18,6 +18,8 @@
 
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
+- (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
+
 - (id)safeObjectAtIndex:(NSUInteger)index;
 - (NSString *)safeStringAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;

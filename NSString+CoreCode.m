@@ -63,7 +63,7 @@
 #if  __has_feature(objc_arc)
 	return [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8))];
 #else
-	return [NSURL URLWithString:[(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)path, NULL, NULL, kCFStringEncodingUTF8) autorelease]];
+	return [NSURL URLWithString:[(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8) autorelease]];
 #endif
 }
 
@@ -131,4 +131,21 @@
 {
 	return [NSMutableString stringWithString:self];
 }
+
+//- (NSString *)arg:(id)arg, ...
+//{
+//	va_list args;
+//	void *stackLocal = (__bridge void *)(arg);
+//	struct __va_list_tag *stackLocal2 = stackLocal;
+//    va_start(args, arg);
+//
+//    NSString *result = [[NSString alloc] initWithFormat:self arguments:stackLocal2];
+//    va_end(args);
+//	
+//#if ! __has_feature(objc_arc)
+//	[d result];
+//#endif
+//	return result;
+//}
+
 @end

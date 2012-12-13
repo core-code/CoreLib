@@ -26,6 +26,15 @@
 	return [NSArray arrayWithArray:array];
 }
 
+- (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet
+{
+	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+	
+	[array removeObjectsAtIndexes:indexSet];
+	
+	return [NSArray arrayWithArray:array];
+}
+
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index
 {
 	NSMutableArray *array = [NSMutableArray arrayWithArray:self];

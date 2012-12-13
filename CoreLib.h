@@ -42,6 +42,7 @@ typedef void (^IntInBlock)(int input);
 	static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...)
 	{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton); }
 	#define _alert(format...)	(alert(format))
+	#define  _appcrashes			([[_dir_contents([@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]) arrayByAddingObjectsFromArray:_dir_contents(@"/Library/Logs/DiagnosticReports/")] filteredArrayUsingPredicate:_predf(@"self BEGINSWITH[cd] %@", _appname)])
 #else
 	#define _appfile(x,y)		([[NSFileManager defaultManager] fileExistsAtPath:[_stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath]] ? [_stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath] : [[NSBundle mainBundle] pathForResource:(x) ofType:(y)])
 #endif
@@ -67,6 +68,7 @@ typedef void (^IntInBlock)(int input);
 #define _dir_contents(x)		([[NSFileManager defaultManager] contentsOfDirectoryAtPath:(x) error:NULL])
 #define _dir_contents_rec(x)	([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:(x) error:NULL])
 #define _unique_file(file)		(unique(file))
+#define _unique_url(url)		(unique([url path]).fileURL)
 
 // obj creation convenience
 #define _predf(format...)		([NSPredicate predicateWithFormat:format])
