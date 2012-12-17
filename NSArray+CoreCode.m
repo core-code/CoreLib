@@ -92,6 +92,29 @@
 {
 	return [self count] == 0;
 }
+
+- (NSArray *)map:(ObjectInOutBlock)block
+{
+    NSMutableArray *resultArray = [NSMutableArray new];
+    
+    for (id object in self)
+        [resultArray addObject:block(object)];
+
+    
+    return resultArray.immutable;
+}
+
+- (NSArray *)filter:(ObjectInIntOutBlock)block
+{
+    NSMutableArray *resultArray = [NSMutableArray new];
+    
+    for (id object in self)
+        if (block(object))
+            [resultArray addObject:object];
+    
+    
+    return resultArray.immutable;
+}
 @end
 
 

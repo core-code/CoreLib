@@ -16,6 +16,19 @@
 #pragma clang diagnostic ignored "-Wvariadic-macros"
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
 
+// basic block types
+#ifdef __BLOCKS__
+typedef void (^BasicBlock)(void);
+typedef void (^DoubleInBlock)(double input);
+typedef void (^StringInBlock)(NSString *input);
+typedef id (^ObjectInOutBlock)(id input);
+typedef int (^ObjectInIntOutBlock)(id input);
+typedef BOOL (^BoolOutBlock)(void);
+typedef int (^IntInOutBlock)(int input);
+typedef void (^IntInBlock)(int input);
+#endif
+
+
 
 #import "NSArray+CoreCode.h"
 #import "NSData+CoreCode.h"
@@ -25,17 +38,6 @@
 #import "NSString+CoreCode.h"
 #import "NSLocale+CoreCode.h"
 #import "NSDate+CoreCode.h"
-
-// basic block types
-#ifdef __BLOCKS__
-typedef void (^BasicBlock)(void);
-typedef void (^DoubleInBlock)(double input);
-typedef void (^StringInBlock)(NSString *input);
-typedef BOOL (^BoolOutBlock)(void);
-typedef int (^IntInOutBlock)(int input);
-typedef void (^IntInBlock)(int input);
-#endif
-
 
 // platform dependent convenience stuff
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

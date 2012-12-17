@@ -10,7 +10,6 @@
  */
 
 
-
 @interface NSArray (CoreCode)
 
 @property (readonly, nonatomic) NSMutableArray *mutable;
@@ -19,12 +18,13 @@
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
-
 - (id)safeObjectAtIndex:(NSUInteger)index;
 - (NSString *)safeStringAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
 - (NSArray *)sortedArrayByKey:(NSString *)key;
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
+- (NSArray *)map:(ObjectInOutBlock)block;
+- (NSArray *)filter:(ObjectInIntOutBlock)block;
 
 @end
 
