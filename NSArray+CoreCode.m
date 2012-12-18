@@ -143,7 +143,6 @@
 	[task setStandardOutput:taskPipe];
 	[task setStandardError:taskPipe];
 	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
-	LOG([task arguments]);
 	[task launch];
 	[task waitUntilExit];
 	

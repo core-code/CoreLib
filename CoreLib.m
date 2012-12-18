@@ -17,10 +17,11 @@ CoreLib *cc;
 
 - (id)init
 {
+	assert(!cc);
 	if ((self = [super init]))
-		if (!cc.suppURL.fileExists)
-			[[NSFileManager defaultManager] createDirectoryAtURL:cc.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
-	
+		if (!self.suppURL.fileExists)
+			[[NSFileManager defaultManager] createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
+	cc = self;
 	return self;
 }
 
