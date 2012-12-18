@@ -15,7 +15,7 @@
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutable, empty;
+@dynamic mutable, empty, count;
 
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
@@ -93,7 +93,7 @@
 	return [self count] == 0;
 }
 
-- (NSArray *)map:(ObjectInOutBlock)block
+- (NSArray *)mapped:(ObjectInOutBlock)block
 {
     NSMutableArray *resultArray = [NSMutableArray new];
     
@@ -104,7 +104,7 @@
     return resultArray.immutable;
 }
 
-- (NSArray *)filter:(ObjectInIntOutBlock)block
+- (NSArray *)filtered:(ObjectInIntOutBlock)block
 {
     NSMutableArray *resultArray = [NSMutableArray new];
     
@@ -114,6 +114,47 @@
     
     
     return resultArray.immutable;
+}
+
+- (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
+{
+    for (id object in self)
+		block(object);
+}
+
+// forwards for less typing
+- (NSString *)joined:(NSString *)sep							// componentsJoinedByString:
+{
+	return [self componentsJoinedByString:sep];
+}
+
+- (NSString *)runAsTask
+{
+	return [self runAsTaskWithTerminationStatus:NULL];
+}
+
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus
+{
+	NSTask *task = [[NSTask alloc] init];
+	NSPipe *taskPipe = [NSPipe pipe];
+	NSFileHandle *file = [taskPipe fileHandleForReading];
+	
+	[task setLaunchPath:[self objectAtIndex:0]];
+	[task setStandardOutput:taskPipe];
+	[task setStandardError:taskPipe];
+	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
+	LOG([task arguments]);
+	[task launch];
+	[task waitUntilExit];
+	
+	NSData *data = [file readDataToEndOfFile];
+	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	
+	
+	if (terminationStatus)
+		(*terminationStatus) = [task terminationStatus];
+	
+	return string;
 }
 @end
 

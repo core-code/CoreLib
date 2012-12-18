@@ -14,6 +14,19 @@
 
 @interface NSString (CoreCode)
 
+// filesystem support
+@property (readonly, nonatomic) NSArray *dirContents;
+@property (readonly, nonatomic) NSArray *dirContentsRecursive;
+@property (readonly, nonatomic) NSString *uniqueFile;
+@property (readonly, nonatomic) BOOL fileExists;
+
+// NSUserDefaults support
+@property (assign, nonatomic) id defaultObj;
+@property (assign, nonatomic) NSString *defaultString;
+@property (assign, nonatomic) NSInteger defaultInt;
+@property (assign, nonatomic) float defaultFloat;
+@property (assign, nonatomic) NSURL *defaultURL;
+
 @property (readonly, nonatomic) NSString *localized;
 @property (readonly, nonatomic) NSString *resourcePath;
 @property (readonly, nonatomic) NSURL *resourceURL;
@@ -22,11 +35,15 @@
 @property (readonly, nonatomic) NSURL *escapedURL;
 @property (readonly, nonatomic) NSArray *lines;
 @property (readonly, nonatomic) NSString *trimmed;
+@property (readonly, nonatomic) NSString *expanded;
 @property (readonly, nonatomic) NSData *download;
 @property (readonly, nonatomic) NSMutableString *mutable;
 #ifdef STRING_SHA1
 @property (readonly, nonatomic) NSString *SHA1;
 #endif
+
+@property (readonly, nonatomic) NSUInteger length;
+
 
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
@@ -35,5 +52,8 @@
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
 
+// forwards for less typing
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;	// stringByReplacingOccurencesOfString:withString:
+- (NSArray *)split:(NSString *)sep;								// componentsSeparatedByString:
 
 @end

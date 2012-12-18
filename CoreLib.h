@@ -21,6 +21,7 @@
 typedef void (^BasicBlock)(void);
 typedef void (^DoubleInBlock)(double input);
 typedef void (^StringInBlock)(NSString *input);
+typedef void (^ObjectInBlock)(id input);
 typedef id (^ObjectInOutBlock)(id input);
 typedef int (^ObjectInIntOutBlock)(id input);
 typedef BOOL (^BoolOutBlock)(void);
@@ -31,6 +32,7 @@ typedef void (^IntInBlock)(int input);
 
 
 #import "NSArray+CoreCode.h"
+#import "NSURL+CoreCode.h"
 #import "NSData+CoreCode.h"
 #import "NSDictionary+CoreCode.h"
 #import "NSFileHandle+CoreCode.h"
@@ -39,15 +41,29 @@ typedef void (^IntInBlock)(int input);
 #import "NSLocale+CoreCode.h"
 #import "NSDate+CoreCode.h"
 
-// platform dependent convenience stuff
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, ...)
-	{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton); }
-	#define _alert(format...)	(alert(format))
-	#define  _appcrashes			([[_dir_contents([@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]) arrayByAddingObjectsFromArray:_dir_contents(@"/Library/Logs/DiagnosticReports/")] filteredArrayUsingPredicate:_predf(@"self BEGINSWITH[cd] %@", _appname)])
-#else
-	#define _appfile(x,y)		([[NSFileManager defaultManager] fileExistsAtPath:[_stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath]] ? [_stringf(@"~/Documents/%@.%@", (x), (y)) stringByExpandingTildeInPath] : [[NSBundle mainBundle] pathForResource:(x) ofType:(y)])
-#endif
+
+@interface CoreLib : NSObject
+
+@property (readonly, nonatomic) NSArray *appCrashLogs;
+
+// info bundle key convenience
+@property (readonly, nonatomic) NSString *appID;
+@property (readonly, nonatomic) int appVersion;
+@property (readonly, nonatomic) NSString *appVersionString;
+@property (readonly, nonatomic) NSString *appName;
+
+// path convenience
+@property (readonly, nonatomic) NSString *resDir;
+@property (readonly, nonatomic) NSString *docDir;
+@property (readonly, nonatomic) NSString *suppDir;
+@property (readonly, nonatomic) NSURL *resURL;
+@property (readonly, nonatomic) NSURL *docURL;
+@property (readonly, nonatomic) NSURL *suppURL;
+
+@end
+
+
+extern CoreLib *cc;
 
 // platform independent color convenience
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -58,53 +74,12 @@ typedef void (^IntInBlock)(int input);
 	#define _color255(r,g,b,a)	([UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
 #endif
 
-// info bundle key convenience
-#define _appbundleid			([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"])
-#define _appbundleversion		([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"])
-#define _appname				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"])
-#define _appversion				([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
-
-// path convenience
-#define _docdir					([@"~/Documents/" stringByExpandingTildeInPath])
-#define _appsuppdir				([[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:_appname])
-#define _dir_contents(x)		([[NSFileManager defaultManager] contentsOfDirectoryAtPath:(x) error:NULL])
-#define _dir_contents_rec(x)	([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:(x) error:NULL])
-#define _unique_file(file)		(unique(file))
-#define _unique_url(url)		(unique([url path]).fileURL)
 
 // obj creation convenience
 #define _predf(format...)		([NSPredicate predicateWithFormat:format])
-#define _stringcu8(x)			((NSString *)[NSString stringWithUTF8String:x])
 #define _stringf(format...)		((NSString *)[NSString stringWithFormat:format])
 #define _mstringf(format...)	((NSMutableString *)[NSMutableString stringWithFormat:format])
 
-// nsuserdefaults convenience
-#define _default(key)			([[NSUserDefaults standardUserDefaults] objectForKey:key])
-#define _defaults(key)			([[NSUserDefaults standardUserDefaults] stringForKey:key])
-#define _defaultu(key)			([[NSUserDefaults standardUserDefaults] URLForKey:key])
-#define _defaulti(key)			([[NSUserDefaults standardUserDefaults] integerForKey:key])
-#define _defaultf(key)			([[NSUserDefaults standardUserDefaults] floatForKey:key])
-#define _remdefault(key)		([[NSUserDefaults standardUserDefaults] removeObjectForKey:key])
-#define _setdefault(o, key)		([[NSUserDefaults standardUserDefaults] setObject:o forKey:key])
-#define _setdefaultu(o, key)	([[NSUserDefaults standardUserDefaults] setURL:o forKey:key])
-#define _setdefaulti(i, key)	([[NSUserDefaults standardUserDefaults] setInteger:i forKey:key])
-#define _setdefaultf(f, key)	([[NSUserDefaults standardUserDefaults] setFloat:f forKey:key])
-#define _defaultsync			([[NSUserDefaults standardUserDefaults] synchronize])
-
-
-
-static inline NSString * unique(NSString *filename)
-{
-	if (![[NSFileManager defaultManager] fileExistsAtPath:filename])	return filename;
-	else
-	{
-		NSString *ext = [filename pathExtension];
-		NSString *namewithoutext = [filename stringByDeletingPathExtension];
-		int i = 0;
-		while ([[NSFileManager defaultManager] fileExistsAtPath:_stringf(@"%@-%i.%@", namewithoutext, i,ext)]) i++;
-		return _stringf(@"%@-%i.%@", namewithoutext, i,ext);
-	}
-}
 
 // custom template collections: lets you define custom types for collection classes that so that the compiler knows what type they return
 #define CUSTOM_ARRAY(classname) \
@@ -125,18 +100,24 @@ static inline NSString * unique(NSString *filename)
 @end
 
 
+// for easy const key generation
+#define CONST_KEY(name) \
+NSString *const k ## name ## Key = @ #name;
+
+#define CONST_KEY_CUSTOM(key, value) \
+NSString *const key = @ #value;
+
+
 // logging support
 #include <asl.h>
-
 extern aslclient client;
-
 #define asl_NSLog(level, format, ...) asl_log(client, NULL, level, "%s", [[NSString stringWithFormat:format, ##__VA_ARGS__] UTF8String])
-
 #ifdef DEBUG
 	#define asl_NSLog_debug(format, ...) asl_log(client, NULL, ASL_LEVEL_DEBUG, "%s", [[NSString stringWithFormat:format, ##__VA_ARGS__] UTF8String])
 #else
 	#define asl_NSLog_debug(format, ...) 
 #endif
+
 
 // old sdk support
 #ifndef NSAppKitVersionNumber10_6
@@ -148,6 +129,7 @@ extern aslclient client;
 #ifndef NSAppKitVersionNumber10_8
     #define NSAppKitVersionNumber10_8 1187
 #endif
+
 
 // convenience macros
 #define LOGSUCC				NSLog(@"success")

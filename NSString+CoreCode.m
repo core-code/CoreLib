@@ -18,10 +18,38 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized;
+@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length;
 #ifdef STRING_SHA1
 @dynamic SHA1;
 #endif
+
+- (NSArray *)dirContents
+{
+	return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self error:NULL];
+}
+
+- (NSArray *)dirContentsRecursive
+{
+	return [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:self error:NULL];
+}
+
+- (NSString *)uniqueFile
+{
+	if (![[NSFileManager defaultManager] fileExistsAtPath:self])	return self;
+	else
+	{
+		NSString *ext = [self pathExtension];
+		NSString *namewithoutext = [self stringByDeletingPathExtension];
+		int i = 0;
+		while ([[NSFileManager defaultManager] fileExistsAtPath:_stringf(@"%@-%i.%@", namewithoutext, i,ext)]) i++;
+		return _stringf(@"%@-%i.%@", namewithoutext, i,ext);
+	}
+}
+
+- (BOOL)fileExists
+{
+	return [[NSFileManager defaultManager] fileExistsAtPath:self];
+}
 
 - (NSUInteger)countOccurencesOfString:(NSString *)str
 {
@@ -61,7 +89,7 @@
 - (NSURL *)escapedURL
 {
 #if  __has_feature(objc_arc)
-	return [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8))];
+	return [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8))];
 #else
 	return [NSURL URLWithString:[(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8) autorelease]];
 #endif
@@ -70,6 +98,11 @@
 - (NSURL *)fileURL
 {
 	return [NSURL fileURLWithPath:self];
+}
+
+- (NSString *)expanded
+{
+	return [self stringByExpandingTildeInPath];
 }
 
 - (NSArray *)lines
@@ -131,6 +164,67 @@
 {
 	return [NSMutableString stringWithString:self];
 }
+
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2	// stringByReplacingOccurencesOfString:withString:
+{
+	return [self stringByReplacingOccurrencesOfString:str1 withString:str2];
+}
+
+- (NSArray *)split:(NSString *)sep								// componentsSeparatedByString:
+{
+	return [self componentsSeparatedByString:sep];
+}
+
+- (id)defaultObj
+{
+	return [[NSUserDefaults standardUserDefaults] objectForKey:self];
+}
+
+- (void)setDefaultObj:(id)newDefault
+{
+	return [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (NSString *)defaultString
+{
+	return [[NSUserDefaults standardUserDefaults] stringForKey:self];
+}
+
+- (void)setDefaultString:(NSString *)newDefault
+{
+	return [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (NSURL *)defaultURL
+{
+	return [[NSUserDefaults standardUserDefaults] URLForKey:self];
+}
+
+- (void)setDefaultURL:(NSURL *)newDefault
+{
+	return [[NSUserDefaults standardUserDefaults] setURL:newDefault forKey:self];
+}
+
+- (NSInteger)defaultInt
+{
+	return [[NSUserDefaults standardUserDefaults] integerForKey:self];
+}
+
+- (void)setDefaultInt:(NSInteger)newDefault
+{
+	return [[NSUserDefaults standardUserDefaults] setInteger:newDefault forKey:self];
+}
+
+- (float)defaultFloat
+{
+	return [[NSUserDefaults standardUserDefaults] floatForKey:self];
+}
+
+- (void)setDefaultFloat:(float)newDefault
+{
+	return [[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
+}
+
 
 //- (NSString *)arg:(id)arg, ...
 //{

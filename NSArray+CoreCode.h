@@ -23,8 +23,20 @@
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
 - (NSArray *)sortedArrayByKey:(NSString *)key;
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
-- (NSArray *)map:(ObjectInOutBlock)block;
-- (NSArray *)filter:(ObjectInIntOutBlock)block;
+
+- (NSString *)runAsTask;
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
+
+- (NSArray *)mapped:(ObjectInOutBlock)block;
+- (NSArray *)filtered:(ObjectInIntOutBlock)block;
+
+// versions similar to cocoa methods
+- (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
+
+// forwards for less typing
+- (NSString *)joined:(NSString *)sep;							// componentsJoinedByString:
+
+@property (readonly, nonatomic) NSUInteger count;
 
 @end
 
