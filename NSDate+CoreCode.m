@@ -19,7 +19,12 @@
 {
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	[df setDateFormat:@"MMM d yyyy"];
-	[df setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
+	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+	[df setLocale:l];
+#if ! __has_feature(objc_arc)
+	[l release];
+	[df autorelease];
+#endif
 	return [df dateFromString:[NSString stringWithUTF8String:preprocessorDateString]];
 }
 

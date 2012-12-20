@@ -41,8 +41,8 @@
 		NSString *ext = [self pathExtension];
 		NSString *namewithoutext = [self stringByDeletingPathExtension];
 		int i = 0;
-		while ([[NSFileManager defaultManager] fileExistsAtPath:_stringf(@"%@-%i.%@", namewithoutext, i,ext)]) i++;
-		return _stringf(@"%@-%i.%@", namewithoutext, i,ext);
+		while ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]]) i++;
+		return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
 	}
 }
 
@@ -182,7 +182,7 @@
 
 - (void)setDefaultObj:(id)newDefault
 {
-	return [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
 }
 
 - (NSString *)defaultString
@@ -192,7 +192,7 @@
 
 - (void)setDefaultString:(NSString *)newDefault
 {
-	return [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
 }
 
 - (NSURL *)defaultURL
@@ -202,7 +202,7 @@
 
 - (void)setDefaultURL:(NSURL *)newDefault
 {
-	return [[NSUserDefaults standardUserDefaults] setURL:newDefault forKey:self];
+	[[NSUserDefaults standardUserDefaults] setURL:newDefault forKey:self];
 }
 
 - (NSInteger)defaultInt
@@ -212,7 +212,7 @@
 
 - (void)setDefaultInt:(NSInteger)newDefault
 {
-	return [[NSUserDefaults standardUserDefaults] setInteger:newDefault forKey:self];
+	[[NSUserDefaults standardUserDefaults] setInteger:newDefault forKey:self];
 }
 
 - (float)defaultFloat
@@ -222,7 +222,7 @@
 
 - (void)setDefaultFloat:(float)newDefault
 {
-	return [[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
+	[[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
 }
 
 

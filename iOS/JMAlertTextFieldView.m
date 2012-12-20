@@ -11,6 +11,18 @@
 
 #import "JMAlertTextFieldView.h"
 
+@interface JMAlertTextFieldView ()
+{
+    StringInBlock cancelBlock;
+    StringInBlock otherBlock;
+    
+    UITextField *textField;
+}
+@end
+
+
+
+
 @implementation JMAlertTextFieldView
 
 @synthesize otherBlock, cancelBlock;

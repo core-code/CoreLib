@@ -14,10 +14,6 @@
 
 
 @interface JMAlertView : UIAlertView <UIAlertViewDelegate>
-{
-    BasicBlock cancelBlock;  
-    BasicBlock otherBlock;  
-}
 
 @property (copy, nonatomic) BasicBlock cancelBlock;
 @property (copy, nonatomic) BasicBlock otherBlock;

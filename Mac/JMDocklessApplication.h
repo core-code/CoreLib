@@ -10,10 +10,7 @@
  */
 
 
-
 @interface JMDocklessApplication : NSApplication 
-{
 
-}
 
 @end

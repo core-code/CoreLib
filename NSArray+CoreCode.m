@@ -100,6 +100,9 @@
     for (id object in self)
         [resultArray addObject:block(object)];
 
+#if ! __has_feature(objc_arc)
+	[resultArray autorelease];
+#endif
     
     return resultArray.immutable;
 }
@@ -111,12 +114,15 @@
     for (id object in self)
         if (block(object))
             [resultArray addObject:object];
-    
+	
+#if ! __has_feature(objc_arc)
+	[resultArray autorelease];
+#endif
     
     return resultArray.immutable;
 }
 
-- (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
+- (void)apply:(ObjectInBlock)block								// enumerateObjectsUsingBlock:
 {
     for (id object in self)
 		block(object);
@@ -128,6 +134,7 @@
 	return [self componentsJoinedByString:sep];
 }
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
 	return [self runAsTaskWithTerminationStatus:NULL];
@@ -153,8 +160,14 @@
 	if (terminationStatus)
 		(*terminationStatus) = [task terminationStatus];
 	
+#if ! __has_feature(objc_arc)
+	[task release];
+	[string autorelease];
+#endif
+	
 	return string;
 }
+#endif
 @end
 
 

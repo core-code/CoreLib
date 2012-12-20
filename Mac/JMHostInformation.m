@@ -22,13 +22,19 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <SystemConfiguration/SystemConfiguration.h>
 #include <IOKit/storage/IOMedia.h>
 
-#define HOSTINFORMATION_MACADDRESS 1
+
+#if ! __has_feature(objc_arc)
+#define BRIDGE
+#else
+#define BRIDGE __bridge
+#endif
 
 #pragma GCC diagnostic ignored "-Wcast-align"
 
+#ifdef USE_IOKIT
 static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices);
 static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress);
-
+#endif
 
 @implementation JMHostInformation
 
@@ -49,7 +55,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	return url;
 }
 
-#ifdef HOSTINFORMATION_MACADDRESS
+#ifdef USE_IOKIT
 + (NSString *)macAddress
 {
 	NSString *result = @"";
@@ -192,12 +198,16 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	return ipv6 ? @"::1" : @"127.0.0.1";
 }
 
+#ifdef USE_SYSTEMCONFIGURATION
 + (NSString *)ipName
 {
 	//return [[NSHost currentHost] name]; // [NSHost currentHost]  broken
 
 	SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"SMARTReporter", NULL, NULL);
-    NSString *hostname = [(NSString *)SCDynamicStoreCopyLocalHostName(dynRef) autorelease];
+    NSString *hostname = (BRIDGE NSString *)SCDynamicStoreCopyLocalHostName(dynRef);
+#if ! __has_feature(objc_arc)
+	[hostname autorelease];
+#endif
     CFRelease(dynRef);
 
     if (hostname)
@@ -205,6 +215,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	else
 		return @"";
 }
+#endif
 
 + (NSString *)machineType
 {
@@ -261,13 +272,15 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 		NSMutableDictionary *diskDict = [NSMutableDictionary dictionary];
 
 		[diskDict setObject:num forKey:kDiskNumberKey];
-		[diskDict setObject:((detail) ? _stringf(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
+		[diskDict setObject:((detail) ? makeString(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
 		
 		asl_NSLog_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
 		
 		[array addObject:diskDict];
 	}
 }
+
+#ifdef USE_DISKARBITRATION
 
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
@@ -343,8 +356,10 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 			{
 				if ((char *)volumeParms.vMDeviceID != NULL)
 				{
-					NSURL *mountURL = [(NSURL *)CFURLCreateFromFSRef(NULL, &volumeFSRef) autorelease];
-
+					NSURL *mountURL = (BRIDGE NSURL *)CFURLCreateFromFSRef(NULL, &volumeFSRef);
+#if ! __has_feature(objc_arc)
+					[mountURL autorelease];
+#endif
 					// This code is just to convert the volume name from a HFSUniCharStr to
 					// a plain C string so we can print it with printf. It'd be preferable to
 					// use CoreFoundation to work with the volume name in its Unicode form.
@@ -354,11 +369,13 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																	 volumeName.unicode,
 																	 volumeName.length);
                     
+#if ! __has_feature(objc_arc)
 					[(NSString *)volNameAsCFString autorelease];
+#endif
                     //NSLog((NSString *)volNameAsCFString);
-					asl_NSLog_debug(@"mountedHarddisks found IOKit name %@", (NSString *)volNameAsCFString);
+					asl_NSLog_debug(@"mountedHarddisks found IOKit name %@", (BRIDGE NSString *)volNameAsCFString);
 
-                    if ([volumeNamesToIgnore indexOfObject:(NSString *)volNameAsCFString] == NSNotFound &&
+                    if ([volumeNamesToIgnore indexOfObject:(BRIDGE NSString *)volNameAsCFString] == NSNotFound &&
 						[volumePathsToIgnore indexOfObject:[mountURL path]] == NSNotFound) // not removable
                     {
 						
@@ -377,7 +394,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
                             if ([[disk objectForKey:kDiskNumberKey] integerValue] == bsdNum)
                             {
                                 NSString *currentName = [disk objectForKey:kDiskNameKey];
-                                [disk setObject:[currentName stringByAppendingFormat:@", %@", (NSString *)volNameAsCFString] forKey:kDiskNameKey];
+                                [disk setObject:[currentName stringByAppendingFormat:@", %@", (BRIDGE NSString *)volNameAsCFString] forKey:kDiskNameKey];
                                 found = TRUE;
                             }
                         }
@@ -389,10 +406,14 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 							
 							if (includeRAIDBackingDevices)
 							{
-								NSString *bsdname = _stringf(@"/dev/disk%li", bsdNum);
+								NSString *bsdname = [NSString stringWithFormat:@"/dev/disk%li", bsdNum];
 								
 								DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdname UTF8String]);
-								NSDictionary *props = [(NSDictionary *)DADiskCopyDescription(disk) autorelease];
+								NSDictionary *props = (BRIDGE NSDictionary *)DADiskCopyDescription(disk);
+#if ! __has_feature(objc_arc)
+								[props autorelease];
+#endif
+								
 								CFRelease(disk);
 								disk = NULL;
 								
@@ -402,11 +423,15 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 								{
 									asl_NSLog_debug(@"mountedHarddisks found props %@", bsdName);
 
-									CFUUIDRef DAMediaUUID = (CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
+									CFUUIDRef DAMediaUUID = (BRIDGE CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
 									if (DAMediaUUID)
 									{
 
-										NSString *uuid = [(NSString *)CFUUIDCreateString(kCFAllocatorDefault, DAMediaUUID) autorelease];
+										NSString *uuid = (BRIDGE NSString *)CFUUIDCreateString(kCFAllocatorDefault, DAMediaUUID);
+#if ! __has_feature(objc_arc)
+										[uuid autorelease];
+#endif
+										
 										asl_NSLog_debug(@"mountedHarddisks found UUID %@ %@", bsdName, uuid);
 
 
@@ -429,8 +454,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 													CFTypeRef	ourUUID = IORegistryEntryCreateCFProperty(object, CFSTR(kIOMediaUUIDKey), kCFAllocatorDefault, 0);
 													if (ourUUID)
 													{
-
-														if ([(NSString *)ourUUID isEqualToString:uuid])
+														if ([(BRIDGE NSString *)ourUUID isEqualToString:uuid])
 														{
 															asl_NSLog_debug(@"mountedHarddisks found matching UUID %@", bsdName);
 
@@ -441,7 +465,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 															{
 																asl_NSLog_debug(@"mountedHarddisks SOFTRAID");
 
-																for (NSString *name in (NSArray *)d)
+																for (NSString *name in (BRIDGE NSArray *)d)
 																{	
 																	if ([name hasPrefix:@"disk"] && ([name length] >= 5))
 																	{
@@ -452,7 +476,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																		else
 																			num = [numStr integerValue];
 																		
-																		[self _addDiskToList:nonRemovableVolumes number:[NSNumber numberWithInteger:num] name:(NSString *)volNameAsCFString detail:name];
+																		[self _addDiskToList:nonRemovableVolumes number:[NSNumber numberWithInteger:num] name:(BRIDGE NSString *)volNameAsCFString detail:name];
 																		
 																		asl_NSLog_debug(@"mountedHarddisks found1\n");
 																		
@@ -504,20 +528,20 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																						data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																						if (data)
 																						{																			
-																							if ([(NSString *)data hasPrefix:@"disk"] && ([(NSString *)data length] >= 5))
+																							if ([(BRIDGE NSString *)data hasPrefix:@"disk"] && ([(BRIDGE NSString *)data length] >= 5))
 																							{
-																								NSInteger num = [[(NSString *)data substringFromIndex:4] integerValue];
+																								NSInteger num = [[(BRIDGE NSString *)data substringFromIndex:4] integerValue];
 																								[diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
 																							}
 																							else
-																								asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (NSString *) data);
+																								asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
 																							
 																							CFRelease(data);
 																							data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																							if (data)
 																							{
-																								asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
-																								serial = [(NSString *)data copy];
+																								asl_NSLog_debug(@"Serial Number: %@", (BRIDGE NSString *) data);
+																								serial = [(BRIDGE NSString *)data copy];
 																								CFRelease(data);
 																							}
 																							else
@@ -525,8 +549,8 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																								data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																								if (data)
 																								{
-																									asl_NSLog_debug(@"Serial Number: %@", (NSString *) data);
-																									serial = [(NSString *)data copy];
+																									asl_NSLog_debug(@"Serial Number: %@", (BRIDGE NSString *) data);
+																									serial = [(BRIDGE NSString *)data copy];
 																									CFRelease(data);
 																								}
 																								else
@@ -534,8 +558,8 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																									data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
 																									if (data)
 																									{
-																										asl_NSLog_debug(@"USB Serial Number: %@", (NSString *) data);
-																										serial = [(NSString *)data copy];
+																										asl_NSLog_debug(@"USB Serial Number: %@", (BRIDGE NSString *) data);
+																										serial = [(BRIDGE NSString *)data copy];
 																										
 																										CFRelease(data);
 																									}
@@ -551,7 +575,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																								
 																								[self _addDiskToList:nonRemovableVolumes
 																											  number:[diskDict2 objectForKey:kDiskNumberKey]
-																												name:(NSString *)volNameAsCFString
+																												name:(BRIDGE NSString *)volNameAsCFString
 																											  detail:info];
 
 																								asl_NSLog_debug(@"mountedHarddisks found %@", [diskDict2 description]);
@@ -559,8 +583,9 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																								foundBacking = true;
 																								//	NSLog(@"disk Dict %@", diskDict2);
 																							}
-																							
+#if ! __has_feature(objc_arc)
 																							[serial release];
+#endif
 																						}
 																						else
 																							asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
@@ -595,7 +620,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 							{
 								[self _addDiskToList:nonRemovableVolumes
 											  number:[NSNumber numberWithInteger:bsdNum]
-												name:(NSString *)volNameAsCFString
+												name:(BRIDGE NSString *)volNameAsCFString
 											  detail:nil];
 
 								
@@ -636,6 +661,8 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 	return nonRemovableVolumes;
 }
+
+#endif
 
 + (NSString *)nameForDevice:(NSInteger)deviceNumber
 {
@@ -748,9 +775,11 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																	 volumeName.unicode,
 																	 volumeName.length);
 
+#if ! __has_feature(objc_arc)
 					[(NSString *)volNameAsCFString autorelease];
+#endif
 
-					if ([volume isEqualToString:(NSString *)volNameAsCFString])
+					if ([volume isEqualToString:(BRIDGE NSString *)volNameAsCFString])
 						return [NSString stringWithFormat:@"/dev/rdisk%@", [[[[NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID] substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0]];
 				}
 				else
@@ -762,6 +791,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	return nil;
 }
 
+#ifdef USE_IOKIT
 + (BOOL)runsOnBattery
 {
 	CFTypeRef		blob = IOPSCopyPowerSourcesInfo();
@@ -785,9 +815,10 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 	return ret;
 }
+#endif
 @end
 
-#ifdef HOSTINFORMATION_MACADDRESS
+#ifdef USE_IOKIT
 // Returns an iterator containing the primary (built-in) Ethernet interface. The caller is responsible for
 // releasing the iterator after the caller is done with it.
 static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
@@ -872,6 +903,7 @@ static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
 // Given an iterator across a set of Ethernet interfaces, return the MAC address of the last one.
 // If no interfaces are found the MAC address is set to an empty string.
 // In this sample the iterator should contain just the primary interface.
+
 static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress)
 {
 	io_object_t intfService;

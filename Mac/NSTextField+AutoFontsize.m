@@ -25,7 +25,9 @@
     {
         NSDictionary* attrs = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont fontWithName:[curr fontName] size:currentFontSize], NSFontAttributeName, nil];
         strSize = [[self stringValue] sizeWithAttributes:attrs];
-        [attrs release];
+#if ! __has_feature(objc_arc)
+		[attrs release];
+#endif
         currentFontSize --;
 
     } while (strSize.width > width);

@@ -12,17 +12,22 @@
 
 #import "NSObject+CoreCode.h"
 
+#if ! __has_feature(objc_arc)
+#define BRIDGE
+#else
+#define BRIDGE __bridge
+#endif
 
 @implementation NSObject (CoreCode)
 
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key
 {
-    objc_setAssociatedObject(self, (__bridge const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, (BRIDGE const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (id)associatedValueForKey:(NSString *)key
 {
-    return objc_getAssociatedObject(self, (__bridge const void *)(key));
+    return objc_getAssociatedObject(self, (BRIDGE const void *)(key));
 }
 
 @end

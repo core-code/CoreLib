@@ -12,9 +12,7 @@
 
 #ifdef __OBJC__
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wvariadic-macros"
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#define CORELIB
 
 // basic block types
 #ifdef __BLOCKS__
@@ -28,7 +26,6 @@ typedef BOOL (^BoolOutBlock)(void);
 typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 #endif
-
 
 
 #import "NSArray+CoreCode.h"
@@ -62,23 +59,34 @@ typedef void (^IntInBlock)(int input);
 
 @end
 
-
-extern CoreLib *cc;
-
-// platform independent color convenience
+// convenience globals for CoreLib and common words singletons
+extern CoreLib *cc; // init CoreLib with: cc = [CoreLib new]; 
+extern NSUserDefaults *userDefaults;
+extern NSFileManager *fileManager;
+extern NSNotificationCenter *notificationCenter;
+extern NSDateFormatter *dateFormatter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	#define _color(r,g,b,a)		([NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)])
-	#define _color255(r,g,b,a)	([NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
-#else
-	#define _color(r,g,b,a)		([UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)])
-	#define _color255(r,g,b,a)	([UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0])
+extern NSWorkspace *workSpace;
 #endif
 
 
 // obj creation convenience
-#define _predf(format...)		([NSPredicate predicateWithFormat:format])
-#define _stringf(format...)		((NSString *)[NSString stringWithFormat:format])
-#define _mstringf(format...)	((NSMutableString *)[NSMutableString stringWithFormat:format])
+NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+NSPredicate *makePredicate(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSColor *makeColor(float r, float g, float b, float a);		// params from 0..1
+NSColor *makeColor255(float r, float g, float b, float a);	// params from 0..255
+#else
+UIColor *makeColor(float r, float g, float b, float a);
+UIColor *makeColor255(float r, float g, float b, float a);
+#endif
+
+
+// gcd convenience
+void dispatch_after_main(float seconds, dispatch_block_t block);
+void dispatch_after_back(float seconds, dispatch_block_t block);
+void dispatch_async_main(dispatch_block_t block);
+void dispatch_async_back(dispatch_block_t block);
 
 
 // custom template collections: lets you define custom types for collection classes that so that the compiler knows what type they return
@@ -104,19 +112,21 @@ extern CoreLib *cc;
 #define CONST_KEY(name) \
 NSString *const k ## name ## Key = @ #name;
 
+#define CONST_KEY_EXTERN(name) \
+extern NSString *const k ## name ## Key;
+
 #define CONST_KEY_CUSTOM(key, value) \
 NSString *const key = @ #value;
+
+#define CONST_KEY_CUSTOM_EXTERN(name) \
+extern NSString *const name;
 
 
 // logging support
 #include <asl.h>
 extern aslclient client;
-#define asl_NSLog(level, format, ...) asl_log(client, NULL, level, "%s", [[NSString stringWithFormat:format, ##__VA_ARGS__] UTF8String])
-#ifdef DEBUG
-	#define asl_NSLog_debug(format, ...) asl_log(client, NULL, ASL_LEVEL_DEBUG, "%s", [[NSString stringWithFormat:format, ##__VA_ARGS__] UTF8String])
-#else
-	#define asl_NSLog_debug(format, ...) 
-#endif
+void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
+void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 
 // old sdk support
@@ -141,8 +151,5 @@ extern aslclient client;
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
-
-
-#pragma clang diagnostic pop
 
 #endif

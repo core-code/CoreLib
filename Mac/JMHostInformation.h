@@ -21,18 +21,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define kDiskNumberKey                      @"DiskNumber"
 
 @interface JMHostInformation : NSObject
-{
-}
 
 + (NSURL *)growlInstallURL;
-+ (NSString *)macAddress;
 + (NSString *)ipAddress:(bool)ipv6;
+#ifdef USE_SYSTEMCONFIGURATION // requires linking SystemConfiguration.framework
 + (NSString *)ipName;
+#endif
 + (NSString *)machineType;
 
 + (NSString *)nameForDevice:(NSInteger)deviceNumber;
 + (NSString *)bsdPathForVolume:(NSString *)volume;
-+ (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices;
-
+#ifdef USE_IOKIT // requires linking IOKit.framework
++ (NSString *)macAddress;
 + (BOOL)runsOnBattery;
+
+#ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
++ (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices;
+#endif
+#endif
+
 @end

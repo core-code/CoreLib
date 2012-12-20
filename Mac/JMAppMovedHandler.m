@@ -11,6 +11,12 @@
 
 #import "JMAppMovedHandler.h"
 
+#if ! __has_feature(objc_arc)
+#define BRIDGE
+#else
+#define BRIDGE __bridge
+#endif
+
 int bundleFileDescriptor;
 
 void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
@@ -49,7 +55,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 			NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%s", newPath]];
 			free(newPath);
 			LSLaunchURLSpec launchSpec;
-			launchSpec.appURL = (CFURLRef)url;
+			launchSpec.appURL = (BRIDGE CFURLRef)url;
 			launchSpec.itemURLs = NULL;
 			launchSpec.passThruParams = NULL;
 			launchSpec.asyncRefCon = NULL;
@@ -75,7 +81,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 + (void)startMoveObservation
 {
-	CFStringRef mypath = (CFStringRef)[[NSBundle mainBundle] bundlePath];
+	CFStringRef mypath = (BRIDGE CFStringRef)[[NSBundle mainBundle] bundlePath];
 	CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
 	void *callbackInfo = NULL;
 	FSEventStreamRef stream;

@@ -10,6 +10,7 @@
  */
 
 #import "NSURL+CoreCode.h"
+#import "NSString+CoreCode.h"
 
 @implementation NSURL (CoreCode)
 
@@ -45,6 +46,10 @@
 
 - (void)open
 {
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	[[NSWorkspace sharedWorkspace] openURL:self];
+#else
+	[[UIApplication sharedApplication] openURL:self];
+#endif
 }
 @end

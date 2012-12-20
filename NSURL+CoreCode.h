@@ -20,4 +20,5 @@
 @property (readonly, nonatomic) NSArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
+
 @end

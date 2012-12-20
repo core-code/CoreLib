@@ -9,7 +9,19 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#ifndef  CORELIB
+#error you need to include CoreLib.h in your PCH file
+#endif
+
 CoreLib *cc;
+aslclient client;
+NSUserDefaults *userDefaults;
+NSFileManager *fileManager;
+NSNotificationCenter *notificationCenter;
+NSDateFormatter *dateFormatter;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSWorkspace *workSpace;
+#endif
 
 @implementation CoreLib
 
@@ -22,12 +34,20 @@ CoreLib *cc;
 		if (!self.suppURL.fileExists)
 			[[NSFileManager defaultManager] createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
 	cc = self;
+	client = asl_open(NULL, NULL, 0U);
+	userDefaults = [NSUserDefaults standardUserDefaults];
+	fileManager = [NSFileManager defaultManager];
+	notificationCenter = [NSNotificationCenter defaultCenter];
+	dateFormatter = [[NSDateFormatter alloc] init];
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	workSpace = [NSWorkspace sharedWorkspace];
+#endif
 	return self;
 }
 
 - (NSArray *)appCrashLogs
 {
-	return [@"~/Library/Logs/DiagnosticReports/".expanded.dirContents filteredArrayUsingPredicate:_predf(@"self BEGINSWITH[cd] %@", self.appName)];
+	return [@"~/Library/Logs/DiagnosticReports/".expanded.dirContents filteredArrayUsingPredicate:makePredicate(@"self BEGINSWITH[cd] %@", self.appName)];
 }
 
 - (NSString *)appID
@@ -82,3 +102,110 @@ CoreLib *cc;
 }
 
 @end
+
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+
+// obj creation convenience
+NSPredicate *makePredicate(NSString *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+	va_end(args);
+
+	return pred;
+}
+
+NSString *makeString(NSString *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
+	va_end(args);
+	
+#if ! __has_feature(objc_arc)
+	[str autorelease];
+#endif
+	
+	return str;
+}
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSColor *makeColor(float r, float g, float b, float a)
+{
+	return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];
+}
+NSColor *makeColor255(float r, float g, float b, float a)
+{
+	return [NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0];
+}
+#else
+UIColor *makeColor(float r, float g, float b, float a)
+{
+	return [UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)];
+}
+UIColor *makeColor255(float r, float g, float b, float a)
+{
+	return [UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0];
+}
+#endif
+
+// logging support
+void asl_NSLog(int level, NSString *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
+	va_end(args);
+
+	
+	asl_log(client, NULL, level, "%s", [str UTF8String]);
+	
+#if ! __has_feature(objc_arc)
+	[str release];
+#endif
+}
+
+#ifdef DEBUG
+void asl_NSLog_debug(NSString *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
+	va_end(args);
+	
+	
+	asl_log(client, NULL, ASL_LEVEL_DEBUG, "%s", [str UTF8String]);
+	
+#if ! __has_feature(objc_arc)
+	[str release];
+#endif
+}
+#else
+void asl_NSLog_debug(NSString *format, ...)
+{
+}
+#endif
+
+// gcd convenience
+void dispatch_after_main(float seconds, dispatch_block_t block)
+{
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
+	dispatch_after(popTime, dispatch_get_main_queue(), block);
+}
+
+void dispatch_after_back(float seconds, dispatch_block_t block)
+{
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
+	dispatch_after(popTime, dispatch_get_global_queue(0, 0), block);
+}
+
+void dispatch_async_main(dispatch_block_t block)
+{
+	dispatch_async(dispatch_get_main_queue(), block);
+}
+
+void dispatch_async_back(dispatch_block_t block)
+{
+	dispatch_async(dispatch_get_global_queue(0, 0), block);
+}

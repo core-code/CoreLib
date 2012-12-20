@@ -12,12 +12,6 @@
 #import "CoreLib.h"
 
 @interface JMAlertTextFieldView : UIAlertView <UIAlertViewDelegate, UITextFieldDelegate>
-{
-    StringInBlock cancelBlock;  
-    StringInBlock otherBlock;  
-    
-    UITextField *textField;
-}
 
 @property (copy, nonatomic) StringInBlock cancelBlock;
 @property (copy, nonatomic) StringInBlock otherBlock;

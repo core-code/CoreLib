@@ -16,6 +16,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define SANDBOX 0
 #endif
 
+#if ! __has_feature(objc_arc)
+#define BRIDGE
+#else
+#define BRIDGE __bridge
+#endif
+
 #define USING_SANDBOX		(OS_IS_POST_SNOW) && (SANDBOX)
 
 #pragma GCC diagnostic ignored "-Wunreachable-code"
@@ -58,7 +64,7 @@ BOOL IsLoginItem_LS(void)
 	
 	if (list)
 	{
-		NSArray *array = (NSArray *) LSSharedFileListCopySnapshot(list, &outSnapshotSeed);
+		NSArray *array = (BRIDGE NSArray *) LSSharedFileListCopySnapshot(list, &outSnapshotSeed);
 		
 		if (array)
 		{
@@ -66,22 +72,22 @@ BOOL IsLoginItem_LS(void)
 			
 			for (id item in array)
 			{
-				NSURL *url = NULL;
-				OSStatus status = LSSharedFileListItemResolve((LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, (CFURLRef *)&url, NULL);
+				CFURLRef url = NULL;
+				OSStatus status = LSSharedFileListItemResolve((BRIDGE LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, &url, NULL);
 				
 				if (status == noErr)
 				{
 					//asl_NSLog_debug(@"isLoginItem: current login item: %@", [url path]);
 					
-					if (NSOrderedSame == [[url path] compare:bp]) // the path is the same as ours => return true
+					if (NSOrderedSame == [[(BRIDGE NSURL *)url path] compare:bp]) // the path is the same as ours => return true
 					{
 						//asl_NSLog_debug(@"isLoginItem: FOUND US");
-						CFRelease(url);
-						CFRelease(array);
+						CFRelease((url));
+						CFRelease((BRIDGE CFTypeRef)(array));
 						CFRelease(list);
 						return TRUE;
 					}
-					else if (NSOrderedSame == [[[url path] lastPathComponent] compare:[[[NSBundle mainBundle] bundlePath] lastPathComponent]]) // another entry of us, must be valid since on 10.5 invalid entries are erased automatically
+					else if (NSOrderedSame == [[[(BRIDGE NSURL *)url path] lastPathComponent] compare:[[[NSBundle mainBundle] bundlePath] lastPathComponent]]) // another entry of us, must be valid since on 10.5 invalid entries are erased automatically
 					{
 						//asl_NSLog_debug(@"isLoginItem: found similar");
 					}
@@ -91,7 +97,7 @@ BOOL IsLoginItem_LS(void)
 				if (url != NULL)
 					CFRelease(url);
 			}
-			CFRelease(array);
+			CFRelease((BRIDGE CFTypeRef)(array));
 		}
 		else
 			asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _IsLoginItem : LSSharedFileListCopySnapshot delivered NULL list!");
@@ -129,7 +135,7 @@ void AddLoginItem_LS(void)
 	
 	if (list)
 	{
-		LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(list, kLSSharedFileListItemLast, (CFStringRef)[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], NULL, (CFURLRef)[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]], NULL, NULL);
+		LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(list, kLSSharedFileListItemLast, (BRIDGE CFStringRef)[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], NULL, (BRIDGE CFURLRef)[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]], NULL, NULL);
 		
 		CFRelease(list);
 		
@@ -167,7 +173,7 @@ void RemoveLoginItem_LS(void)
 	
 	if (list)
 	{
-		NSArray *array = (NSArray *) LSSharedFileListCopySnapshot(list, &outSnapshotSeed);
+		NSArray *array = (BRIDGE NSArray *) LSSharedFileListCopySnapshot(list, &outSnapshotSeed);
 		
 		if (array)
 		{
@@ -175,23 +181,23 @@ void RemoveLoginItem_LS(void)
 			
 			for (id item in array)
 			{
-				NSURL *url;
-				OSStatus status = LSSharedFileListItemResolve((LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, (CFURLRef *)&url, NULL);
+				CFURLRef url;
+				OSStatus status = LSSharedFileListItemResolve((BRIDGE LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, &url, NULL);
 				
 				if (status == noErr)
 				{
-					if (NSOrderedSame == [[url path] compare:bp]) // the path is the same as ours => return true
+					if (NSOrderedSame == [[(BRIDGE NSURL *)url path] compare:bp]) // the path is the same as ours => return true
 					{
-						asl_NSLog_debug(@"removeLoginItem: removing: %@", [url path]);
+						asl_NSLog_debug(@"removeLoginItem: removing: %@", [(BRIDGE NSURL *)url path]);
 						
-						LSSharedFileListItemRemove(list, (LSSharedFileListItemRef) item);
+						LSSharedFileListItemRemove(list, (BRIDGE LSSharedFileListItemRef) item);
 					}
 					CFRelease(url);
 				}
 				else if (status != fnfErr)
 					asl_NSLog(ASL_LEVEL_WARNING, @"Warning: removeLoginItem: LSSharedFileListItemResolve error %i", (int)status);
 			}
-			CFRelease(array);
+			CFRelease((BRIDGE CFTypeRef)(array));
 		}
 		else
 			asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _RemoveLoginItem : LSSharedFileListCopySnapshot delivered NULL list!");

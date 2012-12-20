@@ -9,6 +9,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "CoreLib.h"
 
 @interface NSArray (CoreCode)
 
@@ -24,8 +25,10 @@
 - (NSArray *)sortedArrayByKey:(NSString *)key;
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask;
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
+#endif
 
 - (NSArray *)mapped:(ObjectInOutBlock)block;
 - (NSArray *)filtered:(ObjectInIntOutBlock)block;

@@ -12,11 +12,6 @@
 #import "CoreLib.h"
 
 @interface JMActionSheet : UIActionSheet <UIActionSheetDelegate>
-{
-    BasicBlock cancelBlock;  
-    BasicBlock destructiveBlock;  
-    IntInBlock alternativeBlock;  
-}
 
 @property (copy, nonatomic) BasicBlock cancelBlock;
 @property (copy, nonatomic) BasicBlock destructiveBlock;

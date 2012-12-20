@@ -13,12 +13,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "JMEmailSender.h"
 
 #define WIN32 0
+#ifdef MAILCORE
 #import <MailCore/MailCore.h>
+#endif
+#ifdef APPLEMAIL
 #import "Mail.h"
+#endif
 
 @implementation JMEmailSender
 
-+ (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject timeout:(uint16_t)secs to:(NSString *)recipients
+
+#ifdef APPLEMAIL
++ (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject timeout:(uint16_t)secs to:(NSString *)recipients attachment:(NSString *)attachmentFilePath
 {
 	asl_NSLog_debug(@"sendMailWithScriptingBridge %@\n\n sub: %@\n rec: %@", content, subject, recipients);
 
@@ -70,6 +76,40 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		if (validAddressFound != TRUE)
 			return kToNilFailure;
 		
+		
+		if ( [attachmentFilePath length] > 0 ) {
+			MailAttachment *theAttachment;
+			
+            /* In Snow Leopard, the fileName property requires an NSString representing the path to the
+             * attachment.  In Lion, the property has been changed to require an NSURL.   */
+			SInt32 osxMinorVersion;
+			Gestalt(gestaltSystemVersionMinor, &osxMinorVersion);
+			
+            /* create an attachment object */
+			if ( osxMinorVersion >= 7 )
+				theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
+								 [NSDictionary dictionaryWithObjectsAndKeys:
+								  [NSURL URLWithString:attachmentFilePath], @"fileName",
+								  nil]];
+			else
+            /* The string we read from the text field is a URL so we must create an NSURL instance with it
+             * and retrieve the old style file path from the NSURL instance. */
+				theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
+								 [NSDictionary dictionaryWithObjectsAndKeys:
+								  [[NSURL URLWithString:attachmentFilePath] path], @"fileName",
+								  nil]];
+			
+            /* add it to the list of attachments */
+			[[emailMessage.content attachments] addObject: theAttachment];
+			
+			[theAttachment release];
+			
+            /* Test for errors */
+			if ( [mail lastError] != nil )
+				return kScriptingBridgeFailure;
+		}
+		
+		
 		if ([emailMessage send])
 			res = kSuccess;
 		else
@@ -89,7 +129,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	return kScriptingBridgeFailure;  // just to silence the compiler
 }
+#endif
 
+#ifdef MAILCORE
 + (smtpResult)sendMailWithMailCore:(NSString *)mail subject:(NSString *)subject timeout:(uint16_t)secs server:(NSString *)server port:(uint16_t)port from:(NSString *)sender to:(NSString *)recipients auth:(BOOL)auth tls:(BOOL)tls username:(NSString *)username password:(NSString *)password
 {
 	asl_NSLog_debug(@"sendMailWithMailCore %@\n\n sub: %@\n sender: %@\nrec: %@", mail, subject, sender, recipients);
@@ -152,6 +194,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	return kMailCoreFailure; // just to silence the compiler
 }
+#endif
 @end
 
 BOOL isValidEmail(const char *email)
