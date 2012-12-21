@@ -47,7 +47,7 @@ NSWorkspace *workSpace;
 
 - (NSArray *)appCrashLogs
 {
-	return [@"~/Library/Logs/DiagnosticReports/".expanded.dirContents filteredArrayUsingPredicate:makePredicate(@"self BEGINSWITH[cd] %@", self.appName)];
+	return [@"~/Library/Logs/DiagnosticReports/".expanded.dirContents filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
 
 - (NSString *)appID
@@ -106,15 +106,15 @@ NSWorkspace *workSpace;
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 
 // obj creation convenience
-NSPredicate *makePredicate(NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
-	va_end(args);
-
-	return pred;
-}
+//NSPredicate *makePredicate(NSString *format, ...)
+//{
+//	va_list args;
+//	va_start(args, format);
+//	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+//	va_end(args);
+//
+//	return pred;
+//}
 
 NSString *makeString(NSString *format, ...)
 {

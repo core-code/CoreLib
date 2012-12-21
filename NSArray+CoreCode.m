@@ -134,6 +134,17 @@
 	return [self componentsJoinedByString:sep];
 }
 
+- (NSArray *)filteredUsingPredicateString:(NSString *)format, ...
+{
+	va_list args;
+	va_start(args, format);
+	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+	va_end(args);
+	
+	return [self filteredArrayUsingPredicate:pred];
+}
+
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
