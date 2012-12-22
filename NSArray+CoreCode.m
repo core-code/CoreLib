@@ -153,7 +153,7 @@
 
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus
 {
-	NSTask *task = [[NSTask alloc] init];
+	NSTask *task = [NSTask new];
 	NSPipe *taskPipe = [NSPipe pipe];
 	NSFileHandle *file = [taskPipe fileHandleForReading];
 	

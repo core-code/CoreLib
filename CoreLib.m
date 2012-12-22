@@ -38,7 +38,7 @@ NSWorkspace *workSpace;
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];
-	dateFormatter = [[NSDateFormatter alloc] init];
+	dateFormatter = [NSDateFormatter new];
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	workSpace = [NSWorkspace sharedWorkspace];
 #endif

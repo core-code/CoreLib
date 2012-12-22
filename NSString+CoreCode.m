@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length;
+@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict;
 #ifdef STRING_SHA1
 @dynamic SHA1;
 #endif
@@ -175,6 +175,25 @@
 	return [self componentsSeparatedByString:sep];
 }
 
+- (NSArray *)defaultArray
+{
+	return [[NSUserDefaults standardUserDefaults] arrayForKey:self];
+}
+
+- (void)setDefaultArray:(NSArray *)newDefault
+{
+	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (NSDictionary *)defaultDict
+{
+	return [[NSUserDefaults standardUserDefaults] dictionaryForKey:self];
+}
+
+- (void)setDefaultDict:(NSDictionary *)newDefault
+{
+	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
 - (id)defaultObj
 {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:self];
@@ -242,4 +261,15 @@
 //	return result;
 //}
 
+@end
+
+
+@implementation  NSMutableString (CoreCode)
+
+@dynamic immutable;
+
+- (NSString *)immutable
+{
+	return [NSString stringWithString:self];
+}
 @end

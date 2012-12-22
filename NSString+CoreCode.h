@@ -23,9 +23,11 @@
 // NSUserDefaults support
 @property (assign, nonatomic) id defaultObj;
 @property (assign, nonatomic) NSString *defaultString;
+@property (assign, nonatomic) NSArray *defaultArray;
+@property (assign, nonatomic) NSDictionary *defaultDict;
+@property (assign, nonatomic) NSURL *defaultURL;
 @property (assign, nonatomic) NSInteger defaultInt;
 @property (assign, nonatomic) float defaultFloat;
-@property (assign, nonatomic) NSURL *defaultURL;
 
 @property (readonly, nonatomic) NSString *localized;
 @property (readonly, nonatomic) NSString *resourcePath;
@@ -55,5 +57,12 @@
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;	// stringByReplacingOccurencesOfString:withString:
 - (NSArray *)split:(NSString *)sep;								// componentsSeparatedByString:
+
+@end
+
+
+@interface NSMutableString (CoreCode)
+
+@property (readonly, nonatomic) NSString *immutable;
 
 @end

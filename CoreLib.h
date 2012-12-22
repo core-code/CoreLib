@@ -12,7 +12,8 @@
 
 #ifdef __OBJC__
 
-#define CORELIB
+#ifndef CORELIB
+#define CORELIB 1
 
 // basic block types
 #ifdef __BLOCKS__
@@ -152,4 +153,5 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
 
+#endif
 #endif
