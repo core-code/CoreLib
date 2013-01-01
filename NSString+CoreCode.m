@@ -12,14 +12,14 @@
 
 #import "NSString+CoreCode.h"
 
-#ifdef STRING_SHA1
+#ifdef USE_SECURITY
 #include <CommonCrypto/CommonDigest.h>
 #endif
 
 @implementation NSString (CoreCode)
 
 @dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict;
-#ifdef STRING_SHA1
+#ifdef USE_SECURITY
 @dynamic SHA1;
 #endif
 
@@ -141,7 +141,7 @@
 	return d;
 }
 
-#ifdef STRING_SHA1
+#ifdef USE_SECURITY
 - (NSString *)SHA1
 {
 	const char *cStr = [self UTF8String];

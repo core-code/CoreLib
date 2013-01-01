@@ -25,7 +25,7 @@ NSWorkspace *workSpace;
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL;
+@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, appSHA;
 
 - (id)init
 {
@@ -101,6 +101,27 @@ NSWorkspace *workSpace;
 	return [dir add:self.appName];
 }
 
+#ifdef USE_SECURITY
+#include <CommonCrypto/CommonDigest.h>
+- (NSString *)appSHA
+{
+	NSData *d = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] executableURL]];
+	unsigned char result[CC_SHA1_DIGEST_LENGTH];
+	CC_SHA1([d bytes], (CC_LONG)[d length], result);
+	NSMutableString *ms = [NSMutableString string];
+	
+	for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+	{
+		[ms appendFormat: @"%02x", (int)(result [i])];
+	}
+	
+#if ! __has_feature(objc_arc)
+	return [[ms copy] autorelease];
+#else
+	return [ms copy];
+#endif
+}
+#endif
 @end
 
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"

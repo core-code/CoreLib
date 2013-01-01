@@ -10,8 +10,6 @@
  */
 
 
-#define STRING_SHA1 1
-
 @interface NSString (CoreCode)
 
 // filesystem support
@@ -40,7 +38,7 @@
 @property (readonly, nonatomic) NSString *expanded;
 @property (readonly, nonatomic) NSData *download;
 @property (readonly, nonatomic) NSMutableString *mutable;
-#ifdef STRING_SHA1
+#ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
 #endif
 

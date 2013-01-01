@@ -58,6 +58,9 @@ typedef void (^IntInBlock)(int input);
 @property (readonly, nonatomic) NSURL *docURL;
 @property (readonly, nonatomic) NSURL *suppURL;
 
+#ifdef USE_SECURITY
+@property (readonly, nonatomic) NSString *appSHA;
+#endif
 @end
 
 // convenience globals for CoreLib and common words singletons

@@ -667,7 +667,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 + (NSString *)nameForDevice:(NSInteger)deviceNumber
 {
 	NSMutableString *name = [NSMutableString stringWithCapacity:12];
-	OSErr			result = noErr;
+	OSStatus			result = noErr;
 	ItemCount			volumeIndex;
 
 
@@ -733,7 +733,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 + (NSString *)bsdPathForVolume:(NSString *)volume	// TODO: merge with above
 {
-	OSErr			result = noErr;
+	OSStatus			result = noErr;
 	ItemCount			volumeIndex;
 
 	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
