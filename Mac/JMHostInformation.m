@@ -22,11 +22,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <SystemConfiguration/SystemConfiguration.h>
 #include <IOKit/storage/IOMedia.h>
 
+#if defined(USE_DISKARBITRATION) || defined(USE_SYSTEMCONFIGURATION)
 
 #if ! __has_feature(objc_arc)
 #define BRIDGE
 #else
 #define BRIDGE __bridge
+#endif
+
 #endif
 
 #pragma GCC diagnostic ignored "-Wcast-align"
@@ -770,16 +773,15 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 					// This code is just to convert the volume name from a HFSUniCharStr to
 					// a plain C string so we can print it with printf. It'd be preferable to
 					// use CoreFoundation to work with the volume name in its Unicode form.
-					CFStringRef	volNameAsCFString;
-					volNameAsCFString = CFStringCreateWithCharacters(kCFAllocatorDefault,
+					NSString *volNameAsCFString = CFBridgingRelease(CFStringCreateWithCharacters(kCFAllocatorDefault,
 																	 volumeName.unicode,
-																	 volumeName.length);
+																	 volumeName.length));
 
 #if ! __has_feature(objc_arc)
 					[(NSString *)volNameAsCFString autorelease];
 #endif
 
-					if ([volume isEqualToString:(BRIDGE NSString *)volNameAsCFString])
+					if ([volume isEqualToString:volNameAsCFString])
 						return [NSString stringWithFormat:@"/dev/rdisk%@", [[[[NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID] substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0]];
 				}
 				else
