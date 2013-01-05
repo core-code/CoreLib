@@ -25,7 +25,12 @@ NSWorkspace *workSpace;
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, appSHA;
+@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL
+#ifdef USE_SECURITY
+, appSHA;
+#else
+;
+#endif
 
 - (id)init
 {
