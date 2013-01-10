@@ -64,7 +64,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 				NSDictionary *recipientProperties = [NSDictionary dictionaryWithObjectsAndKeys:recipient, @"address", nil];
 				MailToRecipient *theRecipient =	[[[mail classForScriptingClass:@"to recipient"] alloc] initWithProperties:recipientProperties];
 				[emailMessage.toRecipients addObject:theRecipient];
+#if ! __has_feature(objc_arc)
 				[theRecipient release];
+#endif
 			}
 			else
 			{
@@ -102,8 +104,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             /* add it to the list of attachments */
 			[[emailMessage.content attachments] addObject: theAttachment];
 			
+#if ! __has_feature(objc_arc)
 			[theAttachment release];
-			
+#endif
             /* Test for errors */
 			if ( [mail lastError] != nil )
 				return kScriptingBridgeFailure;
@@ -115,9 +118,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		else
 			res = kScriptingBridgeFailure;
 		asl_NSLog_debug(@"sent!");
-
+#if ! __has_feature(objc_arc)
 		[emailMessage release];
-
+#endif
 		return res;
 	}
 	@catch (NSException *e)

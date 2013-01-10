@@ -636,7 +636,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
             
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error:	volumeParms.vMDeviceID == NULL");
+					asl_NSLog(ASL_LEVEL_ERR, @"Error: mountedHarddisks volumeParms.vMDeviceID == NULL");
 			}
 		}
 	}
@@ -726,7 +726,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 					}
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error:	volumeParms.vMDeviceID == NULL");
+					asl_NSLog(ASL_LEVEL_ERR, @"Error: nameForDevice	volumeParms.vMDeviceID == NULL");
 			}
 		}
 	}
@@ -785,7 +785,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 						return [NSString stringWithFormat:@"/dev/rdisk%@", [[[[NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID] substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0]];
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error:	volumeParms.vMDeviceID == NULL");
+					asl_NSLog(ASL_LEVEL_ERR, @"Error: bsdPathForVolume volumeParms.vMDeviceID == NULL");
 			}
 		}
 	}

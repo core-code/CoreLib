@@ -26,12 +26,49 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #pragma GCC diagnostic ignored "-Wunreachable-code"
 
+@implementation LoginItemManager
+
+@dynamic launchesAtLogin;
+
++ (void)restartApp
+{
+	NSString *appPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Contents/Library/LoginItems/LaunchHelper.app"];
+	int pid = [[NSProcessInfo processInfo] processIdentifier];
+
+	[[NSWorkspace sharedWorkspace] launchApplicationAtURL:[NSURL fileURLWithPath:appPath]
+												  options:NSWorkspaceLaunchDefault
+											configuration:@{@"NSWorkspaceLaunchConfigurationArguments" : @[makeString(@"%i", pid)]}
+													error:NULL];
+
+	[NSApp terminate:nil];
+}
+
+- (BOOL)launchesAtLogin
+{
+	return IsLoginItem();
+}
+
+- (void)setLaunchesAtLogin:(BOOL)launchesAtLogin
+{
+	if (launchesAtLogin && !IsLoginItem())
+		AddLoginItem();
+	else if (!launchesAtLogin && IsLoginItem())
+		RemoveLoginItem();
+}
+@end
+
+
+
 BOOL IsLoginItem_SM(void)
 {
 #if SANDBOX
+#ifdef DONTAPPEND
+	NSString *helperBundleIdentifier = @"LaunchHelper";
+#else
 	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
+#endif
     NSArray * jobDicts = nil;
-    jobDicts = (NSArray *)SMCopyAllJobDictionaries( kSMDomainUserLaunchd );
+    jobDicts = (BRIDGE NSArray *)SMCopyAllJobDictionaries( kSMDomainUserLaunchd );
     // Note: Sandbox issue when using SMJobCopyDictionary()
 	
     if (jobDicts != nil)
@@ -47,7 +84,7 @@ BOOL IsLoginItem_SM(void)
             }
         }
 		
-        CFRelease((CFDictionaryRef)jobDicts); jobDicts = nil;
+        CFRelease((BRIDGE CFDictionaryRef)jobDicts); jobDicts = nil;
         return bOnDemand;
 		
     }
@@ -121,9 +158,13 @@ BOOL IsLoginItem(void)
 void AddLoginItem_SM(void)
 {
 #if SANDBOX
+#ifdef DONTAPPEND
+	NSString *helperBundleIdentifier = @"LaunchHelper";
+#else
 	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
+#endif
 	
-	if (!SMLoginItemSetEnabled((CFStringRef)helperBundleIdentifier, true)) 
+	if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, true)) 
 		NSLog(@"SMLoginItemSetEnabled failed.");
 #endif
 }
@@ -159,9 +200,13 @@ void AddLoginItem(void)
 void RemoveLoginItem_SM(void)
 {
 #if SANDBOX
+#ifdef DONTAPPEND
+	NSString *helperBundleIdentifier = @"LaunchHelper";
+#else
 	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
+#endif
 
-	if (!SMLoginItemSetEnabled((CFStringRef)helperBundleIdentifier, false))
+	if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, false))
 		NSLog(@"SMLoginItemSetEnabled failed.");
 #endif
 }
