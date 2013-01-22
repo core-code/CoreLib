@@ -10,59 +10,150 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 #import "JMVisibilityManager.h"
+#import <Carbon/Carbon.h>
+
+CONST_KEY(JMVisibilityManagerValue)
+
+
+@interface VisibilityManager ()
+{
+	visibilitySettingEnum _visibilitySetting;
+	NSImage *_dockIcon;
+	NSImage *_menubarIcon;
+}
+
+@property (strong, nonatomic) NSStatusItem *statusItem;
+
+@end
 
 
 
 @implementation VisibilityManager
 
-//@dynamic diplaySetting, dockIcon, menubarIcon;
-//
-//- (void)setDisplaySetting:(displaySettingEnum)newSetting
-//{
-//    if (diplaySetting % 2 == 1 && newSetting % 2 == 0)
-//    {
-//		[self _transform:NO];
-//	}
-//	else if (diplaySetting % 2 == 0 && newSetting % 2 == 1)
-//	{
-//		[self _transform:YES];
-//	}
-//
-//
-//	displaySetting = newSetting;
-//}
-//
-//- (displaySettingEnum)displaySetting
-//{
-//
-//}
-//
-//- (void)setDockIcon:(NSImage *)newDockIcon
-//{
-//
-//}
-//
-//- (NSImage *)dockIcon
-//{
-//
-//}
-//
-//- (void)setMenubarIcon:(NSImage *)newMenubarIcon
-//{
-//
-//}
-//
-//- (NSImage *)menubarIcon
-//{
-//
-//}
-//
-//- (void)_transform:(BOOL)foreground
-//{
-//	ProcessSerialNumber psn;
-//	GetCurrentProcess(&psn);
-//	TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
-//	SetFrontProcess(&psn);
-//}
+@dynamic visibilitySetting, dockIcon, menubarIcon, menuTooltip;
 
++ (void)initialize
+{
+	NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
+
+	defaultValues[kJMVisibilityManagerValueKey] = @(kVisibleDock);
+
+	[[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
+}
+
+- (id)init
+{
+	if ((self = [super init]))
+	{
+		visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
+		
+		_visibilitySetting = kVisibleDock;
+
+		if (storedSetting == kVisibleNowhere && ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0))
+			[self setVisibilitySetting:kVisibleDock];
+		else
+			[self setVisibilitySetting:storedSetting];
+	}
+
+	return self;
+}
+
+- (void)setVisibilitySetting:(visibilitySettingEnum)newSetting
+{
+    if (_visibilitySetting % 2 == 1 && newSetting % 2 == 0)
+    {
+		[self _transform:NO];
+	}
+	else if (_visibilitySetting % 2 == 0 && newSetting % 2 == 1)
+	{
+		[self _transform:YES];
+	}
+
+	//[self willChangeValueForKey:@"visibilitySetting"];
+	_visibilitySetting = newSetting;
+	//[self didChangeValueForKey:@"visibilitySetting"];
+
+	[self setMenubarIcon:_menubarIcon];
+	[self setDockIcon:_dockIcon];
+
+	kJMVisibilityManagerValueKey.defaultInt = newSetting;
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (visibilitySettingEnum)visibilitySetting
+{
+	return _visibilitySetting;
+}
+
+- (void)setDockIcon:(NSImage *)newDockIcon
+{
+	_dockIcon = newDockIcon;
+
+	if (_visibilitySetting % 2 == 1)
+	{
+		if (_dockIcon)
+			[NSApp setApplicationIconImage:_dockIcon];
+	}
+}
+
+- (NSImage *)dockIcon
+{
+	return _dockIcon;
+}
+
+- (void)setMenubarIcon:(NSImage *)newMenubarIcon
+{
+	_menubarIcon = newMenubarIcon;
+	
+	if (_visibilitySetting > 1)
+	{
+        if (self.statusItem == nil)
+        {
+            self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+
+            [self.statusItem setHighlightMode:YES];
+            [self.statusItem setEnabled:YES];
+        }
+		
+		[self.statusItem setMenu:self.statusItemMenu];
+		[self.statusItem setImage:_menubarIcon];
+	}
+	else
+	{
+        if (self.statusItem)
+		{
+			[[NSStatusBar systemStatusBar] removeStatusItem:_statusItem];
+			_statusItem = nil;
+		}
+	}
+}
+
+- (NSImage *)menubarIcon
+{
+	return _menubarIcon;
+}
+
+- (void)setMenuTooltip:(NSString *)menuTooltip
+{
+	[_statusItem setToolTip:menuTooltip];
+}
+
+- (NSString *)menuTooltip
+{
+	return [_statusItem toolTip];
+}
+
+- (void)handleAppReopen
+{
+	if (_visibilitySetting == kVisibleNowhere && ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0))
+		[self setVisibilitySetting:kVisibleDock];
+}
+
+- (void)_transform:(BOOL)foreground
+{
+	ProcessSerialNumber psn;
+	GetCurrentProcess(&psn);
+	TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
+	SetFrontProcess(&psn);	
+}
 @end

@@ -50,10 +50,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (void)setLaunchesAtLogin:(BOOL)launchesAtLogin
 {
+	//[self willChangeValueForKey:@"launchesAtLogin"];
+
 	if (launchesAtLogin && !IsLoginItem())
 		AddLoginItem();
 	else if (!launchesAtLogin && IsLoginItem())
 		RemoveLoginItem();
+
+	//[self didChangeValueForKey:@"launchesAtLogin"];
 }
 @end
 
@@ -63,7 +67,7 @@ BOOL IsLoginItem_SM(void)
 {
 #if SANDBOX
 #ifdef DONTAPPEND
-	NSString *helperBundleIdentifier = @"LaunchHelper";
+	NSString *helperBundleIdentifier = @"com.corecode.LaunchHelper";
 #else
 	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
 #endif
@@ -159,7 +163,7 @@ void AddLoginItem_SM(void)
 {
 #if SANDBOX
 #ifdef DONTAPPEND
-	NSString *helperBundleIdentifier = @"LaunchHelper";
+	NSString *helperBundleIdentifier = @"com.corecode.LaunchHelper";
 #else
 	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
 #endif
@@ -201,7 +205,7 @@ void RemoveLoginItem_SM(void)
 {
 #if SANDBOX
 #ifdef DONTAPPEND
-	NSString *helperBundleIdentifier = @"LaunchHelper";
+	NSString *helperBundleIdentifier = @"com.corecode.LaunchHelper";
 #else
 	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
 #endif

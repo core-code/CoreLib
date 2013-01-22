@@ -11,17 +11,21 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 typedef enum
 {
-	kDisplayNowhere,
-	kDisplayDock,
-	kDisplayMenubar,
-	kDisplayDockAndMenubar
-} displaySettingEnum;
+	kVisibleNowhere = 0,
+	kVisibleDock,
+	kVisibleMenubar,
+	kVisibleDockAndMenubar
+} visibilitySettingEnum;
 
 
 @interface VisibilityManager : NSObject
 
-//@property (assign, nonatomic) displaySettingEnum diplaySetting;
-//@property (strong, nonatomic) NSImage *dockIcon;
-//@property (strong, nonatomic) NSImage *menubarIcon;
+@property (assign, nonatomic) visibilitySettingEnum visibilitySetting;
+@property (strong, nonatomic) NSImage *dockIcon;
+@property (strong, nonatomic) NSImage *menubarIcon;
+@property (strong, nonatomic) NSMenu *statusItemMenu;
+@property (strong, nonatomic) NSString *menuTooltip;
+
+- (void)handleAppReopen;
 
 @end
