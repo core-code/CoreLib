@@ -45,9 +45,12 @@ CONST_KEY(JMVisibilityManagerValue)
 {
 	if ((self = [super init]))
 	{
+#ifdef DEBUG
+		assert([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSUIElement"] boolValue]);
+#endif
 		visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
 		
-		_visibilitySetting = kVisibleDock;
+		_visibilitySetting = kVisibleNowhere;
 
 		if (storedSetting == kVisibleNowhere && ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0))
 			[self setVisibilitySetting:kVisibleDock];
@@ -154,6 +157,6 @@ CONST_KEY(JMVisibilityManagerValue)
 	ProcessSerialNumber psn;
 	GetCurrentProcess(&psn);
 	TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
-	SetFrontProcess(&psn);	
+	SetFrontProcess(&psn);
 }
 @end
