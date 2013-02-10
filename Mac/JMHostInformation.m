@@ -777,9 +777,9 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 																	 volumeName.unicode,
 																	 volumeName.length));
 
-#if ! __has_feature(objc_arc)
-					[(NSString *)volNameAsCFString autorelease];
-#endif
+//#if ! __has_feature(objc_arc)
+//					[(NSString *)volNameAsCFString autorelease];
+//#endif
 
 					if ([volume isEqualToString:volNameAsCFString])
 						return [NSString stringWithFormat:@"/dev/rdisk%@", [[[[NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID] substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0]];

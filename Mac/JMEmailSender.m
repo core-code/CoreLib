@@ -212,7 +212,7 @@ BOOL isValidEmail(const char *email)
 	if (i)
 		j = strchr(i, '.');
 
-	if (!i || !j || (j - i < 3))
+	if (!i || !j || (j - i < 2))
 		return FALSE;
 
 	if (strchr(email, ';') || strchr(email, ':') || strchr(email, '|') || strchr(email, '/') || strchr(email, ',') || strchr(email, '&'))
