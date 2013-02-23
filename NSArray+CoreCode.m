@@ -107,6 +107,16 @@
     return resultArray.immutable;
 }
 
+- (NSInteger)collect:(ObjectInIntOutBlock)block
+{
+    NSInteger value = 0;
+    
+    for (id object in self)
+        value += block(object);
+
+    return value;
+}
+
 - (NSArray *)filtered:(ObjectInIntOutBlock)block
 {
     NSMutableArray *resultArray = [NSMutableArray new];

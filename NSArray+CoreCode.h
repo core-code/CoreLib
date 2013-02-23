@@ -33,6 +33,7 @@
 - (NSArray *)mapped:(ObjectInOutBlock)block;
 - (NSArray *)filtered:(ObjectInIntOutBlock)block;
 - (NSArray *)filteredUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
+- (NSInteger)collect:(ObjectInIntOutBlock)block;
 
 // versions similar to cocoa methods
 - (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
