@@ -40,6 +40,11 @@ NSWorkspace *workSpace;
 			[[NSFileManager defaultManager] createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
 	cc = self;
 	client = asl_open(NULL, NULL, 0U);
+
+#ifdef DEBUG
+	asl_add_log_file(client, STDERR_FILENO);
+#endif
+	
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];

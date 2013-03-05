@@ -17,6 +17,8 @@
 @property (readonly, nonatomic) NSArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
+@property (readonly, nonatomic) unsigned long long fileSize;
+@property (readonly, nonatomic) BOOL isWriteablePath;
 
 // NSUserDefaults support
 @property (assign, nonatomic) id defaultObj;

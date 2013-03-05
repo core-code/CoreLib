@@ -18,10 +18,30 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict;
+@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize;
 #ifdef USE_SECURITY
 @dynamic SHA1;
 #endif
+
+- (unsigned long long)fileSize
+{
+	NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
+	if (!attr) return 0;
+	return [attr[NSFileSize] unsignedLongLongValue];
+}
+
+- (BOOL)isWriteablePath
+{
+	if (self.fileExists)
+		return NO;
+
+	if (![@"TEST" writeToFile:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
+		return NO;
+
+	[fileManager removeItemAtPath:self error:NULL];
+
+	return YES;
+}
 
 - (NSArray *)dirContents
 {
