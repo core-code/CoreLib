@@ -27,7 +27,7 @@
 {
 	NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
 	if (!attr) return 0;
-	return [attr[NSFileSize] unsignedLongLongValue];
+	return [[attr objectForKey:NSFileSize] unsignedLongLongValue];
 }
 
 - (BOOL)isWriteablePath

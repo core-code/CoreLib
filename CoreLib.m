@@ -197,7 +197,7 @@ void asl_NSLog(int level, NSString *format, ...)
 #endif
 }
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(FORCE_LOG)
 void asl_NSLog_debug(NSString *format, ...)
 {
 	va_list args;
@@ -205,8 +205,11 @@ void asl_NSLog_debug(NSString *format, ...)
 	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
 	va_end(args);
 	
-	
+#ifdef FORCE_LOG
+	asl_log(client, NULL, ASL_LEVEL_NOTICE, "%s", [str UTF8String]);
+#else
 	asl_log(client, NULL, ASL_LEVEL_DEBUG, "%s", [str UTF8String]);
+#endif
 	
 #if ! __has_feature(objc_arc)
 	[str release];
