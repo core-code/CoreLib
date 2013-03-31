@@ -18,9 +18,8 @@ aslclient client;
 NSUserDefaults *userDefaults;
 NSFileManager *fileManager;
 NSNotificationCenter *notificationCenter;
-NSDateFormatter *dateFormatter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-NSWorkspace *workSpace;
+NSWorkspace *workspace;
 #endif
 
 @implementation CoreLib
@@ -48,9 +47,8 @@ NSWorkspace *workSpace;
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];
-	dateFormatter = [NSDateFormatter new];
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	workSpace = [NSWorkspace sharedWorkspace];
+	workspace = [NSWorkspace sharedWorkspace];
 #endif
 	return self;
 }

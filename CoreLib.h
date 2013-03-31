@@ -68,9 +68,8 @@ extern CoreLib *cc; // init CoreLib with: cc = [CoreLib new];
 extern NSUserDefaults *userDefaults;
 extern NSFileManager *fileManager;
 extern NSNotificationCenter *notificationCenter;
-extern NSDateFormatter *dateFormatter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-extern NSWorkspace *workSpace;
+extern NSWorkspace *workspace;
 #endif
 
 
