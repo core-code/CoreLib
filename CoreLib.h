@@ -150,6 +150,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define LOG(x)				NSLog(@"%@", [(x) description]);
 #define OBJECT_OR(x,y)		((x) ? (x) : (y))
 #define NON_NIL_STR(x)		((x) ? (x) : @"")
+#define NON_NIL_OBJ(x)		((x) ? (x) : [NSNull null])
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 

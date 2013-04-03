@@ -143,11 +143,20 @@
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
 {
 	NSString *ret = self;
-	for (NSString *key in replacements)
-		ret = [ret stringByReplacingOccurrencesOfString:key withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
 	
 	for (NSString *key in replacements)
+	{
+		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
+			 continue;
+		ret = [ret stringByReplacingOccurrencesOfString:key withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
+	}
+	
+	for (NSString *key in replacements)
+	{
+		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
+			continue;
 		ret = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"] withString:[replacements objectForKey:key]];
+	}
 	
 	return ret;
 }
