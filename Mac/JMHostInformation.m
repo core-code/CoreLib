@@ -220,19 +220,11 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 }
 #endif
 
+NSString *_machineType();
+
 + (NSString *)machineType
 {
-	char modelBuffer[256];
-	size_t sz = sizeof(modelBuffer);
-	if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
-	{
-		modelBuffer[sizeof(modelBuffer) - 1] = 0;
-		return [NSString stringWithUTF8String:modelBuffer];
-	}
-	else
-	{
-		return @"";
-	}
+	return _machineType();
 }
 
 + (NSInteger)bootDiskBSDNum

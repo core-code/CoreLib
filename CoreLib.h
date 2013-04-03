@@ -28,6 +28,14 @@ typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 #endif
 
+typedef enum {
+	openSupportRequestMail = 1,	// VendorProductPage info.plist key
+	openBetaSignupMail,			// FeedbackEmail info.plist key
+	openHomepageWebsite,		// VendorProductPage info.plist key
+	openAppStoreWebsite,		// StoreProductPage info.plist key
+	openAppStoreApp,			// StoreProductPage info.plist key
+	openMacupdateWebsite		// MacupdateProductPage info.plist key
+} openChoice;
 
 #import "NSArray+CoreCode.h"
 #import "NSURL+CoreCode.h"
@@ -61,6 +69,9 @@ typedef void (^IntInBlock)(int input);
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *appSHA;
 #endif
+
+- (void)openURL:(openChoice)choice;
+
 @end
 
 // convenience globals for CoreLib and common words singletons
@@ -155,6 +166,9 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7) 
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
+#define kUsagesThisVersionKey makeString(@"%@_usages", cc.appVersionString)
+#define kAskedThisVersionKey makeString(@"%@_usages", cc.appVersionString)
+
 
 #endif
 #endif

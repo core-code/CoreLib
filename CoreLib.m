@@ -130,6 +130,39 @@ NSWorkspace *workspace;
 #endif
 }
 #endif
+
+
+NSString *_machineType();
+
+- (void)openURL:(openChoice)choice
+{
+	NSString *urlString = @"";
+
+	if (choice == openSupportRequestMail)
+		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request (License code: %@)&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@",
+							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
+							   cc.appName,
+							   cc.appVersionString,
+							   cc.appVersion,
+							   cc.appSHA,
+							   _machineType(),
+							   [[NSProcessInfo processInfo] operatingSystemVersionString],
+							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""));
+	else if (choice == openBetaSignupMail)
+		urlString = makeString(@"mailto:%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
+							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
+							   cc.appName, cc.appName);
+	else if (choice == openHomepageWebsite)
+		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"];
+	else if (choice == openAppStoreWebsite)
+		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"];
+	else if (choice == openAppStoreApp)
+		urlString = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
+	else if (choice == openMacupdateWebsite)
+		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"];
+
+	[urlString.escapedURL open];
+}
 @end
 
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
@@ -240,4 +273,23 @@ void dispatch_async_main(dispatch_block_t block)
 void dispatch_async_back(dispatch_block_t block)
 {
 	dispatch_async(dispatch_get_global_queue(0, 0), block);
+}
+
+
+// private
+#include <sys/types.h>
+#include <sys/sysctl.h>
+NSString *_machineType()
+{
+	char modelBuffer[256];
+	size_t sz = sizeof(modelBuffer);
+	if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
+	{
+		modelBuffer[sizeof(modelBuffer) - 1] = 0;
+		return [NSString stringWithUTF8String:modelBuffer];
+	}
+	else
+	{
+		return @"";
+	}
 }
