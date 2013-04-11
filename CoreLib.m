@@ -139,15 +139,19 @@ NSString *_machineType();
 	NSString *urlString = @"";
 
 	if (choice == openSupportRequestMail)
-		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request (License code: %@)&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@",
+		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@",
 							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
 							   cc.appName,
 							   cc.appVersionString,
 							   cc.appVersion,
-							   cc.appSHA,
+#ifdef USE_SECURITY
+							   makeString(@" (License code: %@)", cc.appSHA),
+#else
+							   @"",
+#endif
 							   _machineType(),
 							   [[NSProcessInfo processInfo] operatingSystemVersionString],
-							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""));
+							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""));
 	else if (choice == openBetaSignupMail)
 		urlString = makeString(@"mailto:%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
 							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
@@ -163,6 +167,7 @@ NSString *_machineType();
 
 	[urlString.escapedURL open];
 }
+
 @end
 
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"

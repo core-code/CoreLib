@@ -16,6 +16,7 @@
 @property (readonly, nonatomic) NSMutableArray *mutable;
 @property (readonly, nonatomic) BOOL empty;
 
+- (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
@@ -49,5 +50,7 @@
 @interface NSMutableArray (CoreCode)
 
 @property (readonly, nonatomic) NSArray *immutable;
+
+- (void)addObjectSafely:(id)anObject;
 
 @end

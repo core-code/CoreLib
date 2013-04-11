@@ -21,6 +21,19 @@
 {
 	return [NSMutableDictionary dictionaryWithDictionary:self];
 }
+
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+{
+    return [super methodSignatureForSelector:@selector(valueForKey:)];
+}
+
+- (void)forwardInvocation:(NSInvocation *)invocation
+{
+    NSString *propertyName = NSStringFromSelector(invocation.selector);
+    [invocation setSelector:@selector(valueForKey:)];
+    [invocation setArgument:&propertyName atIndex:2];
+    [invocation invokeWithTarget:self];
+}
 @end
 
 

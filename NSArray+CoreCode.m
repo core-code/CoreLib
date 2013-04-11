@@ -17,6 +17,15 @@
 
 @dynamic mutable, empty, count;
 
+
+- (NSArray *)arrayByAddingNewObject:(id)anObject
+{
+	if ([self indexOfObject:anObject] == NSNotFound)
+		return [self arrayByAddingObject:anObject];
+	else
+		return self;
+}
+
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
 	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
@@ -199,5 +208,11 @@
 - (NSArray *)immutable
 {
 	return [NSArray arrayWithArray:self];
+}
+
+- (void)addObjectSafely:(id)anObject
+{
+	if (anObject)
+		[self addObject:anObject];
 }
 @end
