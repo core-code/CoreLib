@@ -20,6 +20,7 @@
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray *)arrayOfValuesForKey:(NSString *)key;
 - (id)safeObjectAtIndex:(NSUInteger)index;
 - (NSString *)safeStringAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;

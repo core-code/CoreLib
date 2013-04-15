@@ -53,6 +53,20 @@
 	return [NSArray arrayWithArray:array];
 }
 
+- (NSArray *)arrayOfValuesForKey:(NSString *)key
+{
+    NSMutableArray *resultArray = [NSMutableArray new];
+
+    for (id object in self)
+		[resultArray addObject:[object valueForKey:key]];
+
+#if ! __has_feature(objc_arc)
+	[resultArray autorelease];
+#endif
+
+    return resultArray.immutable;
+}
+
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
     if ([self count] > index)

@@ -36,7 +36,8 @@ NSWorkspace *workspace;
 	assert(!cc);
 	if ((self = [super init]))
 		if (!self.suppURL.fileExists)
-			[[NSFileManager defaultManager] createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
+			[[NSFileManager defaultManager] createDirectoryAtPath:self.suppURL.path withIntermediateDirectories:YES attributes:nil error:NULL];
+
 	cc = self;
 	client = asl_open(NULL, NULL, 0U);
 
