@@ -23,3 +23,19 @@
 @property (readonly, nonatomic) NSDictionary *immutable;
 
 @end
+
+
+// support for subscripting with the 10.6 / 10.7 / iOS 5 SDK and deployment target that actually supports it
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wundef"
+#if (((__MAC_OS_X_VERSION_MAX_ALLOWED >= 1060) && (__MAC_OS_X_VERSION_MAX_ALLOWED <= 1070) && (__MAC_OS_X_VERSION_MIN_REQUIRED >= 1060)) || ((__IPHONE_OS_VERSION_MAX_ALLOWED == 50000) && (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)))
+
+@interface  NSDictionary (Indexing)
+- (id)objectForKeyedSubscript:(id)key;
+@end
+@interface  NSMutableDictionary (Indexing)
+- (void)setObject:(id)obj forKeyedSubscript:(id<NSCopying>)key;
+@end
+
+#endif
+#pragma GCC diagnostic push

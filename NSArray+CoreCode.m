@@ -195,9 +195,11 @@
 	[task setStandardError:taskPipe];
 	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
 	[task launch];
+
+	NSData *data = [file readDataToEndOfFile];
+
 	[task waitUntilExit];
 	
-	NSData *data = [file readDataToEndOfFile];
 	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	
 	

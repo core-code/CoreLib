@@ -21,7 +21,7 @@
 	
 	NSMutableArray *tmp = [NSMutableArray new];
 	for (NSString *l in [NSLocale  preferredLanguages])
-		[tmp addObject:(iso2LetterTo3Letter[l] ? iso2LetterTo3Letter[l] : l)];
+		[tmp addObject:([iso2LetterTo3Letter objectForKey:l] ? [iso2LetterTo3Letter objectForKey:l] : l)];
 	
 #if ! __has_feature(objc_arc)
 	[tmp autorelease];

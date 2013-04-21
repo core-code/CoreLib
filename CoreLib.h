@@ -15,6 +15,7 @@
 #ifndef CORELIB
 #define CORELIB 1
 
+
 // basic block types
 #ifdef __BLOCKS__
 typedef void (^BasicBlock)(void);
@@ -28,7 +29,8 @@ typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 #endif
 
-typedef enum {
+typedef enum
+{
 	openSupportRequestMail = 1,	// VendorProductPage info.plist key
 	openBetaSignupMail,			// FeedbackEmail info.plist key
 	openHomepageWebsite,		// VendorProductPage info.plist key
@@ -169,6 +171,17 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define kUsagesThisVersionKey makeString(@"%@_usages", cc.appVersionString)
 #define kAskedThisVersionKey makeString(@"%@_usages", cc.appVersionString)
 
+// vendor information
+#ifdef VENDOR_HOMEPAGE
+#define kVendorHomepage VENDOR_HOMEPAGE
+#else
+#define kVendorHomepage @"http://www.corecode.at/"
+#endif
+#ifdef FEEDBACK_EMAIL
+#define kFeedbackEmail FEEDBACK_EMAIL
+#else
+#define kFeedbackEmail @"feedback@corecode.at"
+#endif
 
 #endif
 #endif

@@ -141,7 +141,7 @@ NSString *_machineType();
 
 	if (choice == openSupportRequestMail)
 		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@",
-							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
+							   OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail),
 							   cc.appName,
 							   cc.appVersionString,
 							   cc.appVersion,
@@ -158,7 +158,12 @@ NSString *_machineType();
 							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
 							   cc.appName, cc.appName);
 	else if (choice == openHomepageWebsite)
+	{
 		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"];
+
+		if (!urlString)
+			urlString = makeString(@"%@%@/", kVendorHomepage, [cc.appName lowercaseString]);
+	}
 	else if (choice == openAppStoreWebsite)
 		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"];
 	else if (choice == openAppStoreApp)
