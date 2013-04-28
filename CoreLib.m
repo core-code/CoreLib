@@ -286,6 +286,16 @@ void dispatch_async_back(dispatch_block_t block)
 	dispatch_async(dispatch_get_global_queue(0, 0), block);
 }
 
+void dispatch_sync_main(dispatch_block_t block)
+{
+	dispatch_sync(dispatch_get_main_queue(), block);
+}
+
+void dispatch_sync_back(dispatch_block_t block)
+{
+	dispatch_sync(dispatch_get_global_queue(0, 0), block);
+}
+
 
 // private
 #include <sys/types.h>

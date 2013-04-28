@@ -103,6 +103,8 @@ void dispatch_after_main(float seconds, dispatch_block_t block);
 void dispatch_after_back(float seconds, dispatch_block_t block);
 void dispatch_async_main(dispatch_block_t block);
 void dispatch_async_back(dispatch_block_t block);
+void dispatch_sync_main(dispatch_block_t block);
+void dispatch_sync_back(dispatch_block_t block);
 
 
 // custom template collections: lets you define custom types for collection classes that so that the compiler knows what type they return
