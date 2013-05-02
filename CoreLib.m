@@ -283,11 +283,14 @@ void dispatch_async_main(dispatch_block_t block)
 
 void dispatch_async_back(dispatch_block_t block)
 {
-	dispatch_async(dispatch_get_global_queue(0, 0), block);
+	dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+	assert(dispatch_get_current_queue() != queue);
+	dispatch_async(queue, block);
 }
 
 void dispatch_sync_main(dispatch_block_t block)
 {
+	assert([NSThread currentThread] != [NSThread mainThread]);
 	dispatch_sync(dispatch_get_main_queue(), block);
 }
 
