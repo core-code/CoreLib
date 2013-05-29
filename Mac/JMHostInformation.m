@@ -32,6 +32,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #endif
 
+#define LOGMOUNTEDHARDDISK(x, ...) 
+
 #pragma GCC diagnostic ignored "-Wcast-align"
 
 #ifdef USE_IOKIT
@@ -256,7 +258,7 @@ NSString *_machineType();
 			NSString *currentName = [disk objectForKey:kDiskNameKey];
 			[disk setObject:[name stringByAppendingFormat:@", %@", currentName] forKey:kDiskNameKey];
 			
-			asl_NSLog_debug(@"_addDiskToList replace name unique %@\n", [disk description]);
+			//asl_NSLog_debug(@"_addDiskToList replace name unique %@\n", [disk description]);
 
 			found = TRUE;
 		}
@@ -269,7 +271,7 @@ NSString *_machineType();
 		[diskDict setObject:num forKey:kDiskNumberKey];
 		[diskDict setObject:((detail) ? makeString(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
 		
-		asl_NSLog_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
+		//asl_NSLog_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
 		
 		[array addObject:diskDict];
 	}
@@ -321,13 +323,14 @@ NSString *_machineType();
     return info;
 }
 
+
 + (void)_findZFSBacking:(BOOL *)foundBacking_p volNameAsCFString:(CFStringRef)volNameAsCFString nonRemovableVolumes:(NSMutableArray *)nonRemovableVolumes bsdNum:(NSInteger)bsdNum
 {
     kern_return_t				kernResult;
     CFMutableDictionaryRef		matchingDict;
     io_iterator_t				iter;
     
-	asl_NSLog_debug(@"mountedHarddisks ZFS");
+	LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS");
 
     matchingDict = IOServiceMatching(kIOMediaClass);
     if (matchingDict != NULL)
@@ -349,7 +352,7 @@ NSString *_machineType();
 					                    
                     if ([(BRIDGE NSString *)bsdVolume isEqualToString:[NSString stringWithFormat:@"disk%li", bsdNum]])
                     {
-						asl_NSLog_debug(@"mountedHarddisks ZFS found match");
+						LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match");
 
                         io_iterator_t           parents = MACH_PORT_NULL;
                         kern_return_t res = IORegistryEntryGetParentIterator (object, kIOServicePlane, &parents);
@@ -374,7 +377,7 @@ NSString *_machineType();
                                         CFTypeRef data = IORegistryEntrySearchCFProperty(gparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
                                         if (data)
                                         {
-											asl_NSLog_debug(@"mountedHarddisks ZFS found match %@", (BRIDGE NSString *)data);
+											LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match %@", (BRIDGE NSString *)data);
 
 
                                             NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
@@ -401,7 +404,7 @@ NSString *_machineType();
                                                                 name:(BRIDGE NSString *)volNameAsCFString
                                                               detail:serial];
                                                 
-                                                asl_NSLog_debug(@"mountedHarddisks found zfs backing %@", [diskDict2 description]);
+                                                LOGMOUNTEDHARDDISK(@"mountedHarddisks found zfs backing %@", [diskDict2 description]);
                                                 
                                                 *foundBacking_p = true;
                                                 //	NSLog(@"disk Dict %@", diskDict2);
@@ -437,7 +440,7 @@ NSString *_machineType();
 + (BOOL)_findRAIDBacking:(NSString *)bsdName props:(NSDictionary *)props volNameAsCFString:(CFStringRef)volNameAsCFString nonRemovableVolumes:(NSMutableArray *)nonRemovableVolumes
 {
     BOOL foundBacking = false;
-    asl_NSLog_debug(@"mountedHarddisks found props %@", bsdName);
+    LOGMOUNTEDHARDDISK(@"mountedHarddisks found props %@", bsdName);
     
     CFUUIDRef DAMediaUUID = (BRIDGE CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
     if (DAMediaUUID)
@@ -448,7 +451,7 @@ NSString *_machineType();
         [uuid autorelease];
 #endif
         
-        asl_NSLog_debug(@"mountedHarddisks found UUID %@ %@", bsdName, uuid);
+        LOGMOUNTEDHARDDISK(@"mountedHarddisks found UUID %@ %@", bsdName, uuid);
         
         
         kern_return_t				kernResult;
@@ -472,14 +475,14 @@ NSString *_machineType();
                     {
                         if ([(BRIDGE NSString *)ourUUID isEqualToString:uuid])
                         {
-                            asl_NSLog_debug(@"mountedHarddisks found matching UUID %@", bsdName);
+                            LOGMOUNTEDHARDDISK(@"mountedHarddisks found matching UUID %@", bsdName);
                             
                             
                             CFTypeRef	d = NULL;
                             d = IORegistryEntryCreateCFProperty(object, CFSTR("SoftRAID Provider Array"), kCFAllocatorDefault, 0);
                             if (d)
                             {
-                                asl_NSLog_debug(@"mountedHarddisks SOFTRAID");
+                                LOGMOUNTEDHARDDISK(@"mountedHarddisks SOFTRAID");
                                 
                                 for (NSString *name in (BRIDGE NSArray *)d)
                                 {	
@@ -494,7 +497,7 @@ NSString *_machineType();
                                         
                                         [self _addDiskToList:nonRemovableVolumes number:[NSNumber numberWithInteger:num] name:(BRIDGE NSString *)volNameAsCFString detail:name];
                                         
-                                        asl_NSLog_debug(@"mountedHarddisks found1\n");
+                                        LOGMOUNTEDHARDDISK(@"mountedHarddisks found1\n");
                                         
                                         foundBacking = true;
                                     }
@@ -563,7 +566,7 @@ NSString *_machineType();
                                                                                 name:(BRIDGE NSString *)volNameAsCFString
                                                                               detail:serial];
                                                                 
-                                                                asl_NSLog_debug(@"mountedHarddisks found %@", [diskDict2 description]);
+                                                                LOGMOUNTEDHARDDISK(@"mountedHarddisks found %@", [diskDict2 description]);
                                                                 
                                                                 foundBacking = true;
                                                                 //	NSLog(@"disk Dict %@", diskDict2);
@@ -638,7 +641,7 @@ NSString *_machineType();
 	if (includeRAIDBackingDevices)
 		session = DASessionCreate(kCFAllocatorDefault);
 
-	asl_NSLog_debug(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
+	LOGMOUNTEDHARDDISK(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
 
 	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
 	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
@@ -690,7 +693,7 @@ NSString *_machineType();
 					[(NSString *)volNameAsCFString autorelease];
 #endif
                     //NSLog((NSString *)volNameAsCFString);
-					asl_NSLog_debug(@"mountedHarddisks found IOKit name %@", (BRIDGE NSString *)volNameAsCFString);
+					LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", (BRIDGE NSString *)volNameAsCFString);
 
                     if ([volumeNamesToIgnore indexOfObject:(BRIDGE NSString *)volNameAsCFString] == NSNotFound &&
 						[volumePathsToIgnore indexOfObject:[mountURL path]] == NSNotFound) // not removable
@@ -698,7 +701,7 @@ NSString *_machineType();
 						
 						NSString *bsdName = [NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID];
 						
-						asl_NSLog_debug(@"mountedHarddisks has BSD name %@", bsdName);
+						LOGMOUNTEDHARDDISK(@"mountedHarddisks has BSD name %@", bsdName);
 
 						if (![bsdName hasPrefix:@"disk"])
 							continue;
@@ -734,7 +737,7 @@ NSString *_machineType();
 								CFRelease(disk);
 								disk = NULL;
 								
-								asl_NSLog_debug(@"mountedHarddisks checking for raid backing %@", bsdName);
+								LOGMOUNTEDHARDDISK(@"mountedHarddisks checking for raid backing %@", bsdName);
 
                                 if ([[props objectForKey:@"DAVolumeKind"] isEqualToString:@"zfs"])
                                 {
@@ -754,10 +757,10 @@ NSString *_machineType();
 											  detail:nil];
 
 								
-								asl_NSLog_debug(@"mountedHarddisks is new disk without backing %@", bsdName);
+								LOGMOUNTEDHARDDISK(@"mountedHarddisks is new disk without backing %@", bsdName);
 							}
 							else
-								asl_NSLog_debug(@"mountedHarddisks ignoring volume with raid/zfs backing %@", bsdName);
+								LOGMOUNTEDHARDDISK(@"mountedHarddisks ignoring volume with raid/zfs backing %@", bsdName);
                         }
                     }
             

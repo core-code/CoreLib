@@ -107,6 +107,8 @@ void dispatch_after_main(float seconds, dispatch_block_t block);
 void dispatch_after_back(float seconds, dispatch_block_t block);
 void dispatch_async_main(dispatch_block_t block);
 void dispatch_async_back(dispatch_block_t block);
+void dispatch_sync_main(dispatch_block_t block);
+void dispatch_sync_back(dispatch_block_t block);
 
 
 // custom template collections: lets you define custom types for collection classes that so that the compiler knows what type they return
@@ -174,6 +176,10 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
 #define kUsagesThisVersionKey makeString(@"%@_usages", cc.appVersionString)
 #define kAskedThisVersionKey makeString(@"%@_usages", cc.appVersionString)
+static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
+{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton); }
+static inline NSInteger alertapp(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
+{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(cc.appName, msgFormat, defaultButton, alternateButton, otherButton); }
 
 // vendor information
 #ifdef VENDOR_HOMEPAGE
