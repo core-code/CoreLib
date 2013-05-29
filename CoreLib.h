@@ -176,10 +176,13 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
 #define kUsagesThisVersionKey makeString(@"%@_usages", cc.appVersionString)
 #define kAskedThisVersionKey makeString(@"%@_usages", cc.appVersionString)
-static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton) 
 { [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton); }
 static inline NSInteger alertapp(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 { [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(cc.appName, msgFormat, defaultButton, alternateButton, otherButton); }
+#pragma GCC diagnostic pop
 
 // vendor information
 #ifdef VENDOR_HOMEPAGE

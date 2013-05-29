@@ -32,7 +32,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #endif
 
+#ifdef USE_DISKARBITRATION
 #define LOGMOUNTEDHARDDISK(x, ...) 
+#endif
 
 #pragma GCC diagnostic ignored "-Wcast-align"
 

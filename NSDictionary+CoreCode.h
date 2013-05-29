@@ -38,4 +38,4 @@
 @end
 
 #endif
-#pragma GCC diagnostic push
+#pragma GCC diagnostic pop
