@@ -204,6 +204,28 @@ NSString *makeString(NSString *format, ...)
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
+NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
+{
+	NSAlert *alert = [NSAlert alertWithMessageText:prompt
+                                     defaultButton:[buttons safeObjectAtIndex:0]
+                                   alternateButton:[buttons safeObjectAtIndex:1]
+                                       otherButton:[buttons safeObjectAtIndex:2]
+                         informativeTextWithFormat:@""];
+    
+	NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+#if ! __has_feature(objc_arc)
+    [input autorelease];
+#endif
+	[alert setAccessoryView:input];
+	NSInteger button = [alert runModal];
+    
+    [input validateEditing];
+    *result = [input stringValue];
+    
+    return button;
+}
+
 NSColor *makeColor(float r, float g, float b, float a)
 {
 	return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];

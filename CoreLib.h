@@ -86,6 +86,10 @@ extern NSWorkspace *workspace;
 #endif
 
 
+// alert convenience
+NSInteger input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
+
+
 // obj creation convenience
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 //NSPredicate *makePredicate(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
