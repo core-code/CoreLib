@@ -17,3 +17,10 @@
 
 @end
 
+
+@interface NSDateFormatter (CoreCode)
+
++ (NSString *)formattedTimeFromTimeInterval:(NSTimeInterval)timeInterval;
+
+@end
+

@@ -86,6 +86,15 @@
 	return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
 }
 
+- (BOOL)containsAny:(NSArray *)otherStrings
+{
+	for (NSString *otherString in otherStrings)
+		if ([self rangeOfString:otherString].location != NSNotFound)
+			return YES;
+
+	return NO;
+}
+
 - (NSString *)localized
 {
 	return NSLocalizedString(self, nil);

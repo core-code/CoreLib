@@ -50,6 +50,7 @@
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;
+- (BOOL)containsAny:(NSArray *)otherStrings;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
