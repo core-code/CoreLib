@@ -16,8 +16,8 @@
 - (void)open;
 
 @property (readonly, nonatomic) NSString *path;
-@property (readonly, nonatomic) NSArray *dirContents;
-@property (readonly, nonatomic) NSArray *dirContentsRecursive;
+@property (readonly, nonatomic) NSStringArray *dirContents;
+@property (readonly, nonatomic) NSStringArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 

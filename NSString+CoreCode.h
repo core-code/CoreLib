@@ -13,8 +13,8 @@
 @interface NSString (CoreCode)
 
 // filesystem support
-@property (readonly, nonatomic) NSArray *dirContents;
-@property (readonly, nonatomic) NSArray *dirContentsRecursive;
+@property (readonly, nonatomic) NSStringArray *dirContents;
+@property (readonly, nonatomic) NSStringArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 @property (readonly, nonatomic) unsigned long long fileSize;
@@ -35,7 +35,8 @@
 @property (readonly, nonatomic) NSURL *fileURL;
 @property (readonly, nonatomic) NSURL *URL;
 @property (readonly, nonatomic) NSURL *escapedURL;
-@property (readonly, nonatomic) NSArray *lines;
+@property (readonly, nonatomic) NSStringArray *lines;
+@property (readonly, nonatomic) NSStringArray *words;
 @property (readonly, nonatomic) NSString *trimmed;
 @property (readonly, nonatomic) NSString *expanded;
 @property (readonly, nonatomic) NSData *download;
@@ -57,7 +58,7 @@
 
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;	// stringByReplacingOccurencesOfString:withString:
-- (NSArray *)split:(NSString *)sep;								// componentsSeparatedByString:
+- (NSStringArray *)split:(NSString *)sep;								// componentsSeparatedByString:
 
 @end
 

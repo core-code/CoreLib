@@ -21,16 +21,16 @@
 	return [self URLByAppendingPathComponent:component];
 }
 
-- (NSArray *)dirContents
+- (NSStringArray *)dirContents
 {
 	if (![self isFileURL]) return nil;
-	return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self path] error:NULL];
+	return (NSStringArray *)[[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self path] error:NULL];
 }
 
-- (NSArray *)dirContentsRecursive
+- (NSStringArray *)dirContentsRecursive
 {
 	if (![self isFileURL]) return nil;
-	return [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[self path] error:NULL];
+	return (NSStringArray *)[[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[self path] error:NULL];
 }
 
 - (NSURL *)uniqueFile

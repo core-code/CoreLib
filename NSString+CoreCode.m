@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize;
+@dynamic words, lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize;
 #ifdef USE_SECURITY
 @dynamic SHA1;
 #endif
@@ -43,14 +43,14 @@
 	return YES;
 }
 
-- (NSArray *)dirContents
+- (NSStringArray *)dirContents
 {
-	return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self error:NULL];
+	return (NSStringArray *)[[NSFileManager defaultManager] contentsOfDirectoryAtPath:self error:NULL];
 }
 
-- (NSArray *)dirContentsRecursive
+- (NSStringArray *)dirContentsRecursive
 {
-	return [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:self error:NULL];
+	return (NSStringArray *)[[NSFileManager defaultManager] subpathsOfDirectoryAtPath:self error:NULL];
 }
 
 - (NSString *)uniqueFile
@@ -134,9 +134,14 @@
 	return [self stringByExpandingTildeInPath];
 }
 
-- (NSArray *)lines
+- (NSStringArray *)words
 {
-	return [self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
+- (NSStringArray *)lines
+{
+	return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
 - (NSString *)trimmed
@@ -208,9 +213,9 @@
 	return [self stringByReplacingOccurrencesOfString:str1 withString:str2];
 }
 
-- (NSArray *)split:(NSString *)sep								// componentsSeparatedByString:
+- (NSStringArray *)split:(NSString *)sep								// componentsSeparatedByString:
 {
-	return [self componentsSeparatedByString:sep];
+	return (NSStringArray *)[self componentsSeparatedByString:sep];
 }
 
 - (NSArray *)defaultArray

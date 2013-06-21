@@ -39,6 +39,37 @@ typedef enum
 	openMacupdateWebsite		// MacupdateProductPage info.plist key
 } openChoice;
 
+
+// CUSTOM TEMPLATE COLLECTIONS
+// lets you define custom types for collection classes that so that the compiler knows what type they return
+#define CUSTOM_ARRAY(classname) \
+@interface classname ## Array : NSArray \
+- (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
+@end
+#define CUSTOM_MUTABLE_ARRAY(classname) \
+@interface Mutable ## classname ## Array : NSMutableArray \
+- (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
+@end
+#define CUSTOM_DICTIONARY(classname) \
+@interface classname ## Dictionary : NSDictionary \
+- (classname *)objectForKeyedSubscript:(id)key;\
+@end
+#define CUSTOM_MUTABLE_DICTIONARY(classname) \
+@interface Mutable ## classname ## Dictionary : NSMutableDictionary \
+- (classname *)objectForKeyedSubscript:(id)key;\
+@end
+CUSTOM_ARRAY(NSString)
+CUSTOM_ARRAY(NSNumber)
+CUSTOM_MUTABLE_ARRAY(NSString)
+CUSTOM_MUTABLE_ARRAY(NSNumber)
+CUSTOM_DICTIONARY(NSString)
+CUSTOM_DICTIONARY(NSNumber)
+CUSTOM_MUTABLE_DICTIONARY(NSString)
+CUSTOM_MUTABLE_DICTIONARY(NSNumber)
+
+
+
+
 #import "NSArray+CoreCode.h"
 #import "NSURL+CoreCode.h"
 #import "NSData+CoreCode.h"
@@ -110,24 +141,6 @@ void dispatch_async_back(dispatch_block_t block);
 void dispatch_sync_main(dispatch_block_t block);
 void dispatch_sync_back(dispatch_block_t block);
 
-
-// custom template collections: lets you define custom types for collection classes that so that the compiler knows what type they return
-#define CUSTOM_ARRAY(classname) \
-@interface classname ## Array : NSArray \
-- (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
-@end
-#define CUSTOM_MUTABLE_ARRAY(classname) \
-@interface Mutable ## classname ## Array : NSMutableArray \
-- (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
-@end
-#define CUSTOM_DICTIONARY(classname) \
-@interface classname ## Dictionary : NSDictionary \
-- (classname *)objectForKeyedSubscript:(id)key;\
-@end
-#define CUSTOM_MUTABLE_DICTIONARY(classname) \
-@interface Mutable ## classname ## Dictionary : NSMutableDictionary \
-- (classname *)objectForKeyedSubscript:(id)key;\
-@end
 
 
 // for easy const key generation
