@@ -16,8 +16,9 @@
 @interface JMAlertView : UIAlertView <UIAlertViewDelegate>
 
 @property (copy, nonatomic) BasicBlock cancelBlock;
-@property (copy, nonatomic) BasicBlock otherBlock;
+@property (copy, nonatomic) IntInBlock otherBlock;
 
 + (void)performBlock:(BasicBlock)block withProgressAlertTitled:(NSString *)title;
++ (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount;
 
 @end

@@ -9,9 +9,11 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef  CORELIB
+#ifndef CORELIB
 #error you need to include CoreLib.h in your PCH file
 #endif
+
+NSString *_machineType();
 
 CoreLib *cc;
 aslclient client;
@@ -133,7 +135,7 @@ NSWorkspace *workspace;
 #endif
 
 
-NSString *_machineType();
+
 
 - (void)openURL:(openChoice)choice
 {
@@ -215,15 +217,15 @@ NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
     
 	NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
 #if ! __has_feature(objc_arc)
-    [input autorelease];
+	[input autorelease];
 #endif
 	[alert setAccessoryView:input];
 	NSInteger button = [alert runModal];
-    
-    [input validateEditing];
-    *result = [input stringValue];
-    
-    return button;
+
+	[input validateEditing];
+	*result = [input stringValue];
+
+	return button;
 }
 
 NSColor *makeColor(float r, float g, float b, float a)
@@ -320,7 +322,6 @@ void dispatch_sync_back(dispatch_block_t block)
 {
 	dispatch_sync(dispatch_get_global_queue(0, 0), block);
 }
-
 
 // private
 #include <sys/types.h>

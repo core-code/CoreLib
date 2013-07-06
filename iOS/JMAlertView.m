@@ -17,6 +17,25 @@
 
 @synthesize cancelBlock, otherBlock;
 
+
++ (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount
+{
+	assert(buttonCount > 0);
+	JMAlertView *alert = [[JMAlertView alloc] initWithTitle:NSLocalizedString([title stringByAppendingString:@"_TITLE"], nil)
+													message:NSLocalizedString([title stringByAppendingString:@"_MESSAGE"], nil)
+												   delegate:self
+										  cancelButtonTitle:NSLocalizedString([title stringByAppendingString:@"_BUTTON"], nil)
+										  otherButtonTitles:nil];
+
+	for (int i = 1; i < buttonCount;i++)
+	{
+		NSString *buttonTitle = [title stringByAppendingFormat:@"_BUTTON%i", i+1];
+		[alert addButtonWithTitle:NSLocalizedString(buttonTitle, nil)];
+	}
+
+	return alert;
+}
+
 - (void)show
 {
     self.delegate = self;
@@ -34,7 +53,7 @@
     else
     {
         if (otherBlock)
-            otherBlock();
+			otherBlock(buttonIndex - [self firstOtherButtonIndex]);
     }
 }
 
