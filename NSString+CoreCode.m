@@ -162,15 +162,28 @@
 	{
 		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
 			 continue;
-		ret = [ret stringByReplacingOccurrencesOfString:key withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
+		ret = [ret stringByReplacingOccurrencesOfString:key
+                                             withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
 	}
 	
-	for (NSString *key in replacements)
-	{
-		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
-			continue;
-		ret = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"] withString:[replacements objectForKey:key]];
-	}
+    BOOL replaced;
+    do
+    {
+        replaced = FALSE;
+        for (NSString *key in replacements)
+        {
+            if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
+                continue;
+            NSString *tmp = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]
+                                                 withString:[replacements objectForKey:key]];
+            
+            if (![tmp isEqualToString:ret])
+            {
+                ret = tmp;
+                replaced = YES;
+            }
+        }
+    } while (replaced);
 	
 	return ret;
 }
