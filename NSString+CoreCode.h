@@ -48,6 +48,8 @@
 @property (readonly, nonatomic) NSUInteger length;
 
 
+- (NSString *)stringValue;
+
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;

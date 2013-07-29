@@ -287,6 +287,11 @@
 	[[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
 }
 
+- (NSString *)stringValue
+{
+	return self;
+}
+
 
 //- (NSString *)arg:(id)arg, ...
 //{
