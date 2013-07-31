@@ -12,5 +12,6 @@
 @interface JMCorrectTimer : NSObject
 
 - (id)initWithFireDate:(NSDate *)d timerBlock:(void (^)(void))timerBlock dropBlock:(void (^)(void))dropBlock;
+- (void)invalidate;
 
 @end

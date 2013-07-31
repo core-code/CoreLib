@@ -49,6 +49,8 @@
 
 - (void)scheduleTimer
 {
+	asl_NSLog_debug(@"JMCorrectTimer: scheduleTimer");
+	
 	NSTimer *t = [[NSTimer alloc] initWithFireDate:_date
 										  interval:0
 											target:self
@@ -63,10 +65,11 @@
 	self.timer = t;
 }
 
-- (void)cleanupTimer
+- (void)invalidate
 {
+	asl_NSLog_debug(@"JMCorrectTimer: invalidate");
 	[self.timer invalidate];
-	self.timer = nil;
+	self.timer = nil; // crash
 }
 
 - (void)timer:(id)sender
@@ -75,7 +78,7 @@
 
 	_timerBlock();
 	
-	[self cleanupTimer];
+	[self invalidate];
 
 	self.timerBlock = nil;
 	self.dropBlock = nil;
@@ -84,7 +87,7 @@
 
 - (void)receiveWakeNote:(id)sender
 {
-	[self cleanupTimer];
+	[self invalidate];
 
 	if ([[NSDate date] timeIntervalSinceDate:_date] > 0.0)
 	{
@@ -108,6 +111,8 @@
 	{
 		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: error dealloced while still in use");
 	}
+	else
+		asl_NSLog_debug(@"JMCorrectTimer: dealloc");
 	
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 	
