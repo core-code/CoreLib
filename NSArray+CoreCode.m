@@ -35,6 +35,16 @@
 	return [NSArray arrayWithArray:array];
 }
 
+- (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects
+{
+	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+    
+    for (id obj in objects)
+        [array removeObjectIdenticalTo:obj];
+    
+	return [NSArray arrayWithArray:array];
+}
+
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet
 {
 	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
