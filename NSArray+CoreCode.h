@@ -18,7 +18,7 @@
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
-- (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects;
+- (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects; 
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
 - (NSArray *)arrayOfValuesForKey:(NSString *)key;

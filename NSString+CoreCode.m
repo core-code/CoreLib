@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize;
+@dynamic words, lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents;
 #ifdef USE_SECURITY
 @dynamic SHA1;
 #endif
@@ -64,6 +64,11 @@
 		while ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]]) i++;
 		return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
 	}
+}
+
+- (NSData *)contents
+{
+    return [[NSData alloc] initWithContentsOfFile:self];
 }
 
 - (BOOL)fileExists

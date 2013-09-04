@@ -30,16 +30,23 @@
 @property (assign, nonatomic) float defaultFloat;
 
 @property (readonly, nonatomic) NSString *localized;
+//  bundle contents to path
 @property (readonly, nonatomic) NSString *resourcePath;
 @property (readonly, nonatomic) NSURL *resourceURL;
+// to url
 @property (readonly, nonatomic) NSURL *fileURL;
 @property (readonly, nonatomic) NSURL *URL;
 @property (readonly, nonatomic) NSURL *escapedURL;
+// url download
+@property (readonly, nonatomic) NSData *download;
+// file data
+@property (readonly, nonatomic) NSData *contents;
+
 @property (readonly, nonatomic) NSStringArray *lines;
 @property (readonly, nonatomic) NSStringArray *words;
 @property (readonly, nonatomic) NSString *trimmed;
 @property (readonly, nonatomic) NSString *expanded;
-@property (readonly, nonatomic) NSData *download;
+
 @property (readonly, nonatomic) NSMutableString *mutable;
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;

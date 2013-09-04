@@ -119,6 +119,7 @@ extern NSWorkspace *workspace;
 
 // alert convenience
 NSInteger input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
+void alertfeedbackfatal(NSString *usermsg, NSString *details);
 
 
 // obj creation convenience
@@ -184,6 +185,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define NON_NIL_STR(x)		((x) ? (x) : @"")
 #define NON_NIL_OBJ(x)		((x) ? (x) : [NSNull null])
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
+#define IS_IN_RANGE(v,l,h)  (((v) >= (l)) && ((v) <= (h)))
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define ONCE(block)			{ static BOOL once = FALSE; if (!once) {	block();	once = TRUE; } }
 #define ONCE_EVERY_MINUTES(block, minutes)	{ 	static NSDate *time = nil;	if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60))	{	block();	time = [NSDate date]; } }
