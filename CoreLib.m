@@ -209,21 +209,23 @@ NSString *makeString(NSString *format, ...)
 
 void alertfeedbackfatal(NSString *usermsg, NSString *details)
 {
-    dispatch_sync_main(^{
-    if (NSRunAlertPanel(@"Fatal Error", @"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\n%@", @"Send to support", @"Quit", nil, usermsg, details) == NSOKButton)
-    {
-        NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured.\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ %@",
-                                          cc.appName,
-                                          cc.appVersionString,
-                                          cc.appName,
-                                          details,
-                                          _machineType(),
-                                          [[NSProcessInfo processInfo] operatingSystemVersionString],
-                                          ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""));
-        
-        [mailtoLink.escapedURL open];
-    }
-    exit(1);
+    dispatch_sync_main(^
+	__attribute__((noreturn))
+	{
+		if (NSRunAlertPanel(@"Fatal Error", @"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\n%@", @"Send to support", @"Quit", nil, usermsg, details) == NSOKButton)
+		{
+			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured.\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ %@",
+											  cc.appName,
+											  cc.appVersionString,
+											  cc.appName,
+											  details,
+											  _machineType(),
+											  [[NSProcessInfo processInfo] operatingSystemVersionString],
+											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""));
+			
+			[mailtoLink.escapedURL open];
+		}
+		exit(1);
     });
 }
 
