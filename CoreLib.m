@@ -181,15 +181,15 @@ NSWorkspace *workspace;
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 
 // obj creation convenience
-//NSPredicate *makePredicate(NSString *format, ...)
-//{
-//	va_list args;
-//	va_start(args, format);
-//	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
-//	va_end(args);
-//
-//	return pred;
-//}
+NSPredicate *makePredicate(NSString *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+	va_end(args);
+
+	return pred;
+}
 
 NSString *makeString(NSString *format, ...)
 {

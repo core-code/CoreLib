@@ -124,7 +124,7 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details);
 
 // obj creation convenience
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
-//NSPredicate *makePredicate(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+NSPredicate *makePredicate(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSColor *makeColor(float r, float g, float b, float a);		// params from 0..1
 NSColor *makeColor255(float r, float g, float b, float a);	// params from 0..255
