@@ -183,6 +183,9 @@ NSWorkspace *workspace;
 // obj creation convenience
 NSPredicate *makePredicate(NSString *format, ...)
 {
+#ifdef DEBUG
+	assert([format rangeOfString:@"'%@'"].location == NSNotFound);
+#endif
 	va_list args;
 	va_start(args, format);
 	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
