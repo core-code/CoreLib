@@ -34,6 +34,16 @@
     [invocation setArgument:&propertyName atIndex:2];
     [invocation invokeWithTarget:self];
 }
+
+- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key
+{
+	NSMutableDictionary *mut = self.mutable;
+
+	mut[key] = value;
+
+	return mut.immutable;
+}
+
 @end
 
 

@@ -131,8 +131,11 @@
     NSMutableArray *resultArray = [NSMutableArray new];
     
     for (id object in self)
-        [resultArray addObject:block(object)];
-
+	{
+		id result = block(object);
+		if (result)
+			[resultArray addObject:result];
+	}
 #if ! __has_feature(objc_arc)
 	[resultArray autorelease];
 #endif
