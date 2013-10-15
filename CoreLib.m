@@ -212,10 +212,15 @@ NSString *makeString(NSString *format, ...)
 
 void alertfeedbackfatal(NSString *usermsg, NSString *details)
 {
-    dispatch_sync_main(^
-	__attribute__((noreturn))
+    dispatch_block_t block = ^__attribute__((noreturn))
 	{
-		if (NSRunAlertPanel(@"Fatal Error", @"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\n%@", @"Send to support", @"Quit", nil, usermsg, details) == NSOKButton)
+        static const int maxLen = 400;
+
+        NSString *visibleDetails = details;
+        if (visibleDetails.length > maxLen)
+            visibleDetails = [[visibleDetails clamp:maxLen] stringByAppendingString:@" …\n(Remaining message omitted)"];
+            
+		if (NSRunAlertPanel(@"Fatal Error", @"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", @"Send to support", @"Quit", nil, usermsg, visibleDetails) == NSOKButton)
 		{
 			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured.\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ %@",
 											  cc.appName,
@@ -229,7 +234,12 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
 			[mailtoLink.escapedURL open];
 		}
 		exit(1);
-    });
+    };
+    
+    if ([NSThread currentThread] == [NSThread mainThread])
+        block();
+    else
+        dispatch_sync_main(block);
 }
 
 NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
@@ -333,13 +343,12 @@ void dispatch_async_main(dispatch_block_t block)
 void dispatch_async_back(dispatch_block_t block)
 {
 	dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
-	assert(dispatch_get_current_queue() != queue);
 	dispatch_async(queue, block);
 }
 
 void dispatch_sync_main(dispatch_block_t block)
 {
-	assert([NSThread currentThread] != [NSThread mainThread]);
+	assert([NSThread currentThread] != [NSThread mainThread]); // this would deadlock
 	dispatch_sync(dispatch_get_main_queue(), block);
 }
 
