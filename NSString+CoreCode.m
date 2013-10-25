@@ -194,6 +194,27 @@
 	return ret;
 }
 
+- (NSString *)titlecaseString
+{
+	NSString *cap = [self capitalizedString];
+	NSString *res = [cap stringByReplacingMultipleStrings:@{@" A " : @" a ", @" An " : @" an ", @" And " : @" and ", @" As " : @" as ", @" At " : @" at ", @" But " : @" but ", @" By " : @" by ", @" En " : @" en ", @" For " : @" for ", @" If " : @" if ", @" In " : @" in ", @" Of " : @" of ", @" On " : @" on ", @" Or " : @" or ", @" Nor " : @" nor ", @" The " : @" the ", @" To " : @" to ", @" V " : @" v ", @" Via " : @" via ", @" Vs " : @" vs ", @" Up " : @" up ", @" It " : @" it "}];
+
+
+	return res;
+}
+
+- (NSString *)propercaseString
+{
+	if ([self length] == 0)
+		return @"";
+	else if ([self length] == 1)
+		return [self uppercaseString];
+
+	return makeString(@"%@%@",
+					  [[self substringToIndex:1] uppercaseString],
+					  [[self substringFromIndex:1] lowercaseString]);
+}
+
 - (NSData *)download
 {
 	NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];

@@ -56,6 +56,8 @@
 
 
 
+- (NSString *)titlecaseString;
+- (NSString *)propercaseString;
 
 
 - (NSString *)stringValue;

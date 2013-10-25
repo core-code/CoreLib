@@ -144,6 +144,7 @@ void dispatch_sync_back(dispatch_block_t block);
 
 
 
+
 // for easy const key generation
 #define CONST_KEY(name) \
 NSString *const k ## name ## Key = @ #name;
@@ -151,11 +152,29 @@ NSString *const k ## name ## Key = @ #name;
 #define CONST_KEY_EXTERN(name) \
 extern NSString *const k ## name ## Key;
 
+
 #define CONST_KEY_CUSTOM(key, value) \
 NSString *const key = @ #value;
 
 #define CONST_KEY_CUSTOM_EXTERN(name) \
 extern NSString *const name;
+
+
+#define CONST_KEY_ENUM_SINGLE(name, enumname) \
+@interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
+enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+
+#define CONST_KEY_ENUM(name, enumname) \
+enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+//\
+//@implementation enumname ## Key\
+//- ( enumname ) defaultEnum { return ( enumname ) self.defaultInt; } \
+//- ( void ) setDefaultEnum:( enumname ) newvalue  { self.defaultInt = newvalue; } \
+//@end \
+
+#define CONST_KEY_ENUM_EXTERN(name, enumname) \
+@interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
+extern enumname ## Key *const k ## name ## Key;
 
 
 // logging support
@@ -178,8 +197,8 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 
 // convenience macros
-#define LOGSUCC				NSLog(@"success")
-#define LOGFAIL				NSLog(@"failure")
+#define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
+#define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
 #define LOG(x)				NSLog(@"%@", [(x) description]);
 #define OBJECT_OR(x,y)		((x) ? (x) : (y))
 #define NON_NIL_STR(x)		((x) ? (x) : @"")
