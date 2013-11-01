@@ -15,9 +15,9 @@
 
 @implementation NSDictionary (CoreCode)
 
-@dynamic mutable;
+@dynamic mutableObject;
 
-- (NSMutableDictionary *)mutable
+- (NSMutableDictionary *)mutableObject
 {
 	return [NSMutableDictionary dictionaryWithDictionary:self];
 }
@@ -37,11 +37,12 @@
 
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key
 {
-	NSMutableDictionary *mut = self.mutable;
+	NSMutableDictionary *mut = [NSMutableDictionary dictionaryWithDictionary:self];
 
 	mut[key] = value;
 
-	return mut.immutable;
+	return [NSDictionary dictionaryWithDictionary:mut
+			];
 }
 
 @end
@@ -49,9 +50,9 @@
 
 @implementation  NSMutableDictionary (CoreCode)
 
-@dynamic immutable;
+@dynamic immutableObject;
 
-- (NSDictionary *)immutable
+- (NSDictionary *)immutableObject
 {
 	return [NSDictionary dictionaryWithDictionary:self];
 }

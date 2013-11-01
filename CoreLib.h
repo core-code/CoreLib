@@ -16,6 +16,11 @@
 #define CORELIB 1
 
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 // basic block types
 #ifdef __BLOCKS__
 typedef void (^BasicBlock)(void);
@@ -166,14 +171,9 @@ enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
 
 #define CONST_KEY_ENUM(name, enumname) \
 enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
-//\
-//@implementation enumname ## Key\
-//- ( enumname ) defaultEnum { return ( enumname ) self.defaultInt; } \
-//- ( void ) setDefaultEnum:( enumname ) newvalue  { self.defaultInt = newvalue; } \
-//@end \
 
 #define CONST_KEY_ENUM_EXTERN(name, enumname) \
-@interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
+@interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
 extern enumname ## Key *const k ## name ## Key;
 
 
@@ -232,6 +232,12 @@ static inline NSInteger alertapp(NSString *msgFormat, NSString *defaultButton, N
 #define kFeedbackEmail FEEDBACK_EMAIL
 #else
 #define kFeedbackEmail @"feedback@corecode.at"
+#endif
+
+
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

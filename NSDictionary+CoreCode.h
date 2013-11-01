@@ -13,7 +13,7 @@
 
 @interface NSDictionary (CoreCode)
 
-@property (readonly, nonatomic) NSMutableDictionary *mutable;
+@property (readonly, nonatomic) NSMutableDictionary *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
 
 @end
@@ -21,7 +21,7 @@
 
 @interface NSMutableDictionary (CoreCode)
 
-@property (readonly, nonatomic) NSDictionary *immutable;
+@property (readonly, nonatomic) NSDictionary *immutableObject;
 
 @end
 

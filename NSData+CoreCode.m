@@ -15,7 +15,7 @@
 
 @implementation NSData (CoreCode)
 
-@dynamic string, mutable;
+@dynamic string, mutableObject;
 
 - (NSString *)string
 {
@@ -26,7 +26,7 @@
     return s;
 }
 
-- (NSMutableData *)mutable
+- (NSMutableData *)mutableObject
 {
 	return [NSMutableData dataWithData:self];
 }

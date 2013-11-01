@@ -22,3 +22,6 @@
 + (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount;
 
 @end
+
+#warning crashes
+#warning no rotate for input image

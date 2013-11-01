@@ -243,7 +243,7 @@
 }
 #endif
 
-- (NSMutableString *)mutable
+- (NSMutableString *)mutableObject
 {
 	return [NSMutableString stringWithString:self];
 }
@@ -354,9 +354,9 @@
 
 @implementation  NSMutableString (CoreCode)
 
-@dynamic immutable;
+@dynamic immutableObject;
 
-- (NSString *)immutable
+- (NSString *)immutableObject
 {
 	return [NSString stringWithString:self];
 }

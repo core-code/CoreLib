@@ -12,7 +12,7 @@
 
 @interface NSData (CoreCode)
 
-@property (readonly, nonatomic) NSMutableData *mutable;
+@property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 
 @end
