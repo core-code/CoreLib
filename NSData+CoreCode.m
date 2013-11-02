@@ -15,7 +15,7 @@
 
 @implementation NSData (CoreCode)
 
-@dynamic string, mutableObject;
+@dynamic string, hexString, mutableObject;
 
 - (NSString *)string
 {
@@ -24,6 +24,22 @@
 	[s autorelease];
 #endif
     return s;
+}
+
+- (NSString *)hexString
+{
+    const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+
+    if (!dataBuffer)
+        return [NSString string];
+
+    NSUInteger          dataLength  = [self length];
+    NSMutableString     *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+
+    for (NSUInteger i = 0; i < dataLength; ++i)
+        [hexString appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)dataBuffer[i]]];
+
+    return [NSString stringWithString:hexString];
 }
 
 - (NSMutableData *)mutableObject

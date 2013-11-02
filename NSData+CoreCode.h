@@ -14,5 +14,6 @@
 
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
+@property (readonly, nonatomic) NSString *hexString;
 
 @end

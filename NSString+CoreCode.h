@@ -54,6 +54,7 @@
 
 @property (readonly, nonatomic) NSUInteger length;
 
+@property (readonly, nonatomic) NSData *dataFromHexString;
 
 
 - (NSString *)titlecaseString;
