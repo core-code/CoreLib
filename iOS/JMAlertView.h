@@ -23,5 +23,3 @@
 
 @end
 
-#warning crashes
-#warning no rotate for input image

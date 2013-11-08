@@ -45,6 +45,7 @@
 - (NSString *)joined:(NSString *)sep;							// componentsJoinedByString:
 
 @property (readonly, nonatomic) NSUInteger count;
+@property (readonly, nonatomic) NSSet *set;
 
 @end
 

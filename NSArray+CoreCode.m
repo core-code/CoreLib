@@ -15,8 +15,12 @@
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, count;
+@dynamic mutableObject, empty, count, set;
 
+- (NSSet *)set
+{
+	return [NSSet setWithArray:self];
+}
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject
 {

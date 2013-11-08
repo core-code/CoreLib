@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObj, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString;
+@dynamic words, lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString;
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
@@ -277,12 +277,12 @@
 {
 	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
 }
-- (id)defaultObj
+- (id)defaultObject
 {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:self];
 }
 
-- (void)setDefaultObj:(id)newDefault
+- (void)setDefaultObject:(id)newDefault
 {
 	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
 }

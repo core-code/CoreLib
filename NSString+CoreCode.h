@@ -21,7 +21,7 @@
 @property (readonly, nonatomic) BOOL isWriteablePath;
 
 // NSUserDefaults support
-@property (copy, nonatomic) id defaultObj;
+@property (copy, nonatomic) id defaultObject;
 @property (copy, nonatomic) NSString *defaultString;
 @property (copy, nonatomic) NSArray *defaultArray;
 @property (copy, nonatomic) NSDictionary *defaultDict;
