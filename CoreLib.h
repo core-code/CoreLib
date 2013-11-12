@@ -206,7 +206,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
 #define IS_IN_RANGE(v,l,h)  (((v) >= (l)) && ((v) <= (h)))
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
-#define ONCE(block)			{ static BOOL once = FALSE; if (!once) {	block();	once = TRUE; } }
+#define ONCE(block)			{ static dispatch_once_t onceToken; dispatch_once(&onceToken, block); }
 #define ONCE_EVERY_MINUTES(block, minutes)	{ 	static NSDate *time = nil;	if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60))	{	block();	time = [NSDate date]; } }
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
