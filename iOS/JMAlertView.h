@@ -22,3 +22,4 @@
 + (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount;
 
 @end
+

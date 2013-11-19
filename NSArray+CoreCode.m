@@ -15,8 +15,12 @@
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutable, empty, count;
+@dynamic mutableObject, empty, count, set;
 
+- (NSSet *)set
+{
+	return [NSSet setWithArray:self];
+}
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject
 {
@@ -63,6 +67,15 @@
 	return [NSArray arrayWithArray:array];
 }
 
+- (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject
+{
+	NSMutableArray *mut = self.mutableObject;
+
+	[mut replaceObjectAtIndex:[mut indexOfObject:anObject] withObject:newObject];
+
+	return mut.immutableObject;
+}
+
 - (NSArray *)arrayOfValuesForKey:(NSString *)key
 {
     NSMutableArray *resultArray = [NSMutableArray new];
@@ -74,7 +87,7 @@
 	[resultArray autorelease];
 #endif
 
-    return resultArray.immutable;
+    return [NSArray arrayWithArray:resultArray];
 }
 
 - (id)safeObjectAtIndex:(NSUInteger)index
@@ -116,7 +129,7 @@
 	return [self sortedArrayUsingDescriptors:[NSArray arrayWithObject:sd]];
 }
 
-- (NSMutableArray *)mutable
+- (NSMutableArray *)mutableObject
 {
 	return [NSMutableArray arrayWithArray:self];
 }
@@ -140,7 +153,7 @@
 	[resultArray autorelease];
 #endif
     
-    return resultArray.immutable;
+    return [NSArray arrayWithArray:resultArray];
 }
 
 - (NSInteger)collect:(ObjectInIntOutBlock)block
@@ -165,7 +178,7 @@
 	[resultArray autorelease];
 #endif
     
-    return resultArray.immutable;
+    return [NSArray arrayWithArray:resultArray];
 }
 
 - (void)apply:(ObjectInBlock)block								// enumerateObjectsUsingBlock:
@@ -232,9 +245,9 @@
 
 @implementation  NSMutableArray (CoreCode)
 
-@dynamic immutable;
+@dynamic immutableObject;
 
-- (NSArray *)immutable
+- (NSArray *)immutableObject
 {
 	return [NSArray arrayWithArray:self];
 }

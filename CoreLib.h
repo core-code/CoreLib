@@ -16,6 +16,11 @@
 #define CORELIB 1
 
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 // basic block types
 #ifdef __BLOCKS__
 typedef void (^BasicBlock)(void);
@@ -120,6 +125,10 @@ extern NSWorkspace *workspace;
 // alert convenience
 NSInteger input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
 void alertfeedbackfatal(NSString *usermsg, NSString *details);
+NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
+void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
 
 
 // obj creation convenience
@@ -144,6 +153,7 @@ void dispatch_sync_back(dispatch_block_t block);
 
 
 
+
 // for easy const key generation
 #define CONST_KEY(name) \
 NSString *const k ## name ## Key = @ #name;
@@ -151,11 +161,24 @@ NSString *const k ## name ## Key = @ #name;
 #define CONST_KEY_EXTERN(name) \
 extern NSString *const k ## name ## Key;
 
+
 #define CONST_KEY_CUSTOM(key, value) \
 NSString *const key = @ #value;
 
 #define CONST_KEY_CUSTOM_EXTERN(name) \
 extern NSString *const name;
+
+
+#define CONST_KEY_ENUM_SINGLE(name, enumname) \
+@interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
+enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+
+#define CONST_KEY_ENUM(name, enumname) \
+enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+
+#define CONST_KEY_ENUM_EXTERN(name, enumname) \
+@interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
+extern enumname ## Key *const k ## name ## Key;
 
 
 // logging support
@@ -178,8 +201,8 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 
 // convenience macros
-#define LOGSUCC				NSLog(@"success")
-#define LOGFAIL				NSLog(@"failure")
+#define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
+#define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
 #define LOG(x)				NSLog(@"%@", [(x) description]);
 #define OBJECT_OR(x,y)		((x) ? (x) : (y))
 #define NON_NIL_STR(x)		((x) ? (x) : @"")
@@ -187,21 +210,13 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
 #define IS_IN_RANGE(v,l,h)  (((v) >= (l)) && ((v) <= (h)))
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
-#define ONCE(block)			{ static BOOL once = FALSE; if (!once) {	block();	once = TRUE; } }
+#define ONCE(block)			{ static dispatch_once_t onceToken; dispatch_once(&onceToken, block); }
 #define ONCE_EVERY_MINUTES(block, minutes)	{ 	static NSDate *time = nil;	if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60))	{	block();	time = [NSDate date]; } }
 #define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
 #define kUsagesThisVersionKey makeString(@"%@_usages", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 #define kAskedThisVersionKey makeString(@"%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
-static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
-{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton); }
-static inline NSInteger alertapp(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
-{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(cc.appName, msgFormat, defaultButton, alternateButton, otherButton); }
-#pragma GCC diagnostic pop
-#endif
+
 
 // vendor information
 #ifdef VENDOR_HOMEPAGE
@@ -213,6 +228,12 @@ static inline NSInteger alertapp(NSString *msgFormat, NSString *defaultButton, N
 #define kFeedbackEmail FEEDBACK_EMAIL
 #else
 #define kFeedbackEmail @"feedback@corecode.at"
+#endif
+
+
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

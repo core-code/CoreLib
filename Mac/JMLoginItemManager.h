@@ -16,7 +16,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @end
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 BOOL IsLoginItem(void);
 void AddLoginItem(void);
 void RemoveLoginItem(void);
+
+
+#ifdef __cplusplus
+}
+#endif

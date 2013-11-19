@@ -21,11 +21,11 @@
 @property (readonly, nonatomic) BOOL isWriteablePath;
 
 // NSUserDefaults support
-@property (assign, nonatomic) id defaultObj;
-@property (assign, nonatomic) NSString *defaultString;
-@property (assign, nonatomic) NSArray *defaultArray;
-@property (assign, nonatomic) NSDictionary *defaultDict;
-@property (assign, nonatomic) NSURL *defaultURL;
+@property (copy, nonatomic) id defaultObject;
+@property (copy, nonatomic) NSString *defaultString;
+@property (copy, nonatomic) NSArray *defaultArray;
+@property (copy, nonatomic) NSDictionary *defaultDict;
+@property (copy, nonatomic) NSURL *defaultURL;
 @property (assign, nonatomic) NSInteger defaultInt;
 @property (assign, nonatomic) float defaultFloat;
 
@@ -47,15 +47,18 @@
 @property (readonly, nonatomic) NSString *trimmed;
 @property (readonly, nonatomic) NSString *expanded;
 
-@property (readonly, nonatomic) NSMutableString *mutable;
+@property (readonly, nonatomic) NSMutableString *mutableObject;
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
 #endif
 
 @property (readonly, nonatomic) NSUInteger length;
 
+@property (readonly, nonatomic) NSData *dataFromHexString;
 
 
+- (NSString *)titlecaseString;
+- (NSString *)propercaseString;
 
 
 - (NSString *)stringValue;
@@ -86,6 +89,7 @@
 
 @interface NSMutableString (CoreCode)
 
-@property (readonly, nonatomic) NSString *immutable;
+@property (readonly, nonatomic) NSString *immutableObject;
 
 @end
+

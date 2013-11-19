@@ -13,7 +13,7 @@
 
 @interface NSArray (CoreCode)
 
-@property (readonly, nonatomic) NSMutableArray *mutable;
+@property (readonly, nonatomic) NSMutableArray *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
@@ -21,6 +21,8 @@
 - (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects; 
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject;
+
 - (NSArray *)arrayOfValuesForKey:(NSString *)key;
 - (id)safeObjectAtIndex:(NSUInteger)index;
 - (NSString *)safeStringAtIndex:(NSUInteger)index;
@@ -45,13 +47,14 @@
 - (NSString *)joined:(NSString *)sep;							// componentsJoinedByString:
 
 @property (readonly, nonatomic) NSUInteger count;
+@property (readonly, nonatomic) NSSet *set;
 
 @end
 
 
 @interface NSMutableArray (CoreCode)
 
-@property (readonly, nonatomic) NSArray *immutable;
+@property (readonly, nonatomic) NSArray *immutableObject;
 
 - (void)addObjectSafely:(id)anObject;
 
