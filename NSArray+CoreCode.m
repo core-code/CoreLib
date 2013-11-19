@@ -67,6 +67,15 @@
 	return [NSArray arrayWithArray:array];
 }
 
+- (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject
+{
+	NSMutableArray *mut = self.mutableObject;
+
+	[mut replaceObjectAtIndex:[mut indexOfObject:anObject] withObject:newObject];
+
+	return mut.immutableObject;
+}
+
 - (NSArray *)arrayOfValuesForKey:(NSString *)key
 {
     NSMutableArray *resultArray = [NSMutableArray new];

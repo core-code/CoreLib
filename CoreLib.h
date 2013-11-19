@@ -125,6 +125,10 @@ extern NSWorkspace *workspace;
 // alert convenience
 NSInteger input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
 void alertfeedbackfatal(NSString *usermsg, NSString *details);
+NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
+void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
 
 
 // obj creation convenience
@@ -212,15 +216,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
 #define kUsagesThisVersionKey makeString(@"%@_usages", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 #define kAskedThisVersionKey makeString(@"%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
-static inline NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
-{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton); }
-static inline NSInteger alertapp(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
-{ [NSApp activateIgnoringOtherApps:YES]; return NSRunAlertPanel(cc.appName, msgFormat, defaultButton, alternateButton, otherButton); }
-#pragma GCC diagnostic pop
-#endif
+
 
 // vendor information
 #ifdef VENDOR_HOMEPAGE

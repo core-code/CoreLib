@@ -263,6 +263,58 @@ NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
 	return button;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
+{
+
+	[NSApp activateIgnoringOtherApps:YES];
+	return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton);
+}
+NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
+{
+	[NSApp activateIgnoringOtherApps:YES];
+	return NSRunAlertPanel(cc.appName, msgFormat, defaultButton, alternateButton, otherButton);
+}
+void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)
+{
+    dispatch_block_t block = ^
+	{
+		NSString *name = makeString(@"_%@_%@_asked", identifier, [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]);
+		if (!name.defaultInt)
+		{
+			[NSApp activateIgnoringOtherApps:YES];
+			if (NSRunAlertPanel(title, msgFormat, defaultButton, dontwarnButton, nil) != NSAlertDefaultReturn)
+				name.defaultInt = 1;
+		}
+	};
+
+    if ([NSThread currentThread] == [NSThread mainThread])
+        block();
+    else
+        dispatch_async_main(block);
+}
+void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)
+{
+    dispatch_block_t block = ^
+	{
+		NSString *name = makeString(@"_%@_asked", identifier);
+		if (!name.defaultInt)
+		{
+			[NSApp activateIgnoringOtherApps:YES];
+			if (NSRunAlertPanel(title, msgFormat, defaultButton, dontwarnButton, nil) != NSAlertDefaultReturn)
+				name.defaultInt = 1;
+		}
+	};
+
+	if ([NSThread currentThread] == [NSThread mainThread])
+		block();
+	else
+		dispatch_async_main(block);
+}
+#pragma GCC diagnostic pop
+
+
 NSColor *makeColor(float r, float g, float b, float a)
 {
 	return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];

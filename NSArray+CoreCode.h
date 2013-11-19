@@ -21,6 +21,8 @@
 - (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects; 
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject;
+
 - (NSArray *)arrayOfValuesForKey:(NSString *)key;
 - (id)safeObjectAtIndex:(NSUInteger)index;
 - (NSString *)safeStringAtIndex:(NSUInteger)index;
