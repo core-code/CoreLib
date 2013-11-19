@@ -69,7 +69,11 @@
 
 - (NSData *)contents
 {
-    return [[NSData alloc] initWithContentsOfFile:self];
+#if  __has_feature(objc_arc)
+   return [[NSData alloc] initWithContentsOfFile:self];
+#else
+	return [[[NSData alloc] initWithContentsOfFile:self] autorelease];
+#endif
 }
 
 - (BOOL)fileExists
