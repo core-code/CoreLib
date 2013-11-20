@@ -16,5 +16,7 @@
 - (id)associatedValueForKey:(NSString *)key;
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key;
 
+@property (readonly, nonatomic) NSString *description;
+
 @end
 
