@@ -194,6 +194,20 @@ NSPredicate *makePredicate(NSString *format, ...)
 	return pred;
 }
 
+NSString *makeDescription(id sender, NSArray *args)
+{
+	NSMutableString *tmp = [NSMutableString new];
+
+	for (NSString *arg in args)
+	{
+		NSString *d = [[sender valueForKey:arg] description];
+
+		[tmp appendFormat:@"\n%@: %@", arg, d];
+	}
+
+	return tmp.immutableObject;
+}
+
 NSString *makeString(NSString *format, ...)
 {
 	va_list args;
