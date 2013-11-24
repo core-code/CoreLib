@@ -336,14 +336,6 @@
 	return self;
 }
 
-unsigned char strToChar (char a, char b)
-{
-    char encoder[3] = {'\0','\0','\0'};
-    encoder[0] = a;
-    encoder[1] = b;
-    return (char) strtol(encoder,NULL,16);
-}
-
 - (NSData *)dataFromHexString
 {
 	const char * bytes = [self cStringUsingEncoding: NSUTF8StringEncoding];
@@ -353,7 +345,10 @@ unsigned char strToChar (char a, char b)
 
 	while ((*bytes) && (*(bytes +1)))
 	{
-		*index = strToChar(*bytes, *(bytes +1));
+		char encoder[3] = {'\0','\0','\0'};
+		encoder[0] = *bytes;
+		encoder[1] = *(bytes+1);
+		*index = (char) strtol(encoder, NULL, 16);
 		index++;
 		bytes+=2;
 	}

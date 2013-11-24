@@ -13,7 +13,7 @@
 #error you need to include CoreLib.h in your PCH file
 #endif
 
-NSString *_machineType();
+NSString *_machineType(void);
 
 CoreLib *cc;
 aslclient client;
@@ -178,6 +178,7 @@ NSWorkspace *workspace;
 
 @end
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 
 // obj creation convenience
@@ -277,8 +278,7 @@ NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
 	return button;
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
 
