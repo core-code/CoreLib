@@ -57,6 +57,9 @@
 @property (readonly, nonatomic) NSArray *immutableObject;
 
 - (void)addObjectSafely:(id)anObject;
+- (void)map:(ObjectInOutBlock)block;
+- (void)filter:(ObjectInIntOutBlock)block;
+- (void)filterUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 
 @end
 
