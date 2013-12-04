@@ -46,7 +46,6 @@ NSWorkspace *workspace;
 #ifdef DEBUG
 	asl_add_log_file(client, STDERR_FILENO);
 #endif
-	
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];
@@ -139,10 +138,16 @@ NSWorkspace *workspace;
 
 - (void)openURL:(openChoice)choice
 {
+
 	NSString *urlString = @"";
 
 	if (choice == openSupportRequestMail)
-		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@",
+	{
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+		BOOL optionDown = ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0);
+#endif
+
+		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
 							   OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail),
 							   cc.appName,
 							   cc.appVersionString,
@@ -154,7 +159,16 @@ NSWorkspace *workspace;
 #endif
 							   _machineType(),
 							   [[NSProcessInfo processInfo] operatingSystemVersionString],
-							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""));
+							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""),
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+							   ((optionDown && (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)) ? [[NSData dataWithContentsOfFile:[makeString(@"~/Library/Preferences/%@.plist", [[NSBundle mainBundle] bundleIdentifier]) stringByExpandingTildeInPath]] base64Encoding] : @"")
+#else
+							   @""
+#endif
+							   );
+
+
+	}
 	else if (choice == openBetaSignupMail)
 		urlString = makeString(@"mailto:%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
 							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],

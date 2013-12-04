@@ -199,7 +199,9 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #ifndef NSAppKitVersionNumber10_8
     #define NSAppKitVersionNumber10_8 1187
 #endif
-
+#ifndef NSAppKitVersionNumber10_9
+	#define NSAppKitVersionNumber10_9 1265
+#endif
 
 // convenience macros
 #define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
