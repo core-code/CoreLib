@@ -144,7 +144,7 @@ NSWorkspace *workspace;
 	if (choice == openSupportRequestMail)
 	{
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-		BOOL optionDown = ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0);
+		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
 #endif
 
 		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
