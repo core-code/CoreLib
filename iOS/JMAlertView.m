@@ -15,8 +15,6 @@
 
 @implementation JMAlertView
 
-@synthesize cancelBlock, otherBlock;
-
 
 + (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount
 {
@@ -47,32 +45,39 @@
 {
     if (buttonIndex == [self cancelButtonIndex])
     {
-        if (cancelBlock)
-            cancelBlock();
+        if (_cancelBlock)
+            _cancelBlock();
     }
     else
     {
-        if (otherBlock)
-			otherBlock(buttonIndex - [self firstOtherButtonIndex]);
+        if (_otherBlock)
+			_otherBlock(buttonIndex - [self firstOtherButtonIndex]);
     }
-}
+    }
 
-
-+ (void)performBlock:(BasicBlock)block withProgressAlertTitled:(NSString *)title
+- (id)initWithTitle:(NSString *)title
+			message:(NSString *)message
+		cancelBlock:(BasicBlock)cancelBlock
+  cancelButtonTitle:(NSString *)cancelButtonTitle
+		 otherBlock:(IntInBlock)otherBlock
+  otherButtonTitles:(NSString *)otherButtonTitles, ...
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:@" " delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
-    UIActivityIndicatorView *progress = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(125, 70, 30, 30)];
-    progress.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-    [alert addSubview:progress];
-    [progress startAnimating];
 
-    [alert show];
-
-    dispatch_after_main(0.1, ^(void)
+	if ((self = [super initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil]))
 	{
-        block();
-        [alert dismissWithClickedButtonIndex:0 animated:NO];
-    });
+		va_list args;
+		va_start(args, otherButtonTitles);
+		for (NSString *arg = otherButtonTitles; arg != nil; arg = va_arg(args, NSString*))
+		{
+			[self addButtonWithTitle:arg];
+		}
+		va_end(args);
+
+		self.cancelBlock = cancelBlock;
+		self.otherBlock = otherBlock;
+	}
+
+	return self;
 }
 
 #if ! __has_feature(objc_arc)

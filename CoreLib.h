@@ -34,7 +34,7 @@ typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 #endif
 
-typedef enum
+typedef NS_ENUM(uint8_t, openChoice)
 {
 	openSupportRequestMail = 1,	// VendorProductPage info.plist key
 	openBetaSignupMail,			// FeedbackEmail info.plist key
@@ -42,7 +42,8 @@ typedef enum
 	openAppStoreWebsite,		// StoreProductPage info.plist key
 	openAppStoreApp,			// StoreProductPage info.plist key
 	openMacupdateWebsite		// MacupdateProductPage info.plist key
-} openChoice;
+};
+
 
 
 // CUSTOM TEMPLATE COLLECTIONS
@@ -74,17 +75,16 @@ CUSTOM_MUTABLE_DICTIONARY(NSNumber)
 
 
 
-
 #import "NSArray+CoreCode.h"
-#import "NSURL+CoreCode.h"
 #import "NSData+CoreCode.h"
+#import "NSDate+CoreCode.h"
 #import "NSDictionary+CoreCode.h"
 #import "NSFileHandle+CoreCode.h"
+#import "NSLocale+CoreCode.h"
+#import "NSNumber+CoreCode.h"
 #import "NSObject+CoreCode.h"
 #import "NSString+CoreCode.h"
-#import "NSLocale+CoreCode.h"
-#import "NSDate+CoreCode.h"
-
+#import "NSURL+CoreCode.h"
 
 @interface CoreLib : NSObject
 

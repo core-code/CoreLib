@@ -15,6 +15,6 @@
 
 @implementation NSNumber (CoreCode)
 
-@dynamic boolValue, charValue, decimalValue, doubleValue, floatValue, intValue, integerValue, longLongValue, longValue, shortValue, unsignedCharValue, unsignedIntegerValue, unsignedIntValue, unsignedLongLongValue, unsignedLongValue, unsignedShortValue;
+@dynamic boolValue, charValue, decimalValue, doubleValue, floatValue, intValue, integerValue, longLongValue, longValue, shortValue, unsignedCharValue, unsignedIntegerValue, unsignedIntValue, unsignedLongLongValue, unsignedLongValue, unsignedShortValue, stringValue;
 
 @end

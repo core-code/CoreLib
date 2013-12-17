@@ -18,8 +18,13 @@
 @property (copy, nonatomic) BasicBlock cancelBlock;
 @property (copy, nonatomic) IntInBlock otherBlock;
 
-+ (void)performBlock:(BasicBlock)block withProgressAlertTitled:(NSString *)title;
 + (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount;
 
-@end
+- (id)initWithTitle:(NSString *)title
+			message:(NSString *)message
+		cancelBlock:(BasicBlock)cancelBlock
+  cancelButtonTitle:(NSString *)cancelButtonTitle
+		 otherBlock:(IntInBlock)otherBlock
+  otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
+@end

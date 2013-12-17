@@ -274,7 +274,7 @@
 
     for (NSUInteger i = 0; i < [self count]; i++)
 	{
-		BOOL result = block(self[i]);
+		BOOL result = (BOOL)block(self[i]);
 		if (!result)
 			[indices addIndex:i];
 	}

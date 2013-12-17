@@ -64,8 +64,8 @@
     {
         if (alternativeBlock)
 		{
-             int sub = [self firstOtherButtonIndex] >= 0 ? [self firstOtherButtonIndex] : (([self destructiveButtonIndex] != -1) + ([self cancelButtonIndex] != -1));
-             alternativeBlock(buttonIndex - sub);
+             int sub = [self firstOtherButtonIndex] >= 0 ? (int)[self firstOtherButtonIndex] : (([self destructiveButtonIndex] != -1) + ([self cancelButtonIndex] != -1));
+             alternativeBlock((int)buttonIndex - sub);
 		}
     }
 }

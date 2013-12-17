@@ -21,6 +21,8 @@
 
 @implementation NSObject (CoreCode)
 
+@dynamic description, associatedValue;
+
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key
 {
     objc_setAssociatedObject(self, (BRIDGE const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
@@ -29,6 +31,16 @@
 - (id)associatedValueForKey:(NSString *)key
 {
     return objc_getAssociatedObject(self, (BRIDGE const void *)(key));
+}
+
+- (void)setAssociatedValue:(id)value
+{
+    [self setAssociatedValue:value forKey:@"CoreCodeAssociatedValue"];
+}
+
+- (id)associatedValue
+{
+    return [self associatedValueForKey:@"CoreCodeAssociatedValue"];
 }
 
 @end

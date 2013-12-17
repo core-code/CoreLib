@@ -30,6 +30,7 @@
 @property (readonly, nonatomic) unsigned long long unsignedLongLongValue;
 @property (readonly, nonatomic) unsigned long unsignedLongValue;
 @property (readonly, nonatomic) unsigned short unsignedShortValue;
+@property (readonly, nonatomic) NSString *stringValue;
 
 
 @end
