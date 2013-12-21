@@ -14,6 +14,7 @@
 @interface NSDate (CoreCode)
 
 + (NSDate *)dateFromPreprocessorDate:(const char *)preprocessorDateString;
+- (NSString *)stringUsingDateFormat:(NSString *)dateFormat; // dd.MM.yyyy HH:mm:ss
 
 @end
 

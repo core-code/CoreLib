@@ -28,6 +28,14 @@
 	return [df dateFromString:[NSString stringWithUTF8String:preprocessorDateString]];
 }
 
+- (NSString *)stringUsingDateFormat:(NSString *)dateFormat
+{
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
+    [dateFormatter setDateFormat:dateFormat];
+    return [dateFormatter stringFromDate:self];
+}
+
 @end
 
 
