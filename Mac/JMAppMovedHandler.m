@@ -17,7 +17,7 @@
 #define BRIDGE __bridge
 #endif
 
-int bundleFileDescriptor;
+static int bundleFileDescriptor;
 
 void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 						  void *clientCallBackInfo,
@@ -44,11 +44,8 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 
 
+			alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", nil), appname], [NSString stringWithFormat:NSLocalizedString(@"Restart %@", nil), appname], nil, nil);
 
-			[NSApp activateIgnoringOtherApps:YES];
-			NSRunAlertPanel(appname,
-							[NSString stringWithFormat:NSLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", nil), appname],
-							[NSString stringWithFormat:NSLocalizedString(@"Restart %@", nil), appname], nil, nil);
 
 		//	printf("new path: %s\n", newPath);
 
@@ -67,10 +64,8 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 				[NSApp terminate:nil];
 			else
 			{
-				[NSApp activateIgnoringOtherApps:YES];
-				NSRunAlertPanel(appname,
-								[NSString stringWithFormat:NSLocalizedString(@"%@ could not restart itself. Please do so yourself.", nil), appname],
-								NSLocalizedString(@"Quit", nil), nil, nil);
+				alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ could not restart itself. Please do so yourself.", nil), appname], NSLocalizedString(@"Quit", nil), nil, nil);
+
 				[NSApp terminate:nil];
 			}
 		}

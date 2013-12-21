@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "JMVisibilityManager.h"
 #import <Carbon/Carbon.h>
 
-CONST_KEY(JMVisibilityManagerValue)
+static CONST_KEY(JMVisibilityManagerValue)
 
 
 @interface VisibilityManager ()
@@ -62,6 +62,9 @@ CONST_KEY(JMVisibilityManagerValue)
 
 	return self;
 }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdirect-ivar-access"
 
 - (void)setVisibilitySetting:(visibilitySettingEnum)newSetting
 {
@@ -147,12 +150,13 @@ CONST_KEY(JMVisibilityManagerValue)
 {
 	return [_statusItem toolTip];
 }
+#pragma GCC diagnostic pop
 
 - (void)handleAppReopen
 {
 	BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
 
-	if (_visibilitySetting == kVisibleNowhere && optionDown)
+	if (self.visibilitySetting == kVisibleNowhere && optionDown)
 		[self setVisibilitySetting:kVisibleDock];
 }
 

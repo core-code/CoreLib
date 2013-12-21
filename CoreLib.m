@@ -238,6 +238,10 @@ NSString *makeDescription(id sender, NSArray *args)
 		[tmp appendFormat:@"\n%@: %@", arg, d];
 	}
 
+#if ! __has_feature(objc_arc)
+	[tmp autorelease];
+#endif
+
 	return tmp.immutableObject;
 }
 

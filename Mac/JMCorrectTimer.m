@@ -51,7 +51,7 @@
 {
 	asl_NSLog_debug(@"JMCorrectTimer: scheduleTimer");
 	
-	NSTimer *t = [[NSTimer alloc] initWithFireDate:_date
+	NSTimer *t = [[NSTimer alloc] initWithFireDate:self.date
 										  interval:0
 											target:self
 										  selector:@selector(timer:)
@@ -74,9 +74,9 @@
 
 - (void)timer:(id)sender
 {
-	asl_NSLog_debug(@"JMCorrectTimer: timerDate: %@   now: %@", [[_timer fireDate] description], [[NSDate date] description]);
+	asl_NSLog_debug(@"JMCorrectTimer: timerDate: %@   now: %@", [[self.timer fireDate] description], [[NSDate date] description]);
 
-	_timerBlock();
+	self.timerBlock();
 	
 	[self invalidate];
 
@@ -89,10 +89,10 @@
 {
 	[self invalidate];
 
-	if ([[NSDate date] timeIntervalSinceDate:_date] > 0.0)
+	if ([[NSDate date] timeIntervalSinceDate:self.date] > 0.0)
 	{
 		asl_NSLog_debug(@"JMCorrectTimer: Dropping Timer as we have been sleeping");
-		_dropBlock();
+		self.dropBlock();
 
 		self.timerBlock = nil;
 		self.dropBlock = nil;

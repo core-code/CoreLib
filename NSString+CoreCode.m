@@ -353,21 +353,12 @@
 - (NSString *)encoded
 {
 #if  __has_feature(objc_arc)
-	NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
+	return encodedString;
 #else
-    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(
+    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
+	return [encodedString autorelease];
 #endif
-																				  NULL,
-																				  (CFStringRef)self,
-																				  NULL,
-																				  (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-																				kCFStringEncodingUTF8
-#if  __has_feature(objc_arc)
-																				  )
-#endif
-																									);
-
-    return encodedString;
 }
 
 //- (NSString *)arg:(id)arg, ...

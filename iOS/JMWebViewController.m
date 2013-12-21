@@ -24,25 +24,29 @@
 
 - (void)viewDidLoad
 {
-	_webView = [[UIWebView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-	[self.view addSubview:_webView];
-	
+	UIWebView *wv = [[UIWebView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	self.webView = wv;
+#if ! __has_feature(objc_arc)
+	[wv release];
+#endif
+	[self.view addSubview:self.webView];
+
     [super viewDidLoad];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	self.title = _navigationTitle;
+	self.title = self.navigationTitle;
 	
-    NSURLRequest *request = [NSURLRequest requestWithURL:_url];
-    [_webView loadRequest:request];
+    NSURLRequest *request = [NSURLRequest requestWithURL:self.url];
+    [self.webView loadRequest:request];
 
 	[super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	_webView.frame = self.view.frame;
+	self.webView.frame = self.view.frame;
 	
 	[super viewDidAppear:animated];
 }

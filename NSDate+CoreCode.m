@@ -30,10 +30,15 @@
 
 - (NSString *)stringUsingDateFormat:(NSString *)dateFormat
 {
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    [dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
-    [dateFormatter setDateFormat:dateFormat];
-    return [dateFormatter stringFromDate:self];
+    NSDateFormatter *df = [NSDateFormatter new];
+	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+	[df setLocale:l];
+    [df setDateFormat:dateFormat];
+#if ! __has_feature(objc_arc)
+	[l release];
+	[df autorelease];
+#endif
+    return [df stringFromDate:self];
 }
 
 @end

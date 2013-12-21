@@ -52,20 +52,20 @@
 {
     if (buttonIndex == [self cancelButtonIndex])
     {
-        if (cancelBlock)
-            cancelBlock();
+        if (self.cancelBlock)
+            self.cancelBlock();
     }
     else if (buttonIndex == [self destructiveButtonIndex])
     {
-        if (destructiveBlock)
-            destructiveBlock();
+        if (self.destructiveBlock)
+            self.destructiveBlock();
     }
     else if (buttonIndex >= [self firstOtherButtonIndex])
     {
-        if (alternativeBlock)
+        if (self.alternativeBlock)
 		{
              int sub = [self firstOtherButtonIndex] >= 0 ? (int)[self firstOtherButtonIndex] : (([self destructiveButtonIndex] != -1) + ([self cancelButtonIndex] != -1));
-             alternativeBlock((int)buttonIndex - sub);
+             self.alternativeBlock((int)buttonIndex - sub);
 		}
     }
 }

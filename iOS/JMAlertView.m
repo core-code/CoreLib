@@ -45,13 +45,13 @@
 {
     if (buttonIndex == [self cancelButtonIndex])
     {
-        if (_cancelBlock)
-            _cancelBlock();
+        if (self.cancelBlock)
+            self.cancelBlock();
     }
     else
     {
-        if (_otherBlock)
-			_otherBlock(buttonIndex - [self firstOtherButtonIndex]);
+        if (self.otherBlock)
+			self.otherBlock((int)(buttonIndex - [self firstOtherButtonIndex]));
     }
     }
 

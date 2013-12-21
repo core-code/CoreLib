@@ -58,11 +58,12 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wvla"
+#pragma GCC diagnostic ignored "-Wdirect-ivar-access"
 - (CGGradientRef)disabledGradient
 {
     if (disabledGradient == NULL)
     {
-        int locCount = [normalGradientLocations count];
+        int locCount = (int)[normalGradientLocations count];
         CGFloat locations[locCount];
         for (NSUInteger i = 0; i < [normalGradientLocations count]; i++)
         {
@@ -90,7 +91,7 @@
 {
     if (normalGradient == NULL)
     {
-        int locCount = [normalGradientLocations count];
+        int locCount = (int)[normalGradientLocations count];
         CGFloat locations[locCount];
         for (NSUInteger i = 0; i < [normalGradientLocations count]; i++)
         {

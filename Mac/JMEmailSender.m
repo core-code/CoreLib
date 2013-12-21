@@ -12,6 +12,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import "JMEmailSender.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-macros"
 #define WIN32 0
 #ifdef MAILCORE
 #import <MailCore/MailCore.h>
@@ -21,6 +23,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifdef APPLEMAIL
 #import "Mail.h"
 #endif
+#pragma GCC diagnostic pop
 
 @implementation JMEmailSender
 

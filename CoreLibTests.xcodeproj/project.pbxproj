@@ -149,7 +149,7 @@
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9EF04FF1865D42C00CF7A38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9EF05011865D42C00CF7A38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		B9EF05151865D42C00CF7A38 /* CoreLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS ARC.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9EF05161865D42C00CF7A38 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		B9EF052C1865D57400CF7A38 /* CoreLibTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreLibTests.m; sourceTree = "<group>"; };
 		B9EF052E1865D5A200CF7A38 /* CoreLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreLib.h; sourceTree = "<group>"; };
@@ -187,8 +187,8 @@
 		B9EF05501865D5A200CF7A38 /* NSURL+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+CoreCode.h"; sourceTree = "<group>"; };
 		B9EF05511865D5A200CF7A38 /* NSURL+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+CoreCode.m"; sourceTree = "<group>"; };
 		B9EF05631865EEF600CF7A38 /* CoreLibTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreLibTests.h; sourceTree = "<group>"; };
-		B9EF05801865F18300CF7A38 /* CoreLibTests iOS ARC copy.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS ARC copy.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B9EF059D1865F20900CF7A38 /* CoreLibTests iOS RR copy.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS RR copy.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS RR.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac RR.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9EF059F1865F24800CF7A38 /* JMAppMovedHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMAppMovedHandler.h; sourceTree = "<group>"; };
 		B9EF05A01865F24800CF7A38 /* JMAppMovedHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMAppMovedHandler.m; sourceTree = "<group>"; };
 		B9EF05A11865F24800CF7A38 /* JMCorrectTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMCorrectTimer.h; sourceTree = "<group>"; };
@@ -206,7 +206,7 @@
 		B9EF05AD1865F24800CF7A38 /* NSTextField+AutoFontsize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextField+AutoFontsize.h"; sourceTree = "<group>"; };
 		B9EF05AE1865F24800CF7A38 /* NSTextField+AutoFontsize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextField+AutoFontsize.m"; sourceTree = "<group>"; };
 		B9EF05B71865F33F00CF7A38 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac RR copy.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac RR copy.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac ARC.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,10 +258,10 @@
 			children = (
 				B9EF05631865EEF600CF7A38 /* CoreLibTests.h */,
 				B9EF052C1865D57400CF7A38 /* CoreLibTests.m */,
-				B9EF052E1865D5A200CF7A38 /* CoreLib.h */,
-				B9EF052F1865D5A200CF7A38 /* CoreLib.m */,
 				B9EF059E1865F24800CF7A38 /* Mac */,
 				B9EF05301865D5A200CF7A38 /* iOS */,
+				B9EF052E1865D5A200CF7A38 /* CoreLib.h */,
+				B9EF052F1865D5A200CF7A38 /* CoreLib.m */,
 				B9EF053E1865D5A200CF7A38 /* NSArray+CoreCode.h */,
 				B9EF053F1865D5A200CF7A38 /* NSArray+CoreCode.m */,
 				B9EF05401865D5A200CF7A38 /* NSData+CoreCode.h */,
@@ -290,10 +290,10 @@
 		B9EF04FB1865D42C00CF7A38 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B9EF05151865D42C00CF7A38 /* CoreLibTests.xctest */,
-				B9EF05801865F18300CF7A38 /* CoreLibTests iOS ARC copy.xctest */,
-				B9EF059D1865F20900CF7A38 /* CoreLibTests iOS RR copy.xctest */,
-				B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac RR copy.xctest */,
+				B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */,
+				B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */,
+				B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */,
+				B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -377,7 +377,7 @@
 			);
 			name = "CoreLibTests iOS ARC";
 			productName = CoreLibTests;
-			productReference = B9EF05151865D42C00CF7A38 /* CoreLibTests.xctest */;
+			productReference = B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		B9EF05641865F18300CF7A38 /* CoreLibTests iOS RR */ = {
@@ -394,7 +394,7 @@
 			);
 			name = "CoreLibTests iOS RR";
 			productName = CoreLibTests;
-			productReference = B9EF05801865F18300CF7A38 /* CoreLibTests iOS ARC copy.xctest */;
+			productReference = B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		B9EF05811865F20900CF7A38 /* CoreLibTests Mac RR */ = {
@@ -411,7 +411,7 @@
 			);
 			name = "CoreLibTests Mac RR";
 			productName = CoreLibTests;
-			productReference = B9EF059D1865F20900CF7A38 /* CoreLibTests iOS RR copy.xctest */;
+			productReference = B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */ = {
@@ -428,7 +428,7 @@
 			);
 			name = "CoreLibTests Mac ARC";
 			productName = CoreLibTests;
-			productReference = B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac RR copy.xctest */;
+			productReference = B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -445,7 +445,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B9EF04F51865D42C00CF7A38 /* Build configuration list for PBXProject "CoreLib" */;
+			buildConfigurationList = B9EF04F51865D42C00CF7A38 /* Build configuration list for PBXProject "CoreLibTests" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -668,6 +668,13 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_CFLAGS = (
+					"-Weverything",
+					"-Wno-auto-import",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-gnu",
+					"-Wno-variadic-macros",
+				);
 			};
 			name = Debug;
 		};
@@ -705,6 +712,13 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				WARNING_CFLAGS = (
+					"-Weverything",
+					"-Wno-auto-import",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-gnu",
+					"-Wno-variadic-macros",
+				);
 			};
 			name = Release;
 		};
@@ -719,7 +733,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+					"USE_SECURITY=1",
 					"$(inherited)",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -737,6 +751,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = "USE_SECURITY=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -757,7 +772,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				PRODUCT_NAME = "CoreLibTests iOS ARC copy";
+				PRODUCT_NAME = "CoreLibTests iOS RR";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -772,7 +787,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				PRODUCT_NAME = "CoreLibTests iOS ARC copy";
+				PRODUCT_NAME = "CoreLibTests iOS RR";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -783,7 +798,6 @@
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
@@ -792,7 +806,7 @@
 					"$(inherited)",
 					"MAC=1",
 				);
-				PRODUCT_NAME = "CoreLibTests iOS RR copy";
+				PRODUCT_NAME = "CoreLibTests Mac RR";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -804,7 +818,6 @@
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
@@ -812,7 +825,7 @@
 					"MAC=1",
 					"NDEBUG=1",
 				);
-				PRODUCT_NAME = "CoreLibTests iOS RR copy";
+				PRODUCT_NAME = "CoreLibTests Mac RR";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -823,17 +836,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 					"MAC=1",
+					"USE_SECURITY=1",
 				);
-				PRODUCT_NAME = "CoreLibTests Mac RR copy";
+				PRODUCT_NAME = "CoreLibTests Mac ARC";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -844,16 +854,13 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"MAC=1",
 					"NDEBUG=1",
+					"USE_SECURITY=1",
 				);
-				PRODUCT_NAME = "CoreLibTests Mac RR copy";
+				PRODUCT_NAME = "CoreLibTests Mac ARC";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -876,7 +883,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B9EF04F51865D42C00CF7A38 /* Build configuration list for PBXProject "CoreLib" */ = {
+		B9EF04F51865D42C00CF7A38 /* Build configuration list for PBXProject "CoreLibTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9EF05241865D42C00CF7A38 /* Debug */,
@@ -928,6 +935,7 @@
 				B9EF05DD1865F53600CF7A38 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

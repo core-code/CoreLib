@@ -274,13 +274,17 @@
 
     for (NSUInteger i = 0; i < [self count]; i++)
 	{
-		BOOL result = (BOOL)block(self[i]);
+		int result = block(self[i]);
 		if (!result)
 			[indices addIndex:i];
 	}
 
 
 	[self removeObjectsAtIndexes:indices];
+
+#if ! __has_feature(objc_arc)
+	[indices release];
+#endif
 }
 
 - (void)filterUsingPredicateString:(NSString *)format, ...

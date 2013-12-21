@@ -12,9 +12,12 @@
 
 #import "JMDocklessApplication.h"
 
-#pragma GCC diagnostic ignored "-Wundeclared-selector"
 
 @implementation JMDocklessApplication
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
 
 - (void)sendEvent:(NSEvent *)event
 {
@@ -51,4 +54,7 @@
     }
     [super sendEvent:event];
 }
+
+#pragma GCC diagnostic pop
+
 @end

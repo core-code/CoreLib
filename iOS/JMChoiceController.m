@@ -31,20 +31,20 @@
     
     float ourWidth;
     
-    if (IS_FLOAT_EQUAL(_minWidth,_maxWidth))
-        ourWidth = _minWidth;
+    if (IS_FLOAT_EQUAL(self.minWidth,self.maxWidth))
+        ourWidth = self.minWidth;
     else
     {
         float max = 0;
         
-        for (NSString *entry in _choices)
+        for (NSString *entry in self.choices)
         {
-            CGSize s = [entry sizeWithFont:_font];
+            CGSize s = [entry sizeWithFont:self.font];
             if (s.width > max)
                 max = s.width;
         }
         
-        ourWidth = CLAMP(max+20, _minWidth, _maxWidth);
+        ourWidth = CLAMP(max+20, self.minWidth, self.maxWidth);
     }
 	self.contentSizeForViewInPopover = (CGSize){ourWidth, [self.choices count] * 44};
 }
@@ -84,16 +84,20 @@
 	{
         cell = [[UITableViewCell alloc] initWithStyle:(self.detail ? UITableViewCellStyleValue1 : UITableViewCellStyleDefault)
 								      reuseIdentifier:CellIdentifier];
+#if ! __has_feature(objc_arc)
+		[cell autorelease];
+#endif
     }
 
     tableView.backgroundColor = [UIColor colorWithWhite:230.0f / 255.0f alpha:1.0f];
 
-    cell.textLabel.font = _font;
+    cell.textLabel.font = self.font;
     cell.textLabel.text = makeString(@"%@", [self.choices objectAtIndex:indexPath.row]);
     if (self.detail)
         cell.detailTextLabel.text = (self.detail)[indexPath.row];
 
-    return cell;
+
+	return cell;
 }
 
 #pragma mark *** UITableViewDelegate protocol-methods ***
@@ -110,7 +114,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return _canRemove;
+    return self.canRemove;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
