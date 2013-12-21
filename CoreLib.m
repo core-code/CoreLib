@@ -22,7 +22,7 @@ NSFileManager *fileManager;
 NSNotificationCenter *notificationCenter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSDistributedNotificationCenter *distributedNotificationCenter;
-NSApplication *app;
+NSApplication *application;
 NSWorkspace *workspace;
 #endif
 
@@ -54,7 +54,7 @@ NSWorkspace *workspace;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
 	workspace = [NSWorkspace sharedWorkspace];
-	app = [NSApplication sharedApplication];
+	application = [NSApplication sharedApplication];
 #endif
 
 #ifdef DEBUG

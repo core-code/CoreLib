@@ -124,7 +124,7 @@ extern NSNotificationCenter *notificationCenter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 extern NSDistributedNotificationCenter *distributedNotificationCenter;
 extern NSWorkspace *workspace;
-extern NSApplication *app;
+extern NSApplication *application;
 #endif
 
 
