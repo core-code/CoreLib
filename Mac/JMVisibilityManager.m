@@ -52,7 +52,9 @@ CONST_KEY(JMVisibilityManagerValue)
 		
 		_visibilitySetting = kVisibleNowhere;
 
-		if (storedSetting == kVisibleNowhere && ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0))
+		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+
+		if (storedSetting == kVisibleNowhere && optionDown)
 			[self setVisibilitySetting:kVisibleDock];
 		else
 			[self setVisibilitySetting:storedSetting];
@@ -148,7 +150,9 @@ CONST_KEY(JMVisibilityManagerValue)
 
 - (void)handleAppReopen
 {
-	if (_visibilitySetting == kVisibleNowhere && ((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0))
+	BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+
+	if (_visibilitySetting == kVisibleNowhere && optionDown)
 		[self setVisibilitySetting:kVisibleDock];
 }
 

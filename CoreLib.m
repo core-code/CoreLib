@@ -21,6 +21,8 @@ NSUserDefaults *userDefaults;
 NSFileManager *fileManager;
 NSNotificationCenter *notificationCenter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSDistributedNotificationCenter *distributedNotificationCenter;
+NSApplication *app;
 NSWorkspace *workspace;
 #endif
 
@@ -50,14 +52,26 @@ NSWorkspace *workspace;
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
 	workspace = [NSWorkspace sharedWorkspace];
+	app = [NSApplication sharedApplication];
+#endif
+
+#ifdef DEBUG
+	BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
+#ifdef SANDBOX
+	assert(isSandbox);
+#else
+	assert(!isSandbox);
+#endif
 #endif
 	return self;
 }
 
-- (NSArray *)appCrashLogs
+- (NSArray *)appCrashLogs // doesn't do anything in sandbox
 {
-	return [@"~/Library/Logs/DiagnosticReports/".expanded.dirContents filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+	NSStringArray *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
 
 - (NSString *)appID
@@ -187,7 +201,7 @@ NSWorkspace *workspace;
 	else if (choice == openMacupdateWebsite)
 		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"];
 
-	[urlString.escapedURL open];
+	[urlString.escaped.URL open];
 }
 
 @end
@@ -260,7 +274,7 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
 											  [[NSProcessInfo processInfo] operatingSystemVersionString],
 											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""));
 			
-			[mailtoLink.escapedURL open];
+			[mailtoLink.escaped.URL open];
 		}
 		exit(1);
     };

@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, escapedURL, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString;
+@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString, escaped;
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
@@ -123,15 +123,6 @@
 - (NSURL *)URL
 {
 	return [NSURL URLWithString:self];
-}
-
-- (NSURL *)escapedURL
-{
-#if  __has_feature(objc_arc)
-	return [NSURL URLWithString:(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8))];
-#else
-	return [NSURL URLWithString:[(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8) autorelease]];
-#endif
 }
 
 - (NSURL *)fileURL
@@ -357,6 +348,26 @@
 	NSData *result = [NSData dataWithBytes: r length: length / 2];
 	free(r);
     return result;
+}
+
+- (NSString *)encoded
+{
+#if  __has_feature(objc_arc)
+	NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+#else
+    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(
+#endif
+																				  NULL,
+																				  (CFStringRef)self,
+																				  NULL,
+																				  (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+																				kCFStringEncodingUTF8
+#if  __has_feature(objc_arc)
+																				  )
+#endif
+																									);
+
+    return encodedString;
 }
 
 //- (NSString *)arg:(id)arg, ...
