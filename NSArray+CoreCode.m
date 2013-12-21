@@ -257,4 +257,39 @@
 	if (anObject)
 		[self addObject:anObject];
 }
+
+- (void)map:(ObjectInOutBlock)block
+{
+    for (NSUInteger i = 0; i < [self count]; i++)
+	{
+		id result = block(self[i]);
+
+		[self replaceObjectAtIndex:i withObject:result];
+	}
+}
+
+- (void)filter:(ObjectInIntOutBlock)block
+{
+    NSMutableIndexSet *indices = [NSMutableIndexSet new];
+
+    for (NSUInteger i = 0; i < [self count]; i++)
+	{
+		BOOL result = (BOOL)block(self[i]);
+		if (!result)
+			[indices addIndex:i];
+	}
+
+
+	[self removeObjectsAtIndexes:indices];
+}
+
+- (void)filterUsingPredicateString:(NSString *)format, ...
+{
+	va_list args;
+	va_start(args, format);
+	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+	va_end(args);
+
+	[self filterUsingPredicate:pred];
+}
 @end

@@ -13,7 +13,7 @@
 #error you need to include CoreLib.h in your PCH file
 #endif
 
-NSString *_machineType();
+NSString *_machineType(void);
 
 CoreLib *cc;
 aslclient client;
@@ -21,6 +21,8 @@ NSUserDefaults *userDefaults;
 NSFileManager *fileManager;
 NSNotificationCenter *notificationCenter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSDistributedNotificationCenter *distributedNotificationCenter;
+NSApplication *app;
 NSWorkspace *workspace;
 #endif
 
@@ -46,19 +48,30 @@ NSWorkspace *workspace;
 #ifdef DEBUG
 	asl_add_log_file(client, STDERR_FILENO);
 #endif
-	
 	userDefaults = [NSUserDefaults standardUserDefaults];
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
 	workspace = [NSWorkspace sharedWorkspace];
+	app = [NSApplication sharedApplication];
+#endif
+
+#ifdef DEBUG
+	BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
+#ifdef SANDBOX
+	assert(isSandbox);
+#else
+	assert(!isSandbox);
+#endif
 #endif
 	return self;
 }
 
-- (NSArray *)appCrashLogs
+- (NSArray *)appCrashLogs // doesn't do anything in sandbox
 {
-	return [@"~/Library/Logs/DiagnosticReports/".expanded.dirContents filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+	NSStringArray *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
 
 - (NSString *)appID
@@ -139,10 +152,16 @@ NSWorkspace *workspace;
 
 - (void)openURL:(openChoice)choice
 {
+
 	NSString *urlString = @"";
 
 	if (choice == openSupportRequestMail)
-		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@",
+	{
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+#endif
+
+		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
 							   OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail),
 							   cc.appName,
 							   cc.appVersionString,
@@ -154,7 +173,16 @@ NSWorkspace *workspace;
 #endif
 							   _machineType(),
 							   [[NSProcessInfo processInfo] operatingSystemVersionString],
-							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""));
+							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""),
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+							   ((optionDown && (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)) ? [[NSData dataWithContentsOfFile:[makeString(@"~/Library/Preferences/%@.plist", [[NSBundle mainBundle] bundleIdentifier]) stringByExpandingTildeInPath]] base64Encoding] : @"")
+#else
+							   @""
+#endif
+							   );
+
+
+	}
 	else if (choice == openBetaSignupMail)
 		urlString = makeString(@"mailto:%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
 							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
@@ -173,11 +201,12 @@ NSWorkspace *workspace;
 	else if (choice == openMacupdateWebsite)
 		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"];
 
-	[urlString.escapedURL open];
+	[urlString.escaped.URL open];
 }
 
 @end
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 
 // obj creation convenience
@@ -245,7 +274,7 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
 											  [[NSProcessInfo processInfo] operatingSystemVersionString],
 											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""));
 			
-			[mailtoLink.escapedURL open];
+			[mailtoLink.escaped.URL open];
 		}
 		exit(1);
     };
@@ -277,8 +306,7 @@ NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
 	return button;
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
 

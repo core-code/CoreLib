@@ -36,7 +36,6 @@
 // to url
 @property (readonly, nonatomic) NSURL *fileURL;
 @property (readonly, nonatomic) NSURL *URL;
-@property (readonly, nonatomic) NSURL *escapedURL;
 // url download
 @property (readonly, nonatomic) NSData *download;
 // file data
@@ -46,6 +45,7 @@
 @property (readonly, nonatomic) NSStringArray *words;
 @property (readonly, nonatomic) NSString *trimmed;
 @property (readonly, nonatomic) NSString *expanded;
+@property (readonly, nonatomic) NSString *escaped;
 
 @property (readonly, nonatomic) NSMutableString *mutableObject;
 #ifdef USE_SECURITY

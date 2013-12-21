@@ -15,6 +15,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define WIN32 0
 #ifdef MAILCORE
 #import <MailCore/MailCore.h>
+//#import <MailCore/CTCoreAddress.h>
+//#import <MailCore/CTCoreMessage.h>
 #endif
 #ifdef APPLEMAIL
 #import "Mail.h"
@@ -181,12 +183,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		[msg setBody:mail];
 		[msg setSubject:subject];
 
-
 		[CTSMTPConnection sendMessage:msg server:server username:username  password:password  port:port useTLS:tls useAuth:auth];
 
 		[msg release];
 
 		return kSuccess;
+
+//		NSError *err;
+//		[CTSMTPConnection sendMessage:msg server:server username:username password:password port:port connectionType:tls ? CTSMTPConnectionTypeTLS : CTSMTPConnectionTypePlain useAuth:auth error:&err];
+//
+//		[msg release];
+//
+//		return err ? kMailCoreFailure : kSuccess;
 	}
 	@catch (NSException *e)
 	{

@@ -31,7 +31,7 @@
     
     float ourWidth;
     
-    if (_minWidth == _maxWidth)
+    if (IS_FLOAT_EQUAL(_minWidth,_maxWidth))
         ourWidth = _minWidth;
     else
     {

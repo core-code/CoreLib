@@ -56,6 +56,8 @@
 #define BRIDGE (CFArrayRef)
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvla"
 - (CGGradientRef)disabledGradient
 {
     if (disabledGradient == NULL)
@@ -701,3 +703,4 @@
 #endif
 
 @end
+#pragma GCC diagnostic pop
