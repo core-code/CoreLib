@@ -10,6 +10,8 @@
  */
 
 
+#include "CoreLib.h"
+
 @interface NSString (CoreCode)
 
 // filesystem support

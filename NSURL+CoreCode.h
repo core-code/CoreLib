@@ -10,6 +10,9 @@
  */
 
 
+#include "CoreLib.h"
+
+
 @interface NSURL (CoreCode)
 
 - (NSURL *)add:(NSString *)component;

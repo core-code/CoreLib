@@ -122,7 +122,11 @@ NSWorkspace *workspace;
 - (NSURL *)suppURL
 {
 	NSURL *dir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
-	return [dir add:self.appName];
+
+    if (dir && self.appName)
+        return [dir add:self.appName];
+    else
+        return nil;
 }
 
 #ifdef USE_SECURITY

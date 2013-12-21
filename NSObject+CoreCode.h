@@ -10,6 +10,7 @@
  */
 
 
+#include "CoreLib.h"
 
 @interface NSObject (CoreCode)
 

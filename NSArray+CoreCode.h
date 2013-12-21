@@ -11,6 +11,7 @@
 
 #include "CoreLib.h"
 
+
 @interface NSArray (CoreCode)
 
 @property (readonly, nonatomic) NSMutableArray *mutableObject;
