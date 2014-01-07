@@ -51,19 +51,24 @@ typedef NS_ENUM(uint8_t, openChoice)
 #define CUSTOM_ARRAY(classname) \
 @interface classname ## Array : NSArray \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
-@end
+@end \
+static inline classname ## Array * make ## classname ## Array (void)    { return (classname ## Array *)[NSArray new];}
 #define CUSTOM_MUTABLE_ARRAY(classname) \
 @interface Mutable ## classname ## Array : NSMutableArray \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
-@end
+@end \
+static inline Mutable ## classname ## Array * make ## Mutable ## classname ## Array (void)    { return (Mutable ## classname ## Array *)[NSMutableArray new];}
 #define CUSTOM_DICTIONARY(classname) \
 @interface classname ## Dictionary : NSDictionary \
 - (classname *)objectForKeyedSubscript:(id)key;\
-@end
+@end \
+static inline classname ## Dictionary * make ## classname ## Dictionary (void)    { return (classname ## Dictionary *)[NSDictionary new];}
 #define CUSTOM_MUTABLE_DICTIONARY(classname) \
 @interface Mutable ## classname ## Dictionary : NSMutableDictionary \
 - (classname *)objectForKeyedSubscript:(id)key;\
-@end
+@end \
+static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];}
+
 CUSTOM_ARRAY(NSString)
 CUSTOM_ARRAY(NSNumber)
 CUSTOM_ARRAY(NSArray)
