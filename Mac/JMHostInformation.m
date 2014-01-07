@@ -33,7 +33,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #endif
 
 #ifdef USE_DISKARBITRATION
+#ifdef FORCE_LOG
+#define LOGMOUNTEDHARDDISK asl_NSLog_debug
+#else
 #define LOGMOUNTEDHARDDISK(x, ...) 
+#endif
 #endif
 
 #pragma GCC diagnostic ignored "-Wcast-align"

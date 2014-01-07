@@ -29,7 +29,6 @@ typedef void (^StringInBlock)(NSString *input);
 typedef void (^ObjectInBlock)(id input);
 typedef id (^ObjectInOutBlock)(id input);
 typedef int (^ObjectInIntOutBlock)(id input);
-typedef BOOL (^BoolOutBlock)(void);
 typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 #endif
@@ -51,10 +50,14 @@ typedef NS_ENUM(uint8_t, openChoice)
 #define CUSTOM_ARRAY(classname) \
 @interface classname ## Array : NSArray \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
+- (classname *)firstObject; \
+- (classname *)lastObject; \
 @end
 #define CUSTOM_MUTABLE_ARRAY(classname) \
 @interface Mutable ## classname ## Array : NSMutableArray \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
+- (classname *)firstObject; \
+- (classname *)lastObject; \
 @end
 #define CUSTOM_DICTIONARY(classname) \
 @interface classname ## Dictionary : NSDictionary \
