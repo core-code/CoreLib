@@ -18,7 +18,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString, escaped, numberValue;
+@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString, escaped, encoded, numberValue;
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
@@ -353,6 +353,17 @@
 	NSData *result = [NSData dataWithBytes: r length: length / 2];
 	free(r);
     return result;
+}
+
+- (NSString *)escaped
+{
+#if  __has_feature(objc_arc)
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8));
+	return encodedString;
+#else
+    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8);
+	return [encodedString autorelease];
+#endif
 }
 
 - (NSString *)encoded

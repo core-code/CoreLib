@@ -47,7 +47,8 @@
 @property (readonly, nonatomic) NSStringArray *words;
 @property (readonly, nonatomic) NSString *trimmed;
 @property (readonly, nonatomic) NSString *expanded;
-@property (readonly, nonatomic) NSString *escaped;
+@property (readonly, nonatomic) NSString *escaped; // URL escaping
+@property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore
 
 @property (readonly, nonatomic) NSMutableString *mutableObject;
 #ifdef USE_SECURITY
