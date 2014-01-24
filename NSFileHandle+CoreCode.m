@@ -19,6 +19,7 @@
     [[self readDataOfLength:sizeof(float)] getBytes:&ret length:sizeof(float)];
     return ret;
 }
+
 - (int)readInt
 {
     int ret;

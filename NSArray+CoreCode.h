@@ -14,6 +14,7 @@
 
 @interface NSArray (CoreCode)
 
+@property (readonly, nonatomic) NSArray *reverseArray;
 @property (readonly, nonatomic) NSMutableArray *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
 
@@ -47,8 +48,12 @@
 // forwards for less typing
 - (NSString *)joined:(NSString *)sep;							// componentsJoinedByString:
 
-@property (readonly, nonatomic) NSUInteger count;
 @property (readonly, nonatomic) NSSet *set;
+
+// properties for implemented methods
+@property (readonly, nonatomic) NSUInteger count;
+@property (readonly, nonatomic) id firstObject;
+@property (readonly, nonatomic) id lastObject;
 
 @end
 

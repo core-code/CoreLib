@@ -13,6 +13,7 @@
 
 #import "NSDictionary+CoreCode.h"
 
+
 @implementation NSDictionary (CoreCode)
 
 @dynamic mutableObject;
@@ -22,7 +23,7 @@
 	return [NSMutableDictionary dictionaryWithDictionary:self];
 }
 
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
     return [super methodSignatureForSelector:@selector(valueForKey:)];
 }
@@ -37,12 +38,11 @@
 
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key
 {
-	NSMutableDictionary *mut = [NSMutableDictionary dictionaryWithDictionary:self];
+	NSMutableDictionary *mutable = self.mutableObject;
 
-	mut[key] = value;
+	mutable[key] = value;
 
-	return [NSDictionary dictionaryWithDictionary:mut
-			];
+	return mutable.immutableObject;
 }
 
 @end

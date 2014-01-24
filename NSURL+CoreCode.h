@@ -25,5 +25,15 @@
 @property (readonly, nonatomic) BOOL fileExists;
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) NSURLRequest *request;
+@property (readonly, nonatomic) BOOL isWriteablePath;
+// url string download
+@property (readonly, nonatomic) NSData *download;
+// path string filedata
+@property (readonly, nonatomic) NSData *contents;
+
 
 @end
+
+
+
+

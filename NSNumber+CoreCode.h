@@ -15,7 +15,7 @@
 
 @interface NSNumber (CoreCode)
 
-
+// properties for implemented methods
 @property (readonly, nonatomic) BOOL  boolValue;
 @property (readonly, nonatomic) char  charValue;
 @property (readonly, nonatomic) NSDecimal  decimalValue;

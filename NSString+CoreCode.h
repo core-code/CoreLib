@@ -22,6 +22,15 @@
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
 
+// path string to url
+@property (readonly, nonatomic) NSURL *fileURL;
+@property (readonly, nonatomic) NSURL *URL;
+// url string download
+@property (readonly, nonatomic) NSData *download;
+// path string filedata
+@property (readonly, nonatomic) NSData *contents;
+
+
 // NSUserDefaults support
 @property (copy, nonatomic) id defaultObject;
 @property (copy, nonatomic) NSString *defaultString;
@@ -32,37 +41,35 @@
 @property (assign, nonatomic) float defaultFloat;
 
 @property (readonly, nonatomic) NSString *localized;
+
 //  bundle contents to path
 @property (readonly, nonatomic) NSString *resourcePath;
 @property (readonly, nonatomic) NSURL *resourceURL;
-// to url
-@property (readonly, nonatomic) NSURL *fileURL;
-@property (readonly, nonatomic) NSURL *URL;
-// url download
-@property (readonly, nonatomic) NSData *download;
-// file data
-@property (readonly, nonatomic) NSData *contents;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@property (readonly, nonatomic) NSImage *namedImage;
+#else
+@property (readonly, nonatomic) UIImage *namedImage;
+#endif
 
+// string things
 @property (readonly, nonatomic) NSStringArray *lines;
 @property (readonly, nonatomic) NSStringArray *words;
 @property (readonly, nonatomic) NSString *trimmed;
 @property (readonly, nonatomic) NSString *expanded;
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
-@property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore
+@property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
 @property (readonly, nonatomic) NSMutableString *mutableObject;
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
 #endif
 
-@property (readonly, nonatomic) NSUInteger length;
 
 @property (readonly, nonatomic) NSData *dataFromHexString;
 
 
 - (NSString *)titlecaseString;
 - (NSString *)propercaseString;
-
 
 - (NSString *)stringValue;
 
@@ -74,11 +81,13 @@
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
 
+
 // forwards for less typing
-- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;	// stringByReplacingOccurencesOfString:withString:
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;		// stringByReplacingOccurencesOfString:withString:
 - (NSStringArray *)split:(NSString *)sep;								// componentsSeparatedByString:
 
 // properties for implemented methods
+@property (readonly, nonatomic) NSUInteger length;
 @property (readonly, nonatomic) double doubleValue;
 @property (readonly, nonatomic) float floatValue;
 @property (readonly, nonatomic) int intValue;

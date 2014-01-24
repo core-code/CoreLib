@@ -15,6 +15,7 @@
 
 @implementation NSNumber (CoreCode)
 
+// properties for implemented methods
 @dynamic boolValue, charValue, decimalValue, doubleValue, floatValue, intValue, integerValue, longLongValue, longValue, shortValue, unsignedCharValue, unsignedIntegerValue, unsignedIntValue, unsignedLongLongValue, unsignedLongValue, unsignedShortValue, stringValue;
 
 @end

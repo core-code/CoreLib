@@ -15,7 +15,12 @@
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, count, set;
+@dynamic mutableObject, empty, count, set, reverseArray, firstObject, lastObject;
+
+- (NSArray *)reverseArray
+{
+	return [[self reverseObjectEnumerator] allObjects];
+}
 
 - (NSSet *)set
 {

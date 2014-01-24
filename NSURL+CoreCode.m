@@ -14,7 +14,7 @@
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, isWriteablePath, download, contents;
 
 - (NSURLRequest *)request
 {
@@ -66,5 +66,33 @@
 #else
 	[[UIApplication sharedApplication] openURL:self];
 #endif
+}
+
+- (BOOL)isWriteablePath
+{
+	if (self.fileExists)
+		return NO;
+
+	if (![@"TEST" writeToURL:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
+		return NO;
+
+	[fileManager removeItemAtURL:self error:NULL];
+
+	return YES;
+}
+
+
+- (NSData *)download
+{
+	NSData *d = [[NSData alloc] initWithContentsOfURL:self];
+#if ! __has_feature(objc_arc)
+	[d autorelease];
+#endif
+	return d;
+}
+
+- (NSData *)contents
+{
+	return self.download;
 }
 @end
