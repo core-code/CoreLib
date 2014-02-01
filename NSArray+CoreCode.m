@@ -17,6 +17,11 @@
 
 @dynamic mutableObject, empty, count, set, reverseArray, firstObject, lastObject;
 
+- (BOOL)contains:(id)object
+{
+	return [self indexOfObject:object] != NSNotFound;
+}
+
 - (NSArray *)reverseArray
 {
 	return [[self reverseObjectEnumerator] allObjects];
@@ -79,20 +84,6 @@
 	[mut replaceObjectAtIndex:[mut indexOfObject:anObject] withObject:newObject];
 
 	return mut.immutableObject;
-}
-
-- (NSArray *)arrayOfValuesForKey:(NSString *)key
-{
-    NSMutableArray *resultArray = [NSMutableArray new];
-
-    for (id object in self)
-		[resultArray addObject:[object valueForKey:key]];
-
-#if ! __has_feature(objc_arc)
-	[resultArray autorelease];
-#endif
-
-    return [NSArray arrayWithArray:resultArray];
 }
 
 - (id)safeObjectAtIndex:(NSUInteger)index
