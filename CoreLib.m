@@ -199,15 +199,9 @@ NSWorkspace *workspace;
 	}
 	else if (choice == openBetaSignupMail)
 		urlString = makeString(@"mailto:%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
-							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"],
-							   cc.appName, cc.appName);
+							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
 	else if (choice == openHomepageWebsite)
-	{
-		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"];
-
-		if (!urlString)
-			urlString = makeString(@"%@%@/", kVendorHomepage, [cc.appName lowercaseString]);
-	}
+		urlString = OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"], makeString(@"%@%@/", kVendorHomepage, cc.appName.lowercaseString));
 	else if (choice == openAppStoreWebsite)
 		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"];
 	else if (choice == openAppStoreApp)
@@ -479,7 +473,7 @@ NSString *_machineType()
 	if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
 	{
 		modelBuffer[sizeof(modelBuffer) - 1] = 0;
-		return [NSString stringWithUTF8String:modelBuffer];
+		return @(modelBuffer);
 	}
 	else
 	{

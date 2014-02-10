@@ -15,20 +15,30 @@
 
 @implementation NSDate (CoreCode)
 
-+ (NSDate *)dateFromPreprocessorDate:(const char *)preprocessorDateString
++ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat andLocaleIdentifier:(NSString *)localeIdentifier
 {
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
-	[df setDateFormat:@"MMM d yyyy"];
-	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+	[df setDateFormat:dateFormat];
+	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier];
 	[df setLocale:l];
 #if ! __has_feature(objc_arc)
 	[l release];
 	[df autorelease];
 #endif
-	return [df dateFromString:[NSString stringWithUTF8String:preprocessorDateString]];
+	return [df dateFromString:dateString];
 }
 
-- (NSString *)stringUsingDateFormat:(NSString *)dateFormat
++ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat
+{
+	return [self dateWithString:dateString andFormat:dateFormat andLocaleIdentifier:@"en_US"];
+}
+
++ (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString
+{
+	return [self dateWithString:@(preprocessorDateString) andFormat:@"MMM d yyyy"];
+}
+
+- (NSString *)stringUsingFormat:(NSString *)dateFormat
 {
     NSDateFormatter *df = [NSDateFormatter new];
 	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];

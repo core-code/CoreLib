@@ -67,9 +67,9 @@
 
 @property (readonly, nonatomic) NSData *dataFromHexString;
 
+@property (readonly, nonatomic) NSString *titlecaseString;
+@property (readonly, nonatomic) NSString *propercaseString;
 
-- (NSString *)titlecaseString;
-- (NSString *)propercaseString;
 
 - (NSString *)stringValue;
 
@@ -95,7 +95,8 @@
 @property (readonly, nonatomic) long long longLongValue;
 @property (readonly, nonatomic) BOOL boolValue;
 @property (readonly, nonatomic) NSNumber *numberValue;
-
+@property (readonly, nonatomic) NSString *lowercaseString;
+@property (readonly, nonatomic) NSString *uppercaseString;
 
 @end
 

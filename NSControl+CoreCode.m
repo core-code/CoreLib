@@ -1,8 +1,8 @@
 //
-//  NSDate+CoreCode.h
+//  NSControl+CoreCode.m
 //  CoreLib
 //
-//  Created by CoreCode on 07.12.12.
+//  Created by CoreCode on 09.02.14.
 /*	Copyright (c) 2012 - 2014 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -10,23 +10,15 @@
  */
 
 
-#include "CoreLib.h"
 
+#import "NSControl+CoreCode.h"
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
-@interface NSDate (CoreCode)
+@implementation NSControl (CoreCode)
 
-+ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat andLocaleIdentifier:(NSString *)localeIdentifier;
-+ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat;
-+ (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
-- (NSString *)stringUsingFormat:(NSString *)dateFormat; // dd.MM.yyyy HH:mm:ss
+@dynamic stringValue, intValue, floatValue, doubleValue, tag;
 
 @end
 
-
-@interface NSDateFormatter (CoreCode)
-
-+ (NSString *)formattedTimeFromTimeInterval:(NSTimeInterval)timeInterval;
-
-@end
-
+#endif
