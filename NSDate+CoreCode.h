@@ -16,10 +16,12 @@
 
 @interface NSDate (CoreCode)
 
+// date format strings:   dd.MM.yyyy HH:mm:ss
 + (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat andLocaleIdentifier:(NSString *)localeIdentifier;
 + (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat;
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
-- (NSString *)stringUsingFormat:(NSString *)dateFormat; // dd.MM.yyyy HH:mm:ss
+- (NSString *)stringUsingFormat:(NSString *)dateFormat;
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle andTimeStyle:(NSDateFormatterStyle)timeStyle;
 
 @end
 

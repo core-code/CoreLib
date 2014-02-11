@@ -19,6 +19,9 @@
 #define BRIDGE __bridge
 #endif
 
+CONST_KEY(CoreCodeAssociatedValue)
+
+
 @implementation NSObject (CoreCode)
 
 @dynamic description, associatedValue;
@@ -35,12 +38,12 @@
 
 - (void)setAssociatedValue:(id)value
 {
-    [self setAssociatedValue:value forKey:@"CoreCodeAssociatedValue"];
+    [self setAssociatedValue:value forKey:kCoreCodeAssociatedValueKey];
 }
 
 - (id)associatedValue
 {
-    return [self associatedValueForKey:@"CoreCodeAssociatedValue"];
+    return [self associatedValueForKey:kCoreCodeAssociatedValueKey];
 }
 
 @end

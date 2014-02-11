@@ -51,6 +51,19 @@
     return [df stringFromDate:self];
 }
 
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle andTimeStyle:(NSDateFormatterStyle)timeStyle
+{
+    NSDateFormatter *df = [NSDateFormatter new];
+
+	[df setLocale:[NSLocale currentLocale]];
+    [df setDateStyle:dateStyle];
+    [df setTimeStyle:timeStyle];
+#if ! __has_feature(objc_arc)
+	[df autorelease];
+#endif
+    return [df stringFromDate:self];
+}
+
 @end
 
 

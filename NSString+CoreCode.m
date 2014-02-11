@@ -284,6 +284,7 @@
 {
 	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
 }
+
 - (id)defaultObject
 {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:self];
