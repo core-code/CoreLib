@@ -98,6 +98,7 @@ CUSTOM_MUTABLE_DICTIONARY(NSNumber)
 #import "NSString+CoreCode.h"
 #import "NSURL+CoreCode.h"
 #import "NSControl+CoreCode.h"
+#import "NSWindow+CoreCode.h"
 
 @interface CoreLib : NSObject
 

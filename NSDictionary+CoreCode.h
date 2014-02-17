@@ -15,6 +15,7 @@
 
 @interface NSDictionary (CoreCode)
 
+@property (readonly, nonatomic) NSData *JSONData;
 @property (readonly, nonatomic) NSMutableDictionary *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
 

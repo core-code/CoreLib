@@ -9,6 +9,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 #include "CoreLib.h"
 
 
@@ -17,6 +18,7 @@
 @property (readonly, nonatomic) NSArray *reverseArray;
 @property (readonly, nonatomic) NSMutableArray *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
+@property (readonly, nonatomic) NSData *JSONData;
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;

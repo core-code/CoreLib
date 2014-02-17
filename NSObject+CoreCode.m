@@ -19,7 +19,7 @@
 #define BRIDGE __bridge
 #endif
 
-CONST_KEY(CoreCodeAssociatedValue)
+static CONST_KEY(CoreCodeAssociatedValue)
 
 
 @implementation NSObject (CoreCode)

@@ -17,8 +17,9 @@
 
 @implementation NSControl (CoreCode)
 
-@dynamic stringValue, intValue, floatValue, doubleValue, tag;
+@dynamic stringValue, intValue, floatValue, doubleValue, tag, action, target;
 
 @end
 
 #endif
+

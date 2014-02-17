@@ -1,8 +1,8 @@
 //
-//  NSControl+CoreCode.h
+//  NSWindow+CoreCode.h
 //  CoreLib
 //
-//  Created by CoreCode on 09.02.14.
+//  Created by CoreCode on 14.02.14.
 /*	Copyright (c) 2012 - 2014 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -15,17 +15,11 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
-@interface NSControl (CoreCode)
+@interface NSWindow (CoreCode)
 
-// properties for implemented methods
-@property (copy, nonatomic) NSString *stringValue;
-@property (assign, nonatomic) id target;
-@property (assign, nonatomic) SEL action;
-@property (assign, nonatomic) int intValue;
-@property (assign, nonatomic) float floatValue;
-@property (assign, nonatomic) double doubleValue;
-@property (assign, nonatomic) NSInteger tag;
-
+- (void)setProgressMessage:(NSString *)message;
+- (void)beginProgress:(NSString *)title;
+- (void)endProgress;
 
 @end
 

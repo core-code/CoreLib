@@ -12,6 +12,7 @@
 
 #include "CoreLib.h"
 
+
 @interface NSObject (CoreCode)
 
 - (id)associatedValueForKey:(NSString *)key;

@@ -15,7 +15,7 @@
 
 @implementation NSData (CoreCode)
 
-@dynamic string, hexString, mutableObject;
+@dynamic string, hexString, mutableObject, JSONArray, JSONDictionary;
 
 - (NSString *)string
 {
@@ -45,5 +45,29 @@
 - (NSMutableData *)mutableObject
 {
 	return [NSMutableData dataWithData:self];
+}
+
+- (id)JSONObject
+{
+    NSError *err;
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self options:(NSJSONReadingOptions)0 error:&err];
+
+    if (!dict || err || ![dict isKindOfClass:[NSDictionary class]])
+    {
+        NSLog(@"Error: JSON read fails! input %@ dict %@ err %@", self, dict, err);
+        return nil;
+    }
+
+    return dict;
+}
+
+- (NSArray *)JSONArray
+{
+    return [self JSONObject];
+}
+
+- (NSDictionary *)JSONDictionary
+{
+    return [self JSONObject];
 }
 @end

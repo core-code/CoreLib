@@ -17,6 +17,20 @@
 
 @dynamic mutableObject, empty, count, set, reverseArray, firstObject, lastObject;
 
+- (NSData *)JSONData
+{
+    NSError *err;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:self options:(NSJSONWritingOptions)0 error:&err];
+
+    if (!data || err)
+    {
+        NSLog(@"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
+        return nil;
+    }
+
+    return data;
+}
+
 - (BOOL)contains:(id)object
 {
 	return [self indexOfObject:object] != NSNotFound;

@@ -13,7 +13,6 @@
 #include "CoreLib.h"
 
 
-
 @interface NSDate (CoreCode)
 
 // date format strings:   dd.MM.yyyy HH:mm:ss
