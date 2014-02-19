@@ -28,10 +28,6 @@
 		B91429F518B2318F00A31326 /* NSArray+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DD18B2318F00A31326 /* NSArray+CoreCode.m */; };
 		B91429F618B2318F00A31326 /* NSArray+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DD18B2318F00A31326 /* NSArray+CoreCode.m */; };
 		B91429F718B2318F00A31326 /* NSArray+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DD18B2318F00A31326 /* NSArray+CoreCode.m */; };
-		B91429F818B2318F00A31326 /* NSControl+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DF18B2318F00A31326 /* NSControl+CoreCode.m */; };
-		B91429F918B2318F00A31326 /* NSControl+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DF18B2318F00A31326 /* NSControl+CoreCode.m */; };
-		B91429FA18B2318F00A31326 /* NSControl+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DF18B2318F00A31326 /* NSControl+CoreCode.m */; };
-		B91429FB18B2318F00A31326 /* NSControl+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429DF18B2318F00A31326 /* NSControl+CoreCode.m */; };
 		B91429FC18B2318F00A31326 /* NSData+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429E118B2318F00A31326 /* NSData+CoreCode.m */; };
 		B91429FD18B2318F00A31326 /* NSData+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429E118B2318F00A31326 /* NSData+CoreCode.m */; };
 		B91429FE18B2318F00A31326 /* NSData+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429E118B2318F00A31326 /* NSData+CoreCode.m */; };
@@ -72,6 +68,7 @@
 		B9142A2118B2318F00A31326 /* NSWindow+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */; };
 		B9142A2218B2318F00A31326 /* NSWindow+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */; };
 		B9142A2318B2318F00A31326 /* NSWindow+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */; };
+		B93A40FB18B4BA4800D06ECF /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B93A40FA18B4BA4800D06ECF /* AppKit+CoreCode.m */; };
 		B9EF05171865D42C00CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF05181865D42C00CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
 		B9EF05191865D42C00CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
@@ -156,8 +153,6 @@
 /* Begin PBXFileReference section */
 		B91429DC18B2318F00A31326 /* NSArray+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+CoreCode.h"; sourceTree = "<group>"; };
 		B91429DD18B2318F00A31326 /* NSArray+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+CoreCode.m"; sourceTree = "<group>"; };
-		B91429DE18B2318F00A31326 /* NSControl+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSControl+CoreCode.h"; sourceTree = "<group>"; };
-		B91429DF18B2318F00A31326 /* NSControl+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSControl+CoreCode.m"; sourceTree = "<group>"; };
 		B91429E018B2318F00A31326 /* NSData+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CoreCode.h"; sourceTree = "<group>"; };
 		B91429E118B2318F00A31326 /* NSData+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CoreCode.m"; sourceTree = "<group>"; };
 		B91429E218B2318F00A31326 /* NSDate+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+CoreCode.h"; sourceTree = "<group>"; };
@@ -178,6 +173,8 @@
 		B91429F118B2318F00A31326 /* NSURL+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+CoreCode.m"; sourceTree = "<group>"; };
 		B91429F218B2318F00A31326 /* NSWindow+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+CoreCode.h"; sourceTree = "<group>"; };
 		B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+CoreCode.m"; sourceTree = "<group>"; };
+		B93A40F918B4BA4800D06ECF /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
+		B93A40FA18B4BA4800D06ECF /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9EF04FF1865D42C00CF7A38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9EF05011865D42C00CF7A38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -274,10 +271,10 @@
 				B9EF05301865D5A200CF7A38 /* iOS */,
 				B9EF052E1865D5A200CF7A38 /* CoreLib.h */,
 				B9EF052F1865D5A200CF7A38 /* CoreLib.m */,
+				B93A40F918B4BA4800D06ECF /* AppKit+CoreCode.h */,
+				B93A40FA18B4BA4800D06ECF /* AppKit+CoreCode.m */,
 				B91429DC18B2318F00A31326 /* NSArray+CoreCode.h */,
 				B91429DD18B2318F00A31326 /* NSArray+CoreCode.m */,
-				B91429DE18B2318F00A31326 /* NSControl+CoreCode.h */,
-				B91429DF18B2318F00A31326 /* NSControl+CoreCode.m */,
 				B91429E018B2318F00A31326 /* NSData+CoreCode.h */,
 				B91429E118B2318F00A31326 /* NSData+CoreCode.m */,
 				B91429E218B2318F00A31326 /* NSDate+CoreCode.h */,
@@ -529,8 +526,8 @@
 				B9EF05531865D5A200CF7A38 /* GradientButton.m in Sources */,
 				B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */,
 				B9142A2018B2318F00A31326 /* NSWindow+CoreCode.m in Sources */,
-				B91429F818B2318F00A31326 /* NSControl+CoreCode.m in Sources */,
 				B91429FC18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
+				B93A40FB18B4BA4800D06ECF /* AppKit+CoreCode.m in Sources */,
 				B9EF052D1865D57400CF7A38 /* CoreLibTests.m in Sources */,
 				B9142A1C18B2318F00A31326 /* NSURL+CoreCode.m in Sources */,
 				B9EF05551865D5A200CF7A38 /* JMAlertView.m in Sources */,
@@ -556,7 +553,6 @@
 				B9EF05711865F18300CF7A38 /* GradientButton.m in Sources */,
 				B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */,
 				B9142A2118B2318F00A31326 /* NSWindow+CoreCode.m in Sources */,
-				B91429F918B2318F00A31326 /* NSControl+CoreCode.m in Sources */,
 				B91429FD18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
 				B9EF05731865F18300CF7A38 /* CoreLibTests.m in Sources */,
 				B9142A1D18B2318F00A31326 /* NSURL+CoreCode.m in Sources */,
@@ -579,7 +575,6 @@
 				B9EF05B31865F24800CF7A38 /* JMHostInformation.m in Sources */,
 				B91429FE18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
 				B9142A0618B2318F00A31326 /* NSDictionary+CoreCode.m in Sources */,
-				B91429FA18B2318F00A31326 /* NSControl+CoreCode.m in Sources */,
 				B9142A1618B2318F00A31326 /* NSObject+CoreCode.m in Sources */,
 				B9142A1E18B2318F00A31326 /* NSURL+CoreCode.m in Sources */,
 				B9EF05B11865F24800CF7A38 /* JMDocklessApplication.m in Sources */,
@@ -608,7 +603,6 @@
 				B9EF05C21865F4A000CF7A38 /* JMHostInformation.m in Sources */,
 				B91429FF18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
 				B9142A0718B2318F00A31326 /* NSDictionary+CoreCode.m in Sources */,
-				B91429FB18B2318F00A31326 /* NSControl+CoreCode.m in Sources */,
 				B9142A1718B2318F00A31326 /* NSObject+CoreCode.m in Sources */,
 				B9142A1F18B2318F00A31326 /* NSURL+CoreCode.m in Sources */,
 				B9EF05C31865F4A000CF7A38 /* JMDocklessApplication.m in Sources */,

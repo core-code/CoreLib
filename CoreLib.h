@@ -75,11 +75,15 @@ static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname 
 CUSTOM_ARRAY(NSString)
 CUSTOM_ARRAY(NSNumber)
 CUSTOM_ARRAY(NSArray)
+CUSTOM_ARRAY(NSDictionary)
 CUSTOM_ARRAY(NSMutableArray)
+CUSTOM_ARRAY(NSMutableDictionary)
 CUSTOM_MUTABLE_ARRAY(NSString)
 CUSTOM_MUTABLE_ARRAY(NSNumber)
 CUSTOM_MUTABLE_ARRAY(NSArray)
+CUSTOM_MUTABLE_ARRAY(NSDictionary)
 CUSTOM_MUTABLE_ARRAY(NSMutableArray)
+CUSTOM_MUTABLE_ARRAY(NSMutableDictionary)
 CUSTOM_DICTIONARY(NSString)
 CUSTOM_DICTIONARY(NSNumber)
 CUSTOM_MUTABLE_DICTIONARY(NSString)
@@ -97,7 +101,8 @@ CUSTOM_MUTABLE_DICTIONARY(NSNumber)
 #import "NSObject+CoreCode.h"
 #import "NSString+CoreCode.h"
 #import "NSURL+CoreCode.h"
-#import "NSControl+CoreCode.h"
+	
+#import "AppKit+CoreCode.h"
 #import "NSWindow+CoreCode.h"
 
 @interface CoreLib : NSObject
@@ -222,6 +227,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #endif
 
 // convenience macros
+#define LOGFUNC				NSLog(@"%s", __PRETTY_FUNCTION__)
 #define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
 #define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
 #define LOG(x)				NSLog(@"%@", [(x) description]);
