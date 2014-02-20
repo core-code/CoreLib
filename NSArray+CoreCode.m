@@ -262,6 +262,12 @@
 	return [NSArray arrayWithArray:self];
 }
 
+- (void)addNewObject:(id)anObject
+{
+	if (anObject && [self indexOfObject:anObject] == NSNotFound)
+		[self addObject:anObject];
+}
+
 - (void)addObjectSafely:(id)anObject
 {
 	if (anObject)

@@ -63,6 +63,7 @@
 
 @property (readonly, nonatomic) NSArray *immutableObject;
 
+- (void)addNewObject:(id)anObject;
 - (void)addObjectSafely:(id)anObject;
 - (void)map:(ObjectInOutBlock)block;
 - (void)filter:(ObjectInIntOutBlock)block;

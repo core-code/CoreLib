@@ -284,4 +284,26 @@
 
 @end
 
+
+@interface NSToolbarItem (CoreCode)
+
+@property (readonly, nonatomic) NSString *itemIdentifier;
+@property (readonly, nonatomic) NSToolbar *toolbar;
+@property (readonly, nonatomic) BOOL allowsDuplicatesInToolbar;
+@property (copy, nonatomic) NSString *label;
+@property (copy, nonatomic) NSString *paletteLabel;
+@property (copy, nonatomic) NSString *toolTip;
+@property (strong, nonatomic) NSMenuItem *menuFormRepresentation;
+@property (assign, nonatomic) NSInteger tag;
+@property (assign, nonatomic) id target;
+@property (assign, nonatomic) SEL action;
+@property (assign, nonatomic, getter=isEnabled) BOOL enabled;
+@property (strong, nonatomic) NSImage *image;
+@property (strong, nonatomic) NSView *view;
+@property (assign, nonatomic) NSSize minSize;
+@property (assign, nonatomic) NSSize maxSize;
+@property (assign, nonatomic) NSInteger visibilityPriority;
+@property (assign, nonatomic) BOOL autovalidates;
+
+@end
 #endif

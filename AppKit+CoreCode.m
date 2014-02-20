@@ -76,5 +76,12 @@
 
 @end
 
+
+@implementation NSToolbarItem (CoreCode)
+
+@dynamic itemIdentifier, toolbar, allowsDuplicatesInToolbar, label, paletteLabel, toolTip, menuFormRepresentation, tag, target, action, enabled, image, view, minSize, maxSize, visibilityPriority, autovalidates;
+
+
+@end
 #endif
 
