@@ -237,6 +237,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define LOG(x)				NSLog(@"%@", [(x) description]);
 #define OBJECT_OR(x,y)		((x) ? (x) : (y))
 #define STRING_OR(x, y)		(((x) && ([x length])) ? (x) : (y))
+#define VALID_STR(x)		(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
 #define NON_NIL_STR(x)		((x) ? (x) : @"")
 #define NON_NIL_OBJ(x)		((x) ? (x) : [NSNull null])
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
