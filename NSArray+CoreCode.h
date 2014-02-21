@@ -51,10 +51,6 @@
 
 @property (readonly, nonatomic) NSSet *set;
 
-// properties for implemented methods
-@property (readonly, nonatomic) NSUInteger count;
-@property (readonly, nonatomic) id firstObject;
-@property (readonly, nonatomic) id lastObject;
 
 @end
 

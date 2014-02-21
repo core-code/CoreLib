@@ -44,7 +44,6 @@ typedef NS_ENUM(uint8_t, openChoice)
 };
 
 
-
 // CUSTOM TEMPLATE COLLECTIONS
 // lets you define custom types for collection classes that so that the compiler knows what type they return
 #define CUSTOM_ARRAY(classname) \
@@ -72,6 +71,7 @@ static inline classname ## Dictionary * make ## classname ## Dictionary (void)  
 @end \
 static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];}
 
+
 CUSTOM_ARRAY(NSString)
 CUSTOM_ARRAY(NSNumber)
 CUSTOM_ARRAY(NSArray)
@@ -90,20 +90,24 @@ CUSTOM_MUTABLE_DICTIONARY(NSString)
 CUSTOM_MUTABLE_DICTIONARY(NSNumber)
 
 
-
+// foundation categories
 #import "NSArray+CoreCode.h"
 #import "NSData+CoreCode.h"
 #import "NSDate+CoreCode.h"
 #import "NSDictionary+CoreCode.h"
 #import "NSFileHandle+CoreCode.h"
 #import "NSLocale+CoreCode.h"
-#import "NSNumber+CoreCode.h"
 #import "NSObject+CoreCode.h"
 #import "NSString+CoreCode.h"
 #import "NSURL+CoreCode.h"
-	
-#import "AppKit+CoreCode.h"
+
+// appkit categories
 #import "NSWindow+CoreCode.h"
+
+// property categories
+#import "AppKit+Properties.h"
+#import "Foundation+Properties.h"
+
 
 @interface CoreLib : NSObject
 
@@ -147,7 +151,7 @@ extern NSApplication *application;
 
 // alert convenience
 NSInteger input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
-void alertfeedbackfatal(NSString *usermsg, NSString *details);
+void alertfeedbackfatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));

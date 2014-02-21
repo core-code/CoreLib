@@ -295,6 +295,8 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
         block();
     else
         dispatch_sync_main(block);
+
+	exit(1);
 }
 
 NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)

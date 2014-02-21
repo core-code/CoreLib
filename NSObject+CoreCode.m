@@ -24,7 +24,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSObject (CoreCode)
 
-@dynamic description, associatedValue;
+@dynamic associatedValue;
 
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key
 {

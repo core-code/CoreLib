@@ -48,10 +48,6 @@
 		B9142A0D18B2318F00A31326 /* NSLocale+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429E918B2318F00A31326 /* NSLocale+CoreCode.m */; };
 		B9142A0E18B2318F00A31326 /* NSLocale+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429E918B2318F00A31326 /* NSLocale+CoreCode.m */; };
 		B9142A0F18B2318F00A31326 /* NSLocale+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429E918B2318F00A31326 /* NSLocale+CoreCode.m */; };
-		B9142A1018B2318F00A31326 /* NSNumber+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429EB18B2318F00A31326 /* NSNumber+CoreCode.m */; };
-		B9142A1118B2318F00A31326 /* NSNumber+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429EB18B2318F00A31326 /* NSNumber+CoreCode.m */; };
-		B9142A1218B2318F00A31326 /* NSNumber+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429EB18B2318F00A31326 /* NSNumber+CoreCode.m */; };
-		B9142A1318B2318F00A31326 /* NSNumber+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429EB18B2318F00A31326 /* NSNumber+CoreCode.m */; };
 		B9142A1418B2318F00A31326 /* NSObject+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429ED18B2318F00A31326 /* NSObject+CoreCode.m */; };
 		B9142A1518B2318F00A31326 /* NSObject+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429ED18B2318F00A31326 /* NSObject+CoreCode.m */; };
 		B9142A1618B2318F00A31326 /* NSObject+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429ED18B2318F00A31326 /* NSObject+CoreCode.m */; };
@@ -68,7 +64,11 @@
 		B9142A2118B2318F00A31326 /* NSWindow+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */; };
 		B9142A2218B2318F00A31326 /* NSWindow+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */; };
 		B9142A2318B2318F00A31326 /* NSWindow+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */; };
-		B93A40FB18B4BA4800D06ECF /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B93A40FA18B4BA4800D06ECF /* AppKit+CoreCode.m */; };
+		B93A40FB18B4BA4800D06ECF /* AppKit+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B93A40FA18B4BA4800D06ECF /* AppKit+Properties.m */; };
+		B968A3E618B75D7400309F2F /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B968A3E518B75D7400309F2F /* Foundation+Properties.m */; };
+		B968A3E718B75D7400309F2F /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B968A3E518B75D7400309F2F /* Foundation+Properties.m */; };
+		B968A3E818B75D7400309F2F /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B968A3E518B75D7400309F2F /* Foundation+Properties.m */; };
+		B968A3E918B75D7400309F2F /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B968A3E518B75D7400309F2F /* Foundation+Properties.m */; };
 		B9EF05171865D42C00CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF05181865D42C00CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
 		B9EF05191865D42C00CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
@@ -163,8 +163,6 @@
 		B91429E718B2318F00A31326 /* NSFileHandle+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+CoreCode.m"; sourceTree = "<group>"; };
 		B91429E818B2318F00A31326 /* NSLocale+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSLocale+CoreCode.h"; sourceTree = "<group>"; };
 		B91429E918B2318F00A31326 /* NSLocale+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+CoreCode.m"; sourceTree = "<group>"; };
-		B91429EA18B2318F00A31326 /* NSNumber+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+CoreCode.h"; sourceTree = "<group>"; };
-		B91429EB18B2318F00A31326 /* NSNumber+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+CoreCode.m"; sourceTree = "<group>"; };
 		B91429EC18B2318F00A31326 /* NSObject+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CoreCode.h"; sourceTree = "<group>"; };
 		B91429ED18B2318F00A31326 /* NSObject+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CoreCode.m"; sourceTree = "<group>"; };
 		B91429EE18B2318F00A31326 /* NSString+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CoreCode.h"; sourceTree = "<group>"; };
@@ -173,8 +171,10 @@
 		B91429F118B2318F00A31326 /* NSURL+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+CoreCode.m"; sourceTree = "<group>"; };
 		B91429F218B2318F00A31326 /* NSWindow+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+CoreCode.h"; sourceTree = "<group>"; };
 		B91429F318B2318F00A31326 /* NSWindow+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+CoreCode.m"; sourceTree = "<group>"; };
-		B93A40F918B4BA4800D06ECF /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
-		B93A40FA18B4BA4800D06ECF /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
+		B93A40F918B4BA4800D06ECF /* AppKit+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+Properties.h"; sourceTree = "<group>"; };
+		B93A40FA18B4BA4800D06ECF /* AppKit+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+Properties.m"; sourceTree = "<group>"; };
+		B968A3E418B75D7400309F2F /* Foundation+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+Properties.h"; sourceTree = "<group>"; };
+		B968A3E518B75D7400309F2F /* Foundation+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Properties.m"; sourceTree = "<group>"; };
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9EF04FF1865D42C00CF7A38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9EF05011865D42C00CF7A38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -271,8 +271,10 @@
 				B9EF05301865D5A200CF7A38 /* iOS */,
 				B9EF052E1865D5A200CF7A38 /* CoreLib.h */,
 				B9EF052F1865D5A200CF7A38 /* CoreLib.m */,
-				B93A40F918B4BA4800D06ECF /* AppKit+CoreCode.h */,
-				B93A40FA18B4BA4800D06ECF /* AppKit+CoreCode.m */,
+				B93A40F918B4BA4800D06ECF /* AppKit+Properties.h */,
+				B93A40FA18B4BA4800D06ECF /* AppKit+Properties.m */,
+				B968A3E418B75D7400309F2F /* Foundation+Properties.h */,
+				B968A3E518B75D7400309F2F /* Foundation+Properties.m */,
 				B91429DC18B2318F00A31326 /* NSArray+CoreCode.h */,
 				B91429DD18B2318F00A31326 /* NSArray+CoreCode.m */,
 				B91429E018B2318F00A31326 /* NSData+CoreCode.h */,
@@ -285,8 +287,6 @@
 				B91429E718B2318F00A31326 /* NSFileHandle+CoreCode.m */,
 				B91429E818B2318F00A31326 /* NSLocale+CoreCode.h */,
 				B91429E918B2318F00A31326 /* NSLocale+CoreCode.m */,
-				B91429EA18B2318F00A31326 /* NSNumber+CoreCode.h */,
-				B91429EB18B2318F00A31326 /* NSNumber+CoreCode.m */,
 				B91429EC18B2318F00A31326 /* NSObject+CoreCode.h */,
 				B91429ED18B2318F00A31326 /* NSObject+CoreCode.m */,
 				B91429EE18B2318F00A31326 /* NSString+CoreCode.h */,
@@ -522,12 +522,12 @@
 				B9EF05541865D5A200CF7A38 /* JMActionSheet.m in Sources */,
 				B9142A0818B2318F00A31326 /* NSFileHandle+CoreCode.m in Sources */,
 				B9EF05521865D5A200CF7A38 /* CoreLib.m in Sources */,
-				B9142A1018B2318F00A31326 /* NSNumber+CoreCode.m in Sources */,
+				B968A3E618B75D7400309F2F /* Foundation+Properties.m in Sources */,
 				B9EF05531865D5A200CF7A38 /* GradientButton.m in Sources */,
 				B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */,
 				B9142A2018B2318F00A31326 /* NSWindow+CoreCode.m in Sources */,
 				B91429FC18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
-				B93A40FB18B4BA4800D06ECF /* AppKit+CoreCode.m in Sources */,
+				B93A40FB18B4BA4800D06ECF /* AppKit+Properties.m in Sources */,
 				B9EF052D1865D57400CF7A38 /* CoreLibTests.m in Sources */,
 				B9142A1C18B2318F00A31326 /* NSURL+CoreCode.m in Sources */,
 				B9EF05551865D5A200CF7A38 /* JMAlertView.m in Sources */,
@@ -549,8 +549,8 @@
 				B9EF056B1865F18300CF7A38 /* JMActionSheet.m in Sources */,
 				B9142A0918B2318F00A31326 /* NSFileHandle+CoreCode.m in Sources */,
 				B9EF056E1865F18300CF7A38 /* CoreLib.m in Sources */,
-				B9142A1118B2318F00A31326 /* NSNumber+CoreCode.m in Sources */,
 				B9EF05711865F18300CF7A38 /* GradientButton.m in Sources */,
+				B968A3E718B75D7400309F2F /* Foundation+Properties.m in Sources */,
 				B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */,
 				B9142A2118B2318F00A31326 /* NSWindow+CoreCode.m in Sources */,
 				B91429FD18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
@@ -571,6 +571,7 @@
 				B9EF05AF1865F24800CF7A38 /* JMAppMovedHandler.m in Sources */,
 				B9EF05B21865F24800CF7A38 /* JMEmailSender.m in Sources */,
 				B9142A0218B2318F00A31326 /* NSDate+CoreCode.m in Sources */,
+				B968A3E818B75D7400309F2F /* Foundation+Properties.m in Sources */,
 				B91429F618B2318F00A31326 /* NSArray+CoreCode.m in Sources */,
 				B9EF05B31865F24800CF7A38 /* JMHostInformation.m in Sources */,
 				B91429FE18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
@@ -585,7 +586,6 @@
 				B9EF05B51865F24800CF7A38 /* JMVisibilityManager.m in Sources */,
 				B9EF058B1865F20900CF7A38 /* CoreLib.m in Sources */,
 				B9EF05B61865F24800CF7A38 /* NSTextField+AutoFontsize.m in Sources */,
-				B9142A1218B2318F00A31326 /* NSNumber+CoreCode.m in Sources */,
 				B9142A0A18B2318F00A31326 /* NSFileHandle+CoreCode.m in Sources */,
 				B9142A2218B2318F00A31326 /* NSWindow+CoreCode.m in Sources */,
 				B9EF05901865F20900CF7A38 /* CoreLibTests.m in Sources */,
@@ -599,6 +599,7 @@
 				B9EF05BD1865F4A000CF7A38 /* JMAppMovedHandler.m in Sources */,
 				B9EF05BF1865F4A000CF7A38 /* JMEmailSender.m in Sources */,
 				B9142A0318B2318F00A31326 /* NSDate+CoreCode.m in Sources */,
+				B968A3E918B75D7400309F2F /* Foundation+Properties.m in Sources */,
 				B91429F718B2318F00A31326 /* NSArray+CoreCode.m in Sources */,
 				B9EF05C21865F4A000CF7A38 /* JMHostInformation.m in Sources */,
 				B91429FF18B2318F00A31326 /* NSData+CoreCode.m in Sources */,
@@ -613,7 +614,6 @@
 				B9EF05C91865F4A000CF7A38 /* JMVisibilityManager.m in Sources */,
 				B9EF05CA1865F4A000CF7A38 /* CoreLib.m in Sources */,
 				B9EF05CC1865F4A000CF7A38 /* NSTextField+AutoFontsize.m in Sources */,
-				B9142A1318B2318F00A31326 /* NSNumber+CoreCode.m in Sources */,
 				B9142A0B18B2318F00A31326 /* NSFileHandle+CoreCode.m in Sources */,
 				B9142A2318B2318F00A31326 /* NSWindow+CoreCode.m in Sources */,
 				B9EF05CE1865F4A000CF7A38 /* CoreLibTests.m in Sources */,

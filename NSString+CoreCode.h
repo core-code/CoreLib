@@ -86,18 +86,6 @@
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;		// stringByReplacingOccurencesOfString:withString:
 - (NSStringArray *)split:(NSString *)sep;								// componentsSeparatedByString:
 
-// properties for implemented methods
-@property (readonly, nonatomic) NSUInteger length;
-@property (readonly, nonatomic) double doubleValue;
-@property (readonly, nonatomic) float floatValue;
-@property (readonly, nonatomic) int intValue;
-@property (readonly, nonatomic) NSInteger integerValue;
-@property (readonly, nonatomic) long long longLongValue;
-@property (readonly, nonatomic) BOOL boolValue;
-@property (readonly, nonatomic) NSNumber *numberValue;
-@property (readonly, nonatomic) NSString *lowercaseString;
-@property (readonly, nonatomic) NSString *uppercaseString;
-
 @end
 
 

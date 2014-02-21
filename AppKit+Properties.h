@@ -1,5 +1,5 @@
 //
-//  AppKit+CoreCode.h
+//  AppKit+Properties.h
 //  CoreLib
 //
 //  Created by CoreCode on 09.02.14.
@@ -15,7 +15,7 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
-@interface NSControl (CoreCode)
+@interface NSControl (Properties)
 
 // properties for implemented methods
 @property (copy, nonatomic) NSString *stringValue;
@@ -29,7 +29,7 @@
 @end
 
 
-@interface NSCell (CoreCode)
+@interface NSCell (Properties)
 
 // properties for implemented methods
 @property (assign, nonatomic) BOOL acceptsFirstResponder;
@@ -79,7 +79,7 @@
 @end
 
 
-@interface NSButton (CoreCode)
+@interface NSButton (Properties)
 
 // properties for implemented methods
 
@@ -99,7 +99,7 @@
 @end
 
 
-@interface NSTableView (CoreCode)
+@interface NSTableView (Properties)
 
 // properties for implemented methods
 
@@ -138,7 +138,7 @@
 @end
 
 
-@interface NSTableColumn (CoreCode)
+@interface NSTableColumn (Properties)
 
 // properties for implemented methods
 
@@ -159,7 +159,7 @@
 @end
 
 
-@interface NSTextFieldCell (CoreCode)
+@interface NSTextFieldCell (Properties)
 
 // properties for implemented methods
 
@@ -173,7 +173,7 @@
 @end
 
 
-@interface NSView (CoreCode)
+@interface NSView (Properties)
 
 // properties for implemented methods
 
@@ -218,7 +218,7 @@
 @end
 
 
-@interface NSEvent (CoreCode)
+@interface NSEvent (Properties)
 
 // properties for implemented methods
 
@@ -276,7 +276,7 @@
 @end
 
 
-@interface NSSegmentedControl (CoreCode)
+@interface NSSegmentedControl (Properties)
 
 @property (assign, nonatomic) NSInteger segmentCount;
 @property (assign, nonatomic) NSInteger selectedSegment;
@@ -285,7 +285,7 @@
 @end
 
 
-@interface NSToolbarItem (CoreCode)
+@interface NSToolbarItem (Properties)
 
 @property (readonly, nonatomic) NSString *itemIdentifier;
 @property (readonly, nonatomic) NSToolbar *toolbar;

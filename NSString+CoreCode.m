@@ -9,7 +9,6 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 #import "NSString+CoreCode.h"
 
 #ifdef USE_SECURITY
@@ -18,7 +17,7 @@
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, length, defaultArray, defaultDict, isWriteablePath, fileSize, contents, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, dataFromHexString, escaped, encoded, numberValue, namedImage, lowercaseString, uppercaseString;
+@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, contents, dataFromHexString, escaped, encoded, namedImage;
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
