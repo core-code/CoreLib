@@ -18,9 +18,9 @@
 @property (copy, nonatomic) BasicBlock cancelBlock;
 @property (copy, nonatomic) IntInBlock otherBlock;
 
-+ (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount;
++ (JMAlertView *)localizedAlertWithName:(NSString *)name;
 
-- (id)initWithTitle:(NSString *)title
+- (JMAlertView *)initWithTitle:(NSString *)title
 			message:(NSString *)message
 		cancelBlock:(BasicBlock)cancelBlock
   cancelButtonTitle:(NSString *)cancelButtonTitle

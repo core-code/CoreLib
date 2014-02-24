@@ -16,20 +16,26 @@
 @implementation JMAlertView
 
 
-+ (JMAlertView *)localizedAlertWithTitle:(NSString *)title numberOfButtons:(int)buttonCount
++ (JMAlertView *)localizedAlertWithName:(NSString *)name
 {
-	assert(buttonCount > 0);
-	JMAlertView *alert = [[JMAlertView alloc] initWithTitle:NSLocalizedString([title stringByAppendingString:@"_TITLE"], nil)
-													message:NSLocalizedString([title stringByAppendingString:@"_MESSAGE"], nil)
+	JMAlertView *alert = [[JMAlertView alloc] initWithTitle:NSLocalizedString([name stringByAppendingString:@"_TITLE"], nil)
+													message:NSLocalizedString([name stringByAppendingString:@"_MESSAGE"], nil)
 												   delegate:self
-										  cancelButtonTitle:NSLocalizedString([title stringByAppendingString:@"_BUTTON"], nil)
+										  cancelButtonTitle:NSLocalizedString([name stringByAppendingString:@"_BUTTON"], nil)
 										  otherButtonTitles:nil];
 
-	for (int i = 1; i < buttonCount;i++)
+	int i = 2;
+	do
 	{
-		NSString *buttonTitle = [title stringByAppendingFormat:@"_BUTTON%i", i+1];
-		[alert addButtonWithTitle:NSLocalizedString(buttonTitle, nil)];
-	}
+		NSString *buttonKey = [name stringByAppendingFormat:@"_BUTTON%i", i++];
+		NSString *localizedButton = [[NSBundle mainBundle] localizedStringForKey:buttonKey value:nil table:nil];
+
+		if (!localizedButton)
+			break;
+
+		[alert addButtonWithTitle:NSLocalizedString(localizedButton, nil)];
+	} while (true);
+
 
 	return alert;
 }
@@ -53,7 +59,7 @@
         if (self.otherBlock)
 			self.otherBlock((int)(buttonIndex - [self firstOtherButtonIndex]));
     }
-    }
+}
 
 - (id)initWithTitle:(NSString *)title
 			message:(NSString *)message

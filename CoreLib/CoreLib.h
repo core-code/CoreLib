@@ -90,21 +90,11 @@ CUSTOM_MUTABLE_DICTIONARY(NSString)
 CUSTOM_MUTABLE_DICTIONARY(NSNumber)
 
 
-// foundation categories
-#import "NSArray+CoreCode.h"
-#import "NSData+CoreCode.h"
-#import "NSDate+CoreCode.h"
-#import "NSDictionary+CoreCode.h"
-#import "NSFileHandle+CoreCode.h"
-#import "NSLocale+CoreCode.h"
-#import "NSObject+CoreCode.h"
-#import "NSString+CoreCode.h"
-#import "NSURL+CoreCode.h"
+// categories
+#import "AppKit+CoreCode.h"
+#import "Foundation+CoreCode.h"
 
-// appkit categories
-#import "NSWindow+CoreCode.h"
-
-// property categories
+// properties
 #import "AppKit+Properties.h"
 #import "Foundation+Properties.h"
 
