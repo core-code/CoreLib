@@ -115,9 +115,9 @@ static CONST_KEY(CCProgressIndicator)
 
 - (void)adjustFontSize
 {
-    float width = self.frame.size.width;
+    double width = self.frame.size.width;
     NSFont *curr = [self font];
-    int currentFontSize = [curr pointSize];
+    int currentFontSize = (int)[curr pointSize];
     NSSize strSize;
     do
     {

@@ -90,14 +90,6 @@ CUSTOM_MUTABLE_DICTIONARY(NSString)
 CUSTOM_MUTABLE_DICTIONARY(NSNumber)
 
 
-// categories
-#import "AppKit+CoreCode.h"
-#import "Foundation+CoreCode.h"
-
-// properties
-#import "AppKit+Properties.h"
-#import "Foundation+Properties.h"
-
 
 @interface CoreLib : NSObject
 
@@ -254,6 +246,16 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #endif
 
 
+
+
+	// categories
+#import "AppKit+CoreCode.h"
+#import "Foundation+CoreCode.h"
+
+	// properties
+#import "AppKit+Properties.h"
+#import "Foundation+Properties.h"
+	
 
 #ifdef __cplusplus
 }
