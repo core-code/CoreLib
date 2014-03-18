@@ -35,6 +35,9 @@
 - (NSArray *)sortedArrayByKey:(NSString *)key;
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
 - (BOOL)contains:(id)object;
+- (NSRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block;
+- (NSRange)calculateExtentsOfValues:(ObjectInIntOutBlock)block;
+
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask;

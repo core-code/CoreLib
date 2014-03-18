@@ -29,6 +29,7 @@ typedef void (^StringInBlock)(NSString *input);
 typedef void (^ObjectInBlock)(id input);
 typedef id (^ObjectInOutBlock)(id input);
 typedef int (^ObjectInIntOutBlock)(id input);
+typedef NSPoint (^ObjectInPointOutBlock)(id input);
 typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 #endif
@@ -48,26 +49,59 @@ typedef NS_ENUM(uint8_t, openChoice)
 // lets you define custom types for collection classes that so that the compiler knows what type they return
 #define CUSTOM_ARRAY(classname) \
 @interface classname ## Array : NSArray \
-- (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
+_Pragma("GCC diagnostic push") \
+_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
++ (instancetype)arrayWithObject:(id)anObject; \
+- (NSArray *)arrayByAddingObject:(classname *)anObject; \
+- (BOOL)containsObject:(classname *)anObject; \
+- (NSUInteger)indexOfObject:(classname *)anObject; \
+- (NSUInteger)indexOfObject:(classname *)anObject inRange:(NSRange)range; \
+- (NSUInteger)indexOfObjectIdenticalTo:(classname *)anObject; \
+- (NSUInteger)indexOfObjectIdenticalTo:(classname *)anObject inRange:(NSRange)range; \
+- (classname *)objectAtIndexedSubscript:(NSUInteger)index; \
 - (classname *)firstObject; \
 - (classname *)lastObject; \
+_Pragma("GCC diagnostic pop") \
 @end \
 static inline classname ## Array * make ## classname ## Array (void)    { return (classname ## Array *)[NSArray new];}
 #define CUSTOM_MUTABLE_ARRAY(classname) \
+_Pragma("GCC diagnostic push") \
+_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
 @interface Mutable ## classname ## Array : NSMutableArray \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
+- (void)setObject:(classname *)anObject atIndexedSubscript:(NSUInteger)index; \
+- (void)addObject:(classname *)anObject; \
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index; \
+- (void)removeObject:(classname *)anObject; \
+- (void)removeObject:(classname *)anObject inRange:(NSRange)aRange; \
+- (void)removeObjectIdenticalTo:(classname *)anObject; \
+- (void)removeObjectIdenticalTo:(classname *)anObject inRange:(NSRange)aRange; \
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(classname *)anObject; \
 - (classname *)firstObject; \
 - (classname *)lastObject; \
+_Pragma("GCC diagnostic pop") \
 @end \
 static inline Mutable ## classname ## Array * make ## Mutable ## classname ## Array (void)    { return (Mutable ## classname ## Array *)[NSMutableArray new];}
 #define CUSTOM_DICTIONARY(classname) \
 @interface classname ## Dictionary : NSDictionary \
+_Pragma("GCC diagnostic push") \
+_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
 - (classname *)objectForKeyedSubscript:(id)key;\
++ (instancetype)dictionaryWithObject:(classname *)anObject forKey:(id<NSCopying>)aKey; \
+- (NSArray *)allKeysForObject:(classname *)anObject; \
+- (classname *)objectForKey:(id)aKey; \
+- (void)getObjects:(classname * __unsafe_unretained [])objects andKeys:(id __unsafe_unretained [])keys; \
+_Pragma("GCC diagnostic pop") \
 @end \
 static inline classname ## Dictionary * make ## classname ## Dictionary (void)    { return (classname ## Dictionary *)[NSDictionary new];}
 #define CUSTOM_MUTABLE_DICTIONARY(classname) \
 @interface Mutable ## classname ## Dictionary : NSMutableDictionary \
+_Pragma("GCC diagnostic push") \
+_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
 - (classname *)objectForKeyedSubscript:(id)key;\
+- (void)setObject:(classname *)object forKeyedSubscript:(id < NSCopying >)aKey; \
+- (void)setObject:(classname *)anObject forKey:(id < NSCopying >)aKey; \
+_Pragma("GCC diagnostic pop") \
 @end \
 static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];}
 
@@ -88,6 +122,16 @@ CUSTOM_DICTIONARY(NSString)
 CUSTOM_DICTIONARY(NSNumber)
 CUSTOM_MUTABLE_DICTIONARY(NSString)
 CUSTOM_MUTABLE_DICTIONARY(NSNumber)
+
+
+
+#define MAKE_MAKER(classname) \
+static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
+
+
+MAKE_MAKER(MutableArray)
+MAKE_MAKER(MutableDictionary)
+MAKE_MAKER(MutableString)
 
 
 

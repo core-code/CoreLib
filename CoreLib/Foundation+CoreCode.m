@@ -42,6 +42,39 @@ static CONST_KEY(CoreCodeAssociatedValue)
     return data;
 }
 
+- (NSRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block
+{
+	NSPoint min = NSMakePoint(INT_MAX, INT_MAX);
+	NSPoint max = NSMakePoint(INT_MIN, INT_MIN);
+
+	for (NSObject *o in self)
+	{
+		NSPoint p = block(o);
+
+		max.x = MAX(max.x, p.x);
+		max.y = MAX(max.y, p.y);
+		min.x = MIN(min.x, p.x);
+		min.y = MIN(min.y, p.y);
+	}
+
+	return NSMakeRect(min.x,min.y,max.x - min.x,max.y-min.y);
+}
+
+- (NSRange)calculateExtentsOfValues:(ObjectInIntOutBlock)block
+{
+	int min = INT_MAX, max = INT_MIN;
+
+	for (NSObject *o in self)
+	{
+		int p = block(o);
+
+		min = MIN(min, p);
+		max = MAX(max, p);
+	}
+
+	return NSMakeRange(min, max-min);
+}
+
 - (NSString *)string
 {
 	NSString *ret = @"";
