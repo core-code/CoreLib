@@ -1,41 +1,37 @@
 //
-//  Foundation+Properties.m
+//  JMFontPopUpButton.m
 //  CoreLib
 //
-//  Created by CoreCode on 09.02.14.
-/*	Copyright (c) 2014 CoreCode
+//  Created by CoreCode on 28.03.14
+/*	Copyright (c) 2004 - 2014 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#import "Foundation+Properties.h"
+#import "JMFontPopUpButton.h"
 
 
-@implementation NSNumber (Properties)
+@implementation JMFontPopUpButtonCell
 
-@dynamic boolValue, charValue, decimalValue, doubleValue, floatValue, intValue, integerValue, longLongValue, longValue, shortValue, unsignedCharValue, unsignedIntegerValue, unsignedIntValue, unsignedLongLongValue, unsignedLongValue, unsignedShortValue, stringValue;
-
-@end
-
-
-@implementation NSArray (Properties)
-
-@dynamic count, firstObject, lastObject;
+- (NSAttributedString*)attributedTitle
+{
+	return [[NSAttributedString alloc] initWithString:[self title] attributes:nil];
+}
 
 @end
 
 
-@implementation NSObject (Properties)
+@implementation JMFontMenu
 
-@dynamic description;
+- (void)insertItem:(NSMenuItem *)newItem atIndex:(NSInteger)index
+{
+	NSFont *font = [NSFont fontWithName:[newItem title] size:12];
+	NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:[newItem title] attributes:@{NSFontAttributeName : font}];
+
+	[newItem setAttributedTitle:attributedTitle];
+
+	[super insertItem:newItem atIndex:index];
+}
 
 @end
-
-
-@implementation NSString (Properties)
-
-@dynamic length, doubleValue, floatValue, intValue, integerValue, longLongValue, boolValue, numberValue, lowercaseString, uppercaseString;
-
-@end
-

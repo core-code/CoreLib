@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 15.03.12.
-/*	Copyright (c) 2012 - 2014 CoreCode
+/*	Copyright (c) 2014 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -42,14 +42,14 @@ static CONST_KEY(CoreCodeAssociatedValue)
     return data;
 }
 
-- (NSRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block
+- (CGRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block
 {
-	NSPoint min = NSMakePoint(INT_MAX, INT_MAX);
-	NSPoint max = NSMakePoint(INT_MIN, INT_MIN);
+	CGPoint min = CGPointMake(INT_MAX, INT_MAX);
+	CGPoint max = CGPointMake(INT_MIN, INT_MIN);
 
 	for (NSObject *o in self)
 	{
-		NSPoint p = block(o);
+		CGPoint p = block(o);
 
 		max.x = MAX(max.x, p.x);
 		max.y = MAX(max.y, p.y);
@@ -57,7 +57,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		min.y = MIN(min.y, p.y);
 	}
 
-	return NSMakeRect(min.x,min.y,max.x - min.x,max.y-min.y);
+	return CGRectMake(min.x,min.y,max.x - min.x,max.y-min.y);
 }
 
 - (NSRange)calculateExtentsOfValues:(ObjectInIntOutBlock)block
@@ -624,6 +624,15 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key
 {
+#if	TARGET_OS_IPHONE
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-objc-pointer-introspection"
+	BOOL is64Bit = sizeof(void *) == 8;
+	BOOL isTagged = ((uintptr_t)self & 0x1);
+	assert(!(is64Bit && isTagged)); // associated values on tagged pointers broken on 64 bit iOS
+#pragma clang diagnostic pop
+#endif
+
     objc_setAssociatedObject(self, (BRIDGE const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
 }
 
@@ -647,7 +656,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, contents, dataFromHexString, escaped, encoded, namedImage;
+@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage;
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
@@ -667,11 +676,48 @@ static CONST_KEY(CoreCodeAssociatedValue)
 }
 #endif
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+- (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth
+{
+	NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self];
+	NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth, FLT_MAX)];
+	NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+	[layoutManager addTextContainer:textContainer];
+	[textStorage addLayoutManager:layoutManager];
+	[textStorage beginEditing];
+	[textStorage setAttributes:@{NSFontAttributeName: font} range:NSMakeRange(0, [self length])];
+	[textStorage endEditing];
+
+	(void) [layoutManager glyphRangeForTextContainer:textContainer];
+
+	NSRect r = [layoutManager usedRectForTextContainer:textContainer];
+
+#if  !__has_feature(objc_arc)
+	[textStorage release];
+	[layoutManager release];
+	[textContainer release];
+#endif
+	return r.size;
+}
+#endif
+
 - (unsigned long long)fileSize
 {
 	NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
 	if (!attr) return 0;
 	return [[attr objectForKey:NSFileSize] unsignedLongLongValue];
+}
+
+- (unsigned long long)directorySize
+{
+	unsigned long long size = 0;
+	for (NSString *file in self.dirContentsRecursiveAbsolute)
+	{
+		NSDictionary *attr = [fileManager attributesOfItemAtPath:file error:NULL];
+		if (attr && !([[attr objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory]))
+			size += [[attr objectForKey:NSFileSize] unsignedLongLongValue];
+	}
+	return size;
 }
 
 - (BOOL)isWriteablePath
@@ -696,6 +742,19 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	return (NSStringArray *)[[NSFileManager defaultManager] subpathsOfDirectoryAtPath:self error:NULL];
 }
+
+- (NSStringArray *)dirContentsAbsolute
+{
+	NSStringArray *c = self.dirContents;
+	return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+}
+
+- (NSStringArray *)dirContentsRecursiveAbsolute
+{
+	NSStringArray *c = self.dirContentsRecursive;
+	return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+}
+
 
 - (NSString *)uniqueFile
 {
@@ -1054,7 +1113,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, isWriteablePath, download, contents;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents;
 
 - (NSURLRequest *)request
 {
@@ -1066,16 +1125,18 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return [self URLByAppendingPathComponent:component];
 }
 
-- (NSStringArray *)dirContents
+- (NSURLArray *)dirContents
 {
 	if (![self isFileURL]) return nil;
-	return (NSStringArray *)[[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self path] error:NULL];
+	NSArray *c = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self path] error:NULL];
+	return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
-- (NSStringArray *)dirContentsRecursive
+- (NSURLArray *)dirContentsRecursive
 {
 	if (![self isFileURL]) return nil;
-	return (NSStringArray *)[[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[self path] error:NULL];
+	NSArray *c = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[self path] error:NULL];
+	return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
 - (NSURL *)uniqueFile
@@ -1097,6 +1158,18 @@ static CONST_KEY(CoreCodeAssociatedValue)
         return [size unsignedLongLongValue];
 	else
 		return 0;
+}
+
+- (unsigned long long)directorySize
+{
+	unsigned long long size = 0;
+	for (NSString *file in self.dirContentsRecursive)
+	{
+		NSDictionary *attr = [fileManager attributesOfItemAtPath:@[self.path, file].path error:NULL];
+		if (attr && !([[attr objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory]))
+			size += [[attr objectForKey:NSFileSize] unsignedLongLongValue];
+	}
+	return size;
 }
 
 - (void)open
