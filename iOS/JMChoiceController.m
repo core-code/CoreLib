@@ -39,14 +39,14 @@
         
         for (NSString *entry in self.choices)
         {
-            CGSize s = [entry sizeWithFont:self.font];
+            CGSize s = [entry sizeWithAttributes:@{NSFontAttributeName: self.font}];
             if (s.width > max)
                 max = s.width;
         }
         
         ourWidth = CLAMP(max+20, self.minWidth, self.maxWidth);
     }
-	self.contentSizeForViewInPopover = (CGSize){ourWidth, [self.choices count] * 44};
+	self.preferredContentSize = (CGSize){ourWidth, [self.choices count] * 44};
 }
 
 - (void)viewWillDisappear:(BOOL)animated

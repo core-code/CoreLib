@@ -42,6 +42,9 @@ static CONST_KEY(CoreCodeAssociatedValue)
     return data;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-statement-expression"
+
 - (CGRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block
 {
 	CGPoint min = CGPointMake(INT_MAX, INT_MAX);
@@ -74,6 +77,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 	return NSMakeRange(min, max-min);
 }
+
+#pragma clang diagnostic pop
 
 - (NSString *)string
 {
