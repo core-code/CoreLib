@@ -27,11 +27,15 @@
 - (void)insertItem:(NSMenuItem *)newItem atIndex:(NSInteger)index
 {
 	NSFont *font = [NSFont fontWithName:[newItem title] size:12];
-	NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:[newItem title] attributes:@{NSFontAttributeName : font}];
 
-	[newItem setAttributedTitle:attributedTitle];
-
-	[super insertItem:newItem atIndex:index];
+	if (font)
+	{
+		NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:[newItem title] attributes:@{NSFontAttributeName : font}];
+		[newItem setAttributedTitle:attributedTitle];
+		[super insertItem:newItem atIndex:index];
+	}
+	else
+		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: font with name '%@' is damaged and can not be instantiated.", [newItem title]);
 }
 
 @end
