@@ -87,6 +87,11 @@
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
 
+
+#ifdef USE_SECURITY
+@property (readonly, nonatomic) NSString *SHA1;
+#endif
+
 @end
 
 
@@ -167,6 +172,8 @@
 @property (readonly, nonatomic) NSStringArray *dirContentsRecursiveAbsolute;
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
+@property (readonly, nonatomic) BOOL fileIsAlias;
+@property (readonly, nonatomic) NSString *fileAliasTarget;
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
@@ -260,6 +267,8 @@
 @property (readonly, nonatomic) NSURLArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
+@property (readonly, nonatomic) BOOL fileIsAlias;
+@property (readonly, nonatomic) NSURL *fileAliasTarget;
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) NSURLRequest *request;

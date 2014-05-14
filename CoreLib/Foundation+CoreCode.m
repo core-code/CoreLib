@@ -392,7 +392,31 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSData (CoreCode)
 
-@dynamic string, hexString, mutableObject, JSONArray, JSONDictionary;
+@dynamic string, hexString, mutableObject, JSONArray, JSONDictionary
+#ifdef USE_SECURITY
+, SHA1;
+#else
+;
+#endif
+
+#ifdef USE_SECURITY
+- (NSString *)SHA1
+{
+	const char *cStr = [self bytes];
+	unsigned char result[CC_SHA1_DIGEST_LENGTH];
+	CC_SHA1(cStr, (CC_LONG)[self length], result);
+	NSString *s = [NSString  stringWithFormat:
+				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+				   result[0], result[1], result[2], result[3], result[4],
+				   result[5], result[6], result[7],
+				   result[8], result[9], result[10], result[11], result[12],
+				   result[13], result[14], result[15],
+				   result[16], result[17], result[18], result[19]
+				   ];
+
+    return s;
+}
+#endif
 
 - (NSString *)string
 {
@@ -661,7 +685,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage;
+@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage, fileIsAlias, fileAliasTarget;
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
@@ -680,6 +704,51 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return image;
 }
 #endif
+
+- (BOOL)fileIsAlias
+{
+    NSURL *url = [NSURL fileURLWithPath:self];
+    CFURLRef cfurl = (BRIDGE CFURLRef) url;
+    CFBooleanRef aliasBool = kCFBooleanFalse;
+    BOOL success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
+    BOOL alias = CFBooleanGetValue(aliasBool);
+
+    return alias && success;
+}
+
+- (NSString *)fileAliasTarget
+{
+    CFURLRef url = (BRIDGE CFURLRef) self;
+	CFStringRef resolvedPath = NULL;
+	if (url != NULL)
+	{
+		FSRef fsRef;
+		if (CFURLGetFSRef(url, &fsRef))
+		{
+			Boolean targetIsFolder, wasAliased;
+			OSErr err = FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased);
+			if ((err == noErr) && wasAliased)
+			{
+				CFURLRef resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
+				if (resolvedUrl != NULL)
+				{
+					resolvedPath = CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle);
+					CFRelease(resolvedUrl);
+				}
+			}
+		}
+		CFRelease(url);
+	}
+
+	if (resolvedPath)
+	{
+		__autoreleasing NSString *str = [NSString stringWithString:(BRIDGE NSString *)(resolvedPath)];
+		CFRelease(resolvedPath);
+		return str;
+	}
+	else
+		return NULL;
+}
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth
@@ -1118,7 +1187,46 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents, fileIsAlias, fileAliasTarget;
+
+- (BOOL)fileIsAlias
+{
+    CFURLRef cfurl = (BRIDGE CFURLRef) self;
+    CFBooleanRef aliasBool = kCFBooleanFalse;
+    BOOL success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
+    BOOL alias = CFBooleanGetValue(aliasBool);
+
+    return alias && success;
+}
+
+- (NSURL *)fileAliasTarget
+{
+    CFURLRef url = (BRIDGE CFURLRef)self;
+	CFURLRef resolvedUrl = NULL;
+	if (url != NULL)
+	{
+		FSRef fsRef;
+		if (CFURLGetFSRef(url, &fsRef))
+		{
+			Boolean targetIsFolder, wasAliased;
+			OSErr err = FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased);
+			if ((err == noErr) && wasAliased)
+			{
+				resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
+			}
+		}
+		CFRelease(url);
+	}
+
+	if (resolvedUrl)
+	{
+		__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)resolvedUrl copy];
+		CFRelease(resolvedUrl);
+		return nurl;
+	}
+	else
+		return NULL;
+}
 
 - (NSURLRequest *)request
 {

@@ -51,6 +51,7 @@ typedef NS_ENUM(uint8_t, openChoice)
 @interface classname ## Array : NSArray \
 _Pragma("GCC diagnostic push") \
 _Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
+_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 + (instancetype)arrayWithObject:(id)anObject; \
 - (NSArray *)arrayByAddingObject:(classname *)anObject; \
 - (BOOL)containsObject:(classname *)anObject; \
@@ -61,13 +62,15 @@ _Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index; \
 - (classname *)firstObject; \
 - (classname *)lastObject; \
-_Pragma("GCC diagnostic pop") \
 @end \
-static inline classname ## Array * make ## classname ## Array (void)    { return (classname ## Array *)[NSArray new];}
+static inline classname ## Array * make ## classname ## Array (void)    { return (classname ## Array *)[NSArray new];} \
+_Pragma("GCC diagnostic pop")
+
 #define CUSTOM_MUTABLE_ARRAY(classname) \
 _Pragma("GCC diagnostic push") \
 _Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
 _Pragma("GCC diagnostic ignored \"-Wsuper-class-method-mismatch\"") \
+_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 @interface Mutable ## classname ## Array : NSMutableArray \
 - (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
 - (void)setObject:(classname *)anObject atIndexedSubscript:(NSUInteger)index; \
@@ -80,32 +83,36 @@ _Pragma("GCC diagnostic ignored \"-Wsuper-class-method-mismatch\"") \
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(classname *)anObject; \
 - (classname *)firstObject; \
 - (classname *)lastObject; \
-_Pragma("GCC diagnostic pop") \
 @end \
-static inline Mutable ## classname ## Array * make ## Mutable ## classname ## Array (void)    { return (Mutable ## classname ## Array *)[NSMutableArray new];}
+static inline Mutable ## classname ## Array * make ## Mutable ## classname ## Array (void)    { return (Mutable ## classname ## Array *)[NSMutableArray new];} \
+_Pragma("GCC diagnostic pop")
+
 #define CUSTOM_DICTIONARY(classname) \
 @interface classname ## Dictionary : NSDictionary \
 _Pragma("GCC diagnostic push") \
 _Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
+_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 - (classname *)objectForKeyedSubscript:(id)key;\
 + (instancetype)dictionaryWithObject:(classname *)anObject forKey:(id<NSCopying>)aKey; \
 - (NSArray *)allKeysForObject:(classname *)anObject; \
 - (classname *)objectForKey:(id)aKey; \
 - (void)getObjects:(classname * __unsafe_unretained [])objects andKeys:(id __unsafe_unretained [])keys; \
-_Pragma("GCC diagnostic pop") \
 @end \
-static inline classname ## Dictionary * make ## classname ## Dictionary (void)    { return (classname ## Dictionary *)[NSDictionary new];}
+static inline classname ## Dictionary * make ## classname ## Dictionary (void)    { return (classname ## Dictionary *)[NSDictionary new];} \
+_Pragma("GCC diagnostic pop")
+
 #define CUSTOM_MUTABLE_DICTIONARY(classname) \
 @interface Mutable ## classname ## Dictionary : NSMutableDictionary \
 _Pragma("GCC diagnostic push") \
 _Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
 _Pragma("GCC diagnostic ignored \"-Wsuper-class-method-mismatch\"") \
+_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 - (classname *)objectForKeyedSubscript:(id)key;\
 - (void)setObject:(classname *)object forKeyedSubscript:(id < NSCopying >)aKey; \
 - (void)setObject:(classname *)anObject forKey:(id < NSCopying >)aKey; \
-_Pragma("GCC diagnostic pop") \
 @end \
-static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];}
+static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];} \
+_Pragma("GCC diagnostic pop")
 
 
 CUSTOM_ARRAY(NSString)

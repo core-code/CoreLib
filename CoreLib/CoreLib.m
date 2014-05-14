@@ -323,12 +323,17 @@ NSInteger input(NSString *prompt, NSArray *buttons, NSString **result)
 
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
-
+#ifdef DEBUG
+	assert([NSThread currentThread] == [NSThread mainThread]);
+#endif
 	[NSApp activateIgnoringOtherApps:YES];
 	return NSRunAlertPanel(title, msgFormat, defaultButton, alternateButton, otherButton);
 }
 NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
+#ifdef DEBUG
+	assert([NSThread currentThread] == [NSThread mainThread]);
+#endif
 	[NSApp activateIgnoringOtherApps:YES];
 	return NSRunAlertPanel(cc.appName, msgFormat, defaultButton, alternateButton, otherButton);
 }
