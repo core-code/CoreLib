@@ -685,7 +685,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage, fileIsAlias, fileAliasTarget;
+@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage;
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@dynamic fileIsAlias, fileAliasTarget;
+#endif
 
 #ifdef USE_SECURITY
 @dynamic SHA1;
@@ -705,6 +709,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 }
 #endif
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (BOOL)fileIsAlias
 {
     NSURL *url = [NSURL fileURLWithPath:self];
@@ -750,7 +755,6 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		return NULL;
 }
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth
 {
 	NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self];
@@ -1187,7 +1191,9 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents, fileIsAlias, fileAliasTarget;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@dynamic fileIsAlias, fileAliasTarget;
 
 - (BOOL)fileIsAlias
 {
@@ -1227,6 +1233,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	else
 		return NULL;
 }
+#endif
 
 - (NSURLRequest *)request
 {

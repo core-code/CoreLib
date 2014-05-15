@@ -172,8 +172,10 @@
 @property (readonly, nonatomic) NSStringArray *dirContentsRecursiveAbsolute;
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @property (readonly, nonatomic) BOOL fileIsAlias;
 @property (readonly, nonatomic) NSString *fileAliasTarget;
+#endif
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
@@ -267,8 +269,10 @@
 @property (readonly, nonatomic) NSURLArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @property (readonly, nonatomic) BOOL fileIsAlias;
 @property (readonly, nonatomic) NSURL *fileAliasTarget;
+#endif
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) NSURLRequest *request;
