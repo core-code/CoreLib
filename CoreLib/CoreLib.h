@@ -196,7 +196,7 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 
 // obj creation convenience
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
-NSPredicate *makePredicate(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSColor *makeColor(float r, float g, float b, float a);		// params from 0..1
@@ -267,6 +267,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #endif
 
 // convenience macros
+#define PROPERTY_STR(p)		NSStringFromSelector(@selector(p))
 #define LOGFUNC				NSLog(@"%s", __PRETTY_FUNCTION__)
 #define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
 #define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)

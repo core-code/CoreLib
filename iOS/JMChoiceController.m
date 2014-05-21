@@ -47,6 +47,8 @@
         ourWidth = CLAMP(max+20, self.minWidth, self.maxWidth);
     }
 	self.preferredContentSize = (CGSize){ourWidth, [self.choices count] * 44};
+
+//	self.tableView.backgroundColor = [UIColor colorWithWhite:230.0f / 255.0f alpha:1.0f];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -89,7 +91,7 @@
 #endif
     }
 
-    tableView.backgroundColor = [UIColor colorWithWhite:230.0f / 255.0f alpha:1.0f];
+
 
     cell.textLabel.font = self.font;
     cell.textLabel.text = makeString(@"%@", [self.choices objectAtIndex:indexPath.row]);

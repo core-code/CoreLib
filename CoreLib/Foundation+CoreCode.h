@@ -247,6 +247,7 @@
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth;
 #endif
+- (void)downloadAsynchronously:(ObjectInBlock)completion;
 
 @end
 
@@ -282,6 +283,7 @@
 // path string filedata
 @property (readonly, nonatomic) NSData *contents;
 
+- (void)downloadAsynchronously:(ObjectInBlock)completion;
 
 @end
 

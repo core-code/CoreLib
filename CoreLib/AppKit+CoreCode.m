@@ -134,4 +134,14 @@ static CONST_KEY(CCProgressIndicator)
 }
 @end
 
+#else
+
+@implementation UIView (UIView_RemoveSubviews)
+
+- (void)removeAllSubviews
+{
+	for (UIView *v in self.subviews)
+		[v removeFromSuperview];
+}
+@end
 #endif

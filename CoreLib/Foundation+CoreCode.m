@@ -992,11 +992,26 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)download
 {
+#ifdef DEBUG
+    if ([NSThread currentThread] == [NSThread mainThread])
+        NSLog(@"Warning: performing blocking download on main thread");
+#endif
 	NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
 #if ! __has_feature(objc_arc)
 	[d autorelease];
 #endif
 	return d;
+}
+
+- (void)downloadAsynchronously:(ObjectInBlock)completion
+{
+	[NSURLConnection sendAsynchronousRequest:self.URL.request
+									   queue:[NSOperationQueue mainQueue]
+						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+	 {
+		 completion(data);
+
+	 }];
 }
 
 #ifdef USE_SECURITY
@@ -1317,6 +1332,10 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)download
 {
+#ifdef DEBUG
+	if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
+        NSLog(@"Warning: performing blocking download on main thread");
+#endif
 	NSData *d = [[NSData alloc] initWithContentsOfURL:self];
 #if ! __has_feature(objc_arc)
 	[d autorelease];
@@ -1327,5 +1346,15 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSData *)contents
 {
 	return self.download;
+}
+
+- (void)downloadAsynchronously:(ObjectInBlock)completion
+{
+	[NSURLConnection sendAsynchronousRequest:self.request
+									   queue:[NSOperationQueue mainQueue]
+						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+	{
+		completion(data);
+	}];
 }
 @end
