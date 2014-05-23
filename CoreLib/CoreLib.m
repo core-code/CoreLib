@@ -201,7 +201,7 @@ NSWorkspace *workspace;
 		urlString = makeString(@"mailto:%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
 							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
 	else if (choice == openHomepageWebsite)
-		urlString = OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"], makeString(@"%@%@/", kVendorHomepage, cc.appName.lowercaseString));
+		urlString = OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"], makeString(@"%@%@/", kVendorHomepage, [cc.appName.lowercaseString.words[0] replaced:@"-demo" with:@""]));
 	else if (choice == openAppStoreWebsite)
 		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"];
 	else if (choice == openAppStoreApp)

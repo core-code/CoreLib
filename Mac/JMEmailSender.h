@@ -17,7 +17,10 @@ typedef enum
 	kCGIFailure,
 	kMailCoreFailure,
 	kToNilFailure,
-	kFromNilFailure
+	kFromNilFailure,
+	kBlockedMail,
+	kBlockedHost,
+	kUnreachableHost
 } smtpResult;
 
 @interface JMEmailSender : NSObject { }
