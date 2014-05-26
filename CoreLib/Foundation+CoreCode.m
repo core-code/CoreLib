@@ -1243,7 +1243,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	{
 		__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)resolvedUrl copy];
 		CFRelease(resolvedUrl);
+#if  __has_feature(objc_arc)
 		return nurl;
+#else
+		return [nurl autorelease];
+#endif
 	}
 	else
 		return NULL;

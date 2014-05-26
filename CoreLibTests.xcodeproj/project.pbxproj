@@ -44,6 +44,12 @@
 		B933AB3B18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
 		B933AB3C18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
 		B933AB3D18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
+		B9595DC51933AAF200382738 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC21933AAF200382738 /* JMClickableImageView.m */; };
+		B9595DC61933AAF200382738 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC21933AAF200382738 /* JMClickableImageView.m */; };
+		B9595DC71933AAF200382738 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC41933AAF200382738 /* JMFontPopUpButton.m */; };
+		B9595DC81933AAF200382738 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC41933AAF200382738 /* JMFontPopUpButton.m */; };
+		B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
+		B97FDADB1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
 		B9EF05171865D42C00CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF05181865D42C00CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
 		B9EF05191865D42C00CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
@@ -129,6 +135,12 @@
 		B933AB2718BBDFA1006E42B9 /* Foundation+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+Indexing.h"; sourceTree = "<group>"; };
 		B933AB2818BBDFA1006E42B9 /* Foundation+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+Properties.h"; sourceTree = "<group>"; };
 		B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Properties.m"; sourceTree = "<group>"; };
+		B9595DC11933AAF200382738 /* JMClickableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMClickableImageView.h; sourceTree = "<group>"; };
+		B9595DC21933AAF200382738 /* JMClickableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMClickableImageView.m; sourceTree = "<group>"; };
+		B9595DC31933AAF200382738 /* JMFontPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMFontPopUpButton.h; sourceTree = "<group>"; };
+		B9595DC41933AAF200382738 /* JMFontPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMFontPopUpButton.m; sourceTree = "<group>"; };
+		B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSlideshowController.h; sourceTree = "<group>"; };
+		B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSlideshowController.m; sourceTree = "<group>"; };
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9EF04FF1865D42C00CF7A38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9EF05011865D42C00CF7A38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -275,6 +287,8 @@
 				B9EF05391865D5A200CF7A38 /* JMChoiceController.m */,
 				B9EF053A1865D5A200CF7A38 /* JMPopoverController.h */,
 				B9EF053B1865D5A200CF7A38 /* JMPopoverController.m */,
+				B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */,
+				B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */,
 				B9EF053C1865D5A200CF7A38 /* JMWebViewController.h */,
 				B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */,
 			);
@@ -298,6 +312,10 @@
 				B9EF05AA1865F24800CF7A38 /* JMLoginItemManager.m */,
 				B9EF05AB1865F24800CF7A38 /* JMVisibilityManager.h */,
 				B9EF05AC1865F24800CF7A38 /* JMVisibilityManager.m */,
+				B9595DC11933AAF200382738 /* JMClickableImageView.h */,
+				B9595DC21933AAF200382738 /* JMClickableImageView.m */,
+				B9595DC31933AAF200382738 /* JMFontPopUpButton.h */,
+				B9595DC41933AAF200382738 /* JMFontPopUpButton.m */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -455,6 +473,7 @@
 				B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
 				B933AB3218BBDFA1006E42B9 /* CoreLib.m in Sources */,
 				B933AB2E18BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
+				B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,6 +492,7 @@
 				B933AB2B18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
 				B933AB3318BBDFA1006E42B9 /* CoreLib.m in Sources */,
 				B933AB2F18BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
+				B97FDADB1933AA1900A93E6C /* JMSlideshowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,8 +510,10 @@
 				B9EF05B01865F24800CF7A38 /* JMCorrectTimer.m in Sources */,
 				B933AB3C18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05B41865F24800CF7A38 /* JMLoginItemManager.m in Sources */,
+				B9595DC51933AAF200382738 /* JMClickableImageView.m in Sources */,
 				B9EF05B51865F24800CF7A38 /* JMVisibilityManager.m in Sources */,
 				B933AB3818BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
+				B9595DC71933AAF200382738 /* JMFontPopUpButton.m in Sources */,
 				B9EF05901865F20900CF7A38 /* CoreLibTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,8 +532,10 @@
 				B9EF05C41865F4A000CF7A38 /* JMCorrectTimer.m in Sources */,
 				B933AB3D18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05C51865F4A000CF7A38 /* JMLoginItemManager.m in Sources */,
+				B9595DC61933AAF200382738 /* JMClickableImageView.m in Sources */,
 				B9EF05C91865F4A000CF7A38 /* JMVisibilityManager.m in Sources */,
 				B933AB3918BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
+				B9595DC81933AAF200382738 /* JMFontPopUpButton.m in Sources */,
 				B9EF05CE1865F4A000CF7A38 /* CoreLibTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

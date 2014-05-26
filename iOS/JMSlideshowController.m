@@ -14,8 +14,8 @@
 
 @interface JMSlideshowController ()
 
-@property (weak, nonatomic) UIImageView *imageView;
-@property (weak, nonatomic) UIPageControl *pageControl;
+@property (unsafe_unretained, nonatomic) UIImageView *imageView;
+@property (unsafe_unretained, nonatomic) UIPageControl *pageControl;
 @property (assign, nonatomic) int currentImage;
 
 @end
@@ -50,6 +50,7 @@
 	[iv release];
 	[swiperight release];
 	[swipeleft release];
+	[pc release];
 #endif
 
     [super viewDidLoad];
@@ -87,13 +88,13 @@
 
 -(void)swipeleft:(UISwipeGestureRecognizer *)gestureRecognizer
 {
-	self.currentImage= (int)MIN(self.currentImage+1,self.images.count -1);
+	self.currentImage = (int)MIN(self.currentImage+1, (int)self.images.count -1);
 	[self setup];
 }
 
 -(void)swiperight:(UISwipeGestureRecognizer *)gestureRecognizer
 {
-	self.currentImage=MAX(self.currentImage-1,0);
+	self.currentImage= MAX(self.currentImage-1,0);
 	[self setup];
 }
 
@@ -117,11 +118,19 @@
 			{
 				[label removeFromSuperview];
 				if (data)
+#if ! __has_feature(objc_arc)
+					self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
+#else
 					self.imageView.image = [[UIImage alloc] initWithData:data];
+#endif
 			}];
 		}
 		else if ([im hasPrefix:@"/"])
+#if ! __has_feature(objc_arc)
+			self.imageView.image = [[[UIImage alloc] initWithContentsOfFile:im] autorelease];
+#else
 			self.imageView.image = [[UIImage alloc] initWithContentsOfFile:im];
+#endif
 		else
 			self.imageView.image = [UIImage imageNamed:im];
 	}
@@ -130,7 +139,11 @@
 		NSURL *im2 =  im;
 
 		if ([im2 isFileURL])
+#if ! __has_feature(objc_arc)
+			self.imageView.image = [[[UIImage alloc] initWithContentsOfFile:[im2 path]] autorelease];
+#else
 			self.imageView.image = [[UIImage alloc] initWithContentsOfFile:[im2 path]];
+#endif
 		else
 		{
 			self.imageView.image = nil;
@@ -143,7 +156,11 @@
 			 {
 				 [label removeFromSuperview];
 				 if (data)
-					 self.imageView.image = [[UIImage alloc] initWithData:data];
+#if ! __has_feature(objc_arc)
+					 self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
+#else
+				 self.imageView.image = [[UIImage alloc] initWithData:data];
+#endif
 			 }];
 		}
 	}
