@@ -723,36 +723,19 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)fileAliasTarget
 {
-    CFURLRef url = (BRIDGE CFURLRef) self;
-	CFStringRef resolvedPath = NULL;
-	if (url != NULL)
-	{
-		FSRef fsRef;
-		if (CFURLGetFSRef(url, &fsRef))
-		{
-			Boolean targetIsFolder, wasAliased;
-			OSErr err = FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased);
-			if ((err == noErr) && wasAliased)
-			{
-				CFURLRef resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
-				if (resolvedUrl != NULL)
-				{
-					resolvedPath = CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle);
-					CFRelease(resolvedUrl);
-				}
-			}
-		}
-		CFRelease(url);
-	}
+	CFErrorRef *err = NULL;
+	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
+	if (bookmark == nil)
+		return nil;
+	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NO, err);
+	__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
+	CFRelease(bookmark);
+	CFRelease(url);
+#if  !__has_feature(objc_arc)
+	[nurl autorelease];
+#endif
+	return [nurl path];
 
-	if (resolvedPath)
-	{
-		__autoreleasing NSString *str = [NSString stringWithString:(BRIDGE NSString *)(resolvedPath)];
-		CFRelease(resolvedPath);
-		return str;
-	}
-	else
-		return NULL;
 }
 
 - (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth
@@ -1222,35 +1205,19 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSURL *)fileAliasTarget
 {
-    CFURLRef url = (BRIDGE CFURLRef)self;
-	CFURLRef resolvedUrl = NULL;
-	if (url != NULL)
-	{
-		FSRef fsRef;
-		if (CFURLGetFSRef(url, &fsRef))
-		{
-			Boolean targetIsFolder, wasAliased;
-			OSErr err = FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased);
-			if ((err == noErr) && wasAliased)
-			{
-				resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
-			}
-		}
-		CFRelease(url);
-	}
-
-	if (resolvedUrl)
-	{
-		__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)resolvedUrl copy];
-		CFRelease(resolvedUrl);
+ 	CFErrorRef *err = NULL;
+	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
+	if (bookmark == nil)
+		return nil;
+	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NO, err);
+	__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
+	CFRelease(bookmark);
+	CFRelease(url);
 #if  __has_feature(objc_arc)
-		return nurl;
+	return nurl;
 #else
-		return [nurl autorelease];
+	return [nurl autorelease];
 #endif
-	}
-	else
-		return NULL;
 }
 #endif
 
