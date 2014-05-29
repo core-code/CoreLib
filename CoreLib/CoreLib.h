@@ -12,8 +12,10 @@
 
 #ifdef __OBJC__
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
 #error CoreLib requires 10.6
+#endif
 #endif
 
 #ifndef CORELIB
@@ -27,7 +29,7 @@ extern "C"
 
 // basic block types
 #ifdef __BLOCKS__
-typedef void (^BasicBlock)(void);
+	typedef void (^BasicBlock)(void);
 typedef void (^DoubleInBlock)(double input);
 typedef void (^StringInBlock)(NSString *input);
 typedef void (^ObjectInBlock)(id input);
