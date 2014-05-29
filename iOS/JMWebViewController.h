@@ -14,5 +14,6 @@
 
 @property (strong, nonatomic) NSURL *url;
 @property (strong, nonatomic) NSString *navigationTitle;
+@property (weak, nonatomic) id <UIWebViewDelegate> delegate;
 
 @end

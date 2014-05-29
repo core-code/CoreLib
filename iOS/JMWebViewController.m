@@ -15,6 +15,7 @@
 @interface JMWebViewController ()
 
 @property (strong, nonatomic) UIWebView *webView;
+@property (strong, nonatomic) id <UIWebViewDelegate> tmpDelegate;
 
 @end
 
@@ -26,6 +27,9 @@
 {
 	UIWebView *wv = [[UIWebView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	self.webView = wv;
+	self.webView.delegate = self.tmpDelegate;
+	self.tmpDelegate = nil;
+
 #if ! __has_feature(objc_arc)
 	[wv release];
 #endif
@@ -54,5 +58,19 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+
+- (void)setDelegate:(id<UIWebViewDelegate>)delegate
+{
+	if (self.webView)
+		self.webView.delegate = delegate;
+	else
+		self.tmpDelegate = delegate;
+}
+
+- (id<UIWebViewDelegate>)delegate
+{
+	return OBJECT_OR(self.tmpDelegate, self.webView.delegate);
 }
 @end

@@ -19,7 +19,9 @@
 @property (readonly, nonatomic) NSArray *reverseArray;
 @property (readonly, nonatomic) NSMutableArray *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @property (readonly, nonatomic) NSData *JSONData;
+#endif
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *path;
 
@@ -84,8 +86,10 @@
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *hexString;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
+#endif
 
 
 #ifdef USE_SECURITY
@@ -119,7 +123,9 @@
 
 @interface NSDictionary (CoreCode)
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @property (readonly, nonatomic) NSData *JSONData;
+#endif
 @property (readonly, nonatomic) NSMutableDictionary *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
 
@@ -212,8 +218,8 @@
 // string things
 @property (readonly, nonatomic) NSStringArray *lines;
 @property (readonly, nonatomic) NSStringArray *words;
+@property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
 @property (readonly, nonatomic) NSString *trimmed;
-@property (readonly, nonatomic) NSString *expanded;
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
 @property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
@@ -241,8 +247,8 @@
 
 
 // forwards for less typing
-- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;		// stringByReplacingOccurencesOfString:withString:
-- (NSStringArray *)split:(NSString *)sep;								// componentsSeparatedByString:
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
+- (NSStringArray *)split:(NSString *)sep;								// = componentsSeparatedByString:
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth;

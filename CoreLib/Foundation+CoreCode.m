@@ -28,6 +28,9 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @dynamic mutableObject, empty, set, reverseArray, string, path;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+@dynamic JSONData;
+
 - (NSData *)JSONData
 {
     NSError *err;
@@ -41,6 +44,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
     return data;
 }
+#endif
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-statement-expression"
@@ -392,12 +396,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSData (CoreCode)
 
-@dynamic string, hexString, mutableObject, JSONArray, JSONDictionary
+@dynamic string, hexString, mutableObject;
 #ifdef USE_SECURITY
-, SHA1;
-#else
-;
+@dynamic SHA1;
 #endif
+
 
 #ifdef USE_SECURITY
 - (NSString *)SHA1
@@ -448,6 +451,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return [NSMutableData dataWithData:self];
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+@dynamic JSONArray, JSONDictionary;
 - (id)JSONObject
 {
     NSError *err;
@@ -471,6 +476,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
     return [self JSONObject];
 }
+#endif
+
 @end
 
 
@@ -549,7 +556,9 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSDictionary (CoreCode)
 
-@dynamic mutableObject, JSONData;
+@dynamic mutableObject;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+@dynamic JSONData;
 
 - (NSData *)JSONData
 {
@@ -564,6 +573,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
     return data;
 }
+#endif
+
 
 - (NSMutableDictionary *)mutableObject
 {
@@ -993,7 +1004,6 @@ static CONST_KEY(CoreCodeAssociatedValue)
 						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
 	 {
 		 completion(data);
-
 	 }];
 }
 
