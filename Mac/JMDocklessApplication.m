@@ -21,6 +21,7 @@
 
 - (void)sendEvent:(NSEvent *)event
 {
+
     if ([event type] == NSKeyDown)
 	{
         if (([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSCommandKeyMask)

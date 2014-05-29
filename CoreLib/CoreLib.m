@@ -24,6 +24,7 @@ NSNotificationCenter *notificationCenter;
 NSDistributedNotificationCenter *distributedNotificationCenter;
 NSApplication *application;
 NSWorkspace *workspace;
+NSProcessInfo *processInfo;
 #endif
 
 @implementation CoreLib
@@ -55,6 +56,7 @@ NSWorkspace *workspace;
 	distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
 	workspace = [NSWorkspace sharedWorkspace];
 	application = [NSApplication sharedApplication];
+	processInfo = [NSProcessInfo processInfo];
 #endif
 
 #ifdef DEBUG

@@ -17,7 +17,6 @@
 
 @interface NSControl (Properties)
 
-// properties for implemented methods
 @property (copy, nonatomic) NSString *stringValue;
 @property (assign, nonatomic) id target;
 @property (assign, nonatomic) SEL action;
@@ -25,13 +24,14 @@
 @property (assign, nonatomic) float floatValue;
 @property (assign, nonatomic) double doubleValue;
 @property (assign, nonatomic) NSInteger tag;
+@property (assign, nonatomic) BOOL allowsExpansionToolTips  NS_AVAILABLE_MAC(10_8);
+@property (assign, nonatomic) NSUserInterfaceLayoutDirection userInterfaceLayoutDirection NS_AVAILABLE_MAC(10_8);
 
 @end
 
 
 @interface NSCell (Properties)
 
-// properties for implemented methods
 @property (assign, nonatomic) BOOL acceptsFirstResponder;
 @property (assign, nonatomic) BOOL allowsEditingTextAttributes;
 @property (assign, nonatomic) BOOL allowsUndo;
@@ -71,7 +71,7 @@
 @property (copy, nonatomic) NSString *stringValue;
 @property (copy, nonatomic) NSString *title;
 @property (assign, nonatomic) NSTextAlignment alignment;
-@property (assign, nonatomic) NSUserInterfaceLayoutDirection userInterfaceLayoutDirection;
+@property (assign, nonatomic) NSUserInterfaceLayoutDirection userInterfaceLayoutDirection NS_AVAILABLE_MAC(10_8);
 @property (strong, nonatomic) NSView *controlView;
 @property (assign, nonatomic) NSWritingDirection baseWritingDirection;
 @property (assign, nonatomic) SEL action;
@@ -80,8 +80,6 @@
 
 
 @interface NSButton (Properties)
-
-// properties for implemented methods
 
 @property (assign, nonatomic) BOOL allowsMixedState;
 @property (copy, nonatomic) NSAttributedString * attributedAlternateTitle;
@@ -101,8 +99,6 @@
 
 @interface NSTableView (Properties)
 
-// properties for implemented methods
-
 @property (readonly, nonatomic) NSInteger numberOfColumns;
 @property (readonly, nonatomic) NSInteger numberOfRows;
 @property (readonly, nonatomic) NSArray *tableColumns;
@@ -115,7 +111,7 @@
 @property (assign, nonatomic) BOOL usesAlternatingRowBackgroundColors;
 @property (assign, nonatomic) BOOL verticalMotionCanBeginDrag;
 @property (assign, nonatomic) BOOL allowsTypeSelect;
-@property (assign, nonatomic) BOOL floatsGroupRows;
+@property (assign, nonatomic) BOOL floatsGroupRows NS_AVAILABLE_MAC(10_7);
 @property (assign, nonatomic) CGFloat rowHeight;
 @property (assign, nonatomic) id <NSTableViewDataSource> dataSource;
 @property (assign, nonatomic) id <NSTableViewDelegate> delegate;
@@ -129,7 +125,8 @@
 @property (assign, nonatomic) NSTableViewColumnAutoresizingStyle columnAutoresizingStyle;
 @property (assign, nonatomic) NSTableViewDraggingDestinationFeedbackStyle draggingDestinationFeedbackStyle;
 @property (assign, nonatomic) NSTableViewGridLineStyle gridStyleMask;
-@property (assign, nonatomic) NSTableViewRowSizeStyle rowSizeStyle;
+@property (assign, nonatomic) NSTableViewRowSizeStyle rowSizeStyle NS_AVAILABLE_MAC(10_7);
+@property (readonly, nonatomic) NSTableViewRowSizeStyle effectiveRowSizeStyle NS_AVAILABLE_MAC(10_7);
 @property (assign, nonatomic) NSTableViewSelectionHighlightStyle selectionHighlightStyle;
 @property (strong, nonatomic) NSView * cornerView;
 @property (assign, nonatomic) SEL doubleAction;
@@ -139,8 +136,6 @@
 
 
 @interface NSTableColumn (Properties)
-
-// properties for implemented methods
 
 @property (assign, nonatomic, getter=isEditable) BOOL editable;
 @property (assign, nonatomic, getter=isHidden) BOOL hidden;
@@ -161,8 +156,6 @@
 
 @interface NSTextFieldCell (Properties)
 
-// properties for implemented methods
-
 @property (strong, nonatomic) NSColor * backgroundColor;
 @property (assign, nonatomic) BOOL drawsBackground;
 @property (strong, nonatomic) NSColor * textColor;
@@ -175,16 +168,14 @@
 
 @interface NSView (Properties)
 
-// properties for implemented methods
-
 @property (assign, nonatomic) BOOL autoresizesSubviews;
 @property (assign, nonatomic) BOOL canDraw;
 @property (assign, nonatomic) BOOL needsDisplay;
 @property (assign, nonatomic) BOOL postsBoundsChangedNotifications;
 @property (assign, nonatomic) BOOL postsFrameChangedNotifications;
 @property (assign, nonatomic) BOOL acceptsTouchEvents;
-@property (assign, nonatomic) BOOL canDrawSubviewsIntoLayer;
-@property (assign, nonatomic) BOOL layerUsesCoreImageFilters;
+@property (assign, nonatomic) BOOL canDrawSubviewsIntoLayer NS_AVAILABLE_MAC(10_9);
+@property (assign, nonatomic) BOOL layerUsesCoreImageFilters NS_AVAILABLE_MAC(10_9);
 @property (assign, nonatomic) BOOL wantsLayer;
 @property (assign, nonatomic) BOOL wantsRestingTouches;
 @property (strong, nonatomic) CALayer * layer;
@@ -198,11 +189,12 @@
 @property (assign, nonatomic) NSRect frame;
 @property (strong, nonatomic) NSShadow * shadow;
 @property (copy, nonatomic) NSString * toolTip;
-@property (assign, nonatomic) NSUserInterfaceLayoutDirection userInterfaceLayoutDirection;
+@property (assign, nonatomic) NSUserInterfaceLayoutDirection userInterfaceLayoutDirection NS_AVAILABLE_MAC(10_8);
 @property (strong, nonatomic) NSView * nextKeyView;
 @property (strong, nonatomic) NSView * opaqueAncestor;
 @property (assign, nonatomic) NSViewLayerContentsPlacement layerContentsPlacement;
 @property (assign, nonatomic) NSViewLayerContentsRedrawPolicy layerContentsRedrawPolicy;
+@property (readonly, nonatomic) NSMenuItem *enclosingMenuItem;
 
 @property (readonly, nonatomic) NSInteger tag;
 @property (readonly, nonatomic) NSRect bounds;
@@ -220,25 +212,23 @@
 
 @interface NSEvent (Properties)
 
-// properties for implemented methods
-
-@property (readonly, nonatomic) BOOL hasPreciseScrollingDeltas;
+@property (readonly, nonatomic) BOOL hasPreciseScrollingDeltas NS_AVAILABLE_MAC(10_7);
 @property (readonly, nonatomic) BOOL isARepeat;
-@property (readonly, nonatomic) BOOL isDirectionInvertedFromDevice;
+@property (readonly, nonatomic) BOOL isDirectionInvertedFromDevice NS_AVAILABLE_MAC(10_7);
 @property (readonly, nonatomic) BOOL isEnteringProximity;
 @property (readonly, nonatomic) CGEventRef CGEvent;
 @property (readonly, nonatomic) CGFloat deltaX;
 @property (readonly, nonatomic) CGFloat deltaY;
 @property (readonly, nonatomic) CGFloat deltaZ;
 @property (readonly, nonatomic) CGFloat magnification;
-@property (readonly, nonatomic) CGFloat scrollingDeltaX;
-@property (readonly, nonatomic) CGFloat scrollingDeltaY;
+@property (readonly, nonatomic) CGFloat scrollingDeltaX NS_AVAILABLE_MAC(10_7);
+@property (readonly, nonatomic) CGFloat scrollingDeltaY NS_AVAILABLE_MAC(10_7);
 @property (readonly, nonatomic) float pressure;
 @property (readonly, nonatomic) float rotation;
 @property (readonly, nonatomic) float tangentialPressure;
 @property (readonly, nonatomic) id vendorDefined;
-@property (readonly, nonatomic) NSEventPhase momentumPhase;
-@property (readonly, nonatomic) NSEventPhase phase;
+@property (readonly, nonatomic) NSEventPhase momentumPhase NS_AVAILABLE_MAC(10_7);
+@property (readonly, nonatomic) NSEventPhase phase NS_AVAILABLE_MAC(10_7);
 @property (readonly, nonatomic) NSEventType type;
 @property (readonly, nonatomic) NSGraphicsContext* context;
 @property (readonly, nonatomic) NSInteger absoluteX;
@@ -306,4 +296,88 @@
 @property (assign, nonatomic) BOOL autovalidates;
 
 @end
+
+
+@interface NSMenuItem (Properties)
+
+@property (assign, nonatomic) NSInteger tag;
+@property (assign, nonatomic) id target;
+@property (assign, nonatomic) SEL action;
+@property (assign, nonatomic, getter=isEnabled) BOOL enabled;
+@property (copy, nonatomic) NSString * toolTip;
+@property (assign, nonatomic, getter=isHidden) BOOL hidden;
+@property (strong, nonatomic) NSMenu *menu;
+@property (strong, nonatomic) NSMenu *submenu;
+@property (copy, nonatomic) NSString *title;
+@property (copy, nonatomic) NSAttributedString * attributedTitle;
+@property (copy, nonatomic) NSString *keyEquivalent;
+@property (assign, nonatomic) id representedObject;
+@property (strong, nonatomic) NSView *view;
+@property (assign, nonatomic) NSInteger indentationLevel;
+@property (assign, nonatomic, getter=isAlternate) BOOL alternate;
+@property (strong, nonatomic) NSImage *image;
+@property (readonly, nonatomic) BOOL hasSubmenu;
+@property (readonly, nonatomic) BOOL isSeparatorItem;
+@property (readonly, nonatomic) BOOL isHighlighted;
+@property (readonly, nonatomic) BOOL isHiddenOrHasHiddenAncestor;
+@property (readonly, nonatomic) NSString *userKeyEquivalent;
+@property (readonly, nonatomic) NSMenuItem *parentItem;
+@property (assign, nonatomic) NSInteger state;
+@property (strong, nonatomic) NSImage *mixedStateImage;
+@property (strong, nonatomic) NSImage *offStateImage;
+@property (strong, nonatomic) NSImage *onStateImage;
+@property (assign, nonatomic) NSUInteger keyEquivalentModifierMask;
+
+@end
+
+
+@interface NSApplication (Properties)
+
+@property (strong, nonatomic) NSImage *applicationIconImage;
+@property (assign, nonatomic) id <NSApplicationDelegate> delegate;
+@property (strong, nonatomic) NSMenu *helpMenu;
+@property (strong, nonatomic) NSMenu *mainMenu;
+@property (assign, nonatomic) NSApplicationPresentationOptions presentationOptions;
+@property (strong, nonatomic) NSMenu *servicesMenu;
+@property (strong, nonatomic) id servicesProvider;
+@property (assign, nonatomic) NSMenu *windowsMenu;
+@property (readonly, nonatomic) BOOL isActive;
+@property (readonly, nonatomic) BOOL isFullKeyboardAccessEnabled;
+@property (readonly, nonatomic) BOOL isHidden;
+@property (readonly, nonatomic) BOOL isRunning;
+@property (readonly, nonatomic) NSApplicationActivationPolicy activationPolicy;
+@property (readonly, nonatomic) NSApplicationPresentationOptions currentSystemPresentationOptions;
+@property (readonly, nonatomic) NSArray *windows;
+@property (readonly, nonatomic) NSDockTile *dockTile;
+@property (readonly, nonatomic) NSEvent *currentEvent;
+@property (readonly, nonatomic) NSGraphicsContext* context;
+@property (readonly, nonatomic) NSWindow *keyWindow;
+@property (readonly, nonatomic) NSWindow *mainWindow;
+@property (readonly, nonatomic) NSWindow *modalWindow;
+@property (readonly, nonatomic) NSRemoteNotificationType enabledRemoteNotificationTypes NS_AVAILABLE_MAC(10_7);
+@property (readonly, nonatomic) NSApplicationOcclusionState occlusionState NS_AVAILABLE_MAC(10_9);
+
+@end
+
+
+@interface NSProcessInfo (Properties)
+
+@property (copy, nonatomic) NSString *processName;
+@property (readonly, nonatomic) NSDictionary *environment;
+@property (readonly, nonatomic) NSArray *arguments;
+@property (readonly, nonatomic) NSString *hostName;
+@property (readonly, nonatomic) NSString *globallyUniqueString;
+@property (readonly, nonatomic) NSString *operatingSystemName;
+@property (readonly, nonatomic) NSString *operatingSystemVersionString;
+@property (readonly, nonatomic) int processIdentifier;
+@property (readonly, nonatomic) NSUInteger operatingSystem;
+@property (readonly, nonatomic) NSUInteger processorCount;
+@property (readonly, nonatomic) NSUInteger activeProcessorCount;
+@property (readonly, nonatomic) unsigned long long physicalMemory;
+@property (readonly, nonatomic) NSTimeInterval systemUptime;
+@property (assign, nonatomic) BOOL automaticTerminationSupportEnabled NS_AVAILABLE_MAC(10_7);
+
+@end
+
+
 #endif

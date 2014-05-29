@@ -13,6 +13,7 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
+
 @implementation NSControl (Properties)
 
 @dynamic stringValue, intValue, floatValue, doubleValue, tag, action, target;
@@ -79,7 +80,28 @@
 
 @dynamic itemIdentifier, toolbar, allowsDuplicatesInToolbar, label, paletteLabel, toolTip, menuFormRepresentation, tag, target, action, enabled, image, view, minSize, maxSize, visibilityPriority, autovalidates;
 
+@end
+
+
+@implementation NSMenuItem (Properties)
+
+@dynamic enabled, hidden, alternate, tag, target, action, toolTip, menu, submenu, title, attributedTitle, keyEquivalent, representedObject, view, indentationLevel, image, hasSubmenu, isSeparatorItem, isHighlighted, isHiddenOrHasHiddenAncestor, userKeyEquivalent, parentItem, state, mixedStateImage, offStateImage, onStateImage, keyEquivalentModifierMask;
 
 @end
-#endif
 
+
+@implementation NSApplication (Properties)
+
+@dynamic applicationIconImage, delegate, helpMenu, mainMenu, presentationOptions, servicesMenu, servicesProvider, windowsMenu, isActive, isFullKeyboardAccessEnabled, isHidden, isRunning, activationPolicy, currentSystemPresentationOptions, windows, dockTile, currentEvent, context, keyWindow, mainWindow, modalWindow, enabledRemoteNotificationTypes, occlusionState;
+
+@end
+
+
+@implementation NSProcessInfo (Properties)
+
+@dynamic processName, arguments, hostName, globallyUniqueString, operatingSystemName, operatingSystemVersionString, environment, processIdentifier, operatingSystem, processorCount, activeProcessorCount, physicalMemory, systemUptime;
+
+@end
+
+
+#endif

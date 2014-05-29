@@ -12,6 +12,10 @@
 
 #ifdef __OBJC__
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+#error CoreLib requires 10.6
+#endif
+
 #ifndef CORELIB
 #define CORELIB 1
 
@@ -182,6 +186,7 @@ extern NSNotificationCenter *notificationCenter;
 extern NSDistributedNotificationCenter *distributedNotificationCenter;
 extern NSWorkspace *workspace;
 extern NSApplication *application;
+extern NSProcessInfo *processInfo;
 #endif
 
 
@@ -310,7 +315,9 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 	// properties
 #import "AppKit+Properties.h"
 #import "Foundation+Properties.h"
-	
+
+
+
 
 #ifdef __cplusplus
 }
