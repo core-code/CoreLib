@@ -144,4 +144,7 @@ static CONST_KEY(CCProgressIndicator)
 		[v removeFromSuperview];
 }
 @end
+
+
 #endif
+

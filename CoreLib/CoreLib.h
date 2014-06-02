@@ -185,6 +185,7 @@ extern NSUserDefaults *userDefaults;
 extern NSFileManager *fileManager;
 extern NSNotificationCenter *notificationCenter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+extern NSFontManager *fontManager;
 extern NSDistributedNotificationCenter *distributedNotificationCenter;
 extern NSWorkspace *workspace;
 extern NSApplication *application;
@@ -315,9 +316,10 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #import "AppKit+CoreCode.h"
 #import "Foundation+CoreCode.h"
 
-	// properties
+#if ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101000) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED < 90000)))
 #import "AppKit+Properties.h"
 #import "Foundation+Properties.h"
+#endif
 
 
 

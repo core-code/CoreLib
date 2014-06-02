@@ -1517,7 +1517,6 @@
 @interface NSTableColumn (Properties)
 
 @property (assign, nonatomic) NSUInteger resizingMask;
-@property (strong, nonatomic) NSCell *dataCell;
 @property (strong, nonatomic) NSTableView *tableView;
 @property (assign, nonatomic) CGFloat maxWidth;
 @property (assign, nonatomic, getter=isEditable) BOOL editable;
@@ -1528,6 +1527,7 @@
 @property (assign, nonatomic, getter=isHidden) BOOL hidden NS_AVAILABLE_MAC(10_5);
 @property (copy, nonatomic) NSString *identifier;
 @property (strong, nonatomic) NSTableHeaderCell *headerCell;
+@property (strong, nonatomic) NSCell *dataCell;
 
 @end
 
@@ -1880,6 +1880,7 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @interface NSMutableFontCollection (Properties)
 
 @property (strong, nonatomic) NSArray *exclusionDescriptors;
@@ -1888,6 +1889,7 @@
 - (NSArray *)queryDescriptors UNAVAILABLE_ATTRIBUTE;
 
 @end
+#endif
 
 
 @interface NSMutableParagraphStyle (Properties)
@@ -2113,13 +2115,6 @@
 @end
 
 
-@interface NSInputManager (Properties)
-
-@property (readonly, nonatomic) BOOL wantsToHandleMouseEvents;
-
-@end
-
-
 @interface NSToolbarItemGroup (Properties)
 
 @property (strong, nonatomic) NSArray *subitems;
@@ -2142,19 +2137,6 @@
 @property (readonly, nonatomic) BOOL isEmpty;
 @property (assign, nonatomic) CGFloat lineWidth;
 @property (readonly, nonatomic) NSRect controlPointBounds;
-
-@end
-
-
-@interface NSPDFPanel (Properties)
-
-
-@end
-
-
-@interface NSMovie (Properties)
-
-@property (readonly, nonatomic) QTMovie *QTMovie;
 
 @end
 
@@ -2446,6 +2428,7 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @interface NSFontCollection (Properties)
 
 @property (readonly, nonatomic) NSArray *exclusionDescriptors;
@@ -2453,6 +2436,7 @@
 @property (readonly, nonatomic) NSArray *queryDescriptors;
 
 @end
+#endif
 
 
 @interface NSMediaLibraryBrowserController (Properties)

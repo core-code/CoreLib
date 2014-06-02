@@ -9,6 +9,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#if ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101000) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED < 90000)))
 #import "AppKit+Properties.h"
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -1758,13 +1759,14 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @implementation NSMutableFontCollection (Properties)
 
 @dynamic  exclusionDescriptors;
 @dynamic queryDescriptors;
 
 @end
-
+#endif
 
 @implementation NSMutableParagraphStyle (Properties)
 
@@ -1958,15 +1960,6 @@
 
 
 
-
-
-@implementation NSInputManager (Properties)
-
-@dynamic  wantsToHandleMouseEvents;
-
-@end
-
-
 @implementation NSToolbarItemGroup (Properties)
 
 @dynamic  subitems;
@@ -1993,14 +1986,6 @@
 @end
 
 
-
-
-
-@implementation NSMovie (Properties)
-
-@dynamic  QTMovie;
-
-@end
 
 
 @implementation NSTypesetter (Properties)
@@ -2286,6 +2271,7 @@
 
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @implementation NSFontCollection (Properties)
 
 @dynamic  exclusionDescriptors;
@@ -2293,7 +2279,7 @@
 @dynamic queryDescriptors;
 
 @end
-
+#endif
 
 
 
@@ -2720,4 +2706,5 @@
 
 @end
 
+#endif
 #endif

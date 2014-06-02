@@ -12,6 +12,9 @@
 #ifndef CORELIB
 #error you need to include CoreLib.h in your PCH file
 #endif
+#ifdef USE_SECURITY
+#include <CommonCrypto/CommonDigest.h>
+#endif
 
 NSString *_machineType(void);
 
@@ -21,6 +24,7 @@ NSUserDefaults *userDefaults;
 NSFileManager *fileManager;
 NSNotificationCenter *notificationCenter;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSFontManager *fontManager;
 NSDistributedNotificationCenter *distributedNotificationCenter;
 NSApplication *application;
 NSWorkspace *workspace;
@@ -53,6 +57,7 @@ NSProcessInfo *processInfo;
 	fileManager = [NSFileManager defaultManager];
 	notificationCenter = [NSNotificationCenter defaultCenter];
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	fontManager = [NSFontManager sharedFontManager];
 	distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
 	workspace = [NSWorkspace sharedWorkspace];
 	application = [NSApplication sharedApplication];
@@ -142,7 +147,7 @@ NSProcessInfo *processInfo;
 }
 
 #ifdef USE_SECURITY
-#include <CommonCrypto/CommonDigest.h>
+
 - (NSString *)appSHA
 {
 	NSData *d = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] executableURL]];

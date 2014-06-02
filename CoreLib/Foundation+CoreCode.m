@@ -1013,6 +1013,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return d;
 }
 
+#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
 - (void)downloadAsynchronously:(ObjectInBlock)completion
 {
 	[NSURLConnection sendAsynchronousRequest:self.URL.request
@@ -1022,6 +1023,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		 completion(data);
 	 }];
 }
+#endif
 
 #ifdef USE_SECURITY
 - (NSString *)SHA1
@@ -1345,6 +1347,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return self.download;
 }
 
+#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
 - (void)downloadAsynchronously:(ObjectInBlock)completion
 {
 	[NSURLConnection sendAsynchronousRequest:self.request
@@ -1354,4 +1357,5 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		completion(data);
 	}];
 }
+#endif
 @end

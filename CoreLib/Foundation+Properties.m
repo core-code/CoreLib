@@ -9,7 +9,11 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#if ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101000) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED < 90000)))
+
 #import "Foundation+Properties.h"
+
+
 
 
 @implementation NSInvocationOperation (FProperties)
@@ -232,12 +236,14 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @implementation NSUbiquitousKeyValueStore (FProperties)
 
 @dynamic synchronize;
 @dynamic dictionaryRepresentation;
 
 @end
+#endif
 
 
 @implementation NSMetadataQueryResultGroup (FProperties)
@@ -890,6 +896,7 @@
 
 @end
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 
 @implementation NSUUID (FProperties)
 
@@ -897,6 +904,7 @@
 
 @end
 
+#endif
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @implementation NSRelativeSpecifier (FProperties)
@@ -998,11 +1006,16 @@
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
+
 @implementation NSXPCListener (FProperties)
 
 @dynamic endpoint;
 
 @end
+#endif
+
 #endif
 
 @implementation NSRunLoop (FProperties)
@@ -1203,12 +1216,14 @@
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 @implementation NSUserScriptTask (FProperties)
 
 @dynamic scriptURL;
 
 @end
-
+#endif
 
 @implementation NSPortCoder (FProperties)
 
@@ -1247,11 +1262,14 @@
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 @implementation NSXPCConnection (FProperties)
 
 @dynamic remoteObjectProxy;
 
 @end
+#endif
 #endif
 
 
@@ -1596,6 +1614,7 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @implementation NSOrderedSet (FProperties)
 
 @dynamic count;
@@ -1609,7 +1628,7 @@
 @dynamic array;
 
 @end
-
+#endif
 
 @implementation NSCalendar (FProperties)
 
@@ -1688,3 +1707,5 @@
 @dynamic condition;
 
 @end
+
+#endif

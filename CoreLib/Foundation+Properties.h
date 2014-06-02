@@ -243,12 +243,14 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @interface NSUbiquitousKeyValueStore (FProperties)
 
 @property (readonly, nonatomic) BOOL synchronize;
 @property (readonly, nonatomic) NSDictionary *dictionaryRepresentation;
 
 @end
+#endif
 
 
 @interface NSMetadataQueryResultGroup (FProperties)
@@ -922,11 +924,13 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 @interface NSUUID (FProperties)
 
 @property (readonly, nonatomic) NSString *UUIDString;
 
 @end
+#endif
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
@@ -1030,11 +1034,13 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 @interface NSXPCListener (FProperties)
 
 @property (readonly, nonatomic) NSXPCListenerEndpoint *endpoint;
 
 @end
+#endif
 #endif
 
 @interface NSRunLoop (FProperties)
@@ -1244,11 +1250,13 @@
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 @interface NSUserScriptTask (FProperties)
 
 @property (readonly, nonatomic) NSURL *scriptURL;
 
 @end
+#endif
 
 
 @interface NSPortCoder (FProperties)
@@ -1290,11 +1298,13 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 @interface NSXPCConnection (FProperties)
 
 @property (readonly, nonatomic) id remoteObjectProxy;
 
 @end
+#endif
 #endif
 
 @interface NSOutputStream (FProperties)
@@ -1645,6 +1655,7 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @interface NSOrderedSet (FProperties)
 
 @property (readonly, nonatomic) NSUInteger count;
@@ -1658,7 +1669,7 @@
 @property (readonly, nonatomic) NSArray *array;
 
 @end
-
+#endif
 
 @interface NSCalendar (FProperties)
 

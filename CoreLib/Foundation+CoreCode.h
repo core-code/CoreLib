@@ -255,8 +255,10 @@
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth;
 #endif
-- (void)downloadAsynchronously:(ObjectInBlock)completion;
 
+#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
+- (void)downloadAsynchronously:(ObjectInBlock)completion;
+#endif
 @end
 
 
@@ -291,8 +293,9 @@
 // path string filedata
 @property (readonly, nonatomic) NSData *contents;
 
+#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
 - (void)downloadAsynchronously:(ObjectInBlock)completion;
-
+#endif
 @end
 
 
