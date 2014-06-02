@@ -203,6 +203,7 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 
 // obj creation convenience
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

@@ -265,6 +265,15 @@ NSString *makeString(NSString *format, ...)
 	return str;
 }
 
+NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
+{
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	return [NSValue valueWithRect:CGRectMake(x, y, width, height)];
+#else
+	return [NSValue valueWithCGRect:CGRectMake(x, y, width, height)];
+#endif
+}
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
 void alertfeedbackfatal(NSString *usermsg, NSString *details)

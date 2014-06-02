@@ -160,9 +160,11 @@
 
 @interface NSObject (CoreCode)
 
+@property (readonly, nonatomic) id id;
 - (id)associatedValueForKey:(NSString *)key;
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key;
 @property (retain, nonatomic) id associatedValue;
++ (instancetype)newWith:(NSDictionary *)dict;
 
 @end
 

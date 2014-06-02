@@ -660,7 +660,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSObject (CoreCode)
 
-@dynamic associatedValue;
+@dynamic associatedValue, id;
 
 - (void)setAssociatedValue:(id)value forKey:(NSString *)key
 {
@@ -689,6 +689,22 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (id)associatedValue
 {
     return [self associatedValueForKey:kCoreCodeAssociatedValueKey];
+}
+
++ (instancetype)newWith:(NSDictionary *)dict
+{
+	NSObject *obj = [self new];
+	for (NSString *key in dict)
+	{
+		[obj setValue:dict[key] forKey:key];
+	}
+
+	return obj;
+}
+
+- (id)id
+{
+    return (id)self;
 }
 @end
 
