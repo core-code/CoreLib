@@ -72,3 +72,17 @@ write
 	NSData *file = @"http://myhost/myfile".download;
 
 there are many more convenience methods including some functional extensions for NSArray.
+
+### Defines
+
+some features of CoreLib require linking additional frameworks and are therefore only available if you include these framework and set some preprocessor value:
+	#define USE_SECURITY 1 // if you link Security.framework
+	#define USE_SYSTEMCONFIGURATION 1 // if you link SystemConfiguration.framework
+	#define USE_IOKIT 1 // if you link IOKit.framework
+	#define USE_DISKARBITRATION 1 // if you link DiskArbitration.framework
+	#define USE_SNAPPY 1 // if you link Snappy.framework
+	#define USE_MAILCORE 1 // if you link MailCore.framework
+	#define USE_APPLEMAIL 1 // if you have the ScriptingDefinition for Mail.app 
+
+additionally some parts of CoreLib require setting the SANDBOX #define to indicate whether your app is sandbox
+	

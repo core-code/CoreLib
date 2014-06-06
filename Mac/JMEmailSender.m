@@ -15,12 +15,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-macros"
 #define WIN32 0
-#ifdef MAILCORE
+#ifdef USE_MAILCORE
 #import <MailCore/MailCore.h>
 //#import <MailCore/CTCoreAddress.h>
 //#import <MailCore/CTCoreMessage.h>
 #endif
-#ifdef APPLEMAIL
+#ifdef USE_APPLEMAIL
 #import "Mail.h"
 #endif
 #pragma GCC diagnostic pop
@@ -28,7 +28,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @implementation JMEmailSender
 
 
-#ifdef APPLEMAIL
+#ifdef USE_APPLEMAIL
 + (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject timeout:(uint16_t)secs to:(NSString *)recipients attachment:(NSString *)attachmentFilePath
 {
 	asl_NSLog_debug(@"sendMailWithScriptingBridge %@\n\n sub: %@\n rec: %@", content, subject, recipients);
@@ -139,7 +139,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 #endif
 
-#ifdef MAILCORE
+#ifdef USE_MAILCORE
 + (smtpResult)sendMailWithMailCore:(NSString *)mail subject:(NSString *)subject timeout:(uint16_t)secs server:(NSString *)server port:(uint16_t)port from:(NSString *)sender to:(NSString *)recipients auth:(BOOL)auth tls:(BOOL)tls username:(NSString *)username password:(NSString *)password
 {
 	asl_NSLog_debug(@"sendMailWithMailCore %@\n\n sub: %@\n sender: %@\nrec: %@", mail, subject, sender, recipients);

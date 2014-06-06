@@ -1298,6 +1298,7 @@
 @end
 
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @implementation NSSocketPort (FProperties)
 
 @dynamic socketType;
@@ -1309,7 +1310,6 @@
 @end
 
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @implementation NSScriptSuiteRegistry (FProperties)
 
 @dynamic suiteNames;

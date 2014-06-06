@@ -25,10 +25,10 @@ typedef enum
 
 @interface JMEmailSender : NSObject { }
 
-#ifdef APPLEMAIL
+#ifdef USE_APPLEMAIL
 + (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject timeout:(uint16_t)secs to:(NSString *)recipients attachment:(NSString *)attachmentFilePath;
 #endif
-#ifdef MAILCORE
+#ifdef USE_MAILCORE
 + (smtpResult)sendMailWithMailCore:(NSString *)mail subject:(NSString *)subject timeout:(uint16_t)secs server:(NSString *)server port:(uint16_t)port from:(NSString *)sender to:(NSString *)recipients auth:(BOOL)auth tls:(BOOL)tls username:(NSString *)username password:(NSString *)password;
 #endif
 @end

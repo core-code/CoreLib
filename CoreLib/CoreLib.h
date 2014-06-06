@@ -297,7 +297,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define kAskedThisVersionKey makeString(@"%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 
 
-// vendor information
+// vendor information only used for [cc openURL:(openChoice)choice]
 #ifdef VENDOR_HOMEPAGE
 #define kVendorHomepage VENDOR_HOMEPAGE
 #else

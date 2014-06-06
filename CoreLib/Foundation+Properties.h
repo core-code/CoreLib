@@ -1332,6 +1332,7 @@
 @end
 
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @interface NSSocketPort (FProperties)
 
 @property (readonly, nonatomic) int socketType;
@@ -1343,7 +1344,6 @@
 @end
 
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @interface NSScriptSuiteRegistry (FProperties)
 
 @property (readonly, nonatomic) NSArray *suiteNames;
