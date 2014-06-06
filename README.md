@@ -28,11 +28,13 @@ CoreLib has these components:
 
 in your PCH file:
  
+	#import "CoreLib_Availability.h" // optional, for warnings on calls to unavailable methods
+	#import <Cocoa/Cocoa.h> // you had that before
 	#import "CoreLib.h"
 
 in your applicationDidFinishLaunching:  method:
 
-	cc = [CoreLib new];
+	cc = [CoreLib new]; // dont forget this
 
 ### Usage
 
