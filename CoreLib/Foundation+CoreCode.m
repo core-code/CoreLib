@@ -15,6 +15,10 @@
 #ifdef USE_SECURITY
 	#include <CommonCrypto/CommonDigest.h>
 #endif
+#ifdef USE_SNAPPY
+	#import <snappy/snappy-c.h>
+#endif
+
 #if ! __has_feature(objc_arc)
 	#define BRIDGE
 #else
@@ -421,6 +425,63 @@ static CONST_KEY(CoreCodeAssociatedValue)
 }
 #endif
 
+#ifdef USE_SNAPPY
+@dynamic snappyCompressed, snappyDecompressed;
+
+- (NSData *)snappyDecompressed
+{
+    size_t uncompressedSize = 0;
+
+    if( snappy_uncompressed_length(self.bytes, self.length, &uncompressedSize) != SNAPPY_OK )
+	{
+		NSLog(@"Error: can't calculate the uncompressed length!\n");
+		return nil;
+    }
+
+    assert(uncompressedSize);
+
+    char *buf = (char *)malloc(uncompressedSize);
+    assert(buf);
+
+
+	int res = snappy_uncompress(self.bytes, self.length, buf, &uncompressedSize);
+    if(res != SNAPPY_OK)
+	{
+        NSLog(@"Error: can't uncompress the file!\n");
+		free(buf);
+		return nil;
+    }
+
+
+	NSData *d = [NSData dataWithBytesNoCopy:buf length:uncompressedSize];
+#if ! __has_feature(objc_arc)
+	[d autorelease];
+#endif
+	return d;
+}
+
+- (NSData *)snappyCompressed
+{
+	size_t output_length = snappy_max_compressed_length(self.length);
+	char *buf = (char*)malloc(output_length);
+    assert(buf);
+
+	int res = snappy_compress(self.bytes, self.length, buf, &output_length);
+	if (res != SNAPPY_OK )
+	{
+		NSLog(@"Error: problem compressing the file\n");
+		free(buf);
+		return nil;
+	}
+
+	NSData *d = [NSData dataWithBytesNoCopy:buf length:output_length];
+#if ! __has_feature(objc_arc)
+	[d autorelease];
+#endif
+	return d;
+}
+#endif
+
 - (NSString *)string
 {
 	NSString *s = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
@@ -484,7 +545,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSDate (CoreCode)
 
-+ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat andLocaleIdentifier:(NSString *)localeIdentifier
++ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
 	[df setDateFormat:dateFormat];
@@ -497,14 +558,14 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return [df dateFromString:dateString];
 }
 
-+ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat
++ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat
 {
-	return [self dateWithString:dateString andFormat:dateFormat andLocaleIdentifier:@"en_US"];
+	return [self dateWithString:dateString format:dateFormat localeIdentifier:@"en_US"];
 }
 
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString
 {
-	return [self dateWithString:@(preprocessorDateString) andFormat:@"MMM d yyyy"];
+	return [self dateWithString:@(preprocessorDateString) format:@"MMM d yyyy"];
 }
 
 - (NSString *)stringUsingFormat:(NSString *)dateFormat
@@ -520,7 +581,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
     return [df stringFromDate:self];
 }
 
-- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle andTimeStyle:(NSDateFormatterStyle)timeStyle
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle
 {
     NSDateFormatter *df = [NSDateFormatter new];
 
@@ -765,7 +826,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 }
 
-- (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth
+- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth
 {
 	NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self];
 	NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth, FLT_MAX)];
@@ -1013,17 +1074,6 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return d;
 }
 
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
-- (void)downloadAsynchronously:(ObjectInBlock)completion
-{
-	[NSURLConnection sendAsynchronousRequest:self.URL.request
-									   queue:[NSOperationQueue mainQueue]
-						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
-	 {
-		 completion(data);
-	 }];
-}
-#endif
 
 #ifdef USE_SECURITY
 - (NSString *)SHA1
@@ -1139,6 +1189,88 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return @(self.doubleValue);
 }
 
+- (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter
+{	// credits to Drew McCormack
+    NSMutableArray *rows = [NSMutableArray array];
+
+	NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *newlineCharacterSetMutable = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+    [newlineCharacterSetMutable formIntersectionWithCharacterSet:[whitespaceCharacterSet invertedSet]];
+	NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
+    NSMutableCharacterSet *importantCharactersSetMutable = [NSMutableCharacterSet characterSetWithCharactersInString:[delimiter stringByAppendingString:@"\""]];
+    [importantCharactersSetMutable formUnionWithCharacterSet:newlineCharacterSet];
+	NSCharacterSet *importantCharactersSet = [NSCharacterSet characterSetWithBitmapRepresentation:[importantCharactersSetMutable bitmapRepresentation]];
+
+    NSScanner *scanner = [NSScanner scannerWithString:self];
+    [scanner setCharactersToBeSkipped:nil];
+
+    while (![scanner isAtEnd])
+	{
+		BOOL insideQuotes = NO;
+        BOOL finishedRow = NO;
+        NSMutableArray *columns = [NSMutableArray arrayWithCapacity:30];
+        NSMutableString *currentColumn = [NSMutableString string];
+
+        while (!finishedRow)
+		{
+            NSString *tempString;
+            if ([scanner scanUpToCharactersFromSet:importantCharactersSet intoString:&tempString])
+			{
+                [currentColumn appendString:tempString];
+            }
+
+            if ([scanner isAtEnd])
+			{
+                if (![currentColumn isEqualToString:@""])
+					[columns addObject:currentColumn];
+
+                finishedRow = YES;
+            }
+            else if ([scanner scanCharactersFromSet:newlineCharacterSet intoString:&tempString])
+			{
+                if (insideQuotes)
+				{
+                    [currentColumn appendString:tempString];
+                }
+                else
+				{
+                    if (![currentColumn isEqualToString:@""])
+						[columns addObject:currentColumn];
+                    finishedRow = YES;
+                }
+            }
+            else if ([scanner scanString:@"\"" intoString:NULL])
+			{
+                if (insideQuotes && [scanner scanString:@"\"" intoString:NULL])
+				{
+                    [currentColumn appendString:@"\""];
+                }
+                else
+				{
+                    insideQuotes = !insideQuotes;
+                }
+            }
+            else if ([scanner scanString:delimiter intoString:NULL])
+			{
+                if (insideQuotes)
+				{
+                    [currentColumn appendString:delimiter];
+                }
+                else
+				{
+                    [columns addObject:currentColumn];
+                    currentColumn = [NSMutableString string];
+                    [scanner scanCharactersFromSet:whitespaceCharacterSet intoString:NULL];
+                }
+            }
+        }
+        if ([columns count] > 0)
+			[rows addObject:columns];
+    }
+
+    return (NSArrayArray *)rows;
+}
+
 - (NSData *)dataFromHexString
 {
 	const char * bytes = [self cStringUsingEncoding: NSUTF8StringEncoding];
@@ -1161,6 +1293,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	free(r);
     return result;
 }
+
 
 - (NSString *)escaped
 {
@@ -1346,16 +1479,4 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	return self.download;
 }
-
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
-- (void)downloadAsynchronously:(ObjectInBlock)completion
-{
-	[NSURLConnection sendAsynchronousRequest:self.request
-									   queue:[NSOperationQueue mainQueue]
-						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
-	{
-		completion(data);
-	}];
-}
-#endif
 @end

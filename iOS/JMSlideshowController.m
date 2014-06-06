@@ -114,16 +114,21 @@
 			label.textColor = [UIColor lightGrayColor];
 			label.textAlignment = NSTextAlignmentCenter;
 			[self.imageView addSubview:label];
-			[im downloadAsynchronously:^(NSData *data)
+			dispatch_async_back(^
 			{
-				[label removeFromSuperview];
-				if (data)
+				NSData *data = ((NSString *)im).download;
+
+				dispatch_async_main(^
+				{
+					[label removeFromSuperview];
+					if (data)
 #if ! __has_feature(objc_arc)
-					self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
+						self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
 #else
 					self.imageView.image = [[UIImage alloc] initWithData:data];
 #endif
-			}];
+				});
+			});
 		}
 		else if ([im hasPrefix:@"/"])
 #if ! __has_feature(objc_arc)
@@ -152,16 +157,23 @@
 			label.textColor = [UIColor lightGrayColor];
 			label.textAlignment = NSTextAlignmentCenter;
 			[self.imageView addSubview:label];
-			[im downloadAsynchronously:^(NSData *data)
-			 {
-				 [label removeFromSuperview];
-				 if (data)
+
+			dispatch_async_back(^
+			{
+				NSData *data = ((NSString *)im).download;
+
+				dispatch_async_main(^
+				{
+					[label removeFromSuperview];
+					if (data)
 #if ! __has_feature(objc_arc)
-					 self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
+						self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
 #else
-				 self.imageView.image = [[UIImage alloc] initWithData:data];
+					self.imageView.image = [[UIImage alloc] initWithData:data];
 #endif
-			 }];
+				});
+			});
+
 		}
 	}
 

@@ -91,6 +91,10 @@
 @property (readonly, nonatomic) NSArray *JSONArray;
 #endif
 
+#ifdef USE_SNAPPY
+@property (readonly, nonatomic) NSData *snappyCompressed;
+@property (readonly, nonatomic) NSData *snappyDecompressed;
+#endif
 
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
@@ -103,11 +107,11 @@
 @interface NSDate (CoreCode)
 
 // date format strings:   dd.MM.yyyy HH:mm:ss
-+ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat andLocaleIdentifier:(NSString *)localeIdentifier;
-+ (NSDate *)dateWithString:(NSString *)dateString andFormat:(NSString *)dateFormat;
++ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
++ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
-- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle andTimeStyle:(NSDateFormatterStyle)timeStyle;
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
 
 @end
 
@@ -237,6 +241,8 @@
 @property (readonly, nonatomic) NSString *propercaseString;
 
 
+- (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter;
+
 - (NSString *)stringValue;
 
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
@@ -253,12 +259,9 @@
 - (NSStringArray *)split:(NSString *)sep;								// = componentsSeparatedByString:
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-- (CGSize)sizeUsingFont:(NSFont *)font andMaxWidth:(float)maxWidth;
+- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth;
 #endif
 
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
-- (void)downloadAsynchronously:(ObjectInBlock)completion;
-#endif
 @end
 
 
@@ -293,9 +296,6 @@
 // path string filedata
 @property (readonly, nonatomic) NSData *contents;
 
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
-- (void)downloadAsynchronously:(ObjectInBlock)completion;
-#endif
 @end
 
 
