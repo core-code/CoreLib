@@ -644,7 +644,10 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
-    return [super methodSignatureForSelector:@selector(valueForKey:)];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wselector"
+	return [super methodSignatureForSelector:@selector(valueForKey:)];
+#pragma clang diagnostic pop
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation
