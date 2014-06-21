@@ -14,6 +14,11 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
+#import <objc/runtime.h>
+
+
+
+
 static CONST_KEY(CCProgressDetailInfo)
 static CONST_KEY(CCProgressSheet)
 static CONST_KEY(CCProgressIndicator)
@@ -131,6 +136,46 @@ static CONST_KEY(CCProgressIndicator)
 
 
     [self setFont:[NSFont fontWithName:[curr fontName] size:currentFontSize+1]];
+}
+@end
+
+
+@interface BlockWrapper : NSObject
+@property (nonatomic, copy) ObjectInBlock block;
+- (void)invoke:(id)sender;
+@end
+@implementation BlockWrapper
+- (void)invoke:(id)sender { _block(sender); }
+@end
+
+
+@implementation NSControl (NSControl_BlockAction)
+
+@dynamic actionBlock;
+
+static const char *actionBlockAssociatedObjectName = "CoreCode_NSControl_BlockAction";
+
+
+- (void)setActionBlock:(ObjectInBlock)handler
+{
+	BlockWrapper *wrapper = [[BlockWrapper alloc] init];
+	wrapper.block = handler;
+
+	objc_setAssociatedObject(self, &actionBlockAssociatedObjectName, wrapper, OBJC_ASSOCIATION_RETAIN);
+
+
+	self.target = wrapper;
+	self.action = @selector(invoke:);
+
+#if ! __has_feature(objc_arc)
+	[wrapper release];
+#endif
+}
+
+- (ObjectInBlock)actionBlock
+{
+	BlockWrapper *wrapper = objc_getAssociatedObject(self, &actionBlockAssociatedObjectName);
+	return wrapper.block;
 }
 @end
 

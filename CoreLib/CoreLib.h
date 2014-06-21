@@ -162,10 +162,12 @@ MAKE_MAKER(MutableString)
 @property (readonly, nonatomic) NSString *appName;
 
 // path convenience
+@property (readonly, nonatomic) NSString *prefsPath;
 @property (readonly, nonatomic) NSString *resDir;
 @property (readonly, nonatomic) NSString *docDir;
 @property (readonly, nonatomic) NSString *deskDir;
 @property (readonly, nonatomic) NSString *suppDir;
+@property (readonly, nonatomic) NSURL *prefsURL;
 @property (readonly, nonatomic) NSURL *resURL;
 @property (readonly, nonatomic) NSURL *docURL;
 @property (readonly, nonatomic) NSURL *deskURL;
@@ -287,6 +289,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define NON_NIL_STR(x)		((x) ? (x) : @"")
 #define NON_NIL_OBJ(x)		((x) ? (x) : [NSNull null])
 #define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
+#define IS_DOUBLE_EQUAL(x,y) (fabs((x)-(y)) < 0.000001f)
 #define IS_IN_RANGE(v,l,h)  (((v) >= (l)) && ((v) <= (h)))
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define ONCE(block)			{ static dispatch_once_t onceToken; dispatch_once(&onceToken, block); }

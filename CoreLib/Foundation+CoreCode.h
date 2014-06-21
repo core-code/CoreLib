@@ -24,6 +24,7 @@
 #endif
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *path;
+@property (readonly, nonatomic) NSArray *sorted;
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
@@ -74,6 +75,7 @@
 - (void)filter:(ObjectInIntOutBlock)block;
 - (void)filterUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 - (void)removeFirstObject;
+- (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;
 
 @end
 
@@ -225,7 +227,8 @@
 @property (readonly, nonatomic) NSStringArray *lines;
 @property (readonly, nonatomic) NSStringArray *words;
 @property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
-@property (readonly, nonatomic) NSString *trimmed;
+@property (readonly, nonatomic) NSString *trimmedOfWhitespace;
+@property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
 @property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
@@ -239,6 +242,8 @@
 
 @property (readonly, nonatomic) NSString *titlecaseString;
 @property (readonly, nonatomic) NSString *propercaseString;
+@property (readonly, nonatomic) BOOL isIntegerNumber;
+@property (readonly, nonatomic) BOOL isFloatNumber;
 
 
 - (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter;
@@ -278,6 +283,7 @@
 - (NSURL *)add:(NSString *)component;
 - (void)open;
 
+@property (readonly, nonatomic) BOOL fileIsDirectory;
 @property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSURLArray *dirContents;
 @property (readonly, nonatomic) NSURLArray *dirContentsRecursive;
@@ -299,5 +305,17 @@
 @end
 
 
+@interface NSCharacterSet (CoreCode)
+
+@property (readonly, nonatomic) NSMutableCharacterSet *mutableObject;
+@property (readonly, nonatomic) NSString *stringRepresentation;
+
+@end
+
+@interface NSMutableCharacterSet (CoreCode)
+
+@property (readonly, nonatomic) NSCharacterSet *immutableObject;
+
+@end
 
 

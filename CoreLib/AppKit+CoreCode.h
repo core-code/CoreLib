@@ -32,6 +32,13 @@
 @end
 
 
+
+@interface NSControl (NSControl_BlockAction)
+
+@property (copy, nonatomic) ObjectInBlock actionBlock;
+
+@end
+
 #else
 
 @interface UIView (UIView_RemoveSubviews)

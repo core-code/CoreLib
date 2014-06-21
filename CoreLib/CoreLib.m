@@ -33,7 +33,7 @@ NSProcessInfo *processInfo;
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL
+@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL
 #ifdef USE_SECURITY
 , appSHA;
 #else
@@ -75,6 +75,16 @@ NSProcessInfo *processInfo;
 	return self;
 }
 
+- (NSString *)prefsPath
+{
+	return makeString(@"~/Library/Preferences/%@.plist", self.appID).expanded;
+}
+
+- (NSURL *)prefsURL
+{
+	return self.prefsPath.fileURL;
+}
+
 - (NSArray *)appCrashLogs // doesn't do anything in sandbox?
 {
 	NSStringArray *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
@@ -83,7 +93,7 @@ NSProcessInfo *processInfo;
 
 - (NSString *)appID
 {
-	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+	return [NSBundle mainBundle].bundleIdentifier;
 }
 
 - (NSString *)appVersionString
@@ -169,8 +179,6 @@ NSProcessInfo *processInfo;
 #endif
 
 
-
-
 - (void)openURL:(openChoice)choice
 {
 
@@ -180,6 +188,20 @@ NSProcessInfo *processInfo;
 	{
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+#endif
+
+		NSString *encodedPrefs = @"";
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
+		if (optionDown && (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9))
+			encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
+#pragma clang diagnostic pop
+#endif
 #endif
 
 		urlString = makeString(@"mailto:%@?subject=%@ v%@ (%i) Support Request%@&body=Insert Support Request Here\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
@@ -195,11 +217,7 @@ NSProcessInfo *processInfo;
 							   _machineType(),
 							   [[NSProcessInfo processInfo] operatingSystemVersionString],
 							   ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""),
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-							   ((optionDown && (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)) ? [[NSData dataWithContentsOfFile:[makeString(@"~/Library/Preferences/%@.plist", [[NSBundle mainBundle] bundleIdentifier]) stringByExpandingTildeInPath]] base64Encoding] : @"")
-#else
-							   @""
-#endif
+							   encodedPrefs
 							   );
 
 
@@ -221,8 +239,8 @@ NSProcessInfo *processInfo;
 
 @end
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
 
 // obj creation convenience
 NSPredicate *makePredicate(NSString *format, ...)
@@ -389,7 +407,7 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 	else
 		dispatch_async_main(block);
 }
-#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 
 
 NSColor *makeColor(float r, float g, float b, float a)

@@ -16,8 +16,8 @@
 @implementation JMDocklessApplication
 
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wundeclared-selector"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 
 - (void)sendEvent:(NSEvent *)event
 {
@@ -56,6 +56,6 @@
     [super sendEvent:event];
 }
 
-#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 
 @end

@@ -30,7 +30,15 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, set, reverseArray, string, path;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted;
+
+- (NSArray *)sorted
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wselector"
+	return [self sortedArrayUsingSelector:@selector(compare:)];
+#pragma clang diagnostic pop
+}
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 @dynamic JSONData;
@@ -102,6 +110,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	NSString *ret = @"";
 
+	
 	for (NSString *str in self)
 		ret = [ret stringByAppendingPathComponent:str];
 
@@ -334,6 +343,13 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @dynamic immutableObject;
 
+- (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex
+{
+	id object = [self objectAtIndex:fromIndex];
+	[self removeObjectAtIndex:fromIndex];
+	[self insertObject:object atIndex:(fromIndex < toIndex) ? toIndex - 1 : toIndex];
+}
+
 - (NSArray *)immutableObject
 {
 	return [NSArray arrayWithArray:self];
@@ -547,7 +563,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
-	NSDateFormatter *df = [[NSDateFormatter alloc] init];
+	NSDateFormatter *df = [NSDateFormatter new];
 	[df setDateFormat:dateFormat];
 	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier];
 	[df setLocale:l];
@@ -776,7 +792,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmed, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isFloatNumber;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
@@ -870,6 +886,27 @@ static CONST_KEY(CoreCodeAssociatedValue)
 			size += [[attr objectForKey:NSFileSize] unsignedLongLongValue];
 	}
 	return size;
+}
+
+- (BOOL)isIntegerNumber
+{
+	return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound;
+}
+
+- (BOOL)isFloatNumber
+{
+	static NSCharacterSet *cs;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^
+	{
+		NSMutableCharacterSet *tmp = [NSMutableCharacterSet decimalDigitCharacterSet];
+		[tmp addCharactersInString:@",."];
+		[tmp addCharactersInString:[[NSLocale currentLocale] valueForKey:NSLocaleGroupingSeparator]];
+		[tmp addCharactersInString:[[NSLocale currentLocale] valueForKey:NSLocaleDecimalSeparator]];
+		cs =  tmp.immutableObject;
+	});
+
+	return [self rangeOfCharacterFromSet:cs].location != NSNotFound;
 }
 
 - (BOOL)isWriteablePath
@@ -999,9 +1036,14 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
-- (NSString *)trimmed
+- (NSString *)trimmedOfWhitespace
 {
 	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
+- (NSString *)trimmedOfWhitespaceAndNewlines
+{
+	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 - (NSString *)clamp:(NSUInteger)maximumLength
@@ -1353,7 +1395,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
 
@@ -1365,6 +1407,13 @@ static CONST_KEY(CoreCodeAssociatedValue)
     BOOL alias = CFBooleanGetValue(aliasBool);
 
     return alias && success;
+}
+
+- (BOOL)fileIsDirectory
+{
+	NSNumber *value;
+	[self getResourceValue:&value forKey:NSURLIsDirectoryKey error:NULL];
+	return value.boolValue;
 }
 
 - (NSURL *)fileAliasTarget
@@ -1481,5 +1530,56 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSData *)contents
 {
 	return self.download;
+}
+@end
+
+
+@implementation  NSCharacterSet (CoreCode)
+
+@dynamic stringRepresentation, mutableObject;
+
+- (NSString *)stringRepresentation
+{
+	NSMutableString *tmp = [NSMutableString new];
+	unichar unicharBuffer[20];
+	int index = 0;
+
+	for (unichar uc = 0; uc < (0xFFFF); uc ++)
+	{
+		if ([self characterIsMember:uc])
+		{
+			unicharBuffer[index] = uc;
+
+			index ++;
+
+			if (index == 20)
+			{
+				[tmp appendString:[NSString stringWithCharacters:unicharBuffer length:index]];
+
+				index = 0;
+			}
+		}
+	}
+
+	if (index != 0)
+		[tmp appendString:[NSString stringWithCharacters:unicharBuffer length:index]];
+
+	return tmp;
+}
+
+- (NSMutableCharacterSet *)mutableObject
+{
+	return [NSMutableCharacterSet characterSetWithBitmapRepresentation:[self bitmapRepresentation]];
+}
+@end
+
+
+@implementation  NSMutableCharacterSet (CoreCode)
+
+@dynamic immutableObject;
+
+- (NSCharacterSet *)immutableObject
+{
+	return [NSCharacterSet characterSetWithBitmapRepresentation:[self bitmapRepresentation]];
 }
 @end
