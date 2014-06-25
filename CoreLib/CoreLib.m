@@ -33,14 +33,14 @@ NSProcessInfo *processInfo;
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appID, appVersion, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL
+@dynamic appCrashLogs, appID, appBuild, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL
 #ifdef USE_SECURITY
 , appSHA;
 #else
 ;
 #endif
 
-- (id)init
+- (instancetype)init
 {
 	assert(!cc);
 	if ((self = [super init]))
@@ -106,7 +106,7 @@ NSProcessInfo *processInfo;
 	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 }
 
-- (int)appVersion
+- (int)appBuild
 {
 	return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
 }
@@ -123,32 +123,32 @@ NSProcessInfo *processInfo;
 
 - (NSString *)docDir
 {
-	return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	return NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 }
 
 - (NSString *)deskDir
 {
-	return [NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	return NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES)[0];
 }
 
 - (NSURL *)docURL
 {
-	return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+	return [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
 }
 
 - (NSURL *)deskURL
 {
-	return [[[NSFileManager defaultManager] URLsForDirectory:NSDesktopDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+	return [[NSFileManager defaultManager] URLsForDirectory:NSDesktopDirectory inDomains:NSUserDomainMask][0];
 }
 
 - (NSString *)suppDir
 {
-	return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:self.appName];
+	return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
 }
 
 - (NSURL *)suppURL
 {
-	NSURL *dir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] objectAtIndex:0];
+	NSURL *dir = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
     if (dir && self.appName)
         return [dir add:self.appName];
@@ -208,7 +208,7 @@ NSProcessInfo *processInfo;
 							   OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail),
 							   cc.appName,
 							   cc.appVersionString,
-							   cc.appVersion,
+							   cc.appBuild,
 #ifdef USE_SECURITY
 							   makeString(@" (License code: %@)", cc.appSHA),
 #else

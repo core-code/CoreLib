@@ -181,7 +181,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	NSMutableArray *mut = self.mutableObject;
 
-	[mut replaceObjectAtIndex:[mut indexOfObject:anObject] withObject:newObject];
+	mut[[mut indexOfObject:anObject]] = newObject;
 
 	return mut.immutableObject;
 }
@@ -189,7 +189,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
     if ([self count] > index)
-        return [self objectAtIndex:index];
+        return self[index];
     else
         return nil;
 }
@@ -197,7 +197,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)safeStringAtIndex:(NSUInteger)index
 {
     if ([self count] > index)
-        return [self objectAtIndex:index];
+        return self[index];
     else
         return @"";
 }
@@ -222,7 +222,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 #if ! __has_feature(objc_arc)
 	[sd autorelease];
 #endif
-	return [self sortedArrayUsingDescriptors:[NSArray arrayWithObject:sd]];
+	return [self sortedArrayUsingDescriptors:@[sd]];
 }
 
 - (NSMutableArray *)mutableObject
@@ -312,7 +312,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	NSPipe *taskPipe = [NSPipe pipe];
 	NSFileHandle *file = [taskPipe fileHandleForReading];
 
-	[task setLaunchPath:[self objectAtIndex:0]];
+	[task setLaunchPath:self[0]];
 	[task setStandardOutput:taskPipe];
 	[task setStandardError:taskPipe];
 	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
@@ -345,7 +345,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex
 {
-	id object = [self objectAtIndex:fromIndex];
+	id object = self[fromIndex];
 	[self removeObjectAtIndex:fromIndex];
 	[self insertObject:object atIndex:(fromIndex < toIndex) ? toIndex - 1 : toIndex];
 }
@@ -373,7 +373,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	{
 		id result = block(self[i]);
 
-		[self replaceObjectAtIndex:i withObject:result];
+		self[i] = result;
 	}
 }
 
@@ -725,7 +725,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 	NSMutableArray *tmp = [NSMutableArray new];
 	for (NSString *l in [NSLocale  preferredLanguages])
-		[tmp addObject:([iso2LetterTo3Letter objectForKey:l] ? [iso2LetterTo3Letter objectForKey:l] : l)];
+		[tmp addObject:(iso2LetterTo3Letter[l] ? iso2LetterTo3Letter[l] : l)];
 
 #if ! __has_feature(objc_arc)
 	[tmp autorelease];
@@ -873,7 +873,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
 	if (!attr) return 0;
-	return [[attr objectForKey:NSFileSize] unsignedLongLongValue];
+	return [attr[NSFileSize] unsignedLongLongValue];
 }
 
 - (unsigned long long)directorySize
@@ -882,8 +882,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	for (NSString *file in self.dirContentsRecursiveAbsolute)
 	{
 		NSDictionary *attr = [fileManager attributesOfItemAtPath:file error:NULL];
-		if (attr && !([[attr objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory]))
-			size += [[attr objectForKey:NSFileSize] unsignedLongLongValue];
+		if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
+			size += [attr[NSFileSize] unsignedLongLongValue];
 	}
 	return size;
 }
@@ -1057,7 +1057,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 	for (NSString *key in replacements)
 	{
-		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
+		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
 			continue;
 		ret = [ret stringByReplacingOccurrencesOfString:key
                                              withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
@@ -1069,10 +1069,10 @@ static CONST_KEY(CoreCodeAssociatedValue)
         replaced = FALSE;
         for (NSString *key in replacements)
         {
-            if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:[replacements objectForKey:key]])
+            if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
                 continue;
             NSString *tmp = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]
-														   withString:[replacements objectForKey:key]];
+														   withString:replacements[key]];
 
             if (![tmp isEqualToString:ret])
             {
@@ -1485,8 +1485,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	for (NSString *file in self.dirContentsRecursive)
 	{
 		NSDictionary *attr = [fileManager attributesOfItemAtPath:@[self.path, file].path error:NULL];
-		if (attr && !([[attr objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory]))
-			size += [[attr objectForKey:NSFileSize] unsignedLongLongValue];
+		if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
+			size += [attr[NSFileSize] unsignedLongLongValue];
 	}
 	return size;
 }

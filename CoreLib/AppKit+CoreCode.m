@@ -112,6 +112,16 @@ static CONST_KEY(CCProgressIndicator)
 	});
 }
 
+
+- (IBAction)performBorderlessClose:(id)sender
+{
+	if ([[self delegate] respondsToSelector:@selector(windowShouldClose:)])
+	{
+		if (![[self delegate] windowShouldClose:self])
+			return;
+	}
+	[self close];
+}
 @end
 
 
@@ -125,7 +135,7 @@ static CONST_KEY(CCProgressIndicator)
     NSSize strSize;
     do
     {
-        NSDictionary* attrs = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont fontWithName:[curr fontName] size:currentFontSize], NSFontAttributeName, nil];
+        NSDictionary* attrs = @{NSFontAttributeName: [NSFont fontWithName:[curr fontName] size:currentFontSize]};
         strSize = [[self stringValue] sizeWithAttributes:attrs];
 #if ! __has_feature(objc_arc)
 		[attrs release];

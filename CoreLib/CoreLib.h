@@ -29,7 +29,7 @@ extern "C"
 
 // basic block types
 #ifdef __BLOCKS__
-	typedef void (^BasicBlock)(void);
+typedef void (^BasicBlock)(void);
 typedef void (^DoubleInBlock)(double input);
 typedef void (^StringInBlock)(NSString *input);
 typedef void (^ObjectInBlock)(id input);
@@ -38,6 +38,7 @@ typedef int (^ObjectInIntOutBlock)(id input);
 typedef CGPoint (^ObjectInPointOutBlock)(id input);
 typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
+typedef int (^IntOutBlock)(void);
 #endif
 
 typedef NS_ENUM(uint8_t, openChoice)
@@ -157,7 +158,7 @@ MAKE_MAKER(MutableString)
 
 // info bundle key convenience
 @property (readonly, nonatomic) NSString *appID;
-@property (readonly, nonatomic) int appVersion;
+@property (readonly, nonatomic) int appBuild;
 @property (readonly, nonatomic) NSString *appVersionString;
 @property (readonly, nonatomic) NSString *appName;
 

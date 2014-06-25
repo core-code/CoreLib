@@ -21,6 +21,8 @@
 - (void)beginProgress:(NSString *)title;
 - (void)endProgress;
 
+- (IBAction)performBorderlessClose:(id)sender;
+
 @end
 
 
