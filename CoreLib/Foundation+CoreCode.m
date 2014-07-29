@@ -40,7 +40,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 #pragma clang diagnostic pop
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @dynamic JSONData;
 
 - (NSData *)JSONData
@@ -528,14 +528,14 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return [NSMutableData dataWithData:self];
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @dynamic JSONArray, JSONDictionary;
 - (id)JSONObject
 {
     NSError *err;
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self options:(NSJSONReadingOptions)0 error:&err];
 
-    if (!dict || err || ![dict isKindOfClass:[NSDictionary class]])
+    if (!dict || err)
     {
         NSLog(@"Error: JSON read fails! input %@ dict %@ err %@", self, dict, err);
         return nil;
@@ -546,12 +546,28 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSArray *)JSONArray
 {
-    return [self JSONObject];
+    id res = [self JSONObject];
+
+	if (![res isKindOfClass:[NSArray class]])
+	{
+        NSLog(@"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
+        return nil;
+    }
+
+	return res;
 }
 
 - (NSDictionary *)JSONDictionary
 {
-    return [self JSONObject];
+    id res = [self JSONObject];
+
+	if (![res isKindOfClass:[NSDictionary class]])
+	{
+        NSLog(@"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
+        return nil;
+    }
+
+	return res;
 }
 #endif
 
@@ -634,7 +650,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 @implementation NSDictionary (CoreCode)
 
 @dynamic mutableObject;
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @dynamic JSONData;
 
 - (NSData *)JSONData
@@ -831,10 +847,10 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)fileAliasTarget
 {
 	CFErrorRef *err = NULL;
-	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
+	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self.fileURL, err);
 	if (bookmark == nil)
 		return nil;
-	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NO, err);
+	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
 	__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
 	CFRelease(bookmark);
 	CFRelease(url);
@@ -901,8 +917,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	{
 		NSMutableCharacterSet *tmp = [NSMutableCharacterSet decimalDigitCharacterSet];
 		[tmp addCharactersInString:@",."];
-		[tmp addCharactersInString:[[NSLocale currentLocale] valueForKey:NSLocaleGroupingSeparator]];
-		[tmp addCharactersInString:[[NSLocale currentLocale] valueForKey:NSLocaleDecimalSeparator]];
+		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]];
+		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator]];
 		cs =  tmp.immutableObject;
 	});
 
@@ -1422,7 +1438,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
 	if (bookmark == nil)
 		return nil;
-	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NO, err);
+	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
 	__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
 	CFRelease(bookmark);
 	CFRelease(url);

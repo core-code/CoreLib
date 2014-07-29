@@ -173,6 +173,8 @@ MAKE_MAKER(MutableString)
 @property (readonly, nonatomic) NSURL *docURL;
 @property (readonly, nonatomic) NSURL *deskURL;
 @property (readonly, nonatomic) NSURL *suppURL;
+@property (readonly, nonatomic) NSURL *homeURL;
+
 
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *appSHA;

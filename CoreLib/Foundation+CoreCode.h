@@ -19,7 +19,7 @@
 @property (readonly, nonatomic) NSArray *reverseArray;
 @property (readonly, nonatomic) NSMutableArray *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
 @property (readonly, nonatomic) NSString *string;
@@ -88,7 +88,7 @@
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *hexString;
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
 #endif
@@ -129,7 +129,7 @@
 
 @interface NSDictionary (CoreCode)
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
 @property (readonly, nonatomic) NSMutableDictionary *mutableObject;

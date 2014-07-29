@@ -674,7 +674,7 @@ NSString *_machineType();
 		{
 			GetVolParmsInfoBuffer volumeParms;
 			result = FSGetVolumeParms (actualVolume, &volumeParms, sizeof(volumeParms));
-            
+
 
 			if (result != noErr)
 				asl_NSLog(ASL_LEVEL_ERR, @"Error:	FSGetVolumeParms returned %d", result);

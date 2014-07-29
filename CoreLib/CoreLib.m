@@ -33,7 +33,7 @@ NSProcessInfo *processInfo;
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appID, appBuild, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL
+@dynamic appCrashLogs, appID, appBuild, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL
 #ifdef USE_SECURITY
 , appSHA;
 #else
@@ -129,6 +129,11 @@ NSProcessInfo *processInfo;
 - (NSString *)deskDir
 {
 	return NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES)[0];
+}
+
+- (NSURL *)homeURL
+{
+	return NSHomeDirectory().URL;
 }
 
 - (NSURL *)docURL

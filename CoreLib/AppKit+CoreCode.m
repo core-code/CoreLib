@@ -137,9 +137,7 @@ static CONST_KEY(CCProgressIndicator)
     {
         NSDictionary* attrs = @{NSFontAttributeName: [NSFont fontWithName:[curr fontName] size:currentFontSize]};
         strSize = [[self stringValue] sizeWithAttributes:attrs];
-#if ! __has_feature(objc_arc)
-		[attrs release];
-#endif
+
         currentFontSize --;
 
     } while (strSize.width > width);
