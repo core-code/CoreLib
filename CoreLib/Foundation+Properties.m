@@ -924,6 +924,7 @@
 @dynamic description;
 @dynamic sortedArrayHint;
 @dynamic lastObject;
+@dynamic firstObject;
 
 @end
 

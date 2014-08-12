@@ -201,9 +201,10 @@ NSProcessInfo *processInfo;
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 #endif
 		if (optionDown && (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9))
-			encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+			encodedPrefs = [self.prefsURL.contents performSelector:@selector(base64EncodedStringWithOptions:) withObject:@(0)];
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic pop
 #endif

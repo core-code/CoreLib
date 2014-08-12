@@ -15,6 +15,12 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
+
+
+#ifndef MAC_OS_X_VERSION_10_9
+#define MAC_OS_X_VERSION_10_9 1090
+#endif
+
 @interface NSDocument (Properties)
 
 @property (strong, nonatomic) NSUndoManager *undoManager;
@@ -188,7 +194,7 @@
 @property (assign, nonatomic) NSSize size;
 @property (assign, nonatomic) NSRect alignmentRect NS_AVAILABLE_MAC(10_5);
 @property (assign, nonatomic) BOOL prefersColorMatch;
-@property (assign, nonatomic, getter=isTemplate) BOOL template NS_AVAILABLE_MAC(10_5);
+//@property (assign, nonatomic, getter=isTemplate) BOOL template NS_AVAILABLE_MAC(10_5);
 @property (copy, nonatomic) NSString *accessibilityDescription NS_AVAILABLE_MAC(10_6);
 - (NSString *)accessibilityDescription UNAVAILABLE_ATTRIBUTE;
 @property (strong, nonatomic) NSColor *backgroundColor;
@@ -437,7 +443,9 @@
 
 @interface NSPrintInfo (Properties)
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @property (assign, nonatomic) NSPaperOrientation orientation;
+#endif
 @property (assign, nonatomic) NSPrintingPaginationMode horizontalPagination;
 @property (assign, nonatomic, getter=isSelectionOnly) BOOL selectionOnly NS_AVAILABLE_MAC(10_6);
 @property (readonly, nonatomic) NSMutableDictionary *printSettings NS_AVAILABLE_MAC(10_5);
@@ -1124,10 +1132,12 @@
 @end
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @interface NSAppearance (Properties)
 
 
 @end
+#endif
 
 
 @interface NSRulerView (Properties)
@@ -1697,7 +1707,9 @@
 @property (assign, nonatomic) NSPrintingPageOrder pageOrder;
 @property (strong, nonatomic) NSPrintInfo *printInfo;
 @property (assign, nonatomic) BOOL showsProgressPanel;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @property (strong, nonatomic) NSPDFPanel *PDFPanel NS_AVAILABLE_MAC(10_9);
+#endif
 @property (readonly, nonatomic) BOOL runOperation;
 @property (readonly, nonatomic) NSRange pageRange NS_AVAILABLE_MAC(10_5);
 @property (readonly, nonatomic) NSGraphicsContext *context;
@@ -2439,10 +2451,12 @@
 #endif
 
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @interface NSMediaLibraryBrowserController (Properties)
 
 
 @end
+#endif
 
 
 @interface NSColor (Properties)
@@ -2549,7 +2563,9 @@
 @property (assign, nonatomic) BOOL windowsNeedUpdate;
 - (BOOL)windowsNeedUpdate UNAVAILABLE_ATTRIBUTE;
 @property (assign, nonatomic) id servicesProvider;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @property (readonly, nonatomic) NSApplicationOcclusionState occlusionState NS_AVAILABLE_MAC(10_9);
+#endif
 @property (readonly, nonatomic) NSRemoteNotificationType enabledRemoteNotificationTypes NS_AVAILABLE_MAC(10_7);
 @property (readonly, nonatomic) NSApplicationActivationPolicy activationPolicy NS_AVAILABLE_MAC(10_6);
 @property (assign, nonatomic) NSApplicationPresentationOptions presentationOptions NS_AVAILABLE_MAC(10_6);
@@ -2784,7 +2800,9 @@
 @property (strong, nonatomic) NSColor *backgroundColor;
 @property (assign, nonatomic, getter=isReleasedWhenClosed) BOOL releasedWhenClosed;
 @property (readonly, nonatomic) NSArray *childWindows;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @property (readonly, nonatomic) NSWindowOcclusionState occlusionState NS_AVAILABLE_MAC(10_9);
+#endif
 @property (assign, nonatomic, getter=isDocumentEdited) BOOL documentEdited;
 @property (assign, nonatomic) NSWindowCollectionBehavior collectionBehavior NS_AVAILABLE_MAC(10_5);
 @property (readonly, nonatomic) NSScreen *screen;

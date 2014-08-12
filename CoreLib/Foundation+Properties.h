@@ -950,6 +950,7 @@
 @property (readonly, nonatomic) NSString *description;
 @property (readonly, nonatomic) NSData *sortedArrayHint;
 @property (readonly, nonatomic) id lastObject;
+@property (readonly, nonatomic) id firstObject;
 
 @end
 

@@ -176,7 +176,7 @@
 @dynamic size;
 @dynamic alignmentRect;
 @dynamic prefersColorMatch;
-@dynamic template;
+//@dynamic template;
 @dynamic accessibilityDescription;
 @dynamic backgroundColor;
 @dynamic dataRetained;
@@ -420,7 +420,9 @@
 
 @implementation NSPrintInfo (Properties)
 
-@dynamic  orientation;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
+@dynamic orientation;
+#endif
 @dynamic horizontalPagination;
 @dynamic selectionOnly;
 @dynamic printSettings;
@@ -1580,7 +1582,9 @@
 @dynamic pageOrder;
 @dynamic printInfo;
 @dynamic showsProgressPanel;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @dynamic PDFPanel;
+#endif
 @dynamic runOperation;
 @dynamic pageRange;
 @dynamic context;
@@ -2381,7 +2385,9 @@
 @dynamic isHidden;
 @dynamic windowsNeedUpdate;
 @dynamic servicesProvider;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @dynamic occlusionState;
+#endif
 @dynamic enabledRemoteNotificationTypes;
 @dynamic activationPolicy;
 @dynamic presentationOptions;
@@ -2597,7 +2603,9 @@
 @dynamic backgroundColor;
 @dynamic releasedWhenClosed;
 @dynamic childWindows;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9
 @dynamic occlusionState;
+#endif
 @dynamic documentEdited;
 @dynamic collectionBehavior;
 @dynamic screen;
