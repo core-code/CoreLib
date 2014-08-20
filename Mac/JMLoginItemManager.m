@@ -151,6 +151,8 @@ BOOL IsLoginItem_LS(void)
 	return FALSE;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
 BOOL IsLoginItem(void)
 {
 	if (USING_SANDBOX)
@@ -158,6 +160,7 @@ BOOL IsLoginItem(void)
 	else 
 		return IsLoginItem_LS();
 }
+#pragma clang diagnostic pop
 
 void AddLoginItem_SM(void)
 {
@@ -193,6 +196,9 @@ void AddLoginItem_LS(void)
 		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _AddLoginItem : LSSharedFileListCreate delivered NULL list!");
 }
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
 void AddLoginItem(void)
 {
 	if (USING_SANDBOX)
@@ -200,6 +206,7 @@ void AddLoginItem(void)
 	else 
 		AddLoginItem_LS();
 }
+#pragma clang diagnostic pop
 
 void RemoveLoginItem_SM(void)
 {
@@ -257,6 +264,9 @@ void RemoveLoginItem_LS(void)
 		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _RemoveLoginItem : LSSharedFileListCreate delivered NULL list!");
 }
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
 void RemoveLoginItem(void)
 {
 	if (USING_SANDBOX)
@@ -264,3 +274,4 @@ void RemoveLoginItem(void)
 	else 
 		RemoveLoginItem_LS();
 }
+#pragma clang diagnostic pop

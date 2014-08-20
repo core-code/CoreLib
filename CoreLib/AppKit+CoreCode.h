@@ -41,6 +41,13 @@
 
 @end
 
+
+@interface NSTabView (CoreCode)
+
+@property (readonly, nonatomic) NSUInteger selectedTabViewIndex;
+
+@end
+
 #else
 
 @interface UIView (UIView_RemoveSubviews)

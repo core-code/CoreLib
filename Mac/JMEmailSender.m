@@ -61,7 +61,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		/* create a new recipient and add it to the recipients list */
 		for (recipient in recipientList) // the recipient string can be a newline seperated list of recipients
 		{
-			if (isValidEmail([recipient UTF8String]))
+			if (recipient.isValidEmail)
 			{
 				asl_NSLog_debug(@"sendMail: messageframework - sending to: %@", recipient);
 
@@ -157,13 +157,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		
 		if (recipients == nil)
 			return kToNilFailure;
-		if (sender == nil || [sender length] == 0 || !isValidEmail([sender UTF8String]))
+		if (sender == nil || [sender length] == 0 || !sender.isValidEmail)
 			return kFromNilFailure;
 
 		/* create a new recipient and add it to the recipients list */
 		for (recipient in recipientList) // the recipient string can be a newline seperated list of recipients
 		{
-			if (isValidEmail([recipient UTF8String]))
+			if (recipient.isValidEmail)
 			{
 				asl_NSLog_debug(@"sendMail: mailcore - sending to: %@", recipient);
 
@@ -203,33 +203,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 #endif
 @end
-
-BOOL isValidEmail(const char *email)
-{
-	char *i = NULL, *j = NULL;
-
-	if (strlen(email) > 254)
-		return FALSE;
-
-	i = strchr(email, '@');
-
-	if (i)
-		j = strchr(i, '.');
-
-	if (!i || !j || (j - i < 2))
-		return FALSE;
-
-	if (strchr(email, ';') || strchr(email, ':') || strchr(email, '|') || strchr(email, '/') || strchr(email, ',') || strchr(email, '&'))
-		return FALSE;
-
-	while ((i = strchr(j, '.')))
-	{
-		j = i;
-		++j;
-	}
-
-	if (strlen(email) - ((int)(j - email)) < 2)
-		return FALSE;
-
-	return TRUE;
-}

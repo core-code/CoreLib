@@ -32,5 +32,3 @@ typedef enum
 + (smtpResult)sendMailWithMailCore:(NSString *)mail subject:(NSString *)subject timeout:(uint16_t)secs server:(NSString *)server port:(uint16_t)port from:(NSString *)sender to:(NSString *)recipients auth:(BOOL)auth tls:(BOOL)tls username:(NSString *)username password:(NSString *)password;
 #endif
 @end
-
-BOOL isValidEmail(const char *email);

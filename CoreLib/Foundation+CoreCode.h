@@ -76,6 +76,8 @@
 - (void)filterUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 - (void)removeFirstObject;
 - (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;
+- (void)removeObjectPassingTest:(ObjectInIntOutBlock)block;
+
 
 @end
 
@@ -134,6 +136,8 @@
 #endif
 @property (readonly, nonatomic) NSMutableDictionary *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
+- (NSDictionary *)dictionaryByRemovingKey:(NSString *)key;
+- (NSDictionary *)dictionaryByRemovingKeys:(NSStringArray *)keys;
 
 @end
 
@@ -203,6 +207,7 @@
 @property (readonly, nonatomic) NSData *contents;
 
 
+
 // NSUserDefaults support
 @property (copy, nonatomic) id defaultObject;
 @property (copy, nonatomic) NSString *defaultString;
@@ -244,6 +249,8 @@
 @property (readonly, nonatomic) NSString *propercaseString;
 @property (readonly, nonatomic) BOOL isIntegerNumber;
 @property (readonly, nonatomic) BOOL isFloatNumber;
+@property (readonly, nonatomic) BOOL isValidEmail;
+
 
 
 - (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter;

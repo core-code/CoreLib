@@ -350,6 +350,16 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	[self insertObject:object atIndex:(fromIndex < toIndex) ? toIndex - 1 : toIndex];
 }
 
+- (void)removeObjectPassingTest:(ObjectInIntOutBlock)block
+{
+	NSInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
+	{
+		return block(obj);
+	}];
+
+	[self removeObjectAtIndex:idx];
+}
+
 - (NSArray *)immutableObject
 {
 	return [NSArray arrayWithArray:self];
@@ -699,6 +709,25 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return mutable.immutableObject;
 }
 
+- (NSDictionary *)dictionaryByRemovingKey:(NSString *)key
+{
+	NSMutableDictionary *mutable = self.mutableObject;
+
+	[mutable removeObjectForKey:key];
+
+	return mutable.immutableObject;
+}
+
+- (NSDictionary *)dictionaryByRemovingKeys:(NSStringArray *)keys
+{
+	NSMutableDictionary *mutable = self.mutableObject;
+
+	for (NSString *key in keys)
+		[mutable removeObjectForKey:key];
+
+	return mutable.immutableObject;
+}
+
 @end
 
 
@@ -934,6 +963,32 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		return NO;
 
 	[fileManager removeItemAtPath:self error:NULL];
+
+	return YES;
+}
+
+- (BOOL)isValidEmail
+{
+	if (self.length > 254)
+		return NO;
+
+
+	NSStringArray *portions = [self split:@"@"];
+
+	if (portions.count != 2)
+		return FALSE;
+
+	NSString *local = portions[0];
+	NSString *domain = portions[1];
+
+	NSCharacterSet *localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
+	NSCharacterSet *domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
+
+	if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
+		return NO;
+
+	if ([domain rangeOfCharacterFromSet:domainValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
+		return NO;
 
 	return YES;
 }

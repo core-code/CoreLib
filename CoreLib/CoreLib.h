@@ -21,6 +21,9 @@
 #ifndef CORELIB
 #define CORELIB 1
 
+#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
+#define __IPHONE_OS_VERSION_MIN_REQUIRED 0
+#endif
 
 #ifdef __cplusplus
 extern "C"
@@ -35,6 +38,7 @@ typedef void (^StringInBlock)(NSString *input);
 typedef void (^ObjectInBlock)(id input);
 typedef id (^ObjectInOutBlock)(id input);
 typedef int (^ObjectInIntOutBlock)(id input);
+typedef float (^ObjectInFloatOutBlock)(id input);
 typedef CGPoint (^ObjectInPointOutBlock)(id input);
 typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);

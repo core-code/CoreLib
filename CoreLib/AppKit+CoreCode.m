@@ -23,6 +23,17 @@ static CONST_KEY(CCProgressDetailInfo)
 static CONST_KEY(CCProgressSheet)
 static CONST_KEY(CCProgressIndicator)
 
+@implementation NSTabView (CoreCode)
+
+@dynamic selectedTabViewIndex;
+
+- (NSUInteger)selectedTabViewIndex
+{
+	return [self indexOfTabViewItem:[self selectedTabViewItem]];
+}
+
+@end
+
 @implementation NSWindow (CoreCode)
 
 
