@@ -354,7 +354,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	NSInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
 	{
-		return block(obj);
+		return (BOOL)block(obj);
 	}];
 
 	[self removeObjectAtIndex:idx];
@@ -510,11 +510,20 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)string
 {
-	NSString *s = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
-#if ! __has_feature(objc_arc)
-	[s autorelease];
-#endif
-    return s;
+	for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSUTF16StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding)])
+	{
+		NSString *s = [[NSString alloc] initWithData:self encoding:num.integerValue];
+
+		if (!s)
+			continue;
+	#if ! __has_feature(objc_arc)
+		[s autorelease];
+	#endif
+		return s;
+	}
+
+	NSLog(@"Error: could not create string from data %@", self);
+	return nil;
 }
 
 - (NSString *)hexString
