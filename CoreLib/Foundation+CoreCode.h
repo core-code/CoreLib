@@ -270,6 +270,9 @@
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
 - (NSStringArray *)split:(NSString *)sep;								// = componentsSeparatedByString:
 
+- (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet;
+- (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet;
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth;
 #endif

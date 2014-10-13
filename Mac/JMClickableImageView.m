@@ -13,6 +13,7 @@
 #import "JMClickableImageView.h"
 
 
+
 @implementation JMClickableImageView
 
 - (void)awakeFromNib
@@ -27,7 +28,7 @@
 
 - (void)drawRect:(NSRect)frame
 {
-	if (self.highlighted)
+	if (self.isCurrentlyHighlighted)
 	{
 		[[NSColor selectedMenuItemColor] set];
 

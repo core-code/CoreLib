@@ -283,6 +283,9 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #ifndef NSAppKitVersionNumber10_9
 	#define NSAppKitVersionNumber10_9 1265
 #endif
+#ifndef NSAppKitVersionNumber10_10
+	#define NSAppKitVersionNumber10_10 1343.14
+#endif
 
 // convenience macros
 #define PROPERTY_STR(p)		NSStringFromSelector(@selector(p))
@@ -301,8 +304,10 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define ONCE(block)			{ static dispatch_once_t onceToken; dispatch_once(&onceToken, block); }
 #define ONCE_EVERY_MINUTES(block, minutes)	{ 	static NSDate *time = nil;	if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60))	{	block();	time = [NSDate date]; } }
-#define OS_IS_POST_SNOW		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
-#define OS_IS_POST_LION		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8) 
+#define OS_IS_POST_10_6		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
+#define OS_IS_POST_10_7		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8)
+#define OS_IS_POST_10_8		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
+#define OS_IS_POST_10_9		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
 
 #define kUsagesThisVersionKey makeString(@"corelib_%@_usages", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 #define kAskedThisVersionKey makeString(@"corelib_%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])

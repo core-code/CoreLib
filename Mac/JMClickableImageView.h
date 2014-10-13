@@ -13,6 +13,6 @@
 @interface JMClickableImageView : NSImageView
 
 @property (copy, nonatomic) ObjectInBlock clickBlock;
-@property (assign, nonatomic) BOOL highlighted;
+@property (assign, nonatomic) BOOL isCurrentlyHighlighted;
 
 @end

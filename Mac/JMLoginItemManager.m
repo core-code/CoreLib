@@ -22,7 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #define BRIDGE __bridge
 #endif
 
-#define USING_SANDBOX		(OS_IS_POST_SNOW) && (SANDBOX)
+#define USING_SANDBOX		(OS_IS_POST_10_6) && (SANDBOX)
 
 //#pragma GCC diagnostic ignored "-Wunreachable-code"
 
@@ -88,7 +88,7 @@ BOOL IsLoginItem_SM(void)
             }
         }
 		
-        CFRelease((BRIDGE CFDictionaryRef)jobDicts); jobDicts = nil;
+        CFRelease((BRIDGE CFArrayRef)jobDicts); jobDicts = nil;
         return bOnDemand;
 		
     }
@@ -153,6 +153,7 @@ BOOL IsLoginItem_LS(void)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunreachable-code"
+#pragma clang diagnostic ignored "-Wunreachable-code-return"
 BOOL IsLoginItem(void)
 {
 	if (USING_SANDBOX)
