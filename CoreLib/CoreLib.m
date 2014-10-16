@@ -314,14 +314,15 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
 
         NSString *visibleDetails = details;
         if (visibleDetails.length > maxLen)
-            visibleDetails = [[visibleDetails clamp:maxLen] stringByAppendingString:@" …\n(Remaining message omitted)"];
+            visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
             
 		if (NSRunAlertPanel(@"Fatal Error", @"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", @"Send to support", @"Quit", nil, usermsg, visibleDetails) == NSOKButton)
 		{
-			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured.\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ %@",
+			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ %@",
 											  cc.appName,
 											  cc.appVersionString,
 											  cc.appName,
+											  usermsg,
 											  details,
 											  _machineType(),
 											  [[NSProcessInfo processInfo] operatingSystemVersionString],
