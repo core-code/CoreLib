@@ -1,5 +1,14 @@
 #import <XCTest/XCTest.h>
 
+
+@interface Test : NSDictionary
+@property (nonatomic, readonly) NSString *title;
+@end
+@implementation Test
+@dynamic title;
+@end
+
+
 @interface CoreLibTests : XCTestCase
 
 @end
@@ -10,7 +19,9 @@
 - (void)setUp
 {
     [super setUp];
-    cc = [CoreLib new];
+
+	if (!cc)
+		cc = [CoreLib new];
 }
 
 - (void)tearDown
@@ -23,4 +34,10 @@
     XCTAssertNotNil(fileManager);
 }
 
+- (void)testDictionaryMisuse
+{
+	Test *bla = (Test *)@{@"title" : @"1"};
+	NSString *result = bla.title;
+	XCTAssert([result isEqualToString:@"1"]);
+}
 @end

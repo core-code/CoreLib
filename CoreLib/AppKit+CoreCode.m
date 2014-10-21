@@ -164,7 +164,7 @@ static CONST_KEY(CCProgressIndicator)
 - (void)invoke:(id)sender;
 @end
 @implementation BlockWrapper
-- (void)invoke:(id)sender { _block(sender); }
+- (void)invoke:(id)sender { self.block(sender); }
 @end
 
 

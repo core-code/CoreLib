@@ -354,7 +354,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	NSInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
 	{
-		return (BOOL)block(obj);
+		int res = block(obj);
+		return (BOOL)res;
 	}];
 
 	[self removeObjectAtIndex:idx];
