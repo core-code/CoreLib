@@ -22,6 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @interface JMHostInformation : NSObject
 
++ (BOOL)isUserAdmin;
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
 #ifdef USE_SYSTEMCONFIGURATION // requires linking SystemConfiguration.framework

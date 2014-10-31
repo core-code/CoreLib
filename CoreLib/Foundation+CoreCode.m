@@ -847,7 +847,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isFloatNumber;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isFloatNumber, data;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
@@ -1037,6 +1037,14 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		while ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]]) i++;
 		return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
 	}
+}
+
+- (void)setContents:(NSData *)data
+{
+	NSError *err;
+
+	if (![data writeToFile:self options:NSDataWritingAtomic error:&err])
+		LOG(err);
 }
 
 - (NSData *)contents
@@ -1397,6 +1405,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
     return (NSArrayArray *)rows;
 }
 
+- (NSData *)data
+{
+	return [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+}
+
 - (NSData *)dataFromHexString
 {
 	const char * bytes = [self cStringUsingEncoding: NSUTF8StringEncoding];
@@ -1625,6 +1638,14 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	[d autorelease];
 #endif
 	return d;
+}
+
+- (void)setContents:(NSData *)data
+{
+	NSError *err;
+
+	if (![data writeToURL:self options:NSDataWritingAtomic error:&err])
+		LOG(err);
 }
 
 - (NSData *)contents

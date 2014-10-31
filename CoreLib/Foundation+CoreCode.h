@@ -204,7 +204,7 @@
 // url string download
 @property (readonly, nonatomic) NSData *download;
 // path string filedata
-@property (readonly, nonatomic) NSData *contents;
+@property (assign, nonatomic) NSData *contents;
 
 
 
@@ -243,14 +243,16 @@
 #endif
 
 
-@property (readonly, nonatomic) NSData *dataFromHexString;
-
 @property (readonly, nonatomic) NSString *titlecaseString;
 @property (readonly, nonatomic) NSString *propercaseString;
 @property (readonly, nonatomic) BOOL isIntegerNumber;
 @property (readonly, nonatomic) BOOL isFloatNumber;
 @property (readonly, nonatomic) BOOL isValidEmail;
 
+
+
+@property (readonly, nonatomic) NSData *data;	// data of string contents
+@property (readonly, nonatomic) NSData *dataFromHexString;
 
 
 - (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter;
@@ -310,7 +312,7 @@
 // url string download
 @property (readonly, nonatomic) NSData *download;
 // path string filedata
-@property (readonly, nonatomic) NSData *contents;
+@property (assign, nonatomic) NSData *contents;
 
 @end
 

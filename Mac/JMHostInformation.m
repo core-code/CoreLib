@@ -49,6 +49,30 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 @implementation JMHostInformation
 
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <strings.h>
+#include <pwd.h>
+#include <grp.h>
+
++ (BOOL)isUserAdmin
+{
+	uid_t current_user_id = getuid();
+	struct passwd *pwentry = getpwuid(current_user_id);
+	struct group *admin_group = getgrnam("admin");
+	while(*admin_group->gr_mem != NULL)
+	{
+		if (strcmp(pwentry->pw_name, *admin_group->gr_mem) == 0)
+		{
+			return YES;
+		}
+		admin_group->gr_mem++;
+	}
+
+	return NO;
+}
+
 + (NSURL *)growlInstallURL
 {
 	NSString *appPath = @"/Applications/Growl.app";
