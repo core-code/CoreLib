@@ -673,6 +673,95 @@ NSString *_machineType();
 
 	LOGMOUNTEDHARDDISK(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
 
+//    NSArray *urls = [[NSFileManager defaultManager] mountedVolumeURLsIncludingResourceValuesForKeys:@[NSURLVolumeNameKey] options:(NSVolumeEnumerationOptions)0];
+//    for (NSURL *mountURL in urls)
+//    {
+//        NSError *error;
+//        NSString *volNameAsNSString;
+//        [mountURL getResourceValue:&volNameAsNSString forKey:NSURLVolumeNameKey error:&error];
+//        CFStringRef	volNameAsCFString = (BRIDGE CFStringRef)volNameAsNSString;
+//
+//        DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (BRIDGE CFURLRef)mountURL);
+//
+//        const char *utfBSDName = DADiskGetBSDName(disk);
+//        
+//        if (utfBSDName)
+//        {
+//    
+//            NSString *bsdName = @(utfBSDName);
+//
+//            NSLog(@"Volume mounted at: %@  %@ %@", [mountURL path], volNameAsCFString, bsdName);
+//            
+//            //NSLog((NSString *)volNameAsCFString);
+//            LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", (BRIDGE NSString *)volNameAsCFString);
+//            
+//            if ([volumeNamesToIgnore indexOfObject:(BRIDGE NSString *)volNameAsCFString] == NSNotFound &&
+//                [volumePathsToIgnore indexOfObject:[mountURL path]] == NSNotFound) // not removable
+//            {
+//                
+//                LOGMOUNTEDHARDDISK(@"mountedHarddisks has BSD name %@", bsdName);
+//                
+//                if (![bsdName hasPrefix:@"disk"])
+//                    continue;
+//                NSString *bsdNumStr = [[[bsdName substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0];
+//                NSInteger bsdNum = [bsdNumStr integerValue];
+//                BOOL found = FALSE;
+//                
+//                for (NSMutableDictionary *foundDisk in nonRemovableVolumes)  // check if we already added the disk because of another partition
+//                {
+//                    if ([[foundDisk objectForKey:kDiskNumberKey] integerValue] == bsdNum)
+//                    {
+//                        NSString *currentName = [foundDisk objectForKey:kDiskNameKey];
+//                        [foundDisk setObject:[currentName stringByAppendingFormat:@", %@", (BRIDGE NSString *)volNameAsCFString] forKey:kDiskNameKey];
+//                        found = TRUE;
+//                    }
+//                }
+//                
+//                if (!found) // new disk
+//                {
+//                    BOOL foundBacking = false;
+//                    
+//                    
+//                    if (includeRAIDBackingDevices)
+//                    {
+//                        NSDictionary *props = (BRIDGE NSDictionary *)DADiskCopyDescription(disk);
+//#if ! __has_feature(objc_arc)
+//                        [props autorelease];
+//#endif
+//                        
+//                        CFRelease(disk);
+//                        disk = NULL;
+//                        
+//                        LOGMOUNTEDHARDDISK(@"mountedHarddisks checking for raid backing %@", bsdName);
+//                        
+//                        if ([[props objectForKey:@"DAVolumeKind"] isEqualToString:@"zfs"])
+//                        {
+//                            [self _findZFSBacking:&foundBacking volNameAsCFString:volNameAsCFString nonRemovableVolumes:nonRemovableVolumes bsdNum:bsdNum];
+//                        }
+//                        else if ([props objectForKey:@"DAMediaLeaf"] && [[props objectForKey:@"DAMediaLeaf"] intValue])
+//                        {
+//                            foundBacking = [self _findRAIDBacking:bsdName props:props volNameAsCFString:volNameAsCFString nonRemovableVolumes:nonRemovableVolumes];
+//                        }
+//                    }
+//                    
+//                    if (!foundBacking)
+//                    {
+//                        [self _addDiskToList:nonRemovableVolumes
+//                                      number:[NSNumber numberWithInteger:bsdNum]
+//                                        name:(BRIDGE NSString *)volNameAsCFString
+//                                      detail:nil];
+//                        
+//                        
+//                        LOGMOUNTEDHARDDISK(@"mountedHarddisks is new disk without backing %@", bsdName);
+//                    }
+//                    else
+//                        LOGMOUNTEDHARDDISK(@"mountedHarddisks ignoring volume with raid/zfs backing %@", bsdName);
+//                }
+//            }
+//
+//        }
+//    }
+    
 	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
 	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
 	for (volumeIndex = 1; result == noErr || result != nsvErr; volumeIndex++)

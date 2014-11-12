@@ -56,7 +56,7 @@
 - (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
 
 // forwards for less typing
-- (NSString *)joined:(NSString *)sep;							// componentsJoinedByString:
+- (NSString *)joined:(NSString *)sep;							// = componentsJoinedByString:
 
 @property (readonly, nonatomic) NSSet *set;
 
@@ -268,16 +268,17 @@
 //- (NSString *)arg:(id)arg, ...;
 
 
-// forwards for less typing
-- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
-- (NSStringArray *)split:(NSString *)sep;								// = componentsSeparatedByString:
-
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet;
 - (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth;
 #endif
+
+
+// forwards for less typing
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
+- (NSStringArray *)split:(NSString *)sep;								// = componentsSeparatedByString:
 
 @end
 

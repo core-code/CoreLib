@@ -109,7 +109,6 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)path
 {
 	NSString *ret = @"";
-
 	
 	for (NSString *str in self)
 		ret = [ret stringByAppendingPathComponent:str];
