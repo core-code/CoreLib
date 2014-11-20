@@ -673,6 +673,8 @@ NSString *_machineType();
 
 	LOGMOUNTEDHARDDISK(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
 
+
+    
 //    NSArray *urls = [[NSFileManager defaultManager] mountedVolumeURLsIncludingResourceValuesForKeys:@[NSURLVolumeNameKey] options:(NSVolumeEnumerationOptions)0];
 //    for (NSURL *mountURL in urls)
 //    {
@@ -914,6 +916,38 @@ NSString *_machineType();
 	return nonRemovableVolumes;
 }
 
+//NSArray *allHarddisks(void)
+//{
+//    DASessionRef session = DASessionCreate(kCFAllocatorDefault);
+//    
+//    int subsequentNil = 0;
+//    NSMutableArray *disks = [NSMutableArray array];
+//    for (int i = 0; i < 64 && subsequentNil < 5; i++)
+//    {
+//        NSString *bsdname = [NSString stringWithFormat:@"/dev/disk%i", i];
+//        
+//        DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdname UTF8String]);
+//        NSDictionary *props = (__bridge NSDictionary *)DADiskCopyDescription(disk);
+//        
+//        if (!props)
+//            subsequentNil ++;
+//        else
+//        {
+//            subsequentNil = 0;
+//            NSString *name = props[@"DAVolumeName"];
+//            [disks addObject:@{kDiskNameKey :name ? name :  bsdname, kDiskNumberKey : @(i)}];
+//            
+//            [props autorelease];
+//        }
+//        
+//        
+//        CFRelease(disk);
+//        disk = NULL;
+//        
+//    }
+//    CFRelease(session);
+//    return disks;
+//}
 #endif
 
 + (NSString *)nameForDevice:(NSInteger)deviceNumber
