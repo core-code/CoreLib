@@ -456,7 +456,7 @@ UIColor *makeColor(float r, float g, float b, float a)
 }
 UIColor *makeColor255(float r, float g, float b, float a)
 {
-	return [UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0];
+	return [UIColor colorWithRed:(r) / (CGFloat)255.0 green:(g) / (CGFloat)255.0 blue:(b) / (CGFloat)255.0 alpha:(a) / (CGFloat)255.0];
 }
 #endif
 
