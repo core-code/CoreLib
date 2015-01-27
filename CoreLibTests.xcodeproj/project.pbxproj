@@ -124,7 +124,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B9293016193D29B800C94914 /* CoreLib_Availability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreLib_Availability.h; sourceTree = "<group>"; };
 		B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
 		B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
 		B933AB2118BBDFA1006E42B9 /* AppKit+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+Properties.h"; sourceTree = "<group>"; };
@@ -232,7 +231,6 @@
 				B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */,
 				B933AB2118BBDFA1006E42B9 /* AppKit+Properties.h */,
 				B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */,
-				B9293016193D29B800C94914 /* CoreLib_Availability.h */,
 				B933AB2318BBDFA1006E42B9 /* CoreLib.h */,
 				B933AB2418BBDFA1006E42B9 /* CoreLib.m */,
 				B933AB2518BBDFA1006E42B9 /* Foundation+CoreCode.h */,
@@ -585,6 +583,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -615,6 +614,7 @@
 					"-Wno-objc-missing-property-synthesis",
 					"-Wno-gnu",
 					"-Wno-variadic-macros",
+					"-Wno-documentation-unknown-command",
 				);
 			};
 			name = Debug;
@@ -634,6 +634,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -658,6 +659,7 @@
 					"-Wno-objc-missing-property-synthesis",
 					"-Wno-gnu",
 					"-Wno-variadic-macros",
+					"-Wno-documentation-unknown-command",
 				);
 			};
 			name = Release;

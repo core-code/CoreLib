@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 16.01.05.
-/*	Copyright (c) 2014 CoreCode
+/*	Copyright (c) 2015 CoreCode
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -12,15 +12,31 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import "JMHostInformation.h"
 
-#include <sys/types.h>
 #include <sys/sysctl.h>
 #include <sys/socket.h>
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <net/if.h>
-#include <SystemConfiguration/SystemConfiguration.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <strings.h>
+#include <pwd.h>
+#include <grp.h>
+#include <sys/param.h>
+#include <sys/mount.h>
+#ifdef USE_IOKIT
+#include <IOKit/ps/IOPSKeys.h>
+#include <IOKit/ps/IOPowerSources.h>
+#include <IOKit/network/IOEthernetInterface.h>
+#include <IOKit/network/IONetworkInterface.h>
+#include <IOKit/network/IOEthernetController.h>
 #include <IOKit/storage/IOMedia.h>
+#endif
+#ifdef USE_IOKIT
+#include <SystemConfiguration/SystemConfiguration.h>
+#endif
 
 #if defined(USE_DISKARBITRATION) || defined(USE_SYSTEMCONFIGURATION)
 
@@ -40,21 +56,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #endif
 #endif
 
-#pragma GCC diagnostic ignored "-Wcast-align"
-
 #ifdef USE_IOKIT
 static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices);
 static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress);
 #endif
 
+
+
+
 @implementation JMHostInformation
 
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <strings.h>
-#include <pwd.h>
-#include <grp.h>
+
 
 + (BOOL)isUserAdmin
 {
@@ -132,6 +144,10 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 	return result;
 }
 #endif
+
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
 
 + (NSString *)ipAddress:(bool)ipv6
 {
@@ -232,6 +248,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 	return ipv6 ? @"::1" : @"127.0.0.1";
 }
+#pragma clang diagnostic pop
 
 #ifdef USE_SYSTEMCONFIGURATION
 + (NSString *)ipName
@@ -634,7 +651,7 @@ NSString *_machineType();
 
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
-	OSErr           result = noErr;
+	OSStatus           result = noErr;
 	ItemCount       volumeIndex;
     NSMutableArray	*volumeNamesToIgnore = [NSMutableArray array];
     NSMutableArray	*volumePathsToIgnore = [NSMutableArray array];

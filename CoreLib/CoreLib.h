@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 12.04.12.
-/*	Copyright (c) 2014 CoreCode
+/*	Copyright (c) 2015 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -203,7 +203,8 @@ extern NSProcessInfo *processInfo;
 
 
 // alert convenience
-NSInteger input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
+NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *choices, NSInteger *result); // alert with popup button for selection of choice
+NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
 void alertfeedbackfatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
@@ -308,6 +309,8 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define OS_IS_POST_10_7		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8)
 #define OS_IS_POST_10_8		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
 #define OS_IS_POST_10_9		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
+#define MAX3(x,y,z)			(MAX(MAX((x),(y)),(z)))
+#define MIN3(x,y,z)			(MIN(MIN((x),(y)),(z)))
 
 #define kUsagesThisVersionKey makeString(@"corelib_%@_usages", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 #define kAskedThisVersionKey makeString(@"corelib_%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
