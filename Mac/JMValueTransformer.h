@@ -9,92 +9,130 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@interface BaseValueTransformer : NSValueTransformer {}
-@end
+@interface BaseValueTransformer : NSValueTransformer {}@end
 
-@interface OddValueTransformer: BaseValueTransformer {}
-@end
-@interface EvenValueTransformer: BaseValueTransformer {}
-@end
+@interface OddValueTransformer: BaseValueTransformer {} @end
+@interface EvenValueTransformer: BaseValueTransformer {} @end
+
+@interface NumericComparisonValueTransformer : NSValueTransformer {} @end
+@interface SmallerthanValueTransformer : NumericComparisonValueTransformer {} @end
+@interface LargerthanValueTransformer : NumericComparisonValueTransformer {} @end
+@interface EqualtoValueTransformer : NumericComparisonValueTransformer {} @end
+@interface DifferenttoValueTransformer : NumericComparisonValueTransformer {} @end
 
 
-@interface SmallerthanOneValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanOneValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoOneValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoOneValueTransformer: BaseValueTransformer {}
-@end
 
-@interface SmallerthanTwoValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanTwoValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoTwoValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoTwoValueTransformer: BaseValueTransformer {}
-@end
+#define COMPARISONTRANSFORMERS_INTERFACE(number) \
+@interface Smallerthan ## number ## ValueTransformer: SmallerthanValueTransformer {} @end \
+@interface Largerthan ## number ## alueTransformer: LargerthanValueTransformer {} @end \
+@interface Equalto ## number ## ValueTransformer: EqualtoValueTransformer {} @end \
+@interface Differentto ## number ## ValueTransformer: DifferenttoValueTransformer {} @end
 
-@interface SmallerthanThreeValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanThreeValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoThreeValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoThreeValueTransformer: BaseValueTransformer {}
-@end
 
-@interface SmallerthanFourValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanFourValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoFourValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoFourValueTransformer: BaseValueTransformer {}
-@end
 
-@interface SmallerthanFiveValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanFiveValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoFiveValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoFiveValueTransformer: BaseValueTransformer {}
-@end
+#define COMPARISONTRANSFORMERS_IMPLEMENTATION(number) \
+@implementation Smallerthan ## number ## ValueTransformer @end \
+@implementation Largerthan ## number ## alueTransformer @end \
+@implementation Equalto ## number ## ValueTransformer @end \
+@implementation Differentto ## number ## ValueTransformer @end
 
-@interface SmallerthanSixValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanSixValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoSixValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoSixValueTransformer: BaseValueTransformer {}
-@end
-
-@interface SmallerthanSevenValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanSevenValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoSevenValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoSevenValueTransformer: BaseValueTransformer {}
-@end
-
-@interface SmallerthanEightValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanEightValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoEightValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoEightValueTransformer: BaseValueTransformer {}
-@end
-
-@interface SmallerthanNineValueTransformer: BaseValueTransformer {}
-@end
-@interface LargerthanNineValueTransformer: BaseValueTransformer {}
-@end
-@interface EqualtoNineValueTransformer: BaseValueTransformer {}
-@end
-@interface DifferenttoNineValueTransformer: BaseValueTransformer {}
-@end
+COMPARISONTRANSFORMERS_INTERFACE(0)
+COMPARISONTRANSFORMERS_INTERFACE(1)
+COMPARISONTRANSFORMERS_INTERFACE(2)
+COMPARISONTRANSFORMERS_INTERFACE(3)
+COMPARISONTRANSFORMERS_INTERFACE(4)
+COMPARISONTRANSFORMERS_INTERFACE(5)
+COMPARISONTRANSFORMERS_INTERFACE(6)
+COMPARISONTRANSFORMERS_INTERFACE(7)
+COMPARISONTRANSFORMERS_INTERFACE(8)
+COMPARISONTRANSFORMERS_INTERFACE(9)
+COMPARISONTRANSFORMERS_INTERFACE(10)
+COMPARISONTRANSFORMERS_INTERFACE(11)
+COMPARISONTRANSFORMERS_INTERFACE(12)
+COMPARISONTRANSFORMERS_INTERFACE(13)
+COMPARISONTRANSFORMERS_INTERFACE(14)
+COMPARISONTRANSFORMERS_INTERFACE(15)
+COMPARISONTRANSFORMERS_INTERFACE(16)
+COMPARISONTRANSFORMERS_INTERFACE(17)
+COMPARISONTRANSFORMERS_INTERFACE(18)
+COMPARISONTRANSFORMERS_INTERFACE(19)
+COMPARISONTRANSFORMERS_INTERFACE(20)
+COMPARISONTRANSFORMERS_INTERFACE(21)
+COMPARISONTRANSFORMERS_INTERFACE(22)
+COMPARISONTRANSFORMERS_INTERFACE(23)
+COMPARISONTRANSFORMERS_INTERFACE(24)
+COMPARISONTRANSFORMERS_INTERFACE(25)
+COMPARISONTRANSFORMERS_INTERFACE(26)
+COMPARISONTRANSFORMERS_INTERFACE(27)
+COMPARISONTRANSFORMERS_INTERFACE(28)
+COMPARISONTRANSFORMERS_INTERFACE(29)
+COMPARISONTRANSFORMERS_INTERFACE(30)
+COMPARISONTRANSFORMERS_INTERFACE(31)
+COMPARISONTRANSFORMERS_INTERFACE(32)
+COMPARISONTRANSFORMERS_INTERFACE(33)
+COMPARISONTRANSFORMERS_INTERFACE(34)
+COMPARISONTRANSFORMERS_INTERFACE(35)
+COMPARISONTRANSFORMERS_INTERFACE(36)
+COMPARISONTRANSFORMERS_INTERFACE(37)
+COMPARISONTRANSFORMERS_INTERFACE(38)
+COMPARISONTRANSFORMERS_INTERFACE(39)
+COMPARISONTRANSFORMERS_INTERFACE(40)
+COMPARISONTRANSFORMERS_INTERFACE(41)
+COMPARISONTRANSFORMERS_INTERFACE(42)
+COMPARISONTRANSFORMERS_INTERFACE(43)
+COMPARISONTRANSFORMERS_INTERFACE(44)
+COMPARISONTRANSFORMERS_INTERFACE(45)
+COMPARISONTRANSFORMERS_INTERFACE(46)
+COMPARISONTRANSFORMERS_INTERFACE(47)
+COMPARISONTRANSFORMERS_INTERFACE(48)
+COMPARISONTRANSFORMERS_INTERFACE(49)
+COMPARISONTRANSFORMERS_INTERFACE(50)
+COMPARISONTRANSFORMERS_INTERFACE(51)
+COMPARISONTRANSFORMERS_INTERFACE(52)
+COMPARISONTRANSFORMERS_INTERFACE(53)
+COMPARISONTRANSFORMERS_INTERFACE(54)
+COMPARISONTRANSFORMERS_INTERFACE(55)
+COMPARISONTRANSFORMERS_INTERFACE(56)
+COMPARISONTRANSFORMERS_INTERFACE(57)
+COMPARISONTRANSFORMERS_INTERFACE(58)
+COMPARISONTRANSFORMERS_INTERFACE(59)
+COMPARISONTRANSFORMERS_INTERFACE(60)
+COMPARISONTRANSFORMERS_INTERFACE(61)
+COMPARISONTRANSFORMERS_INTERFACE(62)
+COMPARISONTRANSFORMERS_INTERFACE(63)
+COMPARISONTRANSFORMERS_INTERFACE(64)
+COMPARISONTRANSFORMERS_INTERFACE(65)
+COMPARISONTRANSFORMERS_INTERFACE(66)
+COMPARISONTRANSFORMERS_INTERFACE(67)
+COMPARISONTRANSFORMERS_INTERFACE(68)
+COMPARISONTRANSFORMERS_INTERFACE(69)
+COMPARISONTRANSFORMERS_INTERFACE(70)
+COMPARISONTRANSFORMERS_INTERFACE(71)
+COMPARISONTRANSFORMERS_INTERFACE(72)
+COMPARISONTRANSFORMERS_INTERFACE(73)
+COMPARISONTRANSFORMERS_INTERFACE(74)
+COMPARISONTRANSFORMERS_INTERFACE(75)
+COMPARISONTRANSFORMERS_INTERFACE(76)
+COMPARISONTRANSFORMERS_INTERFACE(77)
+COMPARISONTRANSFORMERS_INTERFACE(78)
+COMPARISONTRANSFORMERS_INTERFACE(79)
+COMPARISONTRANSFORMERS_INTERFACE(80)
+COMPARISONTRANSFORMERS_INTERFACE(81)
+COMPARISONTRANSFORMERS_INTERFACE(82)
+COMPARISONTRANSFORMERS_INTERFACE(83)
+COMPARISONTRANSFORMERS_INTERFACE(84)
+COMPARISONTRANSFORMERS_INTERFACE(85)
+COMPARISONTRANSFORMERS_INTERFACE(86)
+COMPARISONTRANSFORMERS_INTERFACE(87)
+COMPARISONTRANSFORMERS_INTERFACE(88)
+COMPARISONTRANSFORMERS_INTERFACE(89)
+COMPARISONTRANSFORMERS_INTERFACE(90)
+COMPARISONTRANSFORMERS_INTERFACE(91)
+COMPARISONTRANSFORMERS_INTERFACE(92)
+COMPARISONTRANSFORMERS_INTERFACE(93)
+COMPARISONTRANSFORMERS_INTERFACE(94)
+COMPARISONTRANSFORMERS_INTERFACE(95)
+COMPARISONTRANSFORMERS_INTERFACE(96)
+COMPARISONTRANSFORMERS_INTERFACE(97)
+COMPARISONTRANSFORMERS_INTERFACE(98)
+COMPARISONTRANSFORMERS_INTERFACE(99)

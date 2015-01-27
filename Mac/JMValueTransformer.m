@@ -14,9 +14,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @implementation BaseValueTransformer
 + (BOOL)allowsReverseTransformation { return NO; }
 + (Class)transformedValueClass { return [NSNumber class]; }
++ (void)initialize
+{
+	Class class = [self class];
+	NSString *className = NSStringFromClass(class);
+	id obj = [[class alloc] init];
+
+	[NSValueTransformer setValueTransformer:obj forName:className];
+#if ! __has_feature(objc_arc)
+	[obj release];
+#endif
+}
 @end
-
-
 
 
 @implementation OddValueTransformer
@@ -27,119 +36,141 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @end
 
 
-@implementation SmallerthanOneValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 1); }
-@end
-@implementation LargerthanOneValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 1); }
-@end
-@implementation EqualtoOneValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 1); }
-@end
-@implementation DifferenttoOneValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 1); }
+
+@interface NumericComparisonValueTransformer ()
+{
+@protected
+	NSInteger comparisonValue;
+}
 @end
 
-@implementation SmallerthanTwoValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 2); }
-@end
-@implementation LargerthanTwoValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 2); }
-@end
-@implementation EqualtoTwoValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 2); }
-@end
-@implementation DifferenttoTwoValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 2); }
-@end
-
-@implementation SmallerthanThreeValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 3); }
-@end
-@implementation LargerthanThreeValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 3); }
-@end
-@implementation EqualtoThreeValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 3); }
-@end
-@implementation DifferenttoThreeValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 3); }
+@implementation NumericComparisonValueTransformer
+- (id)init
+{
+	if ((self = [super init]))
+	{
+		NSString *className = NSStringFromClass([self class]);
+		className = [className stringByTrimmingLeadingCharactersInSet:[NSCharacterSet letterCharacterSet]];
+		className = [className stringByTrimmingTrailingCharactersInSet:[NSCharacterSet letterCharacterSet]];
+		comparisonValue = className.intValue;
+	}
+	return self;
+}
 @end
 
-@implementation SmallerthanFourValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 4); }
+
+@implementation SmallerthanValueTransformer
+- (id)transformedValue:(id)value { return @([value intValue] < comparisonValue); }
 @end
-@implementation LargerthanFourValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 4); }
+@implementation LargerthanValueTransformer
+- (id)transformedValue:(id)value { return @([value intValue] > comparisonValue); }
 @end
-@implementation EqualtoFourValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 4); }
+@implementation EqualtoValueTransformer
+- (id)transformedValue:(id)value { return @([value intValue] == comparisonValue); }
 @end
-@implementation DifferenttoFourValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 4); }
+@implementation DifferenttoValueTransformer
+- (id)transformedValue:(id)value { return @([value intValue] != comparisonValue); }
 @end
 
-@implementation SmallerthanFiveValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 5); }
-@end
-@implementation LargerthanFiveValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 5); }
-@end
-@implementation EqualtoFiveValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 5); }
-@end
-@implementation DifferenttoFiveValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 5); }
-@end
 
-@implementation SmallerthanSixValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 6); }
-@end
-@implementation LargerthanSixValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 6); }
-@end
-@implementation EqualtoSixValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 6); }
-@end
-@implementation DifferenttoSixValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 6); }
-@end
 
-@implementation SmallerthanSevenValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 7); }
-@end
-@implementation LargerthanSevenValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 7); }
-@end
-@implementation EqualtoSevenValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 7); }
-@end
-@implementation DifferenttoSevenValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 7); }
-@end
-
-@implementation SmallerthanEightValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 8); }
-@end
-@implementation LargerthanEightValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 8); }
-@end
-@implementation EqualtoEightValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 8); }
-@end
-@implementation DifferenttoEightValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 8); }
-@end
-
-@implementation SmallerthanNineValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < 9); }
-@end
-@implementation LargerthanNineValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > 9); }
-@end
-@implementation EqualtoNineValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == 9); }
-@end
-@implementation DifferenttoNineValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != 9); }
-@end
+COMPARISONTRANSFORMERS_IMPLEMENTATION(0)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(1)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(2)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(3)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(4)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(5)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(6)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(7)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(8)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(9)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(10)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(11)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(12)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(13)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(14)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(15)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(16)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(17)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(18)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(19)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(20)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(21)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(22)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(23)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(24)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(25)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(26)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(27)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(28)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(29)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(30)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(31)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(32)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(33)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(34)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(35)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(36)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(37)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(38)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(39)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(40)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(41)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(42)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(43)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(44)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(45)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(46)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(47)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(48)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(49)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(50)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(51)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(52)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(53)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(54)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(55)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(56)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(57)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(58)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(59)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(60)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(61)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(62)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(63)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(64)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(65)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(66)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(67)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(68)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(69)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(70)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(71)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(72)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(73)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(74)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(75)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(76)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(77)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(78)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(79)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(80)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(81)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(82)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(83)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(84)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(85)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(86)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(87)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(88)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(89)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(90)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(91)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(92)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(93)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(94)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(95)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(96)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(97)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(98)
+COMPARISONTRANSFORMERS_IMPLEMENTATION(99)
