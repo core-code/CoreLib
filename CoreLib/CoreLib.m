@@ -31,6 +31,13 @@ NSWorkspace *workspace;
 NSProcessInfo *processInfo;
 #endif
 
+
+__attribute__((noreturn)) void exceptionHandler(NSException *exception)
+{
+	alertfeedbackfatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
+}
+
+
 @implementation CoreLib
 
 @dynamic appCrashLogs, appID, appBuild, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL
@@ -72,6 +79,11 @@ NSProcessInfo *processInfo;
 	assert(!isSandbox);
 #endif
 #endif
+
+#ifndef DONT_CRASH_ON_EXCEPTIONS
+	NSSetUncaughtExceptionHandler(&exceptionHandler);
+#endif
+
 	return self;
 }
 

@@ -81,6 +81,9 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSRange)calculateExtentsOfValues:(ObjectInIntOutBlock)block
 {
+    if (!self.count)
+        return NSMakeRange(0, 0);
+    
 	int min = INT_MAX, max = INT_MIN;
 
 	for (NSObject *o in self)
@@ -346,7 +349,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	id object = self[fromIndex];
 	[self removeObjectAtIndex:fromIndex];
-	[self insertObject:object atIndex:(fromIndex < toIndex) ? toIndex - 1 : toIndex];
+
+	if (toIndex < self.count)
+		[self insertObject:object atIndex:toIndex];
+	else
+		[self addObject:object];
 }
 
 - (void)removeObjectPassingTest:(ObjectInIntOutBlock)block
@@ -357,7 +364,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		return (BOOL)res;
 	}];
 
-	[self removeObjectAtIndex:idx];
+	if (idx != NSNotFound)
+		[self removeObjectAtIndex:idx];
 }
 
 - (NSArray *)immutableObject
@@ -846,7 +854,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isFloatNumber, data;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isFloatNumber, data, firstCharacter, lastCharacter;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
@@ -880,6 +888,21 @@ static CONST_KEY(CoreCodeAssociatedValue)
     BOOL alias = CFBooleanGetValue(aliasBool);
 
     return alias && success;
+}
+
+- (unichar)firstCharacter
+{
+	if (self.length)
+		return [self characterAtIndex:0];
+	return 0;
+}
+
+- (unichar)lastCharacter
+{
+	NSUInteger len = self.length;
+	if (len)
+		return [self characterAtIndex:len-1];
+	return 0;
 }
 
 - (NSString *)fileAliasTarget

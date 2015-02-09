@@ -231,6 +231,9 @@
 // string things
 @property (readonly, nonatomic) NSStringArray *lines;
 @property (readonly, nonatomic) NSStringArray *words;
+@property (readonly, nonatomic) unichar firstCharacter;
+@property (readonly, nonatomic) unichar lastCharacter;
+
 @property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
 @property (readonly, nonatomic) NSString *trimmedOfWhitespace;
 @property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;

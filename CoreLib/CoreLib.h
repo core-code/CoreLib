@@ -290,7 +290,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 // convenience macros
 #define PROPERTY_STR(p)		NSStringFromSelector(@selector(p))
-#define LOGFUNC				NSLog(@"%s", __PRETTY_FUNCTION__)
+#define LOGFUNC				NSLog(@"%s (%p)", __PRETTY_FUNCTION__, self)
 #define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
 #define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
 #define LOG(x)				NSLog(@"%@", [(x) description]);
