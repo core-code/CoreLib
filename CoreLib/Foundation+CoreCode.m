@@ -11,10 +11,20 @@
 
 
 #import "Foundation+CoreCode.h"
-#import <objc/runtime.h>
+
+#if __has_feature(modules)
 #ifdef USE_SECURITY
-	#include <CommonCrypto/CommonDigest.h>
+#include <CommonCrypto/CommonDigest.h>
 #endif
+@import ObjectiveC.runtime;
+#else
+#ifdef USE_SECURITY
+#include <CommonCrypto/CommonDigest.h>
+#endif
+#import <objc/runtime.h>
+#endif
+
+
 #ifdef USE_SNAPPY
 	#import <snappy/snappy-c.h>
 #endif
@@ -854,7 +864,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isFloatNumber, data, firstCharacter, lastCharacter;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
@@ -888,6 +898,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
     BOOL alias = CFBooleanGetValue(aliasBool);
 
     return alias && success;
+}
+
+- (NSRange)fullRange
+{
+	return NSMakeRange(0, self.length);
 }
 
 - (unichar)firstCharacter
@@ -970,20 +985,25 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound;
 }
 
+- (BOOL)isIntegerNumberOnly
+{
+	return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location == NSNotFound;
+}
+
 - (BOOL)isFloatNumber
 {
 	static NSCharacterSet *cs;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^
+
+	ONCE(^
 	{
-		NSMutableCharacterSet *tmp = [NSMutableCharacterSet decimalDigitCharacterSet];
-		[tmp addCharactersInString:@",."];
+		NSMutableCharacterSet *tmp = [NSMutableCharacterSet characterSetWithCharactersInString:@",."];
 		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]];
 		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator]];
 		cs =  tmp.immutableObject;
 	});
 
-	return [self rangeOfCharacterFromSet:cs].location != NSNotFound;
+	return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) &&
+			([self rangeOfCharacterFromSet:cs].location != NSNotFound);
 }
 
 - (BOOL)isWriteablePath
@@ -1013,8 +1033,18 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	NSString *local = portions[0];
 	NSString *domain = portions[1];
 
-	NSCharacterSet *localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
-	NSCharacterSet *domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
+	if (![domain contains:@"."])
+		return FALSE;
+
+	static NSCharacterSet *localValid;
+	static NSCharacterSet *domainValid;
+
+
+	ONCE(^
+	{
+		localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
+		domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
+	});
 
 	if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
 		return NO;
@@ -1162,6 +1192,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
     return (([self length] <= maximumLength) ? self : [self substringToIndex:maximumLength]);
 }
 
+
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
 {
 	NSString *ret = self;
@@ -1171,38 +1202,81 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
 			continue;
 		ret = [ret stringByReplacingOccurrencesOfString:key
-                                             withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
+											 withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
 	}
 
-    BOOL replaced;
-    do
-    {
-        replaced = FALSE;
-        for (NSString *key in replacements)
-        {
-            if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
-                continue;
-            NSString *tmp = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]
+	BOOL replaced;
+	do
+	{
+		replaced = FALSE;
+		for (NSString *key in replacements)
+		{
+			if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
+				continue;
+			NSString *tmp = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]
 														   withString:replacements[key]];
 
-            if (![tmp isEqualToString:ret])
-            {
-                ret = tmp;
-                replaced = YES;
-            }
-        }
-    } while (replaced);
+			if (![tmp isEqualToString:ret])
+			{
+				ret = tmp;
+				replaced = YES;
+			}
+		}
+	} while (replaced);
 
 	return ret;
 }
 
-- (NSString *)titlecaseString
+- (NSString *)capitalizedStringWithUppercaseWords:(NSStringArray *)uppercaseWords
 {
-	NSString *cap = [self capitalizedString];
-	NSString *res = [cap stringByReplacingMultipleStrings:@{@" A " : @" a ", @" An " : @" an ", @" And " : @" and ", @" As " : @" as ", @" At " : @" at ", @" But " : @" but ", @" By " : @" by ", @" En " : @" en ", @" For " : @" for ", @" If " : @" if ", @" In " : @" in ", @" Of " : @" of ", @" On " : @" on ", @" Or " : @" or ", @" Nor " : @" nor ", @" The " : @" the ", @" To " : @" to ", @" V " : @" v ", @" Via " : @" via ", @" Vs " : @" vs ", @" Up " : @" up ", @" It " : @" it "}];
+	NSString *res = [self capitalizedString];
 
+	for (NSString *word in uppercaseWords)
+	{
+		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\W)", word.capitalizedString)
+											 withString:makeString(@"$1%@$2", word.uppercaseString)
+												options:NSRegularExpressionSearch range: res.fullRange];
+
+	}
+	for (NSString *word in uppercaseWords)
+	{
+		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\Z)", word.capitalizedString)
+											 withString:makeString(@"$1%@", word.uppercaseString)
+												options:NSRegularExpressionSearch range:res.fullRange];
+
+	}
 
 	return res;
+}
+
+- (NSString *)titlecaseStringWithLowercaseWords:(NSStringArray *)lowercaseWords andUppercaseWords:(NSStringArray *)uppercaseWords
+{
+	NSString *res = [self capitalizedStringWithUppercaseWords:uppercaseWords];
+
+	for (NSString *word in lowercaseWords)
+	{
+		res = [res stringByReplacingOccurrencesOfString:makeString(@"([^:,;,-]\\s)%@(\\s)", word.capitalizedString)
+											 withString:makeString(@"$1%@$2", word.lowercaseString)
+												options:NSRegularExpressionSearch range: res.fullRange];
+		
+	}
+
+//	for (NSString *word in lowercaseWords)
+//	{
+//		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\s)%@(\\Z)", word.capitalizedString)
+//											 withString:makeString(@"$1%@", word.lowercaseString)
+//												options:NSRegularExpressionSearch range: res.fullRange];
+//
+//	}
+	
+	return res;
+}
+
+- (NSString *)titlecaseString
+{
+	NSArray *words = @[@"a", @"an", @"the", @"and", @"but", @"for", @"nor", @"or", @"so", @"yet", @"at", @"by", @"for", @"in", @"of", @"off", @"on", @"out", @"to", @"up", @"via", @"to", @"c", @"ca", @"etc", @"e.g.", @"i.e.", @"vs.", @"vs", @"v", @"down", @"from", @"into", @"like", @"near", @"onto", @"over", @"than", @"with", @"upon"];
+
+	return [self titlecaseStringWithLowercaseWords:words.id andUppercaseWords:nil];
 }
 
 - (NSString *)propercaseString

@@ -12,15 +12,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 typedef enum
 {
-	kSuccess = 0,
-	kScriptingBridgeFailure,
-	kCGIFailure,
-	kMailCoreFailure,
-	kToNilFailure,
-	kFromNilFailure,
-	kBlockedMail,
-	kBlockedHost,
-	kUnreachableHost
+	kSMTPSuccess = 0,
+	kSMTPScriptingBridgeFailure,
+	kSMTPCGIFailure,
+	kSMTPMailCoreFailure,
+	kSMTPToNilFailure,
+	kSMTPFromNilFailure,
+	kSMTPBlockedMail,
+	kSMTPBlockedHost,
+	kSMTPUnreachableHost
 } smtpResult;
 
 @interface JMEmailSender : NSObject { }

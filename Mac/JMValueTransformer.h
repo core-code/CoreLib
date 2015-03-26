@@ -9,6 +9,11 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
+@interface ValidEmailValueTransformer: NSValueTransformer {} @end
+
+
+
 @interface BaseValueTransformer : NSValueTransformer {}@end
 
 @interface OddValueTransformer: BaseValueTransformer {} @end
@@ -24,7 +29,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define COMPARISONTRANSFORMERS_INTERFACE(number) \
 @interface Smallerthan ## number ## ValueTransformer: SmallerthanValueTransformer {} @end \
-@interface Largerthan ## number ## alueTransformer: LargerthanValueTransformer {} @end \
+@interface Largerthan ## number ## ValueTransformer: LargerthanValueTransformer {} @end \
 @interface Equalto ## number ## ValueTransformer: EqualtoValueTransformer {} @end \
 @interface Differentto ## number ## ValueTransformer: DifferenttoValueTransformer {} @end
 
@@ -32,7 +37,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define COMPARISONTRANSFORMERS_IMPLEMENTATION(number) \
 @implementation Smallerthan ## number ## ValueTransformer @end \
-@implementation Largerthan ## number ## alueTransformer @end \
+@implementation Largerthan ## number ## ValueTransformer @end \
 @implementation Equalto ## number ## ValueTransformer @end \
 @implementation Differentto ## number ## ValueTransformer @end
 

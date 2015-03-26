@@ -10,7 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 #import "JMLoginItemManager.h"
+#if __has_feature(modules)
+@import ServiceManagement;
+#else
 #import <ServiceManagement/ServiceManagement.h>
+#endif
 
 #ifndef SANDBOX
 #define SANDBOX 0
@@ -114,7 +118,8 @@ BOOL IsLoginItem_LS(void)
 			{
 				CFURLRef url = NULL;
 				OSStatus status = LSSharedFileListItemResolve((BRIDGE LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, &url, NULL);
-				
+				// TODO: replace with LSSHaredFileListItemCopyResolvedURL
+
 				if (status == noErr)
 				{
 					//asl_NSLog_debug(@"isLoginItem: current login item: %@", [url path]);
@@ -238,6 +243,7 @@ void RemoveLoginItem_LS(void)
 			for (id item in array)
 			{
 				CFURLRef url;
+// TODO: replace with LSSHaredFileListItemCopyResolvedURL
 				OSStatus status = LSSharedFileListItemResolve((BRIDGE LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, &url, NULL);
 				
 				if (status == noErr)

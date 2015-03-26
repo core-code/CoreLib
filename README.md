@@ -80,9 +80,10 @@ some features of CoreLib require linking additional frameworks and are therefore
 	#define USE_SYSTEMCONFIGURATION 1 // if you link SystemConfiguration.framework
 	#define USE_IOKIT 1 // if you link IOKit.framework
 	#define USE_DISKARBITRATION 1 // if you link DiskArbitration.framework
-	#define USE_SNAPPY 1 // if you link Snappy.framework
-	#define USE_MAILCORE 1 // if you link MailCore.framework
+
 	#define USE_APPLEMAIL 1 // if you have the ScriptingDefinition for Mail.app 
 
+	#define USE_SNAPPY 1 // if you link Snappy.framework
+	#define USE_MAILCORE 1 // if you link MailCore.framework
 additionally some parts of CoreLib require setting the SANDBOX #define to indicate whether your app is sandbox
 	

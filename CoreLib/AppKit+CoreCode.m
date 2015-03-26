@@ -14,8 +14,11 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
+#if __has_feature(modules)
+@import ObjectiveC.runtime;
+#else
 #import <objc/runtime.h>
-
+#endif
 
 
 

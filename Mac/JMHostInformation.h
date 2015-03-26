@@ -13,24 +13,44 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #define kDiskNameKey                        @"DiskName"
 #define kDiskNumberKey                      @"DiskNumber"
+typedef enum
+{
+	kSMARTStatusUnknown = 0,
+	kSMARTStatusError = 1,
+	kSMARTStatusOK = 2
+} smartStatusEnum;
+
 
 @interface JMHostInformation : NSObject
 
 + (BOOL)isUserAdmin;
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
+
++ (NSString *)machineType;
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_7
++ (NSString *)nameForDevice:(NSInteger)deviceNumber;
++ (NSString *)bsdPathForVolume:(NSString *)volume;
+#else
+#ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
++ (NSString *)nameForDevice:(NSInteger)deviceNumber;
++ (NSNumber *)bsdNumberForVolume:(NSString *)volume;
+#endif
+#endif
+
+
 #ifdef USE_SYSTEMCONFIGURATION // requires linking SystemConfiguration.framework
 + (NSString *)ipName;
 #endif
-+ (NSString *)machineType;
-
-+ (NSString *)nameForDevice:(NSInteger)deviceNumber;
-+ (NSString *)bsdPathForVolume:(NSString *)volume;
 #ifdef USE_IOKIT // requires linking IOKit.framework
 + (NSString *)macAddress;
 + (BOOL)runsOnBattery;
++ (smartStatusEnum)getDiskSMARTStatus:(int)disk;
++ (NSDictionary *)getDiskSMARTAttributes:(int)disk;
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices;
++ (NSArray *)allHarddisks;
 #endif
 #endif
 

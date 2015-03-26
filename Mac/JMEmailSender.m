@@ -81,7 +81,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 		asl_NSLog_debug(@"going to send");
 		if (validAddressFound != TRUE)
-			return kToNilFailure;
+			return kSMTPToNilFailure;
 		
 		
 		if ( [attachmentFilePath length] > 0 ) {
@@ -132,10 +132,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	{
 		asl_NSLog(ASL_LEVEL_WARNING, @"sendMailWithScriptingBridge, exception %@", [e description]);
 
-		return kScriptingBridgeFailure;
+		return kSMTPScriptingBridgeFailure;
 	}
 
-	return kScriptingBridgeFailure;  // just to silence the compiler
+	return kSMTPScriptingBridgeFailure;  // just to silence the compiler
 }
 #endif
 
@@ -177,7 +177,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		}
 
 		if (!validAddressFound)
-			return kToNilFailure;
+			return kSMTPToNilFailure;
 
 		CTCoreMessage *msg = [[CTCoreMessage alloc] init];
 
@@ -190,7 +190,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 		[msg release];
 
-		return kSuccess;
+		return kSMTPSuccess;
 	}
 	@catch (NSException *e)
 	{
@@ -199,7 +199,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		return kMailCoreFailure;
 	}
 
-	return kMailCoreFailure; // just to silence the compiler
+	return kSMTPMailCoreFailure; // just to silence the compiler
 }
 #endif
 @end

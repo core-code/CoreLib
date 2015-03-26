@@ -197,6 +197,7 @@
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
+@property (readonly, nonatomic) NSRange fullRange;
 
 // path string to url
 @property (readonly, nonatomic) NSURL *fileURL;
@@ -249,6 +250,7 @@
 @property (readonly, nonatomic) NSString *titlecaseString;
 @property (readonly, nonatomic) NSString *propercaseString;
 @property (readonly, nonatomic) BOOL isIntegerNumber;
+@property (readonly, nonatomic) BOOL isIntegerNumberOnly;
 @property (readonly, nonatomic) BOOL isFloatNumber;
 @property (readonly, nonatomic) BOOL isValidEmail;
 
@@ -270,6 +272,8 @@
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
 
+- (NSString *)capitalizedStringWithUppercaseWords:(NSStringArray *)uppercaseWords;
+- (NSString *)titlecaseStringWithLowercaseWords:(NSStringArray *)lowercaseWords andUppercaseWords:(NSStringArray *)uppercaseWords;
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet;
 - (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet;

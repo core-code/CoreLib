@@ -10,7 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 #import "JMVisibilityManager.h"
+#if __has_feature(modules)
+@import Carbon;
+#else
 #import <Carbon/Carbon.h>
+#endif
 
 static CONST_KEY(JMVisibilityManagerValue)
 
@@ -51,6 +55,9 @@ static CONST_KEY(JMVisibilityManagerValue)
 		visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
 		
 		_visibilitySetting = kVisibleNowhere;
+
+		_makeMenubarIconsDarkTemplate = YES;
+
 
 		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
 
@@ -111,6 +118,9 @@ static CONST_KEY(JMVisibilityManagerValue)
 
 - (void)setMenubarIcon:(NSImage *)newMenubarIcon
 {
+	if (_makeMenubarIconsDarkTemplate)
+		[newMenubarIcon setTemplate:YES];
+
 	_menubarIcon = newMenubarIcon;
 	
 	if (_visibilitySetting > 1)
@@ -162,9 +172,8 @@ static CONST_KEY(JMVisibilityManagerValue)
 
 - (void)_transform:(BOOL)foreground
 {
-	ProcessSerialNumber psn;
-	GetCurrentProcess(&psn);
+	ProcessSerialNumber psn = {0, kCurrentProcess};
 	TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
-	SetFrontProcess(&psn);
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 @end

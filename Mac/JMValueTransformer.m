@@ -11,6 +11,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import "JMValueTransformer.h"
 
+
+@implementation ValidEmailValueTransformer
+
++ (BOOL)allowsReverseTransformation { return NO; }
++ (Class)transformedValueClass { return [NSNumber class]; }
+
+- (id)transformedValue:(id)value
+{
+	if (!value || ![value respondsToSelector:@selector(isValidEmail)] || (![(NSString *) value isValidEmail]))
+		return @FALSE;
+
+	return @TRUE;
+}
+@end
+
+
+
 @implementation BaseValueTransformer
 + (BOOL)allowsReverseTransformation { return NO; }
 + (Class)transformedValueClass { return [NSNumber class]; }

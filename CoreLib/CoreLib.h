@@ -205,11 +205,12 @@ extern NSProcessInfo *processInfo;
 // alert convenience
 NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *choices, NSInteger *result); // alert with popup button for selection of choice
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
-void alertfeedbackfatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
 void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
+void alert_feedback_fatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
+void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 
 
 // obj creation convenience
@@ -290,10 +291,6 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 // convenience macros
 #define PROPERTY_STR(p)		NSStringFromSelector(@selector(p))
-#define LOGFUNC				NSLog(@"%s (%p)", __PRETTY_FUNCTION__, self)
-#define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
-#define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
-#define LOG(x)				NSLog(@"%@", [(x) description]);
 #define OBJECT_OR(x,y)		((x) ? (x) : (y))
 #define STRING_OR(x, y)		(((x) && ([x length])) ? (x) : (y))
 #define VALID_STR(x)		(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
@@ -312,10 +309,29 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define MAX3(x,y,z)			(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)			(MIN(MIN((x),(y)),(z)))
 
+// log macros
+#ifdef DEBUG
+#define NSDebugLog(fmt, ...) {NSLog(fmt, ## __VA_ARGS__);}
+#else
+#define NSDebugLog(fmt, ...) {;}
+#endif
+#define LOGFUNC				NSLog(@"%s (%p)", __PRETTY_FUNCTION__, self)
+#define LOGFUNCPARAM(x)		NSLog(@"%s (%p) [%@]", __PRETTY_FUNCTION__, self, [(x) description])
+#define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
+#define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
+#define LOG(x)				NSLog(@"%@", [(x) description]);
+#define LOGFUNCDBG			NSDebugLog(@"%s (%p)", __PRETTY_FUNCTION__, self)
+#define LOGFUNCPARAMDBG(x)	NSDebugLog(@"%s (%p) [%@]", __PRETTY_FUNCTION__, self, [(x) description])
+#define LOGSUCCDBG			NSDebugLog(@"success %s %d", __FILE__, __LINE__)
+#define LOGFAILDBG			NSDebugLog(@"failure %s %d", __FILE__, __LINE__)
+#define LOGDBG(x)			NSDebugLog(@"%@", [(x) description]);
+
+// track usages and questions per versions or per app
 #define kUsagesThisVersionKey makeString(@"corelib_%@_usages", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 #define kAskedThisVersionKey makeString(@"corelib_%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
 #define kUsagesAllVersionsKey @"corelib_usages"
 #define kAskedAllVersionsKey @"corelib_asked"
+
 
 
 // vendor information only used for [cc openURL:(openChoice)choice]

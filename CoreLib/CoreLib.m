@@ -32,11 +32,12 @@ NSProcessInfo *processInfo;
 #endif
 
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
-	alertfeedbackfatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
+	alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
 }
-
+#endif
 
 @implementation CoreLib
 
@@ -78,10 +79,21 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #else
 	assert(!isSandbox);
 #endif
+
+	if (![[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+		NSLog(@"Warning: info.plist key MacupdateProductPage not properly set");
+
+	if ([[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
+		NSLog(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
+
+	if (![[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+		NSLog(@"Warning: info.plist key StoreProductPage not properly set");
 #endif
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #ifndef DONT_CRASH_ON_EXCEPTIONS
 	NSSetUncaughtExceptionHandler(&exceptionHandler);
+#endif
 #endif
 
 	return self;
@@ -97,7 +109,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return self.prefsPath.fileURL;
 }
 
-- (NSArray *)appCrashLogs // doesn't do anything in sandbox?
+- (NSArray *)appCrashLogs // doesn't do anything in sandbox!
 {
 	NSStringArray *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
@@ -318,9 +330,9 @@ NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 
-void alertfeedbackfatal(NSString *usermsg, NSString *details)
+void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 {
-    dispatch_block_t block = ^__attribute__((noreturn))
+    dispatch_block_t block = ^
 	{
         static const int maxLen = 400;
 
@@ -330,7 +342,7 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
             
 		if (NSRunAlertPanel(@"Fatal Error", @"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", @"Send to support", @"Quit", nil, usermsg, visibleDetails) == NSOKButton)
 		{
-			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ %@",
+			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@%@",
 											  cc.appName,
 											  cc.appVersionString,
 											  cc.appName,
@@ -342,19 +354,29 @@ void alertfeedbackfatal(NSString *usermsg, NSString *details)
 			
 			[mailtoLink.escaped.URL open];
 		}
-		exit(1);
+
+		if (fatal)
+			exit(1);
     };
     
-    if ([NSThread currentThread] == [NSThread mainThread])
-        block();
-    else
-        dispatch_sync_main(block);
 
+	dispatch_sync_main(block);
+}
+
+void alert_feedback_fatal(NSString *usermsg, NSString *details)
+{
+	alert_feedback(usermsg, details, YES);
 	exit(1);
+}
+
+void alert_feedback_nonfatal(NSString *usermsg, NSString *details)
+{
+	alert_feedback(usermsg, details, NO);
 }
 
 NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *choices, NSInteger *result)
 {
+	// TODO: replace with alertWithMessageText with init
 	NSAlert *alert = [NSAlert alertWithMessageText:prompt
 									 defaultButton:[buttons safeObjectAtIndex:0]
 								   alternateButton:[buttons safeObjectAtIndex:1]
@@ -378,6 +400,7 @@ NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *cho
 
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result)
 {
+	// TODO: replace with alertWithMessageText with init
 	NSAlert *alert = [NSAlert alertWithMessageText:prompt
                                      defaultButton:[buttons safeObjectAtIndex:0]
                                    alternateButton:[buttons safeObjectAtIndex:1]
@@ -397,6 +420,7 @@ NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result)
 	return button;
 }
 
+// TODO: replace with NSRunAlertPanel with NSAlert
 
 NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
@@ -538,8 +562,10 @@ void dispatch_async_back(dispatch_block_t block)
 
 void dispatch_sync_main(dispatch_block_t block)
 {
-	assert([NSThread currentThread] != [NSThread mainThread]); // this would deadlock
-	dispatch_sync(dispatch_get_main_queue(), block);
+	if ([NSThread currentThread] == [NSThread mainThread])
+		block();	// this would deadlock when performed with dispatch_sync
+	else
+		dispatch_sync(dispatch_get_main_queue(), block);
 }
 
 void dispatch_sync_back(dispatch_block_t block)
@@ -548,8 +574,13 @@ void dispatch_sync_back(dispatch_block_t block)
 }
 
 // private
+#if __has_feature(modules)
+@import Darwin.POSIX.sys.types;
+@import Darwin.sys.sysctl;
+#else
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#endif
 NSString *_machineType()
 {
 	char modelBuffer[256];

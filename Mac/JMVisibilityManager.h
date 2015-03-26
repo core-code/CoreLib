@@ -20,6 +20,7 @@ typedef enum
 
 @interface VisibilityManager : NSObject
 
+@property (assign, nonatomic) BOOL makeMenubarIconsDarkTemplate;
 @property (assign, nonatomic) visibilitySettingEnum visibilitySetting;
 @property (strong, nonatomic) NSImage *dockIcon;
 @property (strong, nonatomic) NSImage *menubarIcon;
