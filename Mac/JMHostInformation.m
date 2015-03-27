@@ -995,7 +995,7 @@ NSString *_machineType();
 					}
 				}
 
-				if (found) // new disk
+				if (!found) // new disk
 				{
 					BOOL foundBacking = false;
 
