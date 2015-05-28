@@ -14,11 +14,14 @@
 
 
 
+
 @interface NSArray (CoreCode)
 
+@property (readonly, nonatomic) NSArray *flattenedArray;
 @property (readonly, nonatomic) NSArray *reverseArray;
 @property (readonly, nonatomic) NSMutableArray *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
+@property (readonly, nonatomic) NSData *XMLData;
 #if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
@@ -38,8 +41,8 @@
 - (NSArray *)sortedArrayByKey:(NSString *)key;
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
 - (BOOL)contains:(id)object;
-- (CGRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block;
-- (NSRange)calculateExtentsOfValues:(ObjectInIntOutBlock)block;
+- (CCIntRange2D)calculateExtentsOfPoints:(ObjectInPointOutBlock)block;
+- (CCIntRange1D)calculateExtentsOfValues:(ObjectInIntOutBlock)block;
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -134,6 +137,7 @@
 #if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
+@property (readonly, nonatomic) NSData *XMLData;
 @property (readonly, nonatomic) NSMutableDictionary *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
 - (NSDictionary *)dictionaryByRemovingKey:(NSString *)key;
@@ -238,6 +242,7 @@
 @property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
 @property (readonly, nonatomic) NSString *trimmedOfWhitespace;
 @property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;
+@property (readonly, nonatomic) NSString *unescaped; 
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
 @property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
@@ -282,6 +287,7 @@
 - (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth;
 #endif
 
+- (NSString *)removed:(NSString *)stringToRemove;
 
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
@@ -316,6 +322,7 @@
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) NSURLRequest *request;
+@property (readonly, nonatomic) NSMutableURLRequest *mutableRequest;
 @property (readonly, nonatomic) BOOL isWriteablePath;
 // url string download
 @property (readonly, nonatomic) NSData *download;

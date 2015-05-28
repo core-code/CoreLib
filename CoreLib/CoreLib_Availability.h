@@ -13,6 +13,10 @@
 #error must include before Cocoa/Foundation/ObjCRuntime
 #endif
 
+#if __has_feature(modules)
+#warning DOES NOT WORK WITH MODULES
+#else
+
 #import <Foundation/NSObjCRuntime.h>
 
 #ifndef MAC_OS_X_VERSION_MIN_REQUIRED
@@ -51,3 +55,4 @@
 #define NS_AVAILABLE(_mac, ...) AVAILABLE_MAC_OS_X_VERSION_##_mac##_AND_LATER
 
 #pragma clang diagnostic pop
+#endif

@@ -24,6 +24,34 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		B90E8DF31B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */; };
+		B90E8DF41B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */; };
+		B90E8DF51B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */; };
+		B90E8DF61B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */; };
+		B90E8DF71B1787B1007C0FB4 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDC1B1787B1007C0FB4 /* JMClickableImageView.m */; };
+		B90E8DF81B1787B1007C0FB4 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDC1B1787B1007C0FB4 /* JMClickableImageView.m */; };
+		B90E8DF91B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDE1B1787B1007C0FB4 /* JMCorrectTimer.m */; };
+		B90E8DFA1B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDE1B1787B1007C0FB4 /* JMCorrectTimer.m */; };
+		B90E8DFB1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE01B1787B1007C0FB4 /* JMCrashReporter.m */; };
+		B90E8DFC1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE01B1787B1007C0FB4 /* JMCrashReporter.m */; };
+		B90E8DFD1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE21B1787B1007C0FB4 /* JMDocklessApplication.m */; };
+		B90E8DFE1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE21B1787B1007C0FB4 /* JMDocklessApplication.m */; };
+		B90E8DFF1B1787B1007C0FB4 /* JMEmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE41B1787B1007C0FB4 /* JMEmailSender.m */; };
+		B90E8E001B1787B1007C0FB4 /* JMEmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE41B1787B1007C0FB4 /* JMEmailSender.m */; };
+		B90E8E011B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE61B1787B1007C0FB4 /* JMFontPopUpButton.m */; };
+		B90E8E021B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE61B1787B1007C0FB4 /* JMFontPopUpButton.m */; };
+		B90E8E031B1787B1007C0FB4 /* JMHostInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE81B1787B1007C0FB4 /* JMHostInformation.m */; };
+		B90E8E041B1787B1007C0FB4 /* JMHostInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE81B1787B1007C0FB4 /* JMHostInformation.m */; };
+		B90E8E051B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEA1B1787B1007C0FB4 /* JMLoginItemManager.m */; };
+		B90E8E061B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEA1B1787B1007C0FB4 /* JMLoginItemManager.m */; };
+		B90E8E071B1787B1007C0FB4 /* JMRTFView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */; };
+		B90E8E081B1787B1007C0FB4 /* JMRTFView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */; };
+		B90E8E091B1787B1007C0FB4 /* JMValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */; };
+		B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */; };
+		B90E8E0B1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */; };
+		B90E8E0C1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */; };
+		B90E8E0D1B1787B1007C0FB4 /* JMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF21B1787B1007C0FB4 /* JMWebView.m */; };
+		B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF21B1787B1007C0FB4 /* JMWebView.m */; };
 		B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
 		B933AB2B18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
 		B933AB2C18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
@@ -44,10 +72,6 @@
 		B933AB3B18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
 		B933AB3C18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
 		B933AB3D18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
-		B9595DC51933AAF200382738 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC21933AAF200382738 /* JMClickableImageView.m */; };
-		B9595DC61933AAF200382738 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC21933AAF200382738 /* JMClickableImageView.m */; };
-		B9595DC71933AAF200382738 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC41933AAF200382738 /* JMFontPopUpButton.m */; };
-		B9595DC81933AAF200382738 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B9595DC41933AAF200382738 /* JMFontPopUpButton.m */; };
 		B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
 		B97FDADB1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
 		B9EF05171865D42C00CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
@@ -71,21 +95,7 @@
 		B9EF05901865F20900CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
 		B9EF05961865F20900CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF05981865F20900CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
-		B9EF05AF1865F24800CF7A38 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A01865F24800CF7A38 /* JMAppMovedHandler.m */; };
-		B9EF05B01865F24800CF7A38 /* JMCorrectTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A21865F24800CF7A38 /* JMCorrectTimer.m */; };
-		B9EF05B11865F24800CF7A38 /* JMDocklessApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A41865F24800CF7A38 /* JMDocklessApplication.m */; };
-		B9EF05B21865F24800CF7A38 /* JMEmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A61865F24800CF7A38 /* JMEmailSender.m */; };
-		B9EF05B31865F24800CF7A38 /* JMHostInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A81865F24800CF7A38 /* JMHostInformation.m */; };
-		B9EF05B41865F24800CF7A38 /* JMLoginItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05AA1865F24800CF7A38 /* JMLoginItemManager.m */; };
-		B9EF05B51865F24800CF7A38 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05AC1865F24800CF7A38 /* JMVisibilityManager.m */; };
 		B9EF05B81865F33F00CF7A38 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05B71865F33F00CF7A38 /* Cocoa.framework */; };
-		B9EF05BD1865F4A000CF7A38 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A01865F24800CF7A38 /* JMAppMovedHandler.m */; };
-		B9EF05BF1865F4A000CF7A38 /* JMEmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A61865F24800CF7A38 /* JMEmailSender.m */; };
-		B9EF05C21865F4A000CF7A38 /* JMHostInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A81865F24800CF7A38 /* JMHostInformation.m */; };
-		B9EF05C31865F4A000CF7A38 /* JMDocklessApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A41865F24800CF7A38 /* JMDocklessApplication.m */; };
-		B9EF05C41865F4A000CF7A38 /* JMCorrectTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05A21865F24800CF7A38 /* JMCorrectTimer.m */; };
-		B9EF05C51865F4A000CF7A38 /* JMLoginItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05AA1865F24800CF7A38 /* JMLoginItemManager.m */; };
-		B9EF05C91865F4A000CF7A38 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05AC1865F24800CF7A38 /* JMVisibilityManager.m */; };
 		B9EF05CE1865F4A000CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
 		B9EF05D21865F4A000CF7A38 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05B71865F33F00CF7A38 /* Cocoa.framework */; };
 		B9EF05D31865F4A000CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
@@ -124,6 +134,34 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B90E8DD71B1787B1007C0FB4 /* JMApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMApplicationDelegate.h; sourceTree = "<group>"; };
+		B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMApplicationDelegate.m; sourceTree = "<group>"; };
+		B90E8DD91B1787B1007C0FB4 /* JMAppMovedHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMAppMovedHandler.h; sourceTree = "<group>"; };
+		B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMAppMovedHandler.m; sourceTree = "<group>"; };
+		B90E8DDB1B1787B1007C0FB4 /* JMClickableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMClickableImageView.h; sourceTree = "<group>"; };
+		B90E8DDC1B1787B1007C0FB4 /* JMClickableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMClickableImageView.m; sourceTree = "<group>"; };
+		B90E8DDD1B1787B1007C0FB4 /* JMCorrectTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMCorrectTimer.h; sourceTree = "<group>"; };
+		B90E8DDE1B1787B1007C0FB4 /* JMCorrectTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMCorrectTimer.m; sourceTree = "<group>"; };
+		B90E8DDF1B1787B1007C0FB4 /* JMCrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMCrashReporter.h; sourceTree = "<group>"; };
+		B90E8DE01B1787B1007C0FB4 /* JMCrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMCrashReporter.m; sourceTree = "<group>"; };
+		B90E8DE11B1787B1007C0FB4 /* JMDocklessApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMDocklessApplication.h; sourceTree = "<group>"; };
+		B90E8DE21B1787B1007C0FB4 /* JMDocklessApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMDocklessApplication.m; sourceTree = "<group>"; };
+		B90E8DE31B1787B1007C0FB4 /* JMEmailSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMEmailSender.h; sourceTree = "<group>"; };
+		B90E8DE41B1787B1007C0FB4 /* JMEmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMEmailSender.m; sourceTree = "<group>"; };
+		B90E8DE51B1787B1007C0FB4 /* JMFontPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMFontPopUpButton.h; sourceTree = "<group>"; };
+		B90E8DE61B1787B1007C0FB4 /* JMFontPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMFontPopUpButton.m; sourceTree = "<group>"; };
+		B90E8DE71B1787B1007C0FB4 /* JMHostInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMHostInformation.h; sourceTree = "<group>"; };
+		B90E8DE81B1787B1007C0FB4 /* JMHostInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMHostInformation.m; sourceTree = "<group>"; };
+		B90E8DE91B1787B1007C0FB4 /* JMLoginItemManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMLoginItemManager.h; sourceTree = "<group>"; };
+		B90E8DEA1B1787B1007C0FB4 /* JMLoginItemManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMLoginItemManager.m; sourceTree = "<group>"; };
+		B90E8DEB1B1787B1007C0FB4 /* JMRTFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMRTFView.h; sourceTree = "<group>"; };
+		B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMRTFView.m; sourceTree = "<group>"; };
+		B90E8DED1B1787B1007C0FB4 /* JMValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMValueTransformer.h; sourceTree = "<group>"; };
+		B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMValueTransformer.m; sourceTree = "<group>"; };
+		B90E8DEF1B1787B1007C0FB4 /* JMVisibilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMVisibilityManager.h; sourceTree = "<group>"; };
+		B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMVisibilityManager.m; sourceTree = "<group>"; };
+		B90E8DF11B1787B1007C0FB4 /* JMWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebView.h; sourceTree = "<group>"; };
+		B90E8DF21B1787B1007C0FB4 /* JMWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWebView.m; sourceTree = "<group>"; };
 		B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
 		B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
 		B933AB2118BBDFA1006E42B9 /* AppKit+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+Properties.h"; sourceTree = "<group>"; };
@@ -136,10 +174,6 @@
 		B933AB2818BBDFA1006E42B9 /* Foundation+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+Properties.h"; sourceTree = "<group>"; };
 		B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Properties.m"; sourceTree = "<group>"; };
 		B947149C193D2CD4000408A0 /* CoreLib_Availability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreLib_Availability.h; sourceTree = "<group>"; };
-		B9595DC11933AAF200382738 /* JMClickableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMClickableImageView.h; sourceTree = "<group>"; };
-		B9595DC21933AAF200382738 /* JMClickableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMClickableImageView.m; sourceTree = "<group>"; };
-		B9595DC31933AAF200382738 /* JMFontPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMFontPopUpButton.h; sourceTree = "<group>"; };
-		B9595DC41933AAF200382738 /* JMFontPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMFontPopUpButton.m; sourceTree = "<group>"; };
 		B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSlideshowController.h; sourceTree = "<group>"; };
 		B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSlideshowController.m; sourceTree = "<group>"; };
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -161,20 +195,6 @@
 		B9EF05631865EEF600CF7A38 /* CoreLibTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoreLibTests.h; path = Tests/CoreLibTests.h; sourceTree = "<group>"; };
 		B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS RR.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac RR.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B9EF059F1865F24800CF7A38 /* JMAppMovedHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMAppMovedHandler.h; sourceTree = "<group>"; };
-		B9EF05A01865F24800CF7A38 /* JMAppMovedHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMAppMovedHandler.m; sourceTree = "<group>"; };
-		B9EF05A11865F24800CF7A38 /* JMCorrectTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMCorrectTimer.h; sourceTree = "<group>"; };
-		B9EF05A21865F24800CF7A38 /* JMCorrectTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMCorrectTimer.m; sourceTree = "<group>"; };
-		B9EF05A31865F24800CF7A38 /* JMDocklessApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMDocklessApplication.h; sourceTree = "<group>"; };
-		B9EF05A41865F24800CF7A38 /* JMDocklessApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMDocklessApplication.m; sourceTree = "<group>"; };
-		B9EF05A51865F24800CF7A38 /* JMEmailSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMEmailSender.h; sourceTree = "<group>"; };
-		B9EF05A61865F24800CF7A38 /* JMEmailSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMEmailSender.m; sourceTree = "<group>"; };
-		B9EF05A71865F24800CF7A38 /* JMHostInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMHostInformation.h; sourceTree = "<group>"; };
-		B9EF05A81865F24800CF7A38 /* JMHostInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMHostInformation.m; sourceTree = "<group>"; };
-		B9EF05A91865F24800CF7A38 /* JMLoginItemManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMLoginItemManager.h; sourceTree = "<group>"; };
-		B9EF05AA1865F24800CF7A38 /* JMLoginItemManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMLoginItemManager.m; sourceTree = "<group>"; };
-		B9EF05AB1865F24800CF7A38 /* JMVisibilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMVisibilityManager.h; sourceTree = "<group>"; };
-		B9EF05AC1865F24800CF7A38 /* JMVisibilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMVisibilityManager.m; sourceTree = "<group>"; };
 		B9EF05B71865F33F00CF7A38 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac ARC.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -300,24 +320,34 @@
 		B9EF059E1865F24800CF7A38 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				B9EF059F1865F24800CF7A38 /* JMAppMovedHandler.h */,
-				B9EF05A01865F24800CF7A38 /* JMAppMovedHandler.m */,
-				B9EF05A11865F24800CF7A38 /* JMCorrectTimer.h */,
-				B9EF05A21865F24800CF7A38 /* JMCorrectTimer.m */,
-				B9EF05A31865F24800CF7A38 /* JMDocklessApplication.h */,
-				B9EF05A41865F24800CF7A38 /* JMDocklessApplication.m */,
-				B9EF05A51865F24800CF7A38 /* JMEmailSender.h */,
-				B9EF05A61865F24800CF7A38 /* JMEmailSender.m */,
-				B9EF05A71865F24800CF7A38 /* JMHostInformation.h */,
-				B9EF05A81865F24800CF7A38 /* JMHostInformation.m */,
-				B9EF05A91865F24800CF7A38 /* JMLoginItemManager.h */,
-				B9EF05AA1865F24800CF7A38 /* JMLoginItemManager.m */,
-				B9EF05AB1865F24800CF7A38 /* JMVisibilityManager.h */,
-				B9EF05AC1865F24800CF7A38 /* JMVisibilityManager.m */,
-				B9595DC11933AAF200382738 /* JMClickableImageView.h */,
-				B9595DC21933AAF200382738 /* JMClickableImageView.m */,
-				B9595DC31933AAF200382738 /* JMFontPopUpButton.h */,
-				B9595DC41933AAF200382738 /* JMFontPopUpButton.m */,
+				B90E8DD71B1787B1007C0FB4 /* JMApplicationDelegate.h */,
+				B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */,
+				B90E8DD91B1787B1007C0FB4 /* JMAppMovedHandler.h */,
+				B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */,
+				B90E8DDB1B1787B1007C0FB4 /* JMClickableImageView.h */,
+				B90E8DDC1B1787B1007C0FB4 /* JMClickableImageView.m */,
+				B90E8DDD1B1787B1007C0FB4 /* JMCorrectTimer.h */,
+				B90E8DDE1B1787B1007C0FB4 /* JMCorrectTimer.m */,
+				B90E8DDF1B1787B1007C0FB4 /* JMCrashReporter.h */,
+				B90E8DE01B1787B1007C0FB4 /* JMCrashReporter.m */,
+				B90E8DE11B1787B1007C0FB4 /* JMDocklessApplication.h */,
+				B90E8DE21B1787B1007C0FB4 /* JMDocklessApplication.m */,
+				B90E8DE31B1787B1007C0FB4 /* JMEmailSender.h */,
+				B90E8DE41B1787B1007C0FB4 /* JMEmailSender.m */,
+				B90E8DE51B1787B1007C0FB4 /* JMFontPopUpButton.h */,
+				B90E8DE61B1787B1007C0FB4 /* JMFontPopUpButton.m */,
+				B90E8DE71B1787B1007C0FB4 /* JMHostInformation.h */,
+				B90E8DE81B1787B1007C0FB4 /* JMHostInformation.m */,
+				B90E8DE91B1787B1007C0FB4 /* JMLoginItemManager.h */,
+				B90E8DEA1B1787B1007C0FB4 /* JMLoginItemManager.m */,
+				B90E8DEB1B1787B1007C0FB4 /* JMRTFView.h */,
+				B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */,
+				B90E8DED1B1787B1007C0FB4 /* JMValueTransformer.h */,
+				B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */,
+				B90E8DEF1B1787B1007C0FB4 /* JMVisibilityManager.h */,
+				B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */,
+				B90E8DF11B1787B1007C0FB4 /* JMWebView.h */,
+				B90E8DF21B1787B1007C0FB4 /* JMWebView.m */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -502,21 +532,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9EF05AF1865F24800CF7A38 /* JMAppMovedHandler.m in Sources */,
 				B933AB3418BBDFA1006E42B9 /* CoreLib.m in Sources */,
+				B90E8DF31B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */,
 				B933AB3018BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
 				B933AB2C18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
-				B9EF05B21865F24800CF7A38 /* JMEmailSender.m in Sources */,
-				B9EF05B31865F24800CF7A38 /* JMHostInformation.m in Sources */,
-				B9EF05B11865F24800CF7A38 /* JMDocklessApplication.m in Sources */,
-				B9EF05B01865F24800CF7A38 /* JMCorrectTimer.m in Sources */,
 				B933AB3C18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
-				B9EF05B41865F24800CF7A38 /* JMLoginItemManager.m in Sources */,
-				B9595DC51933AAF200382738 /* JMClickableImageView.m in Sources */,
-				B9EF05B51865F24800CF7A38 /* JMVisibilityManager.m in Sources */,
+				B90E8DFD1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */,
+				B90E8DF91B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */,
+				B90E8DFB1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */,
+				B90E8E031B1787B1007C0FB4 /* JMHostInformation.m in Sources */,
+				B90E8E0B1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */,
+				B90E8E051B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */,
+				B90E8DFF1B1787B1007C0FB4 /* JMEmailSender.m in Sources */,
 				B933AB3818BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
-				B9595DC71933AAF200382738 /* JMFontPopUpButton.m in Sources */,
+				B90E8E091B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
+				B90E8E0D1B1787B1007C0FB4 /* JMWebView.m in Sources */,
+				B90E8E071B1787B1007C0FB4 /* JMRTFView.m in Sources */,
+				B90E8E011B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */,
+				B90E8DF71B1787B1007C0FB4 /* JMClickableImageView.m in Sources */,
 				B9EF05901865F20900CF7A38 /* CoreLibTests.m in Sources */,
+				B90E8DF51B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,21 +559,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9EF05BD1865F4A000CF7A38 /* JMAppMovedHandler.m in Sources */,
 				B933AB3518BBDFA1006E42B9 /* CoreLib.m in Sources */,
+				B90E8DF41B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */,
 				B933AB3118BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
 				B933AB2D18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
-				B9EF05BF1865F4A000CF7A38 /* JMEmailSender.m in Sources */,
-				B9EF05C21865F4A000CF7A38 /* JMHostInformation.m in Sources */,
-				B9EF05C31865F4A000CF7A38 /* JMDocklessApplication.m in Sources */,
-				B9EF05C41865F4A000CF7A38 /* JMCorrectTimer.m in Sources */,
 				B933AB3D18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
-				B9EF05C51865F4A000CF7A38 /* JMLoginItemManager.m in Sources */,
-				B9595DC61933AAF200382738 /* JMClickableImageView.m in Sources */,
-				B9EF05C91865F4A000CF7A38 /* JMVisibilityManager.m in Sources */,
+				B90E8DFE1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */,
+				B90E8DFA1B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */,
+				B90E8DFC1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */,
+				B90E8E041B1787B1007C0FB4 /* JMHostInformation.m in Sources */,
+				B90E8E0C1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */,
+				B90E8E061B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */,
+				B90E8E001B1787B1007C0FB4 /* JMEmailSender.m in Sources */,
 				B933AB3918BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
-				B9595DC81933AAF200382738 /* JMFontPopUpButton.m in Sources */,
+				B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
+				B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */,
+				B90E8E081B1787B1007C0FB4 /* JMRTFView.m in Sources */,
+				B90E8E021B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */,
+				B90E8DF81B1787B1007C0FB4 /* JMClickableImageView.m in Sources */,
 				B9EF05CE1865F4A000CF7A38 /* CoreLibTests.m in Sources */,
+				B90E8DF61B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,7 +648,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -619,6 +659,7 @@
 					"-Wno-gnu",
 					"-Wno-variadic-macros",
 					"-Wno-documentation-unknown-command",
+					"-Rno-module-build",
 				);
 			};
 			name = Debug;
@@ -657,7 +698,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -668,6 +709,7 @@
 					"-Wno-gnu",
 					"-Wno-variadic-macros",
 					"-Wno-documentation-unknown-command",
+					"-Rno-module-build",
 				);
 			};
 			name = Release;

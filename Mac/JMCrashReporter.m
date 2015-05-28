@@ -9,7 +9,6 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#define SENDTHROUGHCGI 1
 
 #import "JMCrashReporter.h"
 #import "JMHostInformation.h"
@@ -28,17 +27,17 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 {
 	if ([[NSUserDefaults standardUserDefaults] integerForKey:kNeverCheckCrashesKey] == 0)
 	{
-		NSString *name = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 		NSString *path = nil;
 		NSString *dpath = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
 		NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dpath error:NULL];
-		NSDate *newestcrashdate = [NSDate dateWithString:@"2007-01-01 00:00:00 +0000"];
+
+		NSDate *newestcrashdate = [NSDate dateWithString:@"2007 01 01" format:@"yyyy dd MM"];
 		NSString *newestcrashfile = nil;
 		NSString *fname;
 
 		for (fname in contents)
 		{
-			if ([fname hasPrefix:name])
+			if ([fname hasPrefix:cc.appName])
 			{
 				NSDate *date = [[[NSFileManager defaultManager] attributesOfItemAtPath:[dpath stringByAppendingPathComponent:fname] error:NULL] objectForKey:@"NSFileModificationDate"];
 
@@ -68,22 +67,31 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 				BOOL foundNeccessaryString = FALSE;
 
 
-
-				for (NSString *ns in neccessaryStrings)
-					if ([crashlog rangeOfString:ns].location != NSNotFound)
-						foundNeccessaryString = TRUE;
+				if (!neccessaryStrings)
+					foundNeccessaryString = TRUE;
+				else
+				{
+					for (NSString *ns in neccessaryStrings)
+						if ([crashlog rangeOfString:ns].location != NSNotFound)
+							foundNeccessaryString = TRUE;
+				}
 
 				if (!foundNeccessaryString)
+				{
+#if ! __has_feature(objc_arc)
+					[crashlogsource release];
+#endif
 					return;
+				}
 
-				[NSApp activateIgnoringOtherApps:YES];
-				NSInteger code = NSRunAlertPanel([name stringByAppendingString:@" Crash Report"],
-												 [NSString stringWithFormat:NSLocalizedString(@"It seems like %@ has crashed recently. Please consider sending the crash-log to help fix this problem. Also make sure you are using the latest version by using the built-in update mechanism since most reported crashes are already fixed in the latest version.", nil), name],
+                
+				NSInteger code = alert([cc.appName stringByAppendingString:@" Crash Report"],
+												 [NSString stringWithFormat:NSLocalizedString(@"It seems like %@ has crashed recently. Please consider sending the crash-log to help fix this problem. Also make sure you are using the latest version by using the built-in update mechanism since most reported crashes are already fixed in the latest version.", nil), cc.appName],
 												 NSLocalizedString(@"Send", nil), NSLocalizedString(@"Never", nil), NSLocalizedString(@"Cancel", nil));
 
 				[[NSUserDefaults standardUserDefaults] setObject:[NSDate dateWithTimeIntervalSinceNow:60 * 60 * 24 * 3] forKey:kLastCrashDateKey]; // bug the user every 3 days at most
 
-				if (code == NSAlertDefaultReturn)
+				if (code == NSAlertFirstButtonReturn)
 				{
 					NSMutableString *inputManagers = [NSMutableString string];
 					NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask, YES);
@@ -95,8 +103,8 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 								[inputManagers appendFormat:@" %@ ", inputManager];
 					}
 
-					NSString *subject = [NSString stringWithFormat:@"%@ Crashreport", name];
-					NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%@):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", name, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"], crashlog, [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] description]];
+					NSString *subject = [NSString stringWithFormat:@"%@ Crashreport", cc.appName];
+					NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", cc.appName, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuild, crashlog, [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] description]];
 #ifdef SENDTHROUGHCGI
 					[JMEmailSender sendMailWithCGI:body subject:subject to:email withTimeout:10 checkBlocklists:NO];
 #else
@@ -106,14 +114,18 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
 					CFRelease(urlstring);
 					if (![[NSWorkspace sharedWorkspace] openURL:url])
-						asl_NSLog(ASL_LEVEL_WARNING, @"Warning: %@ was unable to open the URL.", name);
+						asl_NSLog(ASL_LEVEL_WARNING, @"Warning: %@ was unable to open the URL.", cc.appName);
 #endif
 				}
-				else if (code == NSAlertAlternateReturn)
+				else if (code == NSAlertSecondButtonReturn)
 					[[NSUserDefaults standardUserDefaults] setInteger:1 forKey:kNeverCheckCrashesKey];
 
 				if (![[NSUserDefaultsController sharedUserDefaultsController] commitEditing])
 					asl_NSLog(ASL_LEVEL_WARNING, @"Warning: shared user defaults controller could not commit editing");
+
+#if ! __has_feature(objc_arc)
+				[crashlogsource release]; 
+#endif
 			}
 		}
 	}

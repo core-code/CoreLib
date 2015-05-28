@@ -9,6 +9,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#ifdef USE_SERVICEMANAGEMENT
+
 #import "JMLoginItemManager.h"
 #if __has_feature(modules)
 @import ServiceManagement;
@@ -16,31 +18,45 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import <ServiceManagement/ServiceManagement.h>
 #endif
 
-#ifndef SANDBOX
-#define SANDBOX 0
+
+
+#ifdef DONTAPPEND
+#error DOESNTWORK
 #endif
-
-#if ! __has_feature(objc_arc)
-#define BRIDGE
-#else
-#define BRIDGE __bridge
-#endif
-
-#define USING_SANDBOX		(OS_IS_POST_10_6) && (SANDBOX)
-
 
 @implementation LoginItemManager
 
 @dynamic launchesAtLogin;
 
++ (NSString *)appID
+{
+	NSString *appID = cc.appID;
+
+	if ([appID hasSuffix:@"-DEMO"]) appID = [appID removed:@"-DEMO"];
+	if ([appID hasSuffix:@"-TRYOUT"]) appID = [appID removed:@"-TRYOUT"];
+
+	return appID;
+}
+
++ (NSString *)appName
+{
+	NSString *appName = cc.appName;
+
+	if ([appName hasSuffix:@"-DEMO"]) appName = [appName removed:@"-DEMO"];
+	if ([appName hasSuffix:@"-TRYOUT"]) appName = [appName removed:@"-TRYOUT"];
+
+	return appName;
+}
+
+
 + (void)restartApp
 {
-	NSString *appPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Contents/Library/LoginItems/LaunchHelper.app"];
+	NSString *appPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app", [LoginItemManager appName])];
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
 
-	[[NSWorkspace sharedWorkspace] launchApplicationAtURL:[NSURL fileURLWithPath:appPath]
+	[[NSWorkspace sharedWorkspace] launchApplicationAtURL:appPath.fileURL
 												  options:NSWorkspaceLaunchDefault
-											configuration:@{@"NSWorkspaceLaunchConfigurationArguments" : @[makeString(@"%i", pid)]}
+											configuration:@{@"NSWorkspaceLaunchConfigurationArguments" : @[@(pid).stringValue]}
 													error:NULL];
 
 	[NSApp terminate:nil];
@@ -48,236 +64,69 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (BOOL)launchesAtLogin
 {
-	return IsLoginItem();
+	LOGFUNC;
+
+	NSString *helperBundleIdentifier = [[LoginItemManager appID] stringByAppendingString:@"LaunchHelper"];
+#ifdef DEBUG
+	NSString *infoPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:
+						  makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appName])];
+	NSDictionary *infoDictionary = [NSDictionary dictionaryWithContentsOfFile:infoPath];
+	NSString *bundleIdentifierInHelperOnDisk = infoDictionary[@"CFBundleIdentifier"];
+	assert([bundleIdentifierInHelperOnDisk isEqualToString:helperBundleIdentifier]);
+#endif
+	
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    NSArray *jobDicts = (BRIDGE NSArray *)SMCopyAllJobDictionaries(kSMDomainUserLaunchd); // this is deprecated but probably should not be: rdar://20510672
+#pragma clang diagnostic pop
+
+	if (jobDicts != nil)
+    {
+        BOOL onDemand = NO;
+        
+        for (NSDictionary * job in jobDicts)
+        {
+            if ([helperBundleIdentifier isEqualToString:[job objectForKey:@"Label"]])
+            {
+                onDemand = [[job objectForKey:@"OnDemand"] boolValue];
+                break;
+            }
+        }
+        
+        CFRelease((BRIDGE CFArrayRef)jobDicts);
+        jobDicts = nil;
+        return onDemand;
+        
+    }
+    return NO;
 }
 
 - (void)setLaunchesAtLogin:(BOOL)launchesAtLogin
 {
+	LOGFUNC;
+
 	//[self willChangeValueForKey:@"launchesAtLogin"];
 
-	if (launchesAtLogin && !IsLoginItem())
-		AddLoginItem();
-	else if (!launchesAtLogin && IsLoginItem())
-		RemoveLoginItem();
+    NSString *helperBundleIdentifier = [[LoginItemManager appID] stringByAppendingString:@"LaunchHelper"];
+	assert([[NSDictionary dictionaryWithContentsOfFile:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appName])]][@"CFBundleIdentifier"] isEqualToString:helperBundleIdentifier]);
+
+
+	if (launchesAtLogin && ![self launchesAtLogin]) // add it
+    {
+        if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, true))
+            LOG(@"SMLoginItemSetEnabled failed.");
+    }
+	else if (!launchesAtLogin && [self launchesAtLogin]) // remove it
+    {
+        if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, false))
+            LOG(@"SMLoginItemSetEnabled failed.");
+    }
+        
 
 	//[self didChangeValueForKey:@"launchesAtLogin"];
 }
 @end
 
 
-
-BOOL IsLoginItem_SM(void)
-{
-#if SANDBOX
-#ifdef DONTAPPEND
-	NSString *helperBundleIdentifier = @"com.corecode.LaunchHelper";
-#else
-	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
 #endif
-    NSArray * jobDicts = nil;
-    jobDicts = (BRIDGE NSArray *)SMCopyAllJobDictionaries( kSMDomainUserLaunchd );
-    // Note: Sandbox issue when using SMJobCopyDictionary()
-	
-    if (jobDicts != nil)
-	{
-        BOOL bOnDemand = NO;
-		
-        for (NSDictionary * job in jobDicts)
-		{
-            if ( [helperBundleIdentifier isEqualToString:[job objectForKey:@"Label"]] )
-			{
-                bOnDemand = [[job objectForKey:@"OnDemand"] boolValue];
-                break;
-            }
-        }
-		
-        CFRelease((BRIDGE CFArrayRef)jobDicts); jobDicts = nil;
-        return bOnDemand;
-		
-    }
-    return NO;
-#else
-	return NO;
-#endif
-}
-
-BOOL IsLoginItem_LS(void)
-{
-	UInt32 outSnapshotSeed;
-	LSSharedFileListRef list = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-	
-	if (list)
-	{
-		NSArray *array = (BRIDGE NSArray *) LSSharedFileListCopySnapshot(list, &outSnapshotSeed);
-		
-		if (array)
-		{
-			NSString *bp = [[NSBundle mainBundle] bundlePath];
-			
-			for (id item in array)
-			{
-				CFURLRef url = NULL;
-				OSStatus status = LSSharedFileListItemResolve((BRIDGE LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, &url, NULL);
-				// TODO: replace with LSSHaredFileListItemCopyResolvedURL
-
-				if (status == noErr)
-				{
-					//asl_NSLog_debug(@"isLoginItem: current login item: %@", [url path]);
-					
-					if (NSOrderedSame == [[(BRIDGE NSURL *)url path] compare:bp]) // the path is the same as ours => return true
-					{
-						//asl_NSLog_debug(@"isLoginItem: FOUND US");
-						CFRelease((url));
-						CFRelease((BRIDGE CFTypeRef)(array));
-						CFRelease(list);
-						return TRUE;
-					}
-					else if (NSOrderedSame == [[[(BRIDGE NSURL *)url path] lastPathComponent] compare:[[[NSBundle mainBundle] bundlePath] lastPathComponent]]) // another entry of us, must be valid since on 10.5 invalid entries are erased automatically
-					{
-						//asl_NSLog_debug(@"isLoginItem: found similar");
-					}
-				}
-				
-				
-				if (url != NULL)
-					CFRelease(url);
-			}
-			CFRelease((BRIDGE CFTypeRef)(array));
-		}
-		else
-			asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _IsLoginItem : LSSharedFileListCopySnapshot delivered NULL list!");
-		
-		CFRelease(list);
-	}
-	else
-		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _IsLoginItem : LSSharedFileListCreate delivered NULL list!");
-	
-	return FALSE;
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
-#pragma clang diagnostic ignored "-Wunreachable-code-return"
-BOOL IsLoginItem(void)
-{
-	if (USING_SANDBOX)
-		return IsLoginItem_SM();
-	else 
-		return IsLoginItem_LS();
-}
-#pragma clang diagnostic pop
-
-void AddLoginItem_SM(void)
-{
-#if SANDBOX
-#ifdef DONTAPPEND
-	NSString *helperBundleIdentifier = @"com.corecode.LaunchHelper";
-#else
-	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
-#endif
-	
-	if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, true)) 
-		NSLog(@"SMLoginItemSetEnabled failed.");
-#endif
-}
-
-void AddLoginItem_LS(void)
-{
-	//asl_NSLog_debug(@"addLoginItem: bundle path: %@", [[NSBundle mainBundle] bundlePath]);
-	LSSharedFileListRef list = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-	
-	if (list)
-	{
-		LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(list, kLSSharedFileListItemLast, (BRIDGE CFStringRef)[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], NULL, (BRIDGE CFURLRef)[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]], NULL, NULL);
-		
-		CFRelease(list);
-		
-		if (item)
-			CFRelease(item);
-		else
-			asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _AddLoginItem : LSSharedFileListInsertItemURL delivered NULL item!");
-	}
-	else
-		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _AddLoginItem : LSSharedFileListCreate delivered NULL list!");
-}
-
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
-void AddLoginItem(void)
-{
-	if (USING_SANDBOX)
-		AddLoginItem_SM();
-	else 
-		AddLoginItem_LS();
-}
-#pragma clang diagnostic pop
-
-void RemoveLoginItem_SM(void)
-{
-#if SANDBOX
-#ifdef DONTAPPEND
-	NSString *helperBundleIdentifier = @"com.corecode.LaunchHelper";
-#else
-	NSString *helperBundleIdentifier = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"] stringByAppendingString:@"LaunchHelper"];
-#endif
-
-	if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, false))
-		NSLog(@"SMLoginItemSetEnabled failed.");
-#endif
-}
-
-void RemoveLoginItem_LS(void)
-{
-	UInt32 outSnapshotSeed;
-	LSSharedFileListRef list = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-	
-	if (list)
-	{
-		NSArray *array = (BRIDGE NSArray *) LSSharedFileListCopySnapshot(list, &outSnapshotSeed);
-		
-		if (array)
-		{
-			NSString *bp = [[NSBundle mainBundle] bundlePath];
-			
-			for (id item in array)
-			{
-				CFURLRef url;
-// TODO: replace with LSSHaredFileListItemCopyResolvedURL
-				OSStatus status = LSSharedFileListItemResolve((BRIDGE LSSharedFileListItemRef)item, kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes, &url, NULL);
-				
-				if (status == noErr)
-				{
-					if (NSOrderedSame == [[(BRIDGE NSURL *)url path] compare:bp]) // the path is the same as ours => return true
-					{
-						asl_NSLog_debug(@"removeLoginItem: removing: %@", [(BRIDGE NSURL *)url path]);
-						
-						LSSharedFileListItemRemove(list, (BRIDGE LSSharedFileListItemRef) item);
-					}
-					CFRelease(url);
-				}
-				else if (status != fnfErr)
-					asl_NSLog(ASL_LEVEL_WARNING, @"Warning: removeLoginItem: LSSharedFileListItemResolve error %i", (int)status);
-			}
-			CFRelease((BRIDGE CFTypeRef)(array));
-		}
-		else
-			asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _RemoveLoginItem : LSSharedFileListCopySnapshot delivered NULL list!");
-		
-		CFRelease(list);
-	}
-	else
-		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: _RemoveLoginItem : LSSharedFileListCreate delivered NULL list!");
-}
-
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
-void RemoveLoginItem(void)
-{
-	if (USING_SANDBOX)
-		RemoveLoginItem_SM();
-	else 
-		RemoveLoginItem_LS();
-}
-#pragma clang diagnostic pop

@@ -10,15 +10,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 
+#import "CoreLib.h"
 
 #define kDiskNameKey                        @"DiskName"
 #define kDiskNumberKey                      @"DiskNumber"
-typedef enum
+
+CC_ENUM(uint8_t, smartStatusEnum)
 {
 	kSMARTStatusUnknown = 0,
 	kSMARTStatusError = 1,
 	kSMARTStatusOK = 2
-} smartStatusEnum;
+};
 
 
 @interface JMHostInformation : NSObject
@@ -30,12 +32,13 @@ typedef enum
 + (NSString *)machineType;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_7
-+ (NSString *)nameForDevice:(NSInteger)deviceNumber;
++ (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber;
 + (NSString *)bsdPathForVolume:(NSString *)volume;
 #else
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
-+ (NSString *)nameForDevice:(NSInteger)deviceNumber;
++ (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber;
 + (NSNumber *)bsdNumberForVolume:(NSString *)volume;
++ (NSDictionary *)descriptionForDevice:(NSInteger)bsdNum;
 #endif
 #endif
 

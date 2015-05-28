@@ -29,7 +29,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 #ifdef USE_APPLEMAIL
-+ (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject timeout:(uint16_t)secs to:(NSString *)recipients attachment:(NSString *)attachmentFilePath
++ (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject to:(NSString *)recipients timeout:(uint16_t)secs attachment:(NSString *)attachmentFilePath
 {
 	asl_NSLog_debug(@"sendMailWithScriptingBridge %@\n\n sub: %@\n rec: %@", content, subject, recipients);
 
@@ -38,7 +38,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	NSString *recipient;
 
 	if (recipients == nil)
-		return kToNilFailure;
+		return kSMTPToNilFailure;
 
 	@try
 	{
@@ -84,29 +84,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			return kSMTPToNilFailure;
 		
 		
-		if ( [attachmentFilePath length] > 0 ) {
+		if ( [attachmentFilePath length] > 0 )
+		{
 			MailAttachment *theAttachment;
 			
-            /* In Snow Leopard, the fileName property requires an NSString representing the path to the
-             * attachment.  In Lion, the property has been changed to require an NSURL.   */
-			SInt32 osxMinorVersion;
-			Gestalt(gestaltSystemVersionMinor, &osxMinorVersion);
-			
-            /* create an attachment object */
-			if ( osxMinorVersion >= 7 )
+           if (OS_IS_POST_10_6)
 				theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
 								 [NSDictionary dictionaryWithObjectsAndKeys:
 								  [NSURL URLWithString:attachmentFilePath], @"fileName",
 								  nil]];
 			else
-            /* The string we read from the text field is a URL so we must create an NSURL instance with it
-             * and retrieve the old style file path from the NSURL instance. */
 				theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
 								 [NSDictionary dictionaryWithObjectsAndKeys:
 								  [[NSURL URLWithString:attachmentFilePath] path], @"fileName",
 								  nil]];
 			
-            /* add it to the list of attachments */
+
 			[[emailMessage.content attachments] addObject: theAttachment];
 			
 #if ! __has_feature(objc_arc)
@@ -114,14 +107,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #endif
             /* Test for errors */
 			if ( [mail lastError] != nil )
-				return kScriptingBridgeFailure;
+				return kSMTPScriptingBridgeFailure;
 		}
 		
 		
 		if ([emailMessage send])
-			res = kSuccess;
+			res = kSMTPSuccess;
 		else
-			res = kScriptingBridgeFailure;
+			res = kSMTPScriptingBridgeFailure;
 		asl_NSLog_debug(@"sent!");
 #if ! __has_feature(objc_arc)
 		[emailMessage release];
@@ -156,9 +149,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		
 		
 		if (recipients == nil)
-			return kToNilFailure;
+			return kSMTPToNilFailure;
 		if (sender == nil || [sender length] == 0 || !sender.isValidEmail)
-			return kFromNilFailure;
+			return kSMTPFromNilFailure;
 
 		/* create a new recipient and add it to the recipients list */
 		for (recipient in recipientList) // the recipient string can be a newline seperated list of recipients
@@ -196,10 +189,37 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	{
 		asl_NSLog(ASL_LEVEL_WARNING, @"e-mail delivery failed with unknown problem, exception %@", [e description]);
 
-		return kMailCoreFailure;
+		return kSMTPMailCoreFailure;
 	}
 
 	return kSMTPMailCoreFailure; // just to silence the compiler
 }
 #endif
+
+//// this uses sending through mail with scripting or sending through CGI if supported and else falls back to opening a mail to be sent manually using mailto link
+//// return YES if the mail was sent in background and NO if a mail has been created
+//+ (BOOL)sendOrCreateMail:(NSString *)content subject:(NSString *)subject to:(NSString *)recipient;
+//+ (BOOL)sendOrCreateMail:(NSString *)content subject:(NSString *)subject to:(NSString *)recipient
+//{
+//	smtpResult result = kSMTPCGIFailure;
+//
+//#ifdef USE_CGIMAIL
+//	if (result != kSMTPSuccess)	result = [self sendMailWithCGI:content subject:subject to:recipient timeout:60 checkBlocklists:NO];
+//#endif
+//
+//#ifdef USE_APPLEMAIL
+//	if (result != kSMTPSuccess)	result = [self sendMailWithScriptingBridge:content subject:subject to:recipient timeout:60 attachment:nil]
+//#endif
+//
+//	if (result != kSMTPSuccess)
+//	{
+//		NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", recipient, subject, content];
+//
+//		[mailtoLink.escaped.URL open];
+//
+//		return NO;
+//	}
+//	else
+//		return YES;
+//}
 @end

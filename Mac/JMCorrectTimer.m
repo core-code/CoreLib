@@ -11,6 +11,8 @@
 
 #import "JMCorrectTimer.h"
 
+
+
 @interface JMCorrectTimer ()
 
 @property (strong, nonatomic) NSTimer *timer;
@@ -32,6 +34,7 @@
 
 - (id)initWithFireDate:(NSDate *)d timerBlock:(void (^)(void))timerBlock dropBlock:(void (^)(void))dropBlock
 {
+	LOGFUNC;
 	if ((self = [super init]))
 	{
 		self.timerBlock = timerBlock;
@@ -41,6 +44,9 @@
 		[self scheduleTimer];
 
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+															   selector:@selector(receiveSleepNote:)
+																   name:NSWorkspaceWillSleepNotification object:NULL];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
 															   selector:@selector(receiveWakeNote:)
 																   name:NSWorkspaceDidWakeNotification object:NULL];
 	}
@@ -49,8 +55,8 @@
 
 - (void)scheduleTimer
 {
-	asl_NSLog_debug(@"JMCorrectTimer: scheduleTimer");
-	
+	LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.date, NSDate.date.description));
+
 	NSTimer *t = [[NSTimer alloc] initWithFireDate:self.date
 										  interval:0
 											target:self
@@ -59,60 +65,116 @@
 
 	[[NSRunLoop currentRunLoop] addTimer:t forMode:NSDefaultRunLoopMode];
 
-#if ! __has_feature(objc_arc)
-	[t autorelease];
-#endif
+	if ([t respondsToSelector:@selector(setTolerance:)])
+		t.tolerance = 0.1;
+
 	self.timer = t;
+
+#if ! __has_feature(objc_arc)
+	[t release];
+#endif
 }
 
 - (void)invalidate
 {
-	asl_NSLog_debug(@"JMCorrectTimer: invalidate");
-	[self.timer invalidate];
-	self.timer = nil; // crash
+	LOGFUNC;
+
+	if (self.timer)
+		[self.timer invalidate];
+	self.timer = nil;
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 }
 
 - (void)timer:(id)sender
 {
-	asl_NSLog_debug(@"JMCorrectTimer: timerDate: %@   now: %@", [[self.timer fireDate] description], [[NSDate date] description]);
+	LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.timer.fireDate.description, NSDate.date.description));
+
+#if ! __has_feature(objc_arc)
+	[self retain];
+#else
+	__strong JMCorrectTimer *strongSelf = self;
+#endif
 
 	self.timerBlock();
-	
-	[self invalidate];
 
+
+	[self invalidate];
 	self.timerBlock = nil;
 	self.dropBlock = nil;
-	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+
+#if ! __has_feature(objc_arc)
+	[self release];
+#else
+	strongSelf = nil;
+#endif
+}
+
+- (void)receiveSleepNote:(id)sender
+{
+	LOGFUNC;
+
+	if (self.timer)
+	{
+		[self.timer invalidate];
+		self.timer = nil;
+	}
+	else
+		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: receiveSleepNote but no timer");
 }
 
 - (void)receiveWakeNote:(id)sender
 {
-	[self invalidate];
-
-	if ([[NSDate date] timeIntervalSinceDate:self.date] > 0.0)
+	if (self.timer)
 	{
-		asl_NSLog_debug(@"JMCorrectTimer: Dropping Timer as we have been sleeping");
-		self.dropBlock();
+		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: receiveWakeNote but timer");
+		[self.timer invalidate];
+		self.timer = nil;
+	}
 
-		self.timerBlock = nil;
-		self.dropBlock = nil;
+
+	if ([[NSDate date] timeIntervalSinceDate:self.date] > 0.01)
+	{
+		LOGFUNCPARAM(makeString(@"dropping Timer as we have been sleeping, missed target by: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
+
+		if (self.dropBlock)
+		{
+#if ! __has_feature(objc_arc)
+			[self retain];
+#else
+			__strong JMCorrectTimer *strongSelf = self;
+#endif
+			self.dropBlock();
+
+			self.timerBlock = nil;
+			self.dropBlock = nil;
+
+
+#if ! __has_feature(objc_arc)
+			[self release];
+#else
+			strongSelf = nil;
+#endif
+		}
+		else
+			asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: error dropBlock was nil");
 	}
 	else
 	{
-		asl_NSLog_debug(@"JMCorrectTimer: Rescheduling timer");
-		
+		LOGFUNCPARAM(makeString(@"rescheduling timer, still time left to reschedule: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
+
 		[self scheduleTimer];
 	}
 }
 
 - (void)dealloc
 {
+	LOGFUNC;
+
 	if (_timer)
 	{
 		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: error dealloced while still in use");
 	}
-	else
-		asl_NSLog_debug(@"JMCorrectTimer: dealloc");
+
 	
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 	

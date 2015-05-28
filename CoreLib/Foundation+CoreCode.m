@@ -29,18 +29,14 @@
 	#import <snappy/snappy-c.h>
 #endif
 
-#if ! __has_feature(objc_arc)
-	#define BRIDGE
-#else
-	#define BRIDGE __bridge
-#endif
-static CONST_KEY(CoreCodeAssociatedValue)
+
+CONST_KEY(CoreCodeAssociatedValue)
 
 
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray;
 
 - (NSArray *)sorted
 {
@@ -60,7 +56,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
     if (!data || err)
     {
-        NSLog(@"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
         return nil;
     }
 
@@ -68,46 +64,87 @@ static CONST_KEY(CoreCodeAssociatedValue)
 }
 #endif
 
+- (NSData *)XMLData
+{
+	NSError *err;
+	NSData *data =  [NSPropertyListSerialization dataWithPropertyList:self
+															   format:NSPropertyListXMLFormat_v1_0
+															  options:(NSPropertyListWriteOptions)0
+																error:&err];
+
+	if (!data || err)
+	{
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: XML write fails! input %@ data %@ err %@", self, data, err);
+		return nil;
+	}
+
+	return data;
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-statement-expression"
 
-- (CGRect)calculateExtentsOfPoints:(ObjectInPointOutBlock)block
+- (CCIntRange2D)calculateExtentsOfPoints:(ObjectInPointOutBlock)block
 {
-	CGPoint min = CGPointMake(INT_MAX, INT_MAX);
-	CGPoint max = CGPointMake(INT_MIN, INT_MIN);
+    CCIntRange2D range = {{INT_MAX, INT_MAX}, {INT_MIN, INT_MIN}, {-1, -1}};
 
-	for (NSObject *o in self)
-	{
-		CGPoint p = block(o);
+    if (self.count)
+    {
+        for (NSObject *o in self)
+        {
+            CCIntPoint p = block(o);
 
-		max.x = MAX(max.x, p.x);
-		max.y = MAX(max.y, p.y);
-		min.x = MIN(min.x, p.x);
-		min.y = MIN(min.y, p.y);
-	}
+            range.max.x = MAX(range.max.x, p.x);
+            range.max.y = MAX(range.max.y, p.y);
+            range.min.x = MIN(range.min.x, p.x);
+            range.min.y = MIN(range.min.y, p.y);
+        }
+    }
 
-	return CGRectMake(min.x,min.y,max.x - min.x,max.y-min.y);
+	return range;
 }
 
-- (NSRange)calculateExtentsOfValues:(ObjectInIntOutBlock)block
+- (CCIntRange1D)calculateExtentsOfValues:(ObjectInIntOutBlock)block
 {
-    if (!self.count)
-        return NSMakeRange(0, 0);
+    CCIntRange1D range = {INT_MAX, INT_MIN, -1};
+
+    if (self.count)
+    {
+        for (NSObject *o in self)
+        {
+            int p = block(o);
+
+            range.min = MIN(range.min, p);
+            range.max = MAX(range.max, p);
+        }
+
+        range.length = range.max - range.min;
+    }
     
-	int min = INT_MAX, max = INT_MIN;
-
-	for (NSObject *o in self)
-	{
-		int p = block(o);
-
-		min = MIN(min, p);
-		max = MAX(max, p);
-	}
-
-	return NSMakeRange(min, max-min);
+    return range;
 }
 
 #pragma clang diagnostic pop
+
++ (void)_addArrayContents:(NSArray *)array toArray:(NSMutableArray *)newArray
+{
+    for (id object in array)
+    {
+        if ([object isKindOfClass:[NSArray class]])
+            [NSArray _addArrayContents:object toArray:newArray];
+        else
+            [newArray addObject:object];
+    }
+}
+
+- (NSArray *)flattenedArray
+{
+    NSMutableArray *tmp = [NSMutableArray array];
+
+    [NSArray _addArrayContents:self toArray:tmp];
+
+	return tmp.immutableObject;
+}
 
 - (NSString *)string
 {
@@ -328,7 +365,15 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	[task setStandardOutput:taskPipe];
 	[task setStandardError:taskPipe];
 	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
-	[task launch];
+
+    @try
+    {
+        [task launch];
+    }
+    @catch (NSException *)
+    {
+        return nil;
+    }
 
 	NSData *data = [file readDataToEndOfFile];
 
@@ -368,7 +413,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (void)removeObjectPassingTest:(ObjectInIntOutBlock)block
 {
-	NSInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
+	NSUInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
 	{
 		int res = block(obj);
 		return (BOOL)res;
@@ -478,7 +523,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
     if( snappy_uncompressed_length(self.bytes, self.length, &uncompressedSize) != SNAPPY_OK )
 	{
-		NSLog(@"Error: can't calculate the uncompressed length!\n");
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: can't calculate the uncompressed length!\n");
 		return nil;
     }
 
@@ -491,7 +536,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	int res = snappy_uncompress(self.bytes, self.length, buf, &uncompressedSize);
     if(res != SNAPPY_OK)
 	{
-        NSLog(@"Error: can't uncompress the file!\n");
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: can't uncompress the file!\n");
 		free(buf);
 		return nil;
     }
@@ -513,7 +558,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	int res = snappy_compress(self.bytes, self.length, buf, &output_length);
 	if (res != SNAPPY_OK )
 	{
-		NSLog(@"Error: problem compressing the file\n");
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: problem compressing the file\n");
 		free(buf);
 		return nil;
 	}
@@ -530,7 +575,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 	for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSUTF16StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding)])
 	{
-		NSString *s = [[NSString alloc] initWithData:self encoding:num.integerValue];
+		NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
 
 		if (!s)
 			continue;
@@ -540,7 +585,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 		return s;
 	}
 
-	NSLog(@"Error: could not create string from data %@", self);
+	asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
 	return nil;
 }
 
@@ -574,7 +619,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
     if (!dict || err)
     {
-        NSLog(@"Error: JSON read fails! input %@ dict %@ err %@", self, dict, err);
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON read fails! input %@ dict %@ err %@", self, dict, err);
         return nil;
     }
 
@@ -587,7 +632,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 	if (![res isKindOfClass:[NSArray class]])
 	{
-        NSLog(@"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
         return nil;
     }
 
@@ -600,7 +645,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 	if (![res isKindOfClass:[NSDictionary class]])
 	{
-        NSLog(@"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
         return nil;
     }
 
@@ -686,7 +731,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSDictionary (CoreCode)
 
-@dynamic mutableObject;
+@dynamic mutableObject, XMLData;
 #if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @dynamic JSONData;
 
@@ -697,7 +742,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
     if (!data || err)
     {
-        NSLog(@"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
         return nil;
     }
 
@@ -705,6 +750,22 @@ static CONST_KEY(CoreCodeAssociatedValue)
 }
 #endif
 
+- (NSData *)XMLData
+{
+    NSError *err;
+	NSData *data =  [NSPropertyListSerialization dataWithPropertyList:self
+															   format:NSPropertyListXMLFormat_v1_0
+															  options:(NSPropertyListWriteOptions)0
+																error:&err];
+
+    if (!data || err)
+    {
+        asl_NSLog(ASL_LEVEL_ERR, @"Error: XML write fails! input %@ data %@ err %@", self, data, err);
+        return nil;
+    }
+
+    return data;
+}
 
 - (NSMutableDictionary *)mutableObject
 {
@@ -864,7 +925,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
@@ -894,8 +955,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
     NSURL *url = [NSURL fileURLWithPath:self];
     CFURLRef cfurl = (BRIDGE CFURLRef) url;
     CFBooleanRef aliasBool = kCFBooleanFalse;
-    BOOL success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
-    BOOL alias = CFBooleanGetValue(aliasBool);
+    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
+    Boolean alias = CFBooleanGetValue(aliasBool);
 
     return alias && success;
 }
@@ -992,15 +1053,19 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)isFloatNumber
 {
-	static NSCharacterSet *cs;
+	static NSCharacterSet *cs = nil;
 
-	ONCE(^
+	if (!cs)
 	{
 		NSMutableCharacterSet *tmp = [NSMutableCharacterSet characterSetWithCharactersInString:@",."];
 		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]];
 		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator]];
-		cs =  tmp.immutableObject;
-	});
+		cs = tmp.immutableObject;
+
+#if  !__has_feature(objc_arc)
+		[cs retain];
+#endif
+	}
 
 	return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) &&
 			([self rangeOfCharacterFromSet:cs].location != NSNotFound);
@@ -1036,15 +1101,18 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	if (![domain contains:@"."])
 		return FALSE;
 
-	static NSCharacterSet *localValid;
-	static NSCharacterSet *domainValid;
+	static NSCharacterSet *localValid = nil, *domainValid = nil;
 
-
-	ONCE(^
+	if (!localValid)
 	{
 		localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
 		domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
-	});
+		
+#if  !__has_feature(objc_arc)
+		[localValid retain];
+		[domainValid retain];
+#endif
+	}
 
 	if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
 		return NO;
@@ -1295,7 +1363,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 #ifdef DEBUG
     if ([NSThread currentThread] == [NSThread mainThread])
-        NSLog(@"Warning: performing blocking download on main thread");
+        LOG(@"Warning: performing blocking download on main thread");
 #endif
 	NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
 #if ! __has_feature(objc_arc)
@@ -1327,6 +1395,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSMutableString *)mutableObject
 {
 	return [NSMutableString stringWithString:self];
+}
+
+- (NSString *)removed:(NSString *)stringToRemove
+{
+	return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
 }
 
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2	// stringByReplacingOccurencesOfString:withString:
@@ -1508,27 +1581,37 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)dataFromHexString
 {
-	const char * bytes = [self cStringUsingEncoding: NSUTF8StringEncoding];
+	const char *bytes = [self cStringUsingEncoding:NSUTF8StringEncoding];
 	NSUInteger length = strlen(bytes);
-	unsigned char * r = (unsigned char *) malloc(length / 2 + 1);
-	unsigned char * index = r;
+	unsigned char *r = (unsigned char *)malloc(length / 2 + 1);
+	unsigned char *index = r;
 
 	while ((*bytes) && (*(bytes +1)))
 	{
 		char encoder[3] = {'\0','\0','\0'};
 		encoder[0] = *bytes;
 		encoder[1] = *(bytes+1);
-		*index = (char) strtol(encoder, NULL, 16);
+		*index = (unsigned char)strtol(encoder, NULL, 16);
 		index++;
 		bytes+=2;
 	}
 	*index = '\0';
 
-	NSData *result = [NSData dataWithBytes: r length: length / 2];
+	NSData *result = [NSData dataWithBytes:r length:length / 2];
 	free(r);
     return result;
 }
 
+- (NSString *)unescaped
+{
+#if  __has_feature(objc_arc)
+	NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
+	return encodedString;
+#else
+	NSString *encodedString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR(""));
+	return [encodedString autorelease];
+#endif
+}
 
 - (NSString *)escaped
 {
@@ -1604,7 +1687,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
 
@@ -1612,8 +1695,8 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
     CFURLRef cfurl = (BRIDGE CFURLRef) self;
     CFBooleanRef aliasBool = kCFBooleanFalse;
-    BOOL success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
-    BOOL alias = CFBooleanGetValue(aliasBool);
+    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
+    Boolean alias = CFBooleanGetValue(aliasBool);
 
     return alias && success;
 }
@@ -1646,6 +1729,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 - (NSURLRequest *)request
 {
 	return [NSURLRequest requestWithURL:self];
+}
+
+- (NSMutableURLRequest *)mutableRequest
+{
+	return [NSMutableURLRequest requestWithURL:self];
 }
 
 - (NSURL *)add:(NSString *)component
@@ -1727,12 +1815,11 @@ static CONST_KEY(CoreCodeAssociatedValue)
 {
 #ifdef DEBUG
 	if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
-        NSLog(@"Warning: performing blocking download on main thread");
+        LOG(@"Warning: performing blocking download on main thread");
 #endif
-	NSData *d = [[NSData alloc] initWithContentsOfURL:self];
-#if ! __has_feature(objc_arc)
-	[d autorelease];
-#endif
+    
+	NSData *d = [NSData dataWithContentsOfURL:self];
+
 	return d;
 }
 
@@ -1757,9 +1844,9 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)stringRepresentation
 {
-	NSMutableString *tmp = [NSMutableString new];
+	NSString *tmp = @"";
 	unichar unicharBuffer[20];
-	int index = 0;
+	NSUInteger index = 0;
 
 	for (unichar uc = 0; uc < (0xFFFF); uc ++)
 	{
@@ -1771,7 +1858,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 
 			if (index == 20)
 			{
-				[tmp appendString:[NSString stringWithCharacters:unicharBuffer length:index]];
+				tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
 
 				index = 0;
 			}
@@ -1779,7 +1866,7 @@ static CONST_KEY(CoreCodeAssociatedValue)
 	}
 
 	if (index != 0)
-		[tmp appendString:[NSString stringWithCharacters:unicharBuffer length:index]];
+		tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
 
 	return tmp;
 }

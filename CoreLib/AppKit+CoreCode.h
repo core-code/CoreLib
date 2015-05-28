@@ -23,8 +23,15 @@
 
 - (IBAction)performBorderlessClose:(id)sender;
 
+
 @end
 
+
+@interface NSView (NSView_ClassSelection)
+
+- (NSView *)viewWithClass:(Class)classofview;
+
+@end
 
 
 @interface NSTextField (NSTextField_AutoFontsize)
@@ -44,7 +51,7 @@
 
 @interface NSTabView (CoreCode)
 
-@property (readonly, nonatomic) NSUInteger selectedTabViewIndex;
+@property (readonly, nonatomic) NSInteger selectedTabViewIndex;
 
 @end
 

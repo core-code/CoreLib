@@ -10,6 +10,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 
+#import "CoreLib.h"
+
 typedef enum
 {
 	kSMTPSuccess = 0,
@@ -23,12 +25,41 @@ typedef enum
 	kSMTPUnreachableHost
 } smtpResult;
 
-@interface JMEmailSender : NSObject { }
+
+@interface JMEmailSender : NSObject
 
 #ifdef USE_APPLEMAIL
-+ (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject timeout:(uint16_t)secs to:(NSString *)recipients attachment:(NSString *)attachmentFilePath;
++ (smtpResult)sendMailWithScriptingBridge:(NSString *)content
+								  subject:(NSString *)subject
+									   to:(NSString *)recipients
+								  timeout:(uint16_t)secs
+							   attachment:(NSString *)attachmentFilePath;
 #endif
 #ifdef USE_MAILCORE
-+ (smtpResult)sendMailWithMailCore:(NSString *)mail subject:(NSString *)subject timeout:(uint16_t)secs server:(NSString *)server port:(uint16_t)port from:(NSString *)sender to:(NSString *)recipients auth:(BOOL)auth tls:(BOOL)tls username:(NSString *)username password:(NSString *)password;
++ (smtpResult)sendMailWithMailCore:(NSString *)content
+						   subject:(NSString *)subject
+						   timeout:(uint16_t)secs
+							server:(NSString *)server
+							  port:(uint16_t)port
+							  from:(NSString *)sender
+								to:(NSString *)recipients
+							  auth:(BOOL)auth
+							   tls:(BOOL)tls
+						  username:(NSString *)username
+						  password:(NSString *)password;
 #endif
+
+
 @end
+
+
+
+#ifdef USE_CGIMAIL
+@interface JMEmailSender (CGIMail)
++ (smtpResult)sendMailWithCGI:(NSString *)content
+					  subject:(NSString *)subject
+						   to:(NSString *)recipients
+					  timeout:(float)timeout
+			  checkBlocklists:(BOOL)checkBlocklists;
+@end
+#endif

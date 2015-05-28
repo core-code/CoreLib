@@ -10,8 +10,9 @@
  */
 
 
+#import "CoreLib.h"
 
-@interface JMAppMovedHandler : NSObject {}
+@interface JMAppMovedHandler : NSObject
 
 + (void)startMoveObservation;
 

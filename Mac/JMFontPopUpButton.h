@@ -10,6 +10,9 @@
  */
 
 
+#import "CoreLib.h"
+
+
 @interface JMFontPopUpButtonCell : NSPopUpButtonCell
 @end
 

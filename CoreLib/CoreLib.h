@@ -12,25 +12,66 @@
 
 #ifdef __OBJC__
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-#error CoreLib requires 10.6
-#endif
-#endif
-
 #ifndef CORELIB
 #define CORELIB 1
 
-#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
-#define __IPHONE_OS_VERSION_MIN_REQUIRED 0
-#endif
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-// basic block types
+
+// include system headers and make sure requrements are met
+#if __has_feature(modules)
+@import Darwin.TargetConditionals;
+#else
+#import <TargetConditionals.h>
+#endif
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+#if __has_feature(modules)
+@import Cocoa;
+#else
+#import <Cocoa/Cocoa.h>
+#endif
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+#error CoreLib requires 10.6
+#endif
+#endif
+
+
+
+// !!!: BASIC TYPES
+typedef CGPoint CCFloatPoint;
+typedef struct
+{
+    NSInteger x;
+    NSInteger y;
+} CCIntPoint;
+typedef struct
+{
+    CGFloat min;
+    CGFloat max;
+    CGFloat length;
+} CCFloatRange1D;
+typedef struct
+{
+    CCFloatPoint min;
+    CCFloatPoint max;
+    CCFloatPoint length;
+} CCFloatRange2D;
+typedef struct
+{
+    NSInteger min;
+    NSInteger max;
+    NSInteger length;
+} CCIntRange1D;
+typedef struct
+{
+    CCIntPoint min;
+    CCIntPoint max;
+    CCIntPoint length;
+} CCIntRange2D;
 #ifdef __BLOCKS__
 typedef void (^BasicBlock)(void);
 typedef void (^DoubleInBlock)(double input);
@@ -39,13 +80,17 @@ typedef void (^ObjectInBlock)(id input);
 typedef id (^ObjectInOutBlock)(id input);
 typedef int (^ObjectInIntOutBlock)(id input);
 typedef float (^ObjectInFloatOutBlock)(id input);
-typedef CGPoint (^ObjectInPointOutBlock)(id input);
+typedef CCIntPoint (^ObjectInPointOutBlock)(id input);
 typedef int (^IntInOutBlock)(int input);
 typedef void (^IntInBlock)(int input);
 typedef int (^IntOutBlock)(void);
 #endif
-
-typedef NS_ENUM(uint8_t, openChoice)
+#ifdef __cplusplus
+#define CC_ENUM(type, name) enum class name : type
+#else
+#define CC_ENUM(type, name) typedef NS_ENUM(type, name)
+#endif
+CC_ENUM(uint8_t, openChoice)
 {
 	openSupportRequestMail = 1,	// VendorProductPage info.plist key
 	openBetaSignupMail,			// FeedbackEmail info.plist key
@@ -56,7 +101,8 @@ typedef NS_ENUM(uint8_t, openChoice)
 };
 
 
-// CUSTOM TEMPLATE COLLECTIONS
+
+// !!!: CUSTOM TEMPLATE COLLECTIONS
 // lets you define custom types for collection classes that so that the compiler knows what type they return
 #define CUSTOM_ARRAY(classname) \
 @interface classname ## Array : NSArray \
@@ -76,7 +122,6 @@ _Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 @end \
 static inline classname ## Array * make ## classname ## Array (void)    { return (classname ## Array *)[NSArray new];} \
 _Pragma("GCC diagnostic pop")
-
 #define CUSTOM_MUTABLE_ARRAY(classname) \
 _Pragma("GCC diagnostic push") \
 _Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
@@ -97,7 +142,6 @@ _Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 @end \
 static inline Mutable ## classname ## Array * make ## Mutable ## classname ## Array (void)    { return (Mutable ## classname ## Array *)[NSMutableArray new];} \
 _Pragma("GCC diagnostic pop")
-
 #define CUSTOM_DICTIONARY(classname) \
 @interface classname ## Dictionary : NSDictionary \
 _Pragma("GCC diagnostic push") \
@@ -111,7 +155,6 @@ _Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 @end \
 static inline classname ## Dictionary * make ## classname ## Dictionary (void)    { return (classname ## Dictionary *)[NSDictionary new];} \
 _Pragma("GCC diagnostic pop")
-
 #define CUSTOM_MUTABLE_DICTIONARY(classname) \
 @interface Mutable ## classname ## Dictionary : NSMutableDictionary \
 _Pragma("GCC diagnostic push") \
@@ -124,8 +167,6 @@ _Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
 @end \
 static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];} \
 _Pragma("GCC diagnostic pop")
-
-
 CUSTOM_ARRAY(NSString)
 CUSTOM_ARRAY(NSNumber)
 CUSTOM_ARRAY(NSArray)
@@ -143,29 +184,21 @@ CUSTOM_DICTIONARY(NSString)
 CUSTOM_DICTIONARY(NSNumber)
 CUSTOM_MUTABLE_DICTIONARY(NSString)
 CUSTOM_MUTABLE_DICTIONARY(NSNumber)
-
-
-
 #define MAKE_MAKER(classname) \
 static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
-
-
 MAKE_MAKER(MutableArray)
 MAKE_MAKER(MutableDictionary)
 MAKE_MAKER(MutableString)
 
 
 
+// !!!: CORELIB OBJ INTERFACE
 @interface CoreLib : NSObject
-
-@property (readonly, nonatomic) NSArray *appCrashLogs;
-
 // info bundle key convenience
 @property (readonly, nonatomic) NSString *appID;
 @property (readonly, nonatomic) int appBuild;
 @property (readonly, nonatomic) NSString *appVersionString;
 @property (readonly, nonatomic) NSString *appName;
-
 // path convenience
 @property (readonly, nonatomic) NSString *prefsPath;
 @property (readonly, nonatomic) NSString *resDir;
@@ -178,18 +211,16 @@ MAKE_MAKER(MutableString)
 @property (readonly, nonatomic) NSURL *deskURL;
 @property (readonly, nonatomic) NSURL *suppURL;
 @property (readonly, nonatomic) NSURL *homeURL;
-
-
-#ifdef USE_SECURITY
+// misc
+@property (readonly, nonatomic) NSArray *appCrashLogs;
 @property (readonly, nonatomic) NSString *appSHA;
-#endif
-
 - (void)openURL:(openChoice)choice;
-
 @end
 
-// convenience globals for CoreLib and common words singletons
-extern CoreLib *cc; // init CoreLib with: cc = [CoreLib new]; 
+
+
+// !!!: GLOBALS
+extern CoreLib *cc; // init CoreLib with: cc = [CoreLib new];
 extern NSUserDefaults *userDefaults;
 extern NSFileManager *fileManager;
 extern NSNotificationCenter *notificationCenter;
@@ -202,20 +233,25 @@ extern NSProcessInfo *processInfo;
 #endif
 
 
-// alert convenience
+
+// !!!: ALERT FUNCTIONS
 NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *choices, NSInteger *result); // alert with popup button for selection of choice
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
-NSInteger alert(NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
-NSInteger alert_apptitled(NSString *msgFormat, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
-void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
-void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *msgFormat, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
+NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result);
+NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
+NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
+void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
 void alert_feedback_fatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
 void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 
 
-// obj creation convenience
+
+// !!!: OBJECT CREATION FUNCTIONS
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
+NSString *makeTempFolder();
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -227,7 +263,7 @@ UIColor *makeColor255(float r, float g, float b, float a);
 #endif
 
 
-// gcd convenience
+// !!!: GRAND CENTRAL DISPATCH FUNCTIONS
 void dispatch_after_main(float seconds, dispatch_block_t block);
 void dispatch_after_back(float seconds, dispatch_block_t block);
 void dispatch_async_main(dispatch_block_t block);
@@ -237,59 +273,43 @@ void dispatch_sync_back(dispatch_block_t block);
 
 
 
-
-// for easy const key generation
+// !!!: CONSTANT KEYS
 #define CONST_KEY(name) \
+static NSString *const k ## name ## Key = @ #name;
+#define CONST_KEY_IMPLEMENTATION(name) \
 NSString *const k ## name ## Key = @ #name;
-
-#define CONST_KEY_EXTERN(name) \
+#define CONST_KEY_DECLARATION(name) \
 extern NSString *const k ## name ## Key;
-
-
-#define CONST_KEY_CUSTOM(key, value) \
-NSString *const key = @ #value;
-
-#define CONST_KEY_CUSTOM_EXTERN(name) \
-extern NSString *const name;
-
-
-#define CONST_KEY_ENUM_SINGLE(name, enumname) \
+#define CONST_KEY_ENUM(name, enumname) \
 @interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
 enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
-
-#define CONST_KEY_ENUM(name, enumname) \
+#define CONST_KEY_ENUM_IMPLEMENTATION(name, enumname) \
 enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
-
-#define CONST_KEY_ENUM_EXTERN(name, enumname) \
+#define CONST_KEY_ENUM_DECLARATION(name, enumname) \
 @interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
 extern enumname ## Key *const k ## name ## Key;
 
 
-// logging support
+
+// !!!: LOGGING
 #include <asl.h>
-extern aslclient client;
 void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
-void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
+#ifdef FORCE_LOG
+    #define asl_NSLog_debug(...) asl_NSLog(ASL_LEVEL_NOTICE, __VA_ARGS__ )
+#elif defined(DEBUG)
+    #define asl_NSLog_debug(...) asl_NSLog(ASL_LEVEL_DEBUG, __VA_ARGS__ )
+#else
+	#define asl_NSLog_debug(...)
+#endif
+#define LOGFUNC				asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), self)
+#define LOGFUNCPARAM(x)		asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), self, [(x) description])
+#define LOGSUCC				asl_NSLog_debug(@"success %@ %d", @(__FILE__), __LINE__)
+#define LOGFAIL				asl_NSLog_debug(@"failure %@ %d", @(__FILE__), __LINE__)
+#define LOG(x)				asl_NSLog_debug(@"%@", [(x) description]);
 
 
-// old sdk support
-#ifndef NSAppKitVersionNumber10_6
-    #define NSAppKitVersionNumber10_6 1038
-#endif
-#ifndef NSAppKitVersionNumber10_7
-    #define NSAppKitVersionNumber10_7 1138
-#endif
-#ifndef NSAppKitVersionNumber10_8
-    #define NSAppKitVersionNumber10_8 1187
-#endif
-#ifndef NSAppKitVersionNumber10_9
-	#define NSAppKitVersionNumber10_9 1265
-#endif
-#ifndef NSAppKitVersionNumber10_10
-	#define NSAppKitVersionNumber10_10 1343.14
-#endif
 
-// convenience macros
+// !!!: CONVENIENCE MACROS
 #define PROPERTY_STR(p)		NSStringFromSelector(@selector(p))
 #define OBJECT_OR(x,y)		((x) ? (x) : (y))
 #define STRING_OR(x, y)		(((x) && ([x length])) ? (x) : (y))
@@ -310,31 +330,35 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 #define MIN3(x,y,z)			(MIN(MIN((x),(y)),(z)))
 
 // log macros
-#ifdef DEBUG
-#define NSDebugLog(fmt, ...) {NSLog(fmt, ## __VA_ARGS__);}
-#else
-#define NSDebugLog(fmt, ...) {;}
+
+
+// !!!: MISC MACROS
+#ifndef NSAppKitVersionNumber10_6
+#define NSAppKitVersionNumber10_6 1038
 #endif
-#define LOGFUNC				NSLog(@"%s (%p)", __PRETTY_FUNCTION__, self)
-#define LOGFUNCPARAM(x)		NSLog(@"%s (%p) [%@]", __PRETTY_FUNCTION__, self, [(x) description])
-#define LOGSUCC				NSLog(@"success %s %d", __FILE__, __LINE__)
-#define LOGFAIL				NSLog(@"failure %s %d", __FILE__, __LINE__)
-#define LOG(x)				NSLog(@"%@", [(x) description]);
-#define LOGFUNCDBG			NSDebugLog(@"%s (%p)", __PRETTY_FUNCTION__, self)
-#define LOGFUNCPARAMDBG(x)	NSDebugLog(@"%s (%p) [%@]", __PRETTY_FUNCTION__, self, [(x) description])
-#define LOGSUCCDBG			NSDebugLog(@"success %s %d", __FILE__, __LINE__)
-#define LOGFAILDBG			NSDebugLog(@"failure %s %d", __FILE__, __LINE__)
-#define LOGDBG(x)			NSDebugLog(@"%@", [(x) description]);
+#ifndef NSAppKitVersionNumber10_7
+#define NSAppKitVersionNumber10_7 1138
+#endif
+#ifndef NSAppKitVersionNumber10_8
+#define NSAppKitVersionNumber10_8 1187
+#endif
+#ifndef NSAppKitVersionNumber10_9
+#define NSAppKitVersionNumber10_9 1265
+#endif
+#ifndef NSAppKitVersionNumber10_10
+#define NSAppKitVersionNumber10_10 1343.14
+#endif
+#if ! __has_feature(objc_arc)
+#define BRIDGE
+#else
+#define BRIDGE __bridge
+#endif
+#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
+#define __IPHONE_OS_VERSION_MIN_REQUIRED 0
+#endif
 
-// track usages and questions per versions or per app
-#define kUsagesThisVersionKey makeString(@"corelib_%@_usages", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
-#define kAskedThisVersionKey makeString(@"corelib_%@_asked", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"])
-#define kUsagesAllVersionsKey @"corelib_usages"
-#define kAskedAllVersionsKey @"corelib_asked"
 
-
-
-// vendor information only used for [cc openURL:(openChoice)choice]
+// !!!: CONFIGURATION
 #ifdef VENDOR_HOMEPAGE
 #define kVendorHomepage VENDOR_HOMEPAGE
 #else
@@ -348,8 +372,7 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 
 
-
-	// categories
+// !!!: INCLUDES
 #import "AppKit+CoreCode.h"
 #import "Foundation+CoreCode.h"
 
@@ -360,7 +383,20 @@ void asl_NSLog_debug(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 
 
-
+// !!!: UNDEFS
+// this makes sure youo not compare the return values of our alert*() functions against old values and use NSLog when you should use ASL. remove as appropriate
+#ifndef IMADESURENOTTOCOMPAREALERTRETURNVALUESAGAINSTOLDRETURNVALUES
+    // alert() and related corelib functions previously returned old deprecated return values from NSRunAlertPanel() and friends. now they return new NSAlertFirst/..ButtonReturn values. we undefine the old return values to make sure you don't use them. if you use NSRunAlertPanel() and friends directly in your code you can set the define to prevent the errors after making sure to update return value checks of alert*()
+    #define NSAlertDefaultReturn
+    #define NSAlertAlternateReturn
+    #define NSAlertOtherReturn
+    #define NSAlertErrorReturn
+    #define NSOKButton
+    #define NSCancelButton
+#endif
+#define asl_log
+#define NSLog
+    
 #ifdef __cplusplus
 }
 #endif

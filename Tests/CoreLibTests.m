@@ -40,4 +40,16 @@
 	NSString *result = bla.title;
 	XCTAssert([result isEqualToString:@"1"]);
 }
+
+- (void)testStringHexRoundtrip
+{
+    
+    NSData *data = @"/System/Library/PreferencePanes/Dock.prefPane/Contents/Resources/Dock.png".contents;
+    
+    NSString *bla = data.hexString;
+    
+    NSData *data2 = bla.dataFromHexString;
+    
+    XCTAssert([data isEqualToData:data2]);
+}
 @end

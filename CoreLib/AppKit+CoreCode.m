@@ -22,15 +22,15 @@
 
 
 
-static CONST_KEY(CCProgressDetailInfo)
-static CONST_KEY(CCProgressSheet)
-static CONST_KEY(CCProgressIndicator)
+CONST_KEY(CCProgressDetailInfo)
+CONST_KEY(CCProgressSheet)
+CONST_KEY(CCProgressIndicator)
 
 @implementation NSTabView (CoreCode)
 
 @dynamic selectedTabViewIndex;
 
-- (NSUInteger)selectedTabViewIndex
+- (NSInteger)selectedTabViewIndex
 {
 	return [self indexOfTabViewItem:[self selectedTabViewItem]];
 }
@@ -137,6 +137,24 @@ static CONST_KEY(CCProgressIndicator)
 	[self close];
 }
 @end
+
+
+@implementation NSView (NSView_ClassSelection)
+
+- (NSView *)viewWithClass:(Class)classofview
+{
+	if ([self isKindOfClass:classofview])
+		return self;
+
+	for (NSView *view in self.subviews)
+		if ([view viewWithClass:classofview])
+			return [view viewWithClass:classofview];
+
+	return nil;
+}
+
+@end
+
 
 
 @implementation NSTextField (NSTextField_AutoFontsize)

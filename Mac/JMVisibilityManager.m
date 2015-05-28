@@ -10,13 +10,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 #import "JMVisibilityManager.h"
+
 #if __has_feature(modules)
 @import Carbon;
 #else
 #import <Carbon/Carbon.h>
 #endif
 
-static CONST_KEY(JMVisibilityManagerValue)
+
+CONST_KEY(JMVisibilityManagerValue)
 
 
 @interface VisibilityManager ()
@@ -56,7 +58,7 @@ static CONST_KEY(JMVisibilityManagerValue)
 		
 		_visibilitySetting = kVisibleNowhere;
 
-		_makeMenubarIconsDarkTemplate = YES;
+		_templateSetting = kTemplateNever;
 
 
 		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
@@ -118,8 +120,11 @@ static CONST_KEY(JMVisibilityManagerValue)
 
 - (void)setMenubarIcon:(NSImage *)newMenubarIcon
 {
-	if (_makeMenubarIconsDarkTemplate)
-		[newMenubarIcon setTemplate:YES];
+	if ((self.templateSetting == kTemplateAlways) ||
+		((self.templateSetting == kTemplateWhenDarkMenubar) && OS_IS_POST_10_9 && [[[NSAppearance currentAppearance] name] contains:@"NSAppearanceNameVibrantDark"]))
+		newMenubarIcon.template = YES;
+	else
+		newMenubarIcon.template = NO;
 
 	_menubarIcon = newMenubarIcon;
 	

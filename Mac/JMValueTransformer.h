@@ -10,20 +10,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 
 
-@interface ValidEmailValueTransformer: NSValueTransformer {} @end
+#import "CoreLib.h"
+
+
+@interface ValidEmailValueTransformer: NSValueTransformer @end
 
 
 
-@interface BaseValueTransformer : NSValueTransformer {}@end
+@interface BaseValueTransformer : NSValueTransformer @end
 
-@interface OddValueTransformer: BaseValueTransformer {} @end
-@interface EvenValueTransformer: BaseValueTransformer {} @end
+@interface OddValueTransformer: BaseValueTransformer @end
+@interface EvenValueTransformer: BaseValueTransformer @end
 
-@interface NumericComparisonValueTransformer : NSValueTransformer {} @end
-@interface SmallerthanValueTransformer : NumericComparisonValueTransformer {} @end
-@interface LargerthanValueTransformer : NumericComparisonValueTransformer {} @end
-@interface EqualtoValueTransformer : NumericComparisonValueTransformer {} @end
-@interface DifferenttoValueTransformer : NumericComparisonValueTransformer {} @end
+@interface NumericComparisonValueTransformer : NSValueTransformer @end
+@interface SmallerthanValueTransformer : NumericComparisonValueTransformer @end
+@interface LargerthanValueTransformer : NumericComparisonValueTransformer @end
+@interface EqualtoValueTransformer : NumericComparisonValueTransformer @end
+@interface DifferenttoValueTransformer : NumericComparisonValueTransformer @end
 
 
 

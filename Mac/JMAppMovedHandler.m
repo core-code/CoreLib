@@ -11,13 +11,11 @@
 
 #import "JMAppMovedHandler.h"
 
-#if ! __has_feature(objc_arc)
-#define BRIDGE
-#else
-#define BRIDGE __bridge
-#endif
+
 
 static int bundleFileDescriptor;
+
+
 
 void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 						  void *clientCallBackInfo,
@@ -27,7 +25,6 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 						  const FSEventStreamEventId eventIds[])
 {
 	//char **paths = eventPaths;
-
 
 
 	for (size_t i = 0; i < numEvents; i++)
@@ -40,31 +37,27 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 			fcntl(bundleFileDescriptor, F_GETPATH, newPath);
 
-			NSString *appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 
 
 
-			alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", nil), appname], [NSString stringWithFormat:NSLocalizedString(@"Restart %@", nil), appname], nil, nil);
+			alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", nil), cc.appName], [NSString stringWithFormat:NSLocalizedString(@"Restart %@", nil), cc.appName], nil, nil);
 
 
 		//	printf("new path: %s\n", newPath);
 
-			NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%s", newPath]];
+			NSURL *url = @(newPath).fileURL;
+
+			NSRunningApplication *newInstance = [workspace launchApplicationAtURL:url
+																		  options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
+																	configuration:nil error:NULL];
+
 			free(newPath);
-			LSLaunchURLSpec launchSpec;
-			launchSpec.appURL = (BRIDGE CFURLRef)url;
-			launchSpec.itemURLs = NULL;
-			launchSpec.passThruParams = NULL;
-			launchSpec.asyncRefCon = NULL;
-			launchSpec.launchFlags = kLSLaunchDefaults | kLSLaunchNewInstance;
-
-
-			OSStatus err = LSOpenFromURLSpec(&launchSpec, NULL);
-			if (err == noErr)
+			
+			if (newInstance)
 				[NSApp terminate:nil];
 			else
 			{
-				alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ could not restart itself. Please do so yourself.", nil), appname], NSLocalizedString(@"Quit", nil), nil, nil);
+				alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ could not restart itself. Please do so yourself.", nil), cc.appName], NSLocalizedString(@"Quit", nil), nil, nil);
 
 				[NSApp terminate:nil];
 			}

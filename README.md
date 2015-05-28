@@ -5,7 +5,7 @@ CoreLib is a collection of reusable Objective-C source code to make various aspe
 
 CoreLib is designed so you can just use the parts you want/need and are not forced to adopt all of it. 
 
-Just include CoreLib.h in your .pch and the files performing the tasks you are interested in.
+Just #import CoreLib.h in your .pch (or in files that use it). Additional Classes in the Mac/ and iOS/ folders can be included as needed.
 
 CoreLib has these components:
 
@@ -28,7 +28,7 @@ CoreLib has these components:
 
 in your PCH file:
  
-	#import "CoreLib_Availability.h" // optional, for warnings on calls to unavailable methods
+	#import "CoreLib_Availability.h" // optional, this provides warnings on calls to methods unavailable in your deployment target - only works when not compiling with 'modules'
 	#import <Cocoa/Cocoa.h> // you had that before
 	#import "CoreLib.h"
 
@@ -73,17 +73,27 @@ write
 
 there are many more convenience methods including some functional extensions for NSArray.
 
-### Defines
+### Defines & Configuration
 
 some features of CoreLib require linking additional frameworks and are therefore only available if you include these framework and set some preprocessor value:
-	#define USE_SECURITY 1 // if you link Security.framework
-	#define USE_SYSTEMCONFIGURATION 1 // if you link SystemConfiguration.framework
-	#define USE_IOKIT 1 // if you link IOKit.framework
-	#define USE_DISKARBITRATION 1 // if you link DiskArbitration.framework
+	#define USE_SECURITY 1 // if you (want to) link Security.framework
+	#define USE_SYSTEMCONFIGURATION 1 // if you (want to) link SystemConfiguration.framework
+	#define USE_IOKIT 1 // if yo (want to) link IOKit.framework
+	#define USE_DISKARBITRATION 1 // if you (want to) link DiskArbitration.framework
 
-	#define USE_APPLEMAIL 1 // if you have the ScriptingDefinition for Mail.app 
+	#define USE_APPLEMAIL 1 // if you want to send mail through Mail.app with the ScriptingBridge (needs temporary exception if sandboxed)
 
-	#define USE_SNAPPY 1 // if you link Snappy.framework
 	#define USE_MAILCORE 1 // if you link MailCore.framework
+	#define USE_SNAPPY 1 // if you link Snappy.framework
+
 additionally some parts of CoreLib require setting the SANDBOX #define to indicate whether your app is sandbox
-	
+
+also you can define VENDOR_HOMEPAGE and FEEDBACK_EMAIL for the built-in feedback mechanism (openURL)	
+
+some parts of CoreLib do more checking if DEBUG is defined
+
+CoreLib saves the last 10 messages logged with asl_NSLog() to the user defaults unless you define  DONTLOGASLTOUSERDEFAULTS
+
+CoreLib has changed its return values of the alert*() functions away from deprecated NSAlertDefaultReturn/NSOKButton values and undefines those to make sure you update. define IMADESURENOTTOCOMPAREALERTRETURNVALUESAGAINSTOLDRETURNVALUES to make sure you can still use the old return values for old appkit functions
+
+defining FORCE_LOG forces output to the system log even for release builds

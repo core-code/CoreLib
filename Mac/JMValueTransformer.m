@@ -55,10 +55,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 @interface NumericComparisonValueTransformer ()
-{
-@protected
-	NSInteger comparisonValue;
-}
+@property (assign, nonatomic) NSInteger comparisonValue;
 @end
 
 @implementation NumericComparisonValueTransformer
@@ -69,7 +66,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		NSString *className = NSStringFromClass([self class]);
 		className = [className stringByTrimmingLeadingCharactersInSet:[NSCharacterSet letterCharacterSet]];
 		className = [className stringByTrimmingTrailingCharactersInSet:[NSCharacterSet letterCharacterSet]];
-		comparisonValue = className.intValue;
+		self.comparisonValue = className.intValue;
 	}
 	return self;
 }
@@ -77,16 +74,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 @implementation SmallerthanValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] < comparisonValue); }
+- (id)transformedValue:(id)value { return @([value intValue] < self.comparisonValue); }
 @end
 @implementation LargerthanValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] > comparisonValue); }
+- (id)transformedValue:(id)value { return @([value intValue] > self.comparisonValue); }
 @end
 @implementation EqualtoValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] == comparisonValue); }
+- (id)transformedValue:(id)value { return @([value intValue] == self.comparisonValue); }
 @end
 @implementation DifferenttoValueTransformer
-- (id)transformedValue:(id)value { return @([value intValue] != comparisonValue); }
+- (id)transformedValue:(id)value { return @([value intValue] != self.comparisonValue); }
 @end
 
 
