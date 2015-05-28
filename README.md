@@ -65,9 +65,9 @@ example string convenience:
 
 	// trimming whitespace
 	// old way
-	// [someString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
+	[someString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
 	// new way
-	// string.trimmedOfWhitespace;
+	string.trimmedOfWhitespace;
 
 
 example downloading files:
