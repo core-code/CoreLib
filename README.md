@@ -40,42 +40,52 @@ in your applicationDidFinishLaunching:  method:
 
 some examples how CoreLib makes developing apps more fun.
 
-instead of
+example user defaults convenience:
 
-	[[NSUserDefaults standardUserDefaults] objectForKey:@"MyPref"]
-write
-
-	@"MyPref".defaultObj
-
-instead of
-
+	// setting defaults
+	// old way 
 	[[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"MyPref"];
-write
-
+	// new way 
 	@"MyPref".defaultInt = 1;
 
-instead of
+	// using defaults
+	// old way 
+	[[NSUserDefaults standardUserDefaults] objectForKey:@"MyPref"]
+	// new way 
+	@"MyPref".defaultObj
 
+
+example string convenience:
+
+	// splitting string into lines
+	// old way
 	[@"abc\ndef\nbla" componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]
-write
-
+	// new way
 	@"abc\ndef\nbla".lines
 
-instead of
+	// trimming whitespace
+	// old way
+	// [someString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]
+	// new way
+	// string.trimmedOfWhitespace;
 
+
+example downloading files:
+
+	// old way
 	NSURL *url = [NSURL URLWithString:@"http://myhost/myfile"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url];
 	NSData *file = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
-
-write
-
+	// new way
 	NSData *file = @"http://myhost/myfile".download;
 
-there are many more convenience methods including some functional extensions for NSArray.
+there are about 2000 lines of convenience categories including some functional extensions for NSArray.
 
 ### Defines & Configuration
 
 some features of CoreLib require linking additional frameworks and are therefore only available if you include these framework and set some preprocessor value:
+
+
 	#define USE_SECURITY 1 // if you (want to) link Security.framework
 	#define USE_SYSTEMCONFIGURATION 1 // if you (want to) link SystemConfiguration.framework
 	#define USE_IOKIT 1 // if yo (want to) link IOKit.framework
