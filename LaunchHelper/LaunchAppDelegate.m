@@ -36,7 +36,7 @@ static NSString *restartWithPID;
 
 @end
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
 	if (argc >= 2)
     {

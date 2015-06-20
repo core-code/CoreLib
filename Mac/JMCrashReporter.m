@@ -12,9 +12,7 @@
 
 #import "JMCrashReporter.h"
 #import "JMHostInformation.h"
-#ifdef SENDTHROUGHCGI
-#import "JMEmailSender+CGIDelivery.h"
-#endif
+
 
 #define kLastCrashDateKey		@"CoreLib_lastcrashdate"
 #define kNeverCheckCrashesKey	@"CoreLib_nevercheckcrashes"
@@ -104,10 +102,9 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 					}
 
 					NSString *subject = [NSString stringWithFormat:@"%@ Crashreport", cc.appName];
-					NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", cc.appName, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuild, crashlog, [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] description]];
-#ifdef SENDTHROUGHCGI
-					[JMEmailSender sendMailWithCGI:body subject:subject to:email withTimeout:10 checkBlocklists:NO];
-#else
+					NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", cc.appName, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuildNumber, crashlog, [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] description]];
+
+
 					NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", email, subject, body];
 					CFStringRef urlstring = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)mailtoLink, NULL, NULL, kCFStringEncodingUTF8);
 					NSURL *url = [NSURL URLWithString:(__bridge NSString *)urlstring];
@@ -115,7 +112,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 					CFRelease(urlstring);
 					if (![[NSWorkspace sharedWorkspace] openURL:url])
 						asl_NSLog(ASL_LEVEL_WARNING, @"Warning: %@ was unable to open the URL.", cc.appName);
-#endif
+
 				}
 				else if (code == NSAlertSecondButtonReturn)
 					[[NSUserDefaults standardUserDefaults] setInteger:1 forKey:kNeverCheckCrashesKey];

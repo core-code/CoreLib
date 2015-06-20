@@ -195,8 +195,8 @@ MAKE_MAKER(MutableString)
 // !!!: CORELIB OBJ INTERFACE
 @interface CoreLib : NSObject
 // info bundle key convenience
-@property (readonly, nonatomic) NSString *appID;
-@property (readonly, nonatomic) int appBuild;
+@property (readonly, nonatomic) NSString *appBundleIdentifier;
+@property (readonly, nonatomic) int appBuildNumber;
 @property (readonly, nonatomic) NSString *appVersionString;
 @property (readonly, nonatomic) NSString *appName;
 // path convenience
@@ -213,8 +213,8 @@ MAKE_MAKER(MutableString)
 @property (readonly, nonatomic) NSURL *homeURL;
 // misc
 @property (readonly, nonatomic) NSArray *appCrashLogs;
-@property (readonly, nonatomic) NSString *appSHA;
-- (void)openURL:(openChoice)choice;
+@property (readonly, nonatomic) NSString *appChecksumSHA;
+- (void)openURL:(openChoice)choice; // todo: move to
 @end
 
 
@@ -230,6 +230,7 @@ extern NSDistributedNotificationCenter *distributedNotificationCenter;
 extern NSWorkspace *workspace;
 extern NSApplication *application;
 extern NSProcessInfo *processInfo;
+extern NSBundle *bundle;
 #endif
 
 
@@ -328,6 +329,9 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define OS_IS_POST_10_9		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
 #define MAX3(x,y,z)			(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)			(MIN(MIN((x),(y)),(z)))
+#define BYTES_TO_KB(x)		((double)(x) / (1024.0))
+#define BYTES_TO_MB(x)		((double)(x) / (1024.0 * 1024))
+#define BYTES_TO_GB(x)		((double)(x) / (1024.0 * 1024 * 1024))
 
 // log macros
 
@@ -356,6 +360,10 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
 #define __IPHONE_OS_VERSION_MIN_REQUIRED 0
 #endif
+#define kSecondsPerMinute (60)
+#define kSecondsPerHour (60 * kSecondsPerMinute)
+#define kSecondsPerDay (24 * kSecondsPerHour)
+#define kSecondsPerWeek (7 * kSecondsPerDay)
 
 
 // !!!: CONFIGURATION

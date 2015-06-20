@@ -28,6 +28,7 @@
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSArray *sorted;
+@property (readonly, nonatomic) NSString *literalString;
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
@@ -53,7 +54,7 @@
 - (NSArray *)mapped:(ObjectInOutBlock)block;
 - (NSArray *)filtered:(ObjectInIntOutBlock)block;
 - (NSArray *)filteredUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
-- (NSInteger)collect:(ObjectInIntOutBlock)block;
+- (NSInteger)reduce:(ObjectInIntOutBlock)block;
 
 // versions similar to cocoa methods
 - (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
@@ -88,103 +89,6 @@
 
 
 
-@interface NSData (CoreCode)
-
-@property (readonly, nonatomic) NSMutableData *mutableObject;
-@property (readonly, nonatomic) NSString *string;
-@property (readonly, nonatomic) NSString *hexString;
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
-@property (readonly, nonatomic) NSDictionary *JSONDictionary;
-@property (readonly, nonatomic) NSArray *JSONArray;
-#endif
-
-#ifdef USE_SNAPPY
-@property (readonly, nonatomic) NSData *snappyCompressed;
-@property (readonly, nonatomic) NSData *snappyDecompressed;
-#endif
-
-#ifdef USE_SECURITY
-@property (readonly, nonatomic) NSString *SHA1;
-#endif
-
-@end
-
-
-
-@interface NSDate (CoreCode)
-
-// date format strings:   dd.MM.yyyy HH:mm:ss
-+ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
-+ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;
-+ (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
-- (NSString *)stringUsingFormat:(NSString *)dateFormat;
-- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
-
-@end
-
-
-
-@interface NSDateFormatter (CoreCode)
-
-+ (NSString *)formattedTimeFromTimeInterval:(NSTimeInterval)timeInterval;
-
-@end
-
-
-
-@interface NSDictionary (CoreCode)
-
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
-@property (readonly, nonatomic) NSData *JSONData;
-#endif
-@property (readonly, nonatomic) NSData *XMLData;
-@property (readonly, nonatomic) NSMutableDictionary *mutableObject;
-- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
-- (NSDictionary *)dictionaryByRemovingKey:(NSString *)key;
-- (NSDictionary *)dictionaryByRemovingKeys:(NSStringArray *)keys;
-
-@end
-
-
-@interface NSMutableDictionary (CoreCode)
-
-@property (readonly, nonatomic) NSDictionary *immutableObject;
-
-@end
-
-
-
-@interface NSFileHandle (CoreCode)
-
-- (float)readFloat;
-- (int)readInt;
-
-@end
-
-
-
-@interface NSLocale (CoreCode)
-
-+ (NSArray *)preferredLanguages3Letter;
-
-@end
-
-
-
-
-@interface NSObject (CoreCode)
-
-@property (readonly, nonatomic) id id;
-- (id)associatedValueForKey:(NSString *)key;
-- (void)setAssociatedValue:(id)value forKey:(NSString *)key;
-@property (retain, nonatomic) id associatedValue;
-+ (instancetype)newWith:(NSDictionary *)dict;
-
-@end
-
-
-
-
 @interface NSString (CoreCode)
 
 // filesystem support
@@ -202,6 +106,9 @@
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
 @property (readonly, nonatomic) NSRange fullRange;
+@property (readonly, nonatomic) NSString *literalString;
+
+@property (readonly, nonatomic) NSString *stringByResolvingSymlinksInPathFixed;
 
 // path string to url
 @property (readonly, nonatomic) NSURL *fileURL;
@@ -242,7 +149,7 @@
 @property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
 @property (readonly, nonatomic) NSString *trimmedOfWhitespace;
 @property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;
-@property (readonly, nonatomic) NSString *unescaped; 
+@property (readonly, nonatomic) NSString *unescaped;
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
 @property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
@@ -332,6 +239,104 @@
 @end
 
 
+
+@interface NSData (CoreCode)
+
+@property (readonly, nonatomic) NSMutableData *mutableObject;
+@property (readonly, nonatomic) NSString *string;
+@property (readonly, nonatomic) NSString *hexString;
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+@property (readonly, nonatomic) NSDictionary *JSONDictionary;
+@property (readonly, nonatomic) NSArray *JSONArray;
+#endif
+
+#ifdef USE_SNAPPY
+@property (readonly, nonatomic) NSData *snappyCompressed;
+@property (readonly, nonatomic) NSData *snappyDecompressed;
+#endif
+
+#ifdef USE_SECURITY
+@property (readonly, nonatomic) NSString *SHA1;
+#endif
+
+@end
+
+
+
+@interface NSDate (CoreCode)
+
+// date format strings:   dd.MM.yyyy HH:mm:ss
++ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
++ (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;
++ (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
+- (NSString *)stringUsingFormat:(NSString *)dateFormat;
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
+
+@end
+
+
+
+@interface NSDateFormatter (CoreCode)
+
++ (NSString *)formattedTimeFromTimeInterval:(NSTimeInterval)timeInterval;
+
+@end
+
+
+
+@interface NSDictionary (CoreCode)
+
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+@property (readonly, nonatomic) NSData *JSONData;
+#endif
+@property (readonly, nonatomic) NSData *XMLData;
+@property (readonly, nonatomic) NSMutableDictionary *mutableObject;
+- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
+- (NSDictionary *)dictionaryByRemovingKey:(NSString *)key;
+- (NSDictionary *)dictionaryByRemovingKeys:(NSStringArray *)keys;
+@property (readonly, nonatomic) NSString *literalString;
+
+@end
+
+
+@interface NSMutableDictionary (CoreCode)
+
+@property (readonly, nonatomic) NSDictionary *immutableObject;
+
+@end
+
+
+
+@interface NSFileHandle (CoreCode)
+
+- (float)readFloat;
+- (int)readInt;
+
+@end
+
+
+
+@interface NSLocale (CoreCode)
+
++ (NSArray *)preferredLanguages3Letter;
+
+@end
+
+
+
+
+@interface NSObject (CoreCode)
+
+@property (readonly, nonatomic) id id;
+- (id)associatedValueForKey:(NSString *)key;
+- (void)setAssociatedValue:(id)value forKey:(NSString *)key;
+@property (retain, nonatomic) id associatedValue;
++ (instancetype)newWith:(NSDictionary *)dict;
+
+@end
+
+
+
 @interface NSCharacterSet (CoreCode)
 
 @property (readonly, nonatomic) NSMutableCharacterSet *mutableObject;
@@ -346,3 +351,9 @@
 @end
 
 
+
+@interface NSNumber (CoreCode)
+
+@property (readonly, nonatomic) NSString *literalString;
+
+@end

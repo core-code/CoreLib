@@ -28,9 +28,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @dynamic launchesAtLogin;
 
-+ (NSString *)appID
++ (NSString *)appIDCleaned
 {
-	NSString *appID = cc.appID;
+	NSString *appID = cc.appBundleIdentifier;
 
 	if ([appID hasSuffix:@"-DEMO"]) appID = [appID removed:@"-DEMO"];
 	if ([appID hasSuffix:@"-TRYOUT"]) appID = [appID removed:@"-TRYOUT"];
@@ -38,7 +38,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	return appID;
 }
 
-+ (NSString *)appName
++ (NSString *)appNameCleaned
 {
 	NSString *appName = cc.appName;
 
@@ -51,7 +51,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 + (void)restartApp
 {
-	NSString *appPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app", [LoginItemManager appName])];
+	NSString *appPath = [[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app", [LoginItemManager appNameCleaned])];
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
 
 	[[NSWorkspace sharedWorkspace] launchApplicationAtURL:appPath.fileURL
@@ -66,10 +66,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC;
 
-	NSString *helperBundleIdentifier = [[LoginItemManager appID] stringByAppendingString:@"LaunchHelper"];
+	NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
 #ifdef DEBUG
-	NSString *infoPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:
-						  makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appName])];
+	NSString *infoPath = [[bundle bundlePath] stringByAppendingPathComponent:
+						  makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])];
 	NSDictionary *infoDictionary = [NSDictionary dictionaryWithContentsOfFile:infoPath];
 	NSString *bundleIdentifierInHelperOnDisk = infoDictionary[@"CFBundleIdentifier"];
 	assert([bundleIdentifierInHelperOnDisk isEqualToString:helperBundleIdentifier]);
@@ -87,7 +87,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         
         for (NSDictionary * job in jobDicts)
         {
-            if ([helperBundleIdentifier isEqualToString:[job objectForKey:@"Label"]])
+			NSString *label = [job objectForKey:@"Label"];
+
+            if ([helperBundleIdentifier isEqualToString:label])
             {
                 onDemand = [[job objectForKey:@"OnDemand"] boolValue];
                 break;
@@ -108,8 +110,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	//[self willChangeValueForKey:@"launchesAtLogin"];
 
-    NSString *helperBundleIdentifier = [[LoginItemManager appID] stringByAppendingString:@"LaunchHelper"];
-	assert([[NSDictionary dictionaryWithContentsOfFile:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appName])]][@"CFBundleIdentifier"] isEqualToString:helperBundleIdentifier]);
+    NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
+	assert([[NSDictionary dictionaryWithContentsOfFile:[[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])]][@"CFBundleIdentifier"] isEqualToString:helperBundleIdentifier]);
 
 
 	if (launchesAtLogin && ![self launchesAtLogin]) // add it

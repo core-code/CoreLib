@@ -29,6 +29,7 @@ NSFontManager *fontManager;
 NSDistributedNotificationCenter *distributedNotificationCenter;
 NSApplication *application;
 NSWorkspace *workspace;
+NSBundle *bundle;
 NSProcessInfo *processInfo;
 #endif
 
@@ -42,9 +43,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appID, appBuild, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL
+@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL
 #ifdef USE_SECURITY
-, appSHA;
+, appChecksumSHA;
 #else
 ;
 #endif
@@ -59,7 +60,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	assert(!cc);
 	if ((self = [super init]))
 		if (!self.suppURL.fileExists)
-			[[NSFileManager defaultManager] createDirectoryAtPath:self.suppURL.path withIntermediateDirectories:YES attributes:nil error:NULL];
+			[[NSFileManager defaultManager] createDirectoryAtPath:self.suppURL.path
+									  withIntermediateDirectories:YES attributes:nil error:NULL];
 
 	cc = self;
 	
@@ -76,40 +78,41 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	workspace = [NSWorkspace sharedWorkspace];
 	application = [NSApplication sharedApplication];
 	processInfo = [NSProcessInfo processInfo];
+	bundle = [NSBundle mainBundle];
 #endif
 
 #ifdef DEBUG
 	BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
-#ifdef SANDBOX
-	assert(isSandbox);
-#else
-	assert(!isSandbox);
-#endif
+	#ifdef SANDBOX
+		assert(isSandbox);
+	#else
+		assert(!isSandbox);
+	#endif
 
-#ifdef NDEBUG
-    LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
-#endif
+	#ifdef NDEBUG
+		LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
+	#endif
 
 
 
-    if (![[self appID] isEqualToString:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"]])
+    if (![[self appBundleIdentifier] isEqualToString:[bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"]])
 		exit(666);
 
-	if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
-		![[[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
+	if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
+		![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
 		asl_NSLog_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 
-	if (![[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+	if (![[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
 		asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
 
-	if ([[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
+	if ([[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
 		asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
 
-	if (![[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-		asl_NSLog_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
+	if (![[[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+		asl_NSLog_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
-	if (![(NSString *)[[NSBundle mainBundle] objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
+	if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
         LOG(@"Warning: LSApplicationCategoryType not properly set");
 #else
     #ifndef NDEBUG
@@ -123,7 +126,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 
 	
-	NSString *frameworkPath = [[NSBundle mainBundle] privateFrameworksPath];
+	NSString *frameworkPath = bundle.privateFrameworksPath;
 	for (NSString *framework in frameworkPath.dirContents)
 	{
 		NSString *smylinkToBinaryPath = makeString(@"%@/%@/%@", frameworkPath, framework, framework.stringByDeletingPathExtension);
@@ -141,7 +144,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSString *)prefsPath
 {
-	return makeString(@"~/Library/Preferences/%@.plist", self.appID).expanded;
+	return makeString(@"~/Library/Preferences/%@.plist", self.appBundleIdentifier).expanded;
 }
 
 - (NSURL *)prefsURL
@@ -155,7 +158,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
 
-- (NSString *)appID
+- (NSString *)appBundleIdentifier
 {
 	return [NSBundle mainBundle].bundleIdentifier;
 }
@@ -170,7 +173,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 }
 
-- (int)appBuild
+- (int)appBuildNumber
 {
 	return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
 }
@@ -215,17 +218,16 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
 }
 
-- (NSURL *)suppURL
+- ( NSURL *)suppURL
 {
 	NSURL *dir = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
-    if (dir && self.appName)
-        return [dir add:self.appName];
-    else
-        return nil;
+	assert(dir && self.appName);
+
+	return [dir add:self.appName];
 }
 
-- (NSString *)appSHA
+- (NSString *)appChecksumSHA
 {
 #ifdef USE_SECURITY
 
@@ -266,24 +268,22 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-#pragma clang diagnostic ignored "-Wselector"
 #endif
-		if (optionDown && (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9))
-			encodedPrefs = [self.prefsURL performSelector:@selector(base64EncodedStringWithOptions:) withObject:@(0)];
+		if (optionDown && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
+			encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic pop
 #endif
 #endif
 
 
-		NSString *recipient = OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
+		NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
 
 		NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
 							   cc.appName,
 							   cc.appVersionString,
-							   cc.appBuild,
-							   cc.appSHA);
+							   cc.appBuildNumber,
+							   cc.appChecksumSHA);
 
 		NSString *content =  makeString(@"<Insert Support Request Here>\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
 								_machineType(),
@@ -296,16 +296,16 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	}
 	else if (choice == openBetaSignupMail)
 		urlString = makeString(@"s%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
-							   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
+							   [bundle objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
 	else if (choice == openHomepageWebsite)
-		urlString = OBJECT_OR([[NSBundle mainBundle] objectForInfoDictionaryKey:@"VendorProductPage"],
+		urlString = OBJECT_OR([bundle objectForInfoDictionaryKey:@"VendorProductPage"],
 							  makeString(@"%@%@/", kVendorHomepage, [cc.appName.lowercaseString.words[0] split:@"-"][0]));
 	else if (choice == openAppStoreWebsite)
-		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"];
+		urlString = [bundle objectForInfoDictionaryKey:@"StoreProductPage"];
 	else if (choice == openAppStoreApp)
-		urlString = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
+		urlString = [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
 	else if (choice == openMacupdateWebsite)
-		urlString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"MacupdateProductPage"];
+		urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
 
 	[urlString.escaped.URL open];
 }
@@ -363,8 +363,10 @@ NSString *makeString(NSString *format, ...)
 
 NSString *makeTempFolder()
 {
-	NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"]] stringByAppendingString:@".XXXXXX"];
-	const char *tempDirectoryTemplateCString = [tempDirectoryTemplate fileSystemRepresentation];
+	NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:[bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"]] stringByAppendingString:@".XXXXXX"];
+	const char *tempDirectoryTemplateCString = tempDirectoryTemplate.fileSystemRepresentation;
+	if (!tempDirectoryTemplateCString) return nil;
+
 	char *tempDirectoryNameCString = (char *)malloc(strlen(tempDirectoryTemplateCString) + 1);
 	strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
 
@@ -375,7 +377,7 @@ NSString *makeTempFolder()
 		return nil;
 	}
 
-	NSString *tempDirectoryPath = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:result length:strlen(result)];
+	NSString *tempDirectoryPath = [fileManager stringWithFileSystemRepresentation:result length:strlen(result)];
 	free(tempDirectoryNameCString);
 
 	return tempDirectoryPath;
@@ -406,11 +408,9 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-#pragma clang diagnostic ignored "-Wselector"
 #endif
-        if (NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
-            encodedPrefs = [cc.prefsURL.contents performSelector:@selector(base64EncodedStringWithOptions:) withObject:@(0)];
+		if ([NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
+			encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic pop
 #endif
@@ -428,7 +428,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@%@\n\nPreferences: %@\n",
 											  cc.appName,
 											  cc.appVersionString,
-											  cc.appBuild,
+											  cc.appBuildNumber,
 											  cc.appName,
 											  usermsg,
 											  details,

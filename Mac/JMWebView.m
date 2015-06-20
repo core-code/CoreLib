@@ -23,9 +23,7 @@
 	sv.borderType = NSBezelBorder;
 
 	self.policyDelegate = self;
-
-	if (self.zoomFactor.floatValue < 1.0)
-		self.resourceLoadDelegate = self;
+	self.resourceLoadDelegate = self;
 }
 
 #pragma GCC diagnostic push
@@ -70,6 +68,18 @@
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource
 {
-	[sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.2f\"", self.zoomFactor.floatValue)];
+	if (!IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
+		[sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.2f\"", self.zoomFactor.floatValue)];
 }
+
+- (void)webView:(WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource
+{
+	if (error.code == -1009 &&
+		[error.userInfo[NSURLErrorFailingURLStringErrorKey] isEqualToString:self.remoteHTMLURL] &&
+		self.localHTMLName.length)
+	{
+		[self.mainFrame loadRequest:self.localHTMLName.resourceURL.request];  // online version failed, fall back to offline
+	}
+}
+
 @end

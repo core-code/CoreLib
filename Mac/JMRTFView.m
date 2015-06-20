@@ -25,6 +25,7 @@
 		if (self.localRTFName && self.localRTFName.length)
 		{
 			NSAttributedString *rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL documentAttributes:NULL];
+			assert(rtfStr);
 			[self.textStorage setAttributedString:rtfStr];
 #if ! __has_feature(objc_arc)
 			[rtfStr release];
@@ -34,7 +35,6 @@
 				dispatch_async_back(^
 				{
 					NSAttributedString *htmlStr = [[NSAttributedString alloc] initWithHTML:self.remoteHTMLURL.URL.download documentAttributes:NULL];
-
 					if (htmlStr && htmlStr.length)
 					{
 						dispatch_async_main(^

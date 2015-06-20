@@ -36,7 +36,20 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString;
+
+- (NSString *)literalString
+{
+	NSMutableString *tmp = [NSMutableString stringWithString:@"@["];
+
+	for (id obj in self)
+		[tmp appendFormat:@"%@, ", [obj literalString]];
+
+	[tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)				// replace trailing ', '
+					   withString:@"]"];						// with terminating ']'
+
+	return tmp;
+}
 
 - (NSArray *)sorted
 {
@@ -301,7 +314,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [NSArray arrayWithArray:resultArray];
 }
 
-- (NSInteger)collect:(ObjectInIntOutBlock)block
+- (NSInteger)reduce:(ObjectInIntOutBlock)block
 {
     NSInteger value = 0;
 
@@ -482,6 +495,961 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (void)removeFirstObject
 {
 	[self removeObjectAtIndex:0];
+}
+@end
+
+
+
+@implementation NSString (CoreCode)
+
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString;
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@dynamic fileIsAlias, fileAliasTarget;
+#endif
+
+#ifdef USE_SECURITY
+@dynamic SHA1;
+#endif
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+- (NSImage *)namedImage
+{
+    NSImage *image = [NSImage imageNamed:self];
+    return image;
+}
+#else
+- (UIImage *)namedImage
+{
+    UIImage *image = [UIImage imageNamed:self];
+    return image;
+}
+#endif
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+- (BOOL)fileIsAlias
+{
+    NSURL *url = [NSURL fileURLWithPath:self];
+    CFURLRef cfurl = (BRIDGE CFURLRef) url;
+    CFBooleanRef aliasBool = kCFBooleanFalse;
+    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
+    Boolean alias = CFBooleanGetValue(aliasBool);
+
+    return alias && success;
+}
+
+- (NSString *)stringByResolvingSymlinksInPathFixed
+{
+    NSString *ret = [self stringByResolvingSymlinksInPath];
+    if ([self hasPrefix:@"/tmp"])
+        LOGSUCC;
+    
+    for (NSString *exception in @[@"/etc/", @"/tmp/", @"/var/"])
+    {
+        if ([ret hasPrefix:exception])
+        {
+            NSString *fixed = [@"/private" stringByAppendingPathComponent:ret];
+
+            return fixed;
+        }
+    }
+
+    return ret;
+}
+
+
+
+- (NSString *)fileAliasTarget
+{
+    CFErrorRef *err = NULL;
+    CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self.fileURL, err);
+    if (bookmark == nil)
+        return nil;
+    CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
+    __autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
+    CFRelease(bookmark);
+    CFRelease(url);
+#if  !__has_feature(objc_arc)
+    [nurl autorelease];
+#endif
+    return [nurl path];
+
+}
+
+- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth
+{
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth, FLT_MAX)];
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    [layoutManager addTextContainer:textContainer];
+    [textStorage addLayoutManager:layoutManager];
+    [textStorage beginEditing];
+    [textStorage setAttributes:@{NSFontAttributeName: font} range:NSMakeRange(0, [self length])];
+    [textStorage endEditing];
+
+    (void) [layoutManager glyphRangeForTextContainer:textContainer];
+
+    NSRect r = [layoutManager usedRectForTextContainer:textContainer];
+
+#if  !__has_feature(objc_arc)
+    [textStorage release];
+    [layoutManager release];
+    [textContainer release];
+#endif
+    return r.size;
+}
+#endif
+
+- (NSString *)literalString
+{
+	return makeString(@"@\"%@\"", self);
+}
+
+- (NSRange)fullRange
+{
+    return NSMakeRange(0, self.length);
+}
+
+- (unichar)firstCharacter
+{
+    if (self.length)
+        return [self characterAtIndex:0];
+    return 0;
+}
+
+- (unichar)lastCharacter
+{
+    NSUInteger len = self.length;
+    if (len)
+        return [self characterAtIndex:len-1];
+    return 0;
+}
+- (unsigned long long)fileSize
+{
+    NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
+    if (!attr) return 0;
+    return [attr[NSFileSize] unsignedLongLongValue];
+}
+
+- (unsigned long long)directorySize
+{
+    unsigned long long size = 0;
+    for (NSString *file in self.dirContentsRecursiveAbsolute)
+    {
+        NSDictionary *attr = [fileManager attributesOfItemAtPath:file error:NULL];
+        if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
+            size += [attr[NSFileSize] unsignedLongLongValue];
+    }
+    return size;
+}
+
+- (BOOL)isIntegerNumber
+{
+    return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound;
+}
+
+- (BOOL)isIntegerNumberOnly
+{
+    return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location == NSNotFound;
+}
+
+- (BOOL)isFloatNumber
+{
+    static NSCharacterSet *cs = nil;
+
+    if (!cs)
+    {
+        NSMutableCharacterSet *tmp = [NSMutableCharacterSet characterSetWithCharactersInString:@",."];
+        NSString *groupingSeperators = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
+        NSString *decimalSeperators = [[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator];
+
+        [tmp addCharactersInString:groupingSeperators];
+        [tmp addCharactersInString:decimalSeperators];
+        cs = tmp.immutableObject;
+
+#if  !__has_feature(objc_arc)
+        [cs retain];
+#endif
+    }
+
+    return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) &&
+    ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
+}
+
+- (BOOL)isWriteablePath
+{
+    if (self.fileExists)
+        return NO;
+
+    if (![@"TEST" writeToFile:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
+        return NO;
+
+    [fileManager removeItemAtPath:self error:NULL];
+
+    return YES;
+}
+
+- (BOOL)isValidEmail
+{
+    if (self.length > 254)
+        return NO;
+
+
+    NSStringArray *portions = [self split:@"@"];
+
+    if (portions.count != 2)
+        return FALSE;
+
+    NSString *local = portions[0];
+    NSString *domain = portions[1];
+
+    if (![domain contains:@"."])
+        return FALSE;
+
+    static NSCharacterSet *localValid = nil, *domainValid = nil;
+
+    if (!localValid)
+    {
+        localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
+        domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
+
+#if  !__has_feature(objc_arc)
+        [localValid retain];
+        [domainValid retain];
+#endif
+    }
+
+    if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
+        return NO;
+
+    if ([domain rangeOfCharacterFromSet:domainValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
+        return NO;
+
+    return YES;
+}
+
+- (NSStringArray *)dirContents
+{
+    return (NSStringArray *)[fileManager contentsOfDirectoryAtPath:self error:NULL];
+}
+
+- (NSStringArray *)dirContentsRecursive
+{
+    return (NSStringArray *)[fileManager subpathsOfDirectoryAtPath:self error:NULL];
+}
+
+- (NSStringArray *)dirContentsAbsolute
+{
+    NSStringArray *c = self.dirContents;
+    return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+}
+
+- (NSStringArray *)dirContentsRecursiveAbsolute
+{
+    NSStringArray *c = self.dirContentsRecursive;
+    return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+}
+
+
+- (NSString *)uniqueFile
+{
+    if (![fileManager fileExistsAtPath:self])	return self;
+    else
+    {
+        NSString *ext = [self pathExtension];
+        NSString *namewithoutext = [self stringByDeletingPathExtension];
+        int i = 0;
+        while ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]]) i++;
+        return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
+    }
+}
+
+- (void)setContents:(NSData *)data
+{
+    NSError *err;
+
+    if (![data writeToFile:self options:NSDataWritingAtomic error:&err])
+        LOG(err);
+}
+
+- (NSData *)contents
+{
+#if  __has_feature(objc_arc)
+    return [[NSData alloc] initWithContentsOfFile:self];
+#else
+    return [[[NSData alloc] initWithContentsOfFile:self] autorelease];
+#endif
+}
+
+- (BOOL)fileExists
+{
+    return [fileManager fileExistsAtPath:self];
+}
+
+- (NSUInteger)countOccurencesOfString:(NSString *)str
+{
+    return [[self componentsSeparatedByString:str] count] - 1;
+}
+
+- (BOOL)contains:(NSString *)otherString
+{
+    return ([self rangeOfString:otherString].location != NSNotFound);
+}
+
+- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive
+{
+    return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
+}
+
+- (BOOL)containsAny:(NSArray *)otherStrings
+{
+    for (NSString *otherString in otherStrings)
+        if ([self rangeOfString:otherString].location != NSNotFound)
+            return YES;
+
+    return NO;
+}
+
+- (NSString *)localized
+{
+    return NSLocalizedString(self, nil);
+}
+
+- (NSString *)resourcePath
+{
+    return [bundle pathForResource:self ofType:nil];
+}
+
+- (NSURL *)resourceURL
+{
+    return [bundle URLForResource:self withExtension:nil];
+}
+
+- (NSURL *)URL
+{
+    return [NSURL URLWithString:self];
+}
+
+- (NSURL *)fileURL
+{
+    return [NSURL fileURLWithPath:self];
+}
+
+- (NSString *)expanded
+{
+    return [self stringByExpandingTildeInPath];
+}
+
+- (NSStringArray *)words
+{
+    return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
+- (NSStringArray *)lines
+{
+    return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+}
+
+- (NSString *)trimmedOfWhitespace
+{
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
+- (NSString *)trimmedOfWhitespaceAndNewlines
+{
+    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)clamp:(NSUInteger)maximumLength
+{
+    return (([self length] <= maximumLength) ? self : [self substringToIndex:maximumLength]);
+}
+
+
+- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
+{
+    NSString *ret = self;
+
+    for (NSString *key in replacements)
+    {
+        if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
+            continue;
+        ret = [ret stringByReplacingOccurrencesOfString:key
+                                             withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
+    }
+
+    BOOL replaced;
+    do
+    {
+        replaced = FALSE;
+
+        for (NSString *key in replacements)
+        {
+            id value = replacements[key];
+
+            if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:value])
+                continue;
+            NSString *tmp = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]
+                                                           withString:value];
+
+            if (![tmp isEqualToString:ret])
+            {
+                ret = tmp;
+                replaced = YES;
+            }
+        }
+    } while (replaced);
+
+    return ret;
+}
+
+- (NSString *)capitalizedStringWithUppercaseWords:(NSStringArray *)uppercaseWords
+{
+    NSString *res = [self capitalizedString];
+
+    for (NSString *word in uppercaseWords)
+    {
+        res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\W)", word.capitalizedString)
+                                             withString:makeString(@"$1%@$2", word.uppercaseString)
+                                                options:NSRegularExpressionSearch range: res.fullRange];
+
+    }
+    for (NSString *word in uppercaseWords)
+    {
+        res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\Z)", word.capitalizedString)
+                                             withString:makeString(@"$1%@", word.uppercaseString)
+                                                options:NSRegularExpressionSearch range:res.fullRange];
+
+    }
+
+    return res;
+}
+
+- (NSString *)titlecaseStringWithLowercaseWords:(NSStringArray *)lowercaseWords andUppercaseWords:(NSStringArray *)uppercaseWords
+{
+    NSString *res = [self capitalizedStringWithUppercaseWords:uppercaseWords];
+
+    for (NSString *word in lowercaseWords)
+    {
+        res = [res stringByReplacingOccurrencesOfString:makeString(@"([^:,;,-]\\s)%@(\\s)", word.capitalizedString)
+                                             withString:makeString(@"$1%@$2", word.lowercaseString)
+                                                options:NSRegularExpressionSearch range: res.fullRange];
+
+    }
+
+    //	for (NSString *word in lowercaseWords)
+    //	{
+    //		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\s)%@(\\Z)", word.capitalizedString)
+    //											 withString:makeString(@"$1%@", word.lowercaseString)
+    //												options:NSRegularExpressionSearch range: res.fullRange];
+    //
+    //	}
+
+    return res;
+}
+
+- (NSString *)titlecaseString
+{
+    NSArray *words = @[@"a", @"an", @"the", @"and", @"but", @"for", @"nor", @"or", @"so", @"yet", @"at", @"by", @"for", @"in", @"of", @"off", @"on", @"out", @"to", @"up", @"via", @"to", @"c", @"ca", @"etc", @"e.g.", @"i.e.", @"vs.", @"vs", @"v", @"down", @"from", @"into", @"like", @"near", @"onto", @"over", @"than", @"with", @"upon"];
+
+    return [self titlecaseStringWithLowercaseWords:words.id andUppercaseWords:nil];
+}
+
+- (NSString *)propercaseString
+{
+    if ([self length] == 0)
+        return @"";
+    else if ([self length] == 1)
+        return [self uppercaseString];
+
+    return makeString(@"%@%@",
+                      [[self substringToIndex:1] uppercaseString],
+                      [[self substringFromIndex:1] lowercaseString]);
+}
+
+- (NSData *)download
+{
+#ifdef DEBUG
+    if ([NSThread currentThread] == [NSThread mainThread])
+        LOG(@"Warning: performing blocking download on main thread");
+#endif
+    NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
+#if ! __has_feature(objc_arc)
+    [d autorelease];
+#endif
+    return d;
+}
+
+
+#ifdef USE_SECURITY
+- (NSString *)SHA1
+{
+    const char *cStr = self.UTF8String;
+    if (!cStr) return nil;
+
+    unsigned char result[CC_SHA1_DIGEST_LENGTH];
+    CC_SHA1(cStr, (CC_LONG)strlen(cStr), result);
+    NSString *s = [NSString  stringWithFormat:
+                   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                   result[0], result[1], result[2], result[3], result[4],
+                   result[5], result[6], result[7],
+                   result[8], result[9], result[10], result[11], result[12],
+                   result[13], result[14], result[15],
+                   result[16], result[17], result[18], result[19]
+                   ];
+
+    return s;
+}
+#endif
+
+- (NSMutableString *)mutableObject
+{
+    return [NSMutableString stringWithString:self];
+}
+
+- (NSString *)removed:(NSString *)stringToRemove
+{
+    return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
+}
+
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2	// stringByReplacingOccurencesOfString:withString:
+{
+    return [self stringByReplacingOccurrencesOfString:str1 withString:str2];
+}
+
+- (NSStringArray *)split:(NSString *)sep								// componentsSeparatedByString:
+{
+    return (NSStringArray *)[self componentsSeparatedByString:sep];
+}
+
+- (NSArray *)defaultArray
+{
+    return [[NSUserDefaults standardUserDefaults] arrayForKey:self];
+}
+
+- (void)setDefaultArray:(NSArray *)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (NSDictionary *)defaultDict
+{
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:self];
+}
+
+- (void)setDefaultDict:(NSDictionary *)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (id)defaultObject
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:self];
+}
+
+- (void)setDefaultObject:(id)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (NSString *)defaultString
+{
+    return [[NSUserDefaults standardUserDefaults] stringForKey:self];
+}
+
+- (void)setDefaultString:(NSString *)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+}
+
+- (NSURL *)defaultURL
+{
+    return [[NSUserDefaults standardUserDefaults] URLForKey:self];
+}
+
+- (void)setDefaultURL:(NSURL *)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setURL:newDefault forKey:self];
+}
+
+- (NSInteger)defaultInt
+{
+    return [[NSUserDefaults standardUserDefaults] integerForKey:self];
+}
+
+- (void)setDefaultInt:(NSInteger)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:newDefault forKey:self];
+}
+
+- (float)defaultFloat
+{
+    return [[NSUserDefaults standardUserDefaults] floatForKey:self];
+}
+
+- (void)setDefaultFloat:(float)newDefault
+{
+    [[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
+}
+
+- (NSString *)stringValue
+{
+    return self;
+}
+
+- (NSNumber *)numberValue
+{
+    return @(self.doubleValue);
+}
+
+- (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter
+{	// credits to Drew McCormack
+    NSMutableArray *rows = [NSMutableArray array];
+
+    NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *newlineCharacterSetMutable = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
+    [newlineCharacterSetMutable formIntersectionWithCharacterSet:[whitespaceCharacterSet invertedSet]];
+    NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
+    NSMutableCharacterSet *importantCharactersSetMutable = [NSMutableCharacterSet characterSetWithCharactersInString:[delimiter stringByAppendingString:@"\""]];
+    [importantCharactersSetMutable formUnionWithCharacterSet:newlineCharacterSet];
+    NSCharacterSet *importantCharactersSet = [NSCharacterSet characterSetWithBitmapRepresentation:[importantCharactersSetMutable bitmapRepresentation]];
+
+    NSScanner *scanner = [NSScanner scannerWithString:self];
+    [scanner setCharactersToBeSkipped:nil];
+
+    while (![scanner isAtEnd])
+    {
+        BOOL insideQuotes = NO;
+        BOOL finishedRow = NO;
+        NSMutableArray *columns = [NSMutableArray arrayWithCapacity:30];
+        NSMutableString *currentColumn = [NSMutableString string];
+
+        while (!finishedRow)
+        {
+            NSString *tempString;
+            if ([scanner scanUpToCharactersFromSet:importantCharactersSet intoString:&tempString])
+            {
+                [currentColumn appendString:tempString];
+            }
+
+            if ([scanner isAtEnd])
+            {
+                if (![currentColumn isEqualToString:@""])
+                    [columns addObject:currentColumn];
+
+                finishedRow = YES;
+            }
+            else if ([scanner scanCharactersFromSet:newlineCharacterSet intoString:&tempString])
+            {
+                if (insideQuotes)
+                {
+                    [currentColumn appendString:tempString];
+                }
+                else
+                {
+                    if (![currentColumn isEqualToString:@""])
+                        [columns addObject:currentColumn];
+                    finishedRow = YES;
+                }
+            }
+            else if ([scanner scanString:@"\"" intoString:NULL])
+            {
+                if (insideQuotes && [scanner scanString:@"\"" intoString:NULL])
+                {
+                    [currentColumn appendString:@"\""];
+                }
+                else
+                {
+                    insideQuotes = !insideQuotes;
+                }
+            }
+            else if ([scanner scanString:delimiter intoString:NULL])
+            {
+                if (insideQuotes)
+                {
+                    [currentColumn appendString:delimiter];
+                }
+                else
+                {
+                    [columns addObject:currentColumn];
+                    currentColumn = [NSMutableString string];
+                    [scanner scanCharactersFromSet:whitespaceCharacterSet intoString:NULL];
+                }
+            }
+        }
+        if ([columns count] > 0)
+            [rows addObject:columns];
+    }
+
+    return (NSArrayArray *)rows;
+}
+
+- (NSData *)data
+{
+    return [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+}
+
+- (NSData *)dataFromHexString
+{
+    const char *bytes = [self cStringUsingEncoding:NSUTF8StringEncoding];
+    if (!bytes) return nil;
+    NSUInteger length = strlen(bytes);
+    unsigned char *r = (unsigned char *)malloc(length / 2 + 1);
+    unsigned char *index = r;
+
+    while ((*bytes) && (*(bytes +1)))
+    {
+        char encoder[3] = {'\0','\0','\0'};
+        encoder[0] = *bytes;
+        encoder[1] = *(bytes+1);
+        *index = (unsigned char)strtol(encoder, NULL, 16);
+        index++;
+        bytes+=2;
+    }
+    *index = '\0';
+
+    NSData *result = [NSData dataWithBytes:r length:length / 2];
+    free(r);
+    return result;
+}
+
+- (NSString *)unescaped
+{
+#if  __has_feature(objc_arc)
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
+    return encodedString;
+#else
+    NSString *encodedString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR(""));
+    return [encodedString autorelease];
+#endif
+}
+
+- (NSString *)escaped
+{
+#if  __has_feature(objc_arc)
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8));
+    return encodedString;
+#else
+    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8);
+    return [encodedString autorelease];
+#endif
+}
+
+- (NSString *)encoded
+{
+#if  __has_feature(objc_arc)
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
+    return encodedString;
+#else
+    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
+    return [encodedString autorelease];
+#endif
+}
+
+- (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet
+{
+    NSRange rangeOfFirstWantedCharacter = [self rangeOfCharacterFromSet:[characterSet invertedSet]];
+    if (rangeOfFirstWantedCharacter.location == NSNotFound)
+        return @"";
+
+    return [self substringFromIndex:rangeOfFirstWantedCharacter.location];
+}
+
+- (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet
+{
+    NSRange rangeOfLastWantedCharacter = [self rangeOfCharacterFromSet:[characterSet invertedSet]
+                                                               options:NSBackwardsSearch];
+    if (rangeOfLastWantedCharacter.location == NSNotFound)
+        return @"";
+
+    return [self substringToIndex:rangeOfLastWantedCharacter.location+1];
+}
+
+//- (NSString *)arg:(id)arg, ...
+//{
+//	va_list args;
+//	void *stackLocal = (__bridge void *)(arg);
+//	struct __va_list_tag *stackLocal2 = stackLocal;
+//    va_start(args, arg);
+//
+//    NSString *result = [[NSString alloc] initWithFormat:self arguments:stackLocal2];
+//    va_end(args);
+//
+//#if ! __has_feature(objc_arc)
+//	[d result];
+//#endif
+//	return result;
+//}
+
+@end
+
+
+@implementation  NSMutableString (CoreCode)
+
+@dynamic immutableObject;
+
+- (NSString *)immutableObject
+{
+    return [NSString stringWithString:self];
+}
+@end
+
+
+
+@implementation NSURL (CoreCode)
+
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@dynamic fileIsAlias, fileAliasTarget;
+
+- (BOOL)fileIsAlias
+{
+    CFURLRef cfurl = (BRIDGE CFURLRef) self;
+    CFBooleanRef aliasBool = kCFBooleanFalse;
+    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
+    Boolean alias = CFBooleanGetValue(aliasBool);
+
+    return alias && success;
+}
+
+- (BOOL)fileIsDirectory
+{
+    NSNumber *value;
+    [self getResourceValue:&value forKey:NSURLIsDirectoryKey error:NULL];
+    return value.boolValue;
+}
+
+- (NSURL *)fileAliasTarget
+{
+    CFErrorRef *err = NULL;
+    CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
+    if (bookmark == nil)
+        return nil;
+    CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
+    __autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
+    CFRelease(bookmark);
+    CFRelease(url);
+#if  __has_feature(objc_arc)
+    return nurl;
+#else
+    return [nurl autorelease];
+#endif
+}
+#endif
+
+- (NSURLRequest *)request
+{
+    return [NSURLRequest requestWithURL:self];
+}
+
+- (NSMutableURLRequest *)mutableRequest
+{
+    return [NSMutableURLRequest requestWithURL:self];
+}
+
+- (NSURL *)add:(NSString *)component
+{
+    return [self URLByAppendingPathComponent:component];
+}
+
+- (NSURLArray *)dirContents
+{
+    if (![self isFileURL]) return nil;
+
+    NSString *path = self.path;
+    NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:NULL];
+    return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
+}
+
+- (NSURLArray *)dirContentsRecursive
+{
+    if (![self isFileURL]) return nil;
+    
+    NSString *path = self.path;
+    NSArray *c = [fileManager subpathsOfDirectoryAtPath:path error:NULL];
+    return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
+}
+
+- (NSURL *)uniqueFile
+{
+    if (![self isFileURL]) return nil;
+    return [self path].uniqueFile.fileURL;
+}
+
+- (BOOL)fileExists
+{
+    NSString *path = self.path;
+    return [self isFileURL] && [fileManager fileExistsAtPath:path];
+}
+
+- (unsigned long long)fileSize
+{
+    NSNumber *size;
+    
+    if ([self getResourceValue:&size forKey:NSURLFileSizeKey error:nil])
+        return [size unsignedLongLongValue];
+    else
+        return 0;
+}
+
+- (unsigned long long)directorySize
+{
+    unsigned long long size = 0;
+    for (NSString *file in self.dirContentsRecursive)
+    {
+        NSDictionary *attr = [fileManager attributesOfItemAtPath:@[self.path, file].path error:NULL];
+        if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
+            size += [attr[NSFileSize] unsignedLongLongValue];
+    }
+    return size;
+}
+
+- (void)open
+{
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+    [[NSWorkspace sharedWorkspace] openURL:self];
+#else
+    [[UIApplication sharedApplication] openURL:self];
+#endif
+}
+
+- (BOOL)isWriteablePath
+{
+    if (self.fileExists)
+        return NO;
+    
+    if (![@"TEST" writeToURL:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
+        return NO;
+    
+    [fileManager removeItemAtURL:self error:NULL];
+    
+    return YES;
+}
+
+
+- (NSData *)download
+{
+#ifdef DEBUG
+    if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
+        LOG(@"Warning: performing blocking download on main thread");
+#endif
+    
+    NSData *d = [NSData dataWithContentsOfURL:self];
+    
+    return d;
+}
+
+- (void)setContents:(NSData *)data
+{
+    NSError *err;
+    
+    if (![data writeToURL:self options:NSDataWritingAtomic error:&err])
+        LOG(err);
+}
+
+- (NSData *)contents
+{
+    return self.download;
 }
 @end
 
@@ -731,7 +1699,21 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSDictionary (CoreCode)
 
-@dynamic mutableObject, XMLData;
+@dynamic mutableObject, XMLData, literalString;
+
+- (NSString *)literalString
+{
+	NSMutableString *tmp = [NSMutableString stringWithString:@"@{"];
+
+	for (id key in self)
+		[tmp appendFormat:@"%@ : %@, ", [key literalString], [self[key] literalString]];
+
+	[tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)				// replace trailing ', '
+					   withString:@"}"];									// with terminating ']'
+
+	return tmp;
+}
+
 #if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @dynamic JSONData;
 
@@ -857,8 +1839,13 @@ CONST_KEY(CoreCodeAssociatedValue)
 	NSDictionary *iso2LetterTo3Letter = @{@"aa" : @"aar", @"ab" : @"abk", @"ae" : @"ave", @"af" : @"afr", @"ak" : @"aka", @"am" : @"amh", @"an" : @"arg", @"ar" : @"ara", @"as" : @"asm", @"av" : @"ava", @"ay" : @"aym", @"az" : @"aze", @"ba" : @"bak", @"be" : @"bel", @"bg" : @"bul", @"bh" : @"bih", @"bi" : @"bis", @"bm" : @"bam", @"bn" : @"ben", @"bo" : @"tib", @"bo" : @"tib", @"br" : @"bre", @"bs" : @"bos", @"ca" : @"cat", @"ce" : @"che", @"ch" : @"cha", @"co" : @"cos", @"cr" : @"cre", @"cs" : @"cze", @"cs" : @"cze", @"cu" : @"chu", @"cv" : @"chv", @"cy" : @"wel", @"cy" : @"wel", @"da" : @"dan", @"de" : @"ger", @"de" : @"ger", @"dv" : @"div", @"dz" : @"dzo", @"ee" : @"ewe", @"el" : @"gre", @"el" : @"gre", @"en" : @"eng", @"eo" : @"epo", @"es" : @"spa", @"et" : @"est", @"eu" : @"baq", @"eu" : @"baq", @"fa" : @"per", @"fa" : @"per", @"ff" : @"ful", @"fi" : @"fin", @"fj" : @"fij", @"fo" : @"fao", @"fr" : @"fre", @"fr" : @"fre", @"fy" : @"fry", @"ga" : @"gle", @"gd" : @"gla", @"gl" : @"glg", @"gn" : @"grn", @"gu" : @"guj", @"gv" : @"glv", @"ha" : @"hau", @"he" : @"heb", @"hi" : @"hin", @"ho" : @"hmo", @"hr" : @"hrv", @"ht" : @"hat", @"hu" : @"hun", @"hy" : @"arm", @"hy" : @"arm", @"hz" : @"her", @"ia" : @"ina", @"id" : @"ind", @"ie" : @"ile", @"ig" : @"ibo", @"ii" : @"iii", @"ik" : @"ipk", @"io" : @"ido", @"is" : @"ice", @"is" : @"ice", @"it" : @"ita", @"iu" : @"iku", @"ja" : @"jpn", @"jv" : @"jav", @"ka" : @"geo", @"ka" : @"geo", @"kg" : @"kon", @"ki" : @"kik", @"kj" : @"kua", @"kk" : @"kaz", @"kl" : @"kal", @"km" : @"khm", @"kn" : @"kan", @"ko" : @"kor", @"kr" : @"kau", @"ks" : @"kas", @"ku" : @"kur", @"kv" : @"kom", @"kw" : @"cor", @"ky" : @"kir", @"la" : @"lat", @"lb" : @"ltz", @"lg" : @"lug", @"li" : @"lim", @"ln" : @"lin", @"lo" : @"lao", @"lt" : @"lit", @"lu" : @"lub", @"lv" : @"lav", @"mg" : @"mlg", @"mh" : @"mah", @"mi" : @"mao", @"mi" : @"mao", @"mk" : @"mac", @"mk" : @"mac", @"ml" : @"mal", @"mn" : @"mon", @"mr" : @"mar", @"ms" : @"may", @"ms" : @"may", @"mt" : @"mlt", @"my" : @"bur", @"my" : @"bur", @"na" : @"nau", @"nb" : @"nob", @"nd" : @"nde", @"ne" : @"nep", @"ng" : @"ndo", @"nl" : @"dut", @"nl" : @"dut", @"nn" : @"nno", @"no" : @"nor", @"nr" : @"nbl", @"nv" : @"nav", @"ny" : @"nya", @"oc" : @"oci", @"oj" : @"oji", @"om" : @"orm", @"or" : @"ori", @"os" : @"oss", @"pa" : @"pan", @"pi" : @"pli", @"pl" : @"pol", @"ps" : @"pus", @"pt" : @"por", @"qu" : @"que", @"rm" : @"roh", @"rn" : @"run", @"ro" : @"rum", @"ro" : @"rum", @"ru" : @"rus", @"rw" : @"kin", @"sa" : @"san", @"sc" : @"srd", @"sd" : @"snd", @"se" : @"sme", @"sg" : @"sag", @"si" : @"sin", @"sk" : @"slo", @"sk" : @"slo", @"sl" : @"slv", @"sm" : @"smo", @"sn" : @"sna", @"so" : @"som", @"sq" : @"alb", @"sq" : @"alb", @"sr" : @"srp", @"ss" : @"ssw", @"st" : @"sot", @"su" : @"sun", @"sv" : @"swe", @"sw" : @"swa", @"ta" : @"tam", @"te" : @"tel", @"tg" : @"tgk", @"th" : @"tha", @"ti" : @"tir", @"tk" : @"tuk", @"tl" : @"tgl", @"tn" : @"tsn", @"to" : @"ton", @"tr" : @"tur", @"ts" : @"tso", @"tt" : @"tat", @"tw" : @"twi", @"ty" : @"tah", @"ug" : @"uig", @"uk" : @"ukr", @"ur" : @"urd", @"uz" : @"uzb", @"ve" : @"ven", @"vi" : @"vie", @"vo" : @"vol", @"wa" : @"wln", @"wo" : @"wol", @"xh" : @"xho", @"yi" : @"yid", @"yo" : @"yor", @"za" : @"zha", @"zh" : @"chi", @"zh" : @"chi", @"zu" : @"zul"};
 
 	NSMutableArray *tmp = [NSMutableArray new];
-	for (NSString *l in [NSLocale  preferredLanguages])
-		[tmp addObject:(iso2LetterTo3Letter[l] ? iso2LetterTo3Letter[l] : l)];
+	
+	for (NSString *twoLetterCode in [NSLocale  preferredLanguages])
+	{
+		NSString *threeLetterCode = iso2LetterTo3Letter[twoLetterCode];
+
+		[tmp addObject:(OBJECT_OR(threeLetterCode, twoLetterCode))];
+	}
 
 #if ! __has_feature(objc_arc)
 	[tmp autorelease];
@@ -923,920 +1910,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 
 
-@implementation NSString (CoreCode)
-
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange;
-
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget;
-#endif
-
-#ifdef USE_SECURITY
-@dynamic SHA1;
-#endif
-
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-- (NSImage *)namedImage
-{
-	NSImage *image = [NSImage imageNamed:self];
-	return image;
-}
-#else
-- (UIImage *)namedImage
-{
-	UIImage *image = [UIImage imageNamed:self];
-	return image;
-}
-#endif
-
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-- (BOOL)fileIsAlias
-{
-    NSURL *url = [NSURL fileURLWithPath:self];
-    CFURLRef cfurl = (BRIDGE CFURLRef) url;
-    CFBooleanRef aliasBool = kCFBooleanFalse;
-    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
-    Boolean alias = CFBooleanGetValue(aliasBool);
-
-    return alias && success;
-}
-
-- (NSRange)fullRange
-{
-	return NSMakeRange(0, self.length);
-}
-
-- (unichar)firstCharacter
-{
-	if (self.length)
-		return [self characterAtIndex:0];
-	return 0;
-}
-
-- (unichar)lastCharacter
-{
-	NSUInteger len = self.length;
-	if (len)
-		return [self characterAtIndex:len-1];
-	return 0;
-}
-
-- (NSString *)fileAliasTarget
-{
-	CFErrorRef *err = NULL;
-	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self.fileURL, err);
-	if (bookmark == nil)
-		return nil;
-	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
-	__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
-	CFRelease(bookmark);
-	CFRelease(url);
-#if  !__has_feature(objc_arc)
-	[nurl autorelease];
-#endif
-	return [nurl path];
-
-}
-
-- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth
-{
-	NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self];
-	NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth, FLT_MAX)];
-	NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
-	[layoutManager addTextContainer:textContainer];
-	[textStorage addLayoutManager:layoutManager];
-	[textStorage beginEditing];
-	[textStorage setAttributes:@{NSFontAttributeName: font} range:NSMakeRange(0, [self length])];
-	[textStorage endEditing];
-
-	(void) [layoutManager glyphRangeForTextContainer:textContainer];
-
-	NSRect r = [layoutManager usedRectForTextContainer:textContainer];
-
-#if  !__has_feature(objc_arc)
-	[textStorage release];
-	[layoutManager release];
-	[textContainer release];
-#endif
-	return r.size;
-}
-#endif
-
-- (unsigned long long)fileSize
-{
-	NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
-	if (!attr) return 0;
-	return [attr[NSFileSize] unsignedLongLongValue];
-}
-
-- (unsigned long long)directorySize
-{
-	unsigned long long size = 0;
-	for (NSString *file in self.dirContentsRecursiveAbsolute)
-	{
-		NSDictionary *attr = [fileManager attributesOfItemAtPath:file error:NULL];
-		if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
-			size += [attr[NSFileSize] unsignedLongLongValue];
-	}
-	return size;
-}
-
-- (BOOL)isIntegerNumber
-{
-	return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound;
-}
-
-- (BOOL)isIntegerNumberOnly
-{
-	return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location == NSNotFound;
-}
-
-- (BOOL)isFloatNumber
-{
-	static NSCharacterSet *cs = nil;
-
-	if (!cs)
-	{
-		NSMutableCharacterSet *tmp = [NSMutableCharacterSet characterSetWithCharactersInString:@",."];
-		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]];
-		[tmp addCharactersInString:[(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator]];
-		cs = tmp.immutableObject;
-
-#if  !__has_feature(objc_arc)
-		[cs retain];
-#endif
-	}
-
-	return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) &&
-			([self rangeOfCharacterFromSet:cs].location != NSNotFound);
-}
-
-- (BOOL)isWriteablePath
-{
-	if (self.fileExists)
-		return NO;
-
-	if (![@"TEST" writeToFile:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
-		return NO;
-
-	[fileManager removeItemAtPath:self error:NULL];
-
-	return YES;
-}
-
-- (BOOL)isValidEmail
-{
-	if (self.length > 254)
-		return NO;
-
-
-	NSStringArray *portions = [self split:@"@"];
-
-	if (portions.count != 2)
-		return FALSE;
-
-	NSString *local = portions[0];
-	NSString *domain = portions[1];
-
-	if (![domain contains:@"."])
-		return FALSE;
-
-	static NSCharacterSet *localValid = nil, *domainValid = nil;
-
-	if (!localValid)
-	{
-		localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
-		domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
-		
-#if  !__has_feature(objc_arc)
-		[localValid retain];
-		[domainValid retain];
-#endif
-	}
-
-	if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
-		return NO;
-
-	if ([domain rangeOfCharacterFromSet:domainValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
-		return NO;
-
-	return YES;
-}
-
-- (NSStringArray *)dirContents
-{
-	return (NSStringArray *)[[NSFileManager defaultManager] contentsOfDirectoryAtPath:self error:NULL];
-}
-
-- (NSStringArray *)dirContentsRecursive
-{
-	return (NSStringArray *)[[NSFileManager defaultManager] subpathsOfDirectoryAtPath:self error:NULL];
-}
-
-- (NSStringArray *)dirContentsAbsolute
-{
-	NSStringArray *c = self.dirContents;
-	return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
-}
-
-- (NSStringArray *)dirContentsRecursiveAbsolute
-{
-	NSStringArray *c = self.dirContentsRecursive;
-	return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
-}
-
-
-- (NSString *)uniqueFile
-{
-	if (![[NSFileManager defaultManager] fileExistsAtPath:self])	return self;
-	else
-	{
-		NSString *ext = [self pathExtension];
-		NSString *namewithoutext = [self stringByDeletingPathExtension];
-		int i = 0;
-		while ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]]) i++;
-		return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
-	}
-}
-
-- (void)setContents:(NSData *)data
-{
-	NSError *err;
-
-	if (![data writeToFile:self options:NSDataWritingAtomic error:&err])
-		LOG(err);
-}
-
-- (NSData *)contents
-{
-#if  __has_feature(objc_arc)
-	return [[NSData alloc] initWithContentsOfFile:self];
-#else
-	return [[[NSData alloc] initWithContentsOfFile:self] autorelease];
-#endif
-}
-
-- (BOOL)fileExists
-{
-	return [[NSFileManager defaultManager] fileExistsAtPath:self];
-}
-
-- (NSUInteger)countOccurencesOfString:(NSString *)str
-{
-    return [[self componentsSeparatedByString:str] count] - 1;
-}
-
-- (BOOL)contains:(NSString *)otherString
-{
-	return ([self rangeOfString:otherString].location != NSNotFound);
-}
-
-- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive
-{
-	return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
-}
-
-- (BOOL)containsAny:(NSArray *)otherStrings
-{
-	for (NSString *otherString in otherStrings)
-		if ([self rangeOfString:otherString].location != NSNotFound)
-			return YES;
-
-	return NO;
-}
-
-- (NSString *)localized
-{
-	return NSLocalizedString(self, nil);
-}
-
-- (NSString *)resourcePath
-{
-	return [[NSBundle mainBundle] pathForResource:self ofType:nil];
-}
-
-- (NSURL *)resourceURL
-{
-	return [[NSBundle mainBundle] URLForResource:self withExtension:nil];
-}
-
-- (NSURL *)URL
-{
-	return [NSURL URLWithString:self];
-}
-
-- (NSURL *)fileURL
-{
-	return [NSURL fileURLWithPath:self];
-}
-
-- (NSString *)expanded
-{
-	return [self stringByExpandingTildeInPath];
-}
-
-- (NSStringArray *)words
-{
-	return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-}
-
-- (NSStringArray *)lines
-{
-	return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-}
-
-- (NSString *)trimmedOfWhitespace
-{
-	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-}
-
-- (NSString *)trimmedOfWhitespaceAndNewlines
-{
-	return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-- (NSString *)clamp:(NSUInteger)maximumLength
-{
-    return (([self length] <= maximumLength) ? self : [self substringToIndex:maximumLength]);
-}
-
-
-- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
-{
-	NSString *ret = self;
-
-	for (NSString *key in replacements)
-	{
-		if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
-			continue;
-		ret = [ret stringByReplacingOccurrencesOfString:key
-											 withString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]];
-	}
-
-	BOOL replaced;
-	do
-	{
-		replaced = FALSE;
-		for (NSString *key in replacements)
-		{
-			if ([[NSNull null] isEqual:key] || [[NSNull null] isEqual:replacements[key]])
-				continue;
-			NSString *tmp = [ret stringByReplacingOccurrencesOfString:[key stringByAppendingString:@"k9BBV15zFYi44YyB"]
-														   withString:replacements[key]];
-
-			if (![tmp isEqualToString:ret])
-			{
-				ret = tmp;
-				replaced = YES;
-			}
-		}
-	} while (replaced);
-
-	return ret;
-}
-
-- (NSString *)capitalizedStringWithUppercaseWords:(NSStringArray *)uppercaseWords
-{
-	NSString *res = [self capitalizedString];
-
-	for (NSString *word in uppercaseWords)
-	{
-		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\W)", word.capitalizedString)
-											 withString:makeString(@"$1%@$2", word.uppercaseString)
-												options:NSRegularExpressionSearch range: res.fullRange];
-
-	}
-	for (NSString *word in uppercaseWords)
-	{
-		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\Z)", word.capitalizedString)
-											 withString:makeString(@"$1%@", word.uppercaseString)
-												options:NSRegularExpressionSearch range:res.fullRange];
-
-	}
-
-	return res;
-}
-
-- (NSString *)titlecaseStringWithLowercaseWords:(NSStringArray *)lowercaseWords andUppercaseWords:(NSStringArray *)uppercaseWords
-{
-	NSString *res = [self capitalizedStringWithUppercaseWords:uppercaseWords];
-
-	for (NSString *word in lowercaseWords)
-	{
-		res = [res stringByReplacingOccurrencesOfString:makeString(@"([^:,;,-]\\s)%@(\\s)", word.capitalizedString)
-											 withString:makeString(@"$1%@$2", word.lowercaseString)
-												options:NSRegularExpressionSearch range: res.fullRange];
-		
-	}
-
-//	for (NSString *word in lowercaseWords)
-//	{
-//		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\s)%@(\\Z)", word.capitalizedString)
-//											 withString:makeString(@"$1%@", word.lowercaseString)
-//												options:NSRegularExpressionSearch range: res.fullRange];
-//
-//	}
-	
-	return res;
-}
-
-- (NSString *)titlecaseString
-{
-	NSArray *words = @[@"a", @"an", @"the", @"and", @"but", @"for", @"nor", @"or", @"so", @"yet", @"at", @"by", @"for", @"in", @"of", @"off", @"on", @"out", @"to", @"up", @"via", @"to", @"c", @"ca", @"etc", @"e.g.", @"i.e.", @"vs.", @"vs", @"v", @"down", @"from", @"into", @"like", @"near", @"onto", @"over", @"than", @"with", @"upon"];
-
-	return [self titlecaseStringWithLowercaseWords:words.id andUppercaseWords:nil];
-}
-
-- (NSString *)propercaseString
-{
-	if ([self length] == 0)
-		return @"";
-	else if ([self length] == 1)
-		return [self uppercaseString];
-
-	return makeString(@"%@%@",
-					  [[self substringToIndex:1] uppercaseString],
-					  [[self substringFromIndex:1] lowercaseString]);
-}
-
-- (NSData *)download
-{
-#ifdef DEBUG
-    if ([NSThread currentThread] == [NSThread mainThread])
-        LOG(@"Warning: performing blocking download on main thread");
-#endif
-	NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
-#if ! __has_feature(objc_arc)
-	[d autorelease];
-#endif
-	return d;
-}
-
-
-#ifdef USE_SECURITY
-- (NSString *)SHA1
-{
-	const char *cStr = [self UTF8String];
-	unsigned char result[CC_SHA1_DIGEST_LENGTH];
-	CC_SHA1(cStr, (CC_LONG)strlen(cStr), result);
-	NSString *s = [NSString  stringWithFormat:
-				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-				   result[0], result[1], result[2], result[3], result[4],
-				   result[5], result[6], result[7],
-				   result[8], result[9], result[10], result[11], result[12],
-				   result[13], result[14], result[15],
-				   result[16], result[17], result[18], result[19]
-				   ];
-
-    return s;
-}
-#endif
-
-- (NSMutableString *)mutableObject
-{
-	return [NSMutableString stringWithString:self];
-}
-
-- (NSString *)removed:(NSString *)stringToRemove
-{
-	return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
-}
-
-- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2	// stringByReplacingOccurencesOfString:withString:
-{
-	return [self stringByReplacingOccurrencesOfString:str1 withString:str2];
-}
-
-- (NSStringArray *)split:(NSString *)sep								// componentsSeparatedByString:
-{
-	return (NSStringArray *)[self componentsSeparatedByString:sep];
-}
-
-- (NSArray *)defaultArray
-{
-	return [[NSUserDefaults standardUserDefaults] arrayForKey:self];
-}
-
-- (void)setDefaultArray:(NSArray *)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
-}
-
-- (NSDictionary *)defaultDict
-{
-	return [[NSUserDefaults standardUserDefaults] dictionaryForKey:self];
-}
-
-- (void)setDefaultDict:(NSDictionary *)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
-}
-
-- (id)defaultObject
-{
-	return [[NSUserDefaults standardUserDefaults] objectForKey:self];
-}
-
-- (void)setDefaultObject:(id)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
-}
-
-- (NSString *)defaultString
-{
-	return [[NSUserDefaults standardUserDefaults] stringForKey:self];
-}
-
-- (void)setDefaultString:(NSString *)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
-}
-
-- (NSURL *)defaultURL
-{
-	return [[NSUserDefaults standardUserDefaults] URLForKey:self];
-}
-
-- (void)setDefaultURL:(NSURL *)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setURL:newDefault forKey:self];
-}
-
-- (NSInteger)defaultInt
-{
-	return [[NSUserDefaults standardUserDefaults] integerForKey:self];
-}
-
-- (void)setDefaultInt:(NSInteger)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setInteger:newDefault forKey:self];
-}
-
-- (float)defaultFloat
-{
-	return [[NSUserDefaults standardUserDefaults] floatForKey:self];
-}
-
-- (void)setDefaultFloat:(float)newDefault
-{
-	[[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
-}
-
-- (NSString *)stringValue
-{
-	return self;
-}
-
-- (NSNumber *)numberValue
-{
-	return @(self.doubleValue);
-}
-
-- (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter
-{	// credits to Drew McCormack
-    NSMutableArray *rows = [NSMutableArray array];
-
-	NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
-    NSMutableCharacterSet *newlineCharacterSetMutable = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-    [newlineCharacterSetMutable formIntersectionWithCharacterSet:[whitespaceCharacterSet invertedSet]];
-	NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
-    NSMutableCharacterSet *importantCharactersSetMutable = [NSMutableCharacterSet characterSetWithCharactersInString:[delimiter stringByAppendingString:@"\""]];
-    [importantCharactersSetMutable formUnionWithCharacterSet:newlineCharacterSet];
-	NSCharacterSet *importantCharactersSet = [NSCharacterSet characterSetWithBitmapRepresentation:[importantCharactersSetMutable bitmapRepresentation]];
-
-    NSScanner *scanner = [NSScanner scannerWithString:self];
-    [scanner setCharactersToBeSkipped:nil];
-
-    while (![scanner isAtEnd])
-	{
-		BOOL insideQuotes = NO;
-        BOOL finishedRow = NO;
-        NSMutableArray *columns = [NSMutableArray arrayWithCapacity:30];
-        NSMutableString *currentColumn = [NSMutableString string];
-
-        while (!finishedRow)
-		{
-            NSString *tempString;
-            if ([scanner scanUpToCharactersFromSet:importantCharactersSet intoString:&tempString])
-			{
-                [currentColumn appendString:tempString];
-            }
-
-            if ([scanner isAtEnd])
-			{
-                if (![currentColumn isEqualToString:@""])
-					[columns addObject:currentColumn];
-
-                finishedRow = YES;
-            }
-            else if ([scanner scanCharactersFromSet:newlineCharacterSet intoString:&tempString])
-			{
-                if (insideQuotes)
-				{
-                    [currentColumn appendString:tempString];
-                }
-                else
-				{
-                    if (![currentColumn isEqualToString:@""])
-						[columns addObject:currentColumn];
-                    finishedRow = YES;
-                }
-            }
-            else if ([scanner scanString:@"\"" intoString:NULL])
-			{
-                if (insideQuotes && [scanner scanString:@"\"" intoString:NULL])
-				{
-                    [currentColumn appendString:@"\""];
-                }
-                else
-				{
-                    insideQuotes = !insideQuotes;
-                }
-            }
-            else if ([scanner scanString:delimiter intoString:NULL])
-			{
-                if (insideQuotes)
-				{
-                    [currentColumn appendString:delimiter];
-                }
-                else
-				{
-                    [columns addObject:currentColumn];
-                    currentColumn = [NSMutableString string];
-                    [scanner scanCharactersFromSet:whitespaceCharacterSet intoString:NULL];
-                }
-            }
-        }
-        if ([columns count] > 0)
-			[rows addObject:columns];
-    }
-
-    return (NSArrayArray *)rows;
-}
-
-- (NSData *)data
-{
-	return [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-}
-
-- (NSData *)dataFromHexString
-{
-	const char *bytes = [self cStringUsingEncoding:NSUTF8StringEncoding];
-	NSUInteger length = strlen(bytes);
-	unsigned char *r = (unsigned char *)malloc(length / 2 + 1);
-	unsigned char *index = r;
-
-	while ((*bytes) && (*(bytes +1)))
-	{
-		char encoder[3] = {'\0','\0','\0'};
-		encoder[0] = *bytes;
-		encoder[1] = *(bytes+1);
-		*index = (unsigned char)strtol(encoder, NULL, 16);
-		index++;
-		bytes+=2;
-	}
-	*index = '\0';
-
-	NSData *result = [NSData dataWithBytes:r length:length / 2];
-	free(r);
-    return result;
-}
-
-- (NSString *)unescaped
-{
-#if  __has_feature(objc_arc)
-	NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
-	return encodedString;
-#else
-	NSString *encodedString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR(""));
-	return [encodedString autorelease];
-#endif
-}
-
-- (NSString *)escaped
-{
-#if  __has_feature(objc_arc)
-    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8));
-	return encodedString;
-#else
-    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8);
-	return [encodedString autorelease];
-#endif
-}
-
-- (NSString *)encoded
-{
-#if  __has_feature(objc_arc)
-    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
-	return encodedString;
-#else
-    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
-	return [encodedString autorelease];
-#endif
-}
-
-- (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet
-{
-	NSRange rangeOfFirstWantedCharacter = [self rangeOfCharacterFromSet:[characterSet invertedSet]];
-	if (rangeOfFirstWantedCharacter.location == NSNotFound)
-		return @"";
-
-	return [self substringFromIndex:rangeOfFirstWantedCharacter.location];
-}
-
-- (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet
-{
-	NSRange rangeOfLastWantedCharacter = [self rangeOfCharacterFromSet:[characterSet invertedSet]
-															   options:NSBackwardsSearch];
-	if (rangeOfLastWantedCharacter.location == NSNotFound)
-		return @"";
-
-	return [self substringToIndex:rangeOfLastWantedCharacter.location+1];
-}
-
-//- (NSString *)arg:(id)arg, ...
-//{
-//	va_list args;
-//	void *stackLocal = (__bridge void *)(arg);
-//	struct __va_list_tag *stackLocal2 = stackLocal;
-//    va_start(args, arg);
-//
-//    NSString *result = [[NSString alloc] initWithFormat:self arguments:stackLocal2];
-//    va_end(args);
-//
-//#if ! __has_feature(objc_arc)
-//	[d result];
-//#endif
-//	return result;
-//}
-
-@end
-
-
-@implementation  NSMutableString (CoreCode)
-
-@dynamic immutableObject;
-
-- (NSString *)immutableObject
-{
-	return [NSString stringWithString:self];
-}
-@end
-
-
-
-@implementation NSURL (CoreCode)
-
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory;
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget;
-
-- (BOOL)fileIsAlias
-{
-    CFURLRef cfurl = (BRIDGE CFURLRef) self;
-    CFBooleanRef aliasBool = kCFBooleanFalse;
-    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
-    Boolean alias = CFBooleanGetValue(aliasBool);
-
-    return alias && success;
-}
-
-- (BOOL)fileIsDirectory
-{
-	NSNumber *value;
-	[self getResourceValue:&value forKey:NSURLIsDirectoryKey error:NULL];
-	return value.boolValue;
-}
-
-- (NSURL *)fileAliasTarget
-{
- 	CFErrorRef *err = NULL;
-	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
-	if (bookmark == nil)
-		return nil;
-	CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
-	__autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
-	CFRelease(bookmark);
-	CFRelease(url);
-#if  __has_feature(objc_arc)
-	return nurl;
-#else
-	return [nurl autorelease];
-#endif
-}
-#endif
-
-- (NSURLRequest *)request
-{
-	return [NSURLRequest requestWithURL:self];
-}
-
-- (NSMutableURLRequest *)mutableRequest
-{
-	return [NSMutableURLRequest requestWithURL:self];
-}
-
-- (NSURL *)add:(NSString *)component
-{
-	return [self URLByAppendingPathComponent:component];
-}
-
-- (NSURLArray *)dirContents
-{
-	if (![self isFileURL]) return nil;
-	NSArray *c = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self path] error:NULL];
-	return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
-}
-
-- (NSURLArray *)dirContentsRecursive
-{
-	if (![self isFileURL]) return nil;
-	NSArray *c = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[self path] error:NULL];
-	return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
-}
-
-- (NSURL *)uniqueFile
-{
-	if (![self isFileURL]) return nil;
-	return [self path].uniqueFile.fileURL;
-}
-
-- (BOOL)fileExists
-{
-	return [self isFileURL] && [[NSFileManager defaultManager] fileExistsAtPath:[self path]];
-}
-
-- (unsigned long long)fileSize
-{
-	NSNumber *size;
-
-	if ([self getResourceValue:&size forKey:NSURLFileSizeKey error:nil])
-        return [size unsignedLongLongValue];
-	else
-		return 0;
-}
-
-- (unsigned long long)directorySize
-{
-	unsigned long long size = 0;
-	for (NSString *file in self.dirContentsRecursive)
-	{
-		NSDictionary *attr = [fileManager attributesOfItemAtPath:@[self.path, file].path error:NULL];
-		if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
-			size += [attr[NSFileSize] unsignedLongLongValue];
-	}
-	return size;
-}
-
-- (void)open
-{
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	[[NSWorkspace sharedWorkspace] openURL:self];
-#else
-	[[UIApplication sharedApplication] openURL:self];
-#endif
-}
-
-- (BOOL)isWriteablePath
-{
-	if (self.fileExists)
-		return NO;
-
-	if (![@"TEST" writeToURL:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
-		return NO;
-
-	[fileManager removeItemAtURL:self error:NULL];
-
-	return YES;
-}
-
-
-- (NSData *)download
-{
-#ifdef DEBUG
-	if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
-        LOG(@"Warning: performing blocking download on main thread");
-#endif
-    
-	NSData *d = [NSData dataWithContentsOfURL:self];
-
-	return d;
-}
-
-- (void)setContents:(NSData *)data
-{
-	NSError *err;
-
-	if (![data writeToURL:self options:NSDataWritingAtomic error:&err])
-		LOG(err);
-}
-
-- (NSData *)contents
-{
-	return self.download;
-}
-@end
-
 
 @implementation  NSCharacterSet (CoreCode)
 
@@ -1885,5 +1958,16 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSCharacterSet *)immutableObject
 {
 	return [NSCharacterSet characterSetWithBitmapRepresentation:[self bitmapRepresentation]];
+}
+@end
+
+
+@implementation  NSNumber (CoreCode)
+
+@dynamic literalString;
+
+- (NSString *)literalString
+{
+	return makeString(@"@(%@)", self.description);
 }
 @end

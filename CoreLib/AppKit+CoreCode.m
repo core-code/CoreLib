@@ -32,7 +32,8 @@ CONST_KEY(CCProgressIndicator)
 
 - (NSInteger)selectedTabViewIndex
 {
-	return [self indexOfTabViewItem:[self selectedTabViewItem]];
+	NSTabViewItem *selectedView = [self selectedTabViewItem];
+	return [self indexOfTabViewItem:selectedView];
 }
 
 @end
