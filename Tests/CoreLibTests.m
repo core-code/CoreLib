@@ -1,6 +1,8 @@
 #import <XCTest/XCTest.h>
 
 
+
+
 @interface Test : NSDictionary
 @property (nonatomic, readonly) NSString *title;
 @end
@@ -18,7 +20,7 @@
 
 - (void)setUp
 {
-    [super setUp];
+	[super setUp];
 
 	if (!cc)
 		cc = [CoreLib new];
@@ -26,12 +28,12 @@
 
 - (void)tearDown
 {
-    [super tearDown];
+	[super tearDown];
 }
 
 - (void)testExample
 {
-    XCTAssertNotNil(fileManager);
+	XCTAssertNotNil(fileManager);
 }
 
 - (void)testDictionaryMisuse
@@ -43,13 +45,12 @@
 
 - (void)testStringHexRoundtrip
 {
-    
-    NSData *data = @"/System/Library/PreferencePanes/Dock.prefPane/Contents/Resources/Dock.png".contents;
-    
-    NSString *bla = data.hexString;
-    
-    NSData *data2 = bla.dataFromHexString;
-    
-    XCTAssert([data isEqualToData:data2]);
+	NSData *data = @"/System/Library/PreferencePanes/Dock.prefPane/Contents/Resources/Dock.png".contents;
+
+	NSString *bla = data.hexString;
+
+	NSData *data2 = bla.dataFromHexString;
+
+	XCTAssert([data isEqualToData:data2]);
 }
 @end

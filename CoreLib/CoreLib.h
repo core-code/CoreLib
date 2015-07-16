@@ -224,13 +224,13 @@ extern CoreLib *cc; // init CoreLib with: cc = [CoreLib new];
 extern NSUserDefaults *userDefaults;
 extern NSFileManager *fileManager;
 extern NSNotificationCenter *notificationCenter;
+extern NSBundle *bundle;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 extern NSFontManager *fontManager;
 extern NSDistributedNotificationCenter *distributedNotificationCenter;
 extern NSWorkspace *workspace;
 extern NSApplication *application;
 extern NSProcessInfo *processInfo;
-extern NSBundle *bundle;
 #endif
 
 
@@ -296,44 +296,48 @@ extern enumname ## Key *const k ## name ## Key;
 #include <asl.h>
 void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG
-    #define asl_NSLog_debug(...) asl_NSLog(ASL_LEVEL_NOTICE, __VA_ARGS__ )
+  #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_NOTICE, __VA_ARGS__ )
 #elif defined(DEBUG)
-    #define asl_NSLog_debug(...) asl_NSLog(ASL_LEVEL_DEBUG, __VA_ARGS__ )
+  #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_DEBUG, __VA_ARGS__ )
 #else
-	#define asl_NSLog_debug(...)
+  #define asl_NSLog_debug(...)
 #endif
-#define LOGFUNC				asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), self)
-#define LOGFUNCPARAM(x)		asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), self, [(x) description])
-#define LOGSUCC				asl_NSLog_debug(@"success %@ %d", @(__FILE__), __LINE__)
-#define LOGFAIL				asl_NSLog_debug(@"failure %@ %d", @(__FILE__), __LINE__)
-#define LOG(x)				asl_NSLog_debug(@"%@", [(x) description]);
+#define LOGFUNC					asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), self)
+#define LOGFUNCPARAM(x)			asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), self, [(x) description])
+#define LOGSUCC					asl_NSLog_debug(@"success %@ %d", @(__FILE__), __LINE__)
+#define LOGFAIL					asl_NSLog_debug(@"failure %@ %d", @(__FILE__), __LINE__)
+#define LOG(x)					asl_NSLog_debug(@"%@", [(x) description]);
 
 
 
 // !!!: CONVENIENCE MACROS
-#define PROPERTY_STR(p)		NSStringFromSelector(@selector(p))
-#define OBJECT_OR(x,y)		((x) ? (x) : (y))
-#define STRING_OR(x, y)		(((x) && ([x length])) ? (x) : (y))
-#define VALID_STR(x)		(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
-#define NON_NIL_STR(x)		((x) ? (x) : @"")
-#define NON_NIL_OBJ(x)		((x) ? (x) : [NSNull null])
-#define IS_FLOAT_EQUAL(x,y) (fabsf((x)-(y)) < 0.0001f)
-#define IS_DOUBLE_EQUAL(x,y) (fabs((x)-(y)) < 0.000001f)
-#define IS_IN_RANGE(v,l,h)  (((v) >= (l)) && ((v) <= (h)))
-#define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
-#define ONCE(block)			{ static dispatch_once_t onceToken; dispatch_once(&onceToken, block); }
-#define ONCE_EVERY_MINUTES(block, minutes)	{ 	static NSDate *time = nil;	if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60))	{	block();	time = [NSDate date]; } }
-#define OS_IS_POST_10_6		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
-#define OS_IS_POST_10_7		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8)
-#define OS_IS_POST_10_8		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
-#define OS_IS_POST_10_9		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
-#define MAX3(x,y,z)			(MAX(MAX((x),(y)),(z)))
-#define MIN3(x,y,z)			(MIN(MIN((x),(y)),(z)))
-#define BYTES_TO_KB(x)		((double)(x) / (1024.0))
-#define BYTES_TO_MB(x)		((double)(x) / (1024.0 * 1024))
-#define BYTES_TO_GB(x)		((double)(x) / (1024.0 * 1024 * 1024))
+#define PROPERTY_STR(p)			NSStringFromSelector(@selector(p))
+#define OBJECT_OR(x,y)			((x) ? (x) : (y))
+#define STRING_OR(x, y)			(((x) && ([x length])) ? (x) : (y))
+#define VALID_STR(x)			(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
+#define NON_NIL_STR(x)			((x) ? (x) : @"")
+#define NON_NIL_OBJ(x)			((x) ? (x) : [NSNull null])
+#define IS_FLOAT_EQUAL(x,y)		(fabsf((x)-(y)) < 0.0001f)
+#define IS_DOUBLE_EQUAL(x,y)	(fabs((x)-(y)) < 0.000001f)
+#define IS_IN_RANGE(v,l,h)		(((v) >= (l)) && ((v) <= (h)))
+#define CLAMP(x, low, high)		(((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+#define ONCE_PER_FUNCTION(b)	{ static dispatch_once_t onceToken; dispatch_once(&onceToken, b); }
+#define ONCE_PER_OBJECT(o,i,b)	@synchronized(o){ NSString *k = makeString(@"CC_ONCE_PER_OBJECT%@", (i)); static dispatch_once_t onceToken; onceToken = [[o associatedValueForKey:k] longValue]; dispatch_once(&onceToken, b); [o setAssociatedValue:@(onceToken) forKey:k]; }
+#define ONCE_EVERY_MINUTES(b,m)	{ static NSDate *time = nil; if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60)) { block(); time = [NSDate date]; }}
+#define OS_IS_POST_10_6			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
+#define OS_IS_POST_10_7			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8)
+#define OS_IS_POST_10_8			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
+#define OS_IS_POST_10_9			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
+#define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
+#define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
+#define BYTES_TO_KB(x)			((double)(x) / (1024.0))
+#define BYTES_TO_MB(x)			((double)(x) / (1024.0 * 1024))
+#define BYTES_TO_GB(x)			((double)(x) / (1024.0 * 1024 * 1024))
+#define SECONDS_PER_MINUTES(x)  ((x) * 60)
+#define SECONDS_PER_HOURS(x)    (SECONDS_PER_MINUTES(x) * 60)
+#define SECONDS_PER_DAYS(x)     (SECONDS_PER_HOURS(x) * 24)
+#define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS(x) * 7)
 
-// log macros
 
 
 // !!!: MISC MACROS
@@ -357,20 +361,16 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #else
 #define BRIDGE __bridge
 #endif
-#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
-#define __IPHONE_OS_VERSION_MIN_REQUIRED 0
-#endif
-#define kSecondsPerMinute (60)
-#define kSecondsPerHour (60 * kSecondsPerMinute)
-#define kSecondsPerDay (24 * kSecondsPerHour)
-#define kSecondsPerWeek (7 * kSecondsPerDay)
+//#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
+//#define __IPHONE_OS_VERSION_MIN_REQUIRED 0
+//#endif
 
 
 // !!!: CONFIGURATION
 #ifdef VENDOR_HOMEPAGE
 #define kVendorHomepage VENDOR_HOMEPAGE
 #else
-#define kVendorHomepage @"http://www.corecode.at/"
+#define kVendorHomepage @"https://www.corecode.at/"
 #endif
 #ifdef FEEDBACK_EMAIL
 #define kFeedbackEmail FEEDBACK_EMAIL

@@ -10,6 +10,7 @@
  */
 
 #import "CoreLib.h"
+#import "JMHostInformation.h"
 #ifndef CORELIB
 #error you need to include CoreLib.h in your PCH file
 #endif
@@ -24,12 +25,12 @@ CoreLib *cc;
 NSUserDefaults *userDefaults;
 NSFileManager *fileManager;
 NSNotificationCenter *notificationCenter;
+NSBundle *bundle;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSFontManager *fontManager;
 NSDistributedNotificationCenter *distributedNotificationCenter;
 NSApplication *application;
 NSWorkspace *workspace;
-NSBundle *bundle;
 NSProcessInfo *processInfo;
 #endif
 
@@ -58,86 +59,93 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 - (instancetype)init
 {
 	assert(!cc);
+
 	if ((self = [super init]))
-		if (!self.suppURL.fileExists)
-			[[NSFileManager defaultManager] createDirectoryAtPath:self.suppURL.path
-									  withIntermediateDirectories:YES attributes:nil error:NULL];
-
-	cc = self;
-	
-    
-#ifdef DEBUG
-	asl_add_log_file(NULL, STDERR_FILENO);
-#endif
-	userDefaults = [NSUserDefaults standardUserDefaults];
-	fileManager = [NSFileManager defaultManager];
-	notificationCenter = [NSNotificationCenter defaultCenter];
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	fontManager = [NSFontManager sharedFontManager];
-	distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
-	workspace = [NSWorkspace sharedWorkspace];
-	application = [NSApplication sharedApplication];
-	processInfo = [NSProcessInfo processInfo];
-	bundle = [NSBundle mainBundle];
-#endif
-
-#ifdef DEBUG
-	BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
-	#ifdef SANDBOX
-		assert(isSandbox);
-	#else
-		assert(!isSandbox);
-	#endif
-
-	#ifdef NDEBUG
-		LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
-	#endif
-
-
-
-    if (![[self appBundleIdentifier] isEqualToString:[bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"]])
-		exit(666);
-
-	if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
-		![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
-		asl_NSLog_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
-
-
-	if (![[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-		asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
-
-	if ([[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
-		asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
-
-	if (![[[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-		asl_NSLog_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
-
-	if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
-        LOG(@"Warning: LSApplicationCategoryType not properly set");
-#else
-    #ifndef NDEBUG
-        asl_NSLog(ASL_LEVEL_WARNING, @"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");
+    {
+        cc = self;
+        
+        
+    #ifdef DEBUG
+        asl_add_log_file(NULL, STDERR_FILENO);
     #endif
+        userDefaults = [NSUserDefaults standardUserDefaults];
+        fileManager = [NSFileManager defaultManager];
+        notificationCenter = [NSNotificationCenter defaultCenter];
+        bundle = [NSBundle mainBundle];
+    #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+        fontManager = [NSFontManager sharedFontManager];
+        distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
+        workspace = [NSWorkspace sharedWorkspace];
+        application = [NSApplication sharedApplication];
+        processInfo = [NSProcessInfo processInfo];
+    #endif
+
+        if (!self.suppURL.fileExists)
+            [fileManager createDirectoryAtURL:self.suppURL
+                  withIntermediateDirectories:YES attributes:nil error:NULL];
+
+    #ifdef DEBUG
+        BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
+        #ifdef SANDBOX
+            assert(isSandbox);
+        #else
+            assert(!isSandbox);
+        #endif
+
+        #ifdef NDEBUG
+            LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
+        #endif
+
+#if !defined(XCTEST) || !XCTEST
+        NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+        if (![[self appBundleIdentifier] isEqualToString:bundleID])
+            exit(666);
 #endif
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#ifndef DONT_CRASH_ON_EXCEPTIONS
-	NSSetUncaughtExceptionHandler(&exceptionHandler);
-#endif
+        if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
+            ![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
+            asl_NSLog_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
-	
-	NSString *frameworkPath = bundle.privateFrameworksPath;
-	for (NSString *framework in frameworkPath.dirContents)
-	{
-		NSString *smylinkToBinaryPath = makeString(@"%@/%@/%@", frameworkPath, framework, framework.stringByDeletingPathExtension);
 
-		if (!smylinkToBinaryPath.fileIsAlias)
-		{
-			alert_apptitled(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and use the ZIP decrompression built into Mac OS X.", @"OK", nil, nil);
-			exit(0);
-		}
-	}
-#endif
+        if (![[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+            asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
+
+        if ([[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
+            asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
+
+        if (![[[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+            asl_NSLog_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
+
+        if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
+            LOG(@"Warning: LSApplicationCategoryType not properly set");
+    #else
+        #ifndef NDEBUG
+            asl_NSLog(ASL_LEVEL_WARNING, @"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");
+        #endif
+    #endif
+
+    #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+    #ifndef DONT_CRASH_ON_EXCEPTIONS
+        NSSetUncaughtExceptionHandler(&exceptionHandler);
+    #endif
+
+        
+        NSString *frameworkPath = bundle.privateFrameworksPath;
+        for (NSString *framework in frameworkPath.dirContents)
+        {
+            NSString *smylinkToBinaryPath = makeString(@"%@/%@/%@", frameworkPath, framework, framework.stringByDeletingPathExtension);
+
+            if (!smylinkToBinaryPath.fileIsAlias)
+            {
+                alert_apptitled(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and use the ZIP decrompression built into Mac OS X.", @"OK", nil, nil);
+                exit(0);
+            }
+        }
+    #endif
+    }
+
+    assert(cc);
+
 
 	return self;
 }
@@ -170,7 +178,11 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSString *)appName
 {
+#if defined(XCTEST) && XCTEST
+	return @"TEST";
+#else
 	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+#endif
 }
 
 - (int)appBuildNumber
@@ -200,7 +212,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSURL *)homeURL
 {
-	return NSHomeDirectory().URL;
+	return NSHomeDirectory().fileURL;
 }
 
 - (NSURL *)docURL
@@ -218,7 +230,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
 }
 
-- ( NSURL *)suppURL
+- ( NSURL * __nonnull)suppURL
 {
 	NSURL *dir = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
@@ -230,8 +242,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 - (NSString *)appChecksumSHA
 {
 #ifdef USE_SECURITY
-
-	NSData *d = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] executableURL]];
+    NSURL *u = [[NSBundle mainBundle] executableURL];
+	NSData *d = [NSData dataWithContentsOfURL:u];
 	unsigned char result[CC_SHA1_DIGEST_LENGTH];
 	CC_SHA1([d bytes], (CC_LONG)[d length], result);
 	NSMutableString *ms = [NSMutableString string];
@@ -363,7 +375,8 @@ NSString *makeString(NSString *format, ...)
 
 NSString *makeTempFolder()
 {
-	NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:[bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"]] stringByAppendingString:@".XXXXXX"];
+    NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+	NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:bundleID] stringByAppendingString:@".XXXXXX"];
 	const char *tempDirectoryTemplateCString = tempDirectoryTemplate.fileSystemRepresentation;
 	if (!tempDirectoryTemplateCString) return nil;
 
@@ -425,7 +438,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
                   makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails),
 				  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
 		{
-			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@%@\n\nPreferences: %@\n",
+			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n",
 											  cc.appName,
 											  cc.appVersionString,
 											  cc.appBuildNumber,
@@ -434,6 +447,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 											  details,
 											  _machineType(),
 											  [[NSProcessInfo processInfo] operatingSystemVersionString],
+											  [JMHostInformation isUserAdmin],
 											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
                                               encodedPrefs);
 			

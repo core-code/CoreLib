@@ -215,7 +215,8 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	}
 
 
-	DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, makeString(@"/dev/disk%li", (long)bsdNum).UTF8String);
+    const char *bsdName = makeString(@"/dev/disk%li", (long)bsdNum).UTF8String;
+	DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, bsdName);
 
 	if (disk)
 	{
@@ -1070,13 +1071,15 @@ NSString *_machineType();
 				{
 
 					NSString *bsdName = @(utfBSDName);
+                    NSString *mountPath = [mountURL path];
 
-					asl_NSLog_debug(@"Volume mounted at: %@  %@ %@", [mountURL path], volumeName, bsdName);
+
+					asl_NSLog_debug(@"Volume mounted at: %@  %@ %@", mountPath, volumeName, bsdName);
 
 					LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", volumeName);
 
 					if ([volumeNamesToIgnore indexOfObject:volumeName] == NSNotFound &&
-						[volumePathsToIgnore indexOfObject:[mountURL path]] == NSNotFound) // not removable
+						[volumePathsToIgnore indexOfObject:mountPath] == NSNotFound) // not removable
 					{
 
 						LOGMOUNTEDHARDDISK(@"mountedHarddisks has BSD name %@", bsdName);
@@ -1422,8 +1425,9 @@ NSString *_machineType();
     for (int i = 0; i < 64 && subsequentNil < 5; i++)
     {
         NSString *bsdname = [NSString stringWithFormat:@"/dev/disk%i", i];
-        
-        DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdname UTF8String]);
+        const char *bsdnameC = bsdname.UTF8String;
+
+        DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, bsdnameC);
 		CFDictionaryRef propsCF = DADiskCopyDescription(disk);
 		NSDictionary *props = (__bridge NSDictionary *)propsCF;
 

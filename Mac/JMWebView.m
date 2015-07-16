@@ -9,10 +9,6 @@
 #import "JMWebView.h"
 
 
-@interface JMWebView ()
-@property (assign, nonatomic) dispatch_once_t onceToken;
-@end
-
 
 @implementation JMWebView
 
@@ -26,11 +22,9 @@
 	self.resourceLoadDelegate = self;
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdirect-ivar-access"
 - (void)viewWillDraw
 {
-	dispatch_once(&_onceToken, ^
+	ONCE_PER_OBJECT(self, @"WebViewLoad", ^
 	{
 		if (self.localHTMLName && self.localHTMLName.length)
 		{
@@ -47,7 +41,6 @@
 		}
 	});
 }
-#pragma GCC diagnostic pop
 
 #pragma mark WebViewPolicyDelegate
 

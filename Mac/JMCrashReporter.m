@@ -58,7 +58,8 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
 			if ([(NSDate *)[[[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL] objectForKey:@"NSFileModificationDate"] compare:lastCrashDate] == NSOrderedDescending)
 			{
-				NSString *crashlogsource = [[NSString alloc] initWithData:[NSData dataWithContentsOfFile:path] encoding:NSUTF8StringEncoding];
+                NSData *data = [NSData dataWithContentsOfFile:path];
+				NSString *crashlogsource = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 				NSString *crashlog = [[[[crashlogsource componentsSeparatedByString:@"**********"] lastObject] componentsSeparatedByString:@"Binary Images:"] objectAtIndex:0];
 
 				NSString *machinetype = [JMHostInformation machineType];

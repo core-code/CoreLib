@@ -10,17 +10,15 @@
 
 
 @interface JMRTFView ()
-@property (assign, nonatomic) dispatch_once_t onceToken;
 @end
 
 
 @implementation JMRTFView
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdirect-ivar-access"
+
 - (void)viewWillDraw
 {
-	dispatch_once(&_onceToken, ^
+	id block = ^
 	{
 		if (self.localRTFName && self.localRTFName.length)
 		{
@@ -53,12 +51,12 @@
 					}
 				});
 			}
-
 		}
 		else
 			asl_NSLog(ASL_LEVEL_ERR, @"Error: localHTMLName not set on JMRTFView");
-	});
+	};
+
+	ONCE_PER_OBJECT(self, @"RTFViewLoad", block);
 }
-#pragma GCC diagnostic pop
 
 @end

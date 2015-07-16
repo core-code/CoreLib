@@ -753,6 +753,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)uniqueFile
 {
+    assert(fileManager);
     if (![fileManager fileExistsAtPath:self])	return self;
     else
     {
@@ -783,6 +784,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)fileExists
 {
+    assert(fileManager);
     return [fileManager fileExistsAtPath:self];
 }
 
@@ -1298,7 +1300,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, path, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory;
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget;
 
@@ -1357,7 +1359,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (![self isFileURL]) return nil;
 
     NSString *path = self.path;
-    NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:NULL];
+	NSError *err;
+	NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:&err];
+	assert(c && !err);
     return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
@@ -1366,7 +1370,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (![self isFileURL]) return nil;
     
     NSString *path = self.path;
-    NSArray *c = [fileManager subpathsOfDirectoryAtPath:path error:NULL];
+	NSError *err;
+    NSArray *c = [fileManager subpathsOfDirectoryAtPath:path error:&err];
+	assert(c && !err);
     return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 

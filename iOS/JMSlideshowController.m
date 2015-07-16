@@ -143,12 +143,17 @@
 	{
 		NSURL *im2 =  im;
 
-		if ([im2 isFileURL])
+		if (im2.isFileURL)
+        {
+            NSString *im2Path = im2.path;
+            UIImage *image = [[UIImage alloc] initWithContentsOfFile:im2Path];
+
 #if ! __has_feature(objc_arc)
-			self.imageView.image = [[[UIImage alloc] initWithContentsOfFile:[im2 path]] autorelease];
-#else
-			self.imageView.image = [[UIImage alloc] initWithContentsOfFile:[im2 path]];
+            [image autorelease];
 #endif
+
+            self.imageView.image = image;
+        }
 		else
 		{
 			self.imageView.image = nil;

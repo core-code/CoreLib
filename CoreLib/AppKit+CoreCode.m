@@ -68,7 +68,6 @@ CONST_KEY(CCProgressIndicator)
 
 
 
-
 		[progressInfo setStringValue:title];
 		[progressDetailInfo setStringValue:@""];
 		[waitLabel setStringValue:@"Please wait until the operation finishes…"];
@@ -99,11 +98,16 @@ CONST_KEY(CCProgressIndicator)
 		[self setAssociatedValue:progressIndicator forKey:kCCProgressIndicatorKey];
 
 		[NSApp activateIgnoringOtherApps:YES];
-		[NSApp beginSheet:progressPanel
-		   modalForWindow:self
-			modalDelegate:nil
-		   didEndSelector:nil
-			  contextInfo:NULL];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        if (OS_IS_POST_10_8)
+            [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
+        else
+            [NSApp beginSheet:progressPanel modalForWindow:self
+                modalDelegate:nil didEndSelector:nil contextInfo:NULL];
+
+#pragma clang diagnostic pop
 
 		[progressIndicator startAnimation:self];
 	});

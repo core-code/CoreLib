@@ -45,11 +45,12 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 		//	printf("new path: %s\n", newPath);
 
-			NSURL *url = @(newPath).fileURL;
+			NSURL * url = @(newPath).fileURL;
+
 
 			NSRunningApplication *newInstance = [workspace launchApplicationAtURL:url
 																		  options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
-																	configuration:nil error:NULL];
+                                                                    configuration:@{} error:NULL];
 
 			free(newPath);
 			

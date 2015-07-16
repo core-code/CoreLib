@@ -217,7 +217,7 @@
 - (void)open;
 
 @property (readonly, nonatomic) BOOL fileIsDirectory;
-@property (readonly, nonatomic) NSString *path;
+//@property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSURLArray *dirContents;
 @property (readonly, nonatomic) NSURLArray *dirContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
