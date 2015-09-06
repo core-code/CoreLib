@@ -323,7 +323,7 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define CLAMP(x, low, high)		(((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define ONCE_PER_FUNCTION(b)	{ static dispatch_once_t onceToken; dispatch_once(&onceToken, b); }
 #define ONCE_PER_OBJECT(o,i,b)	@synchronized(o){ NSString *k = makeString(@"CC_ONCE_PER_OBJECT%@", (i)); static dispatch_once_t onceToken; onceToken = [[o associatedValueForKey:k] longValue]; dispatch_once(&onceToken, b); [o setAssociatedValue:@(onceToken) forKey:k]; }
-#define ONCE_EVERY_MINUTES(b,m)	{ static NSDate *time = nil; if (!time || [[NSDate date] timeIntervalSinceDate:time] > (minutes * 60)) { block(); time = [NSDate date]; }}
+#define ONCE_EVERY_MINUTES(b,m)	{ static NSDate *time = nil; if (!time || [[NSDate date] timeIntervalSinceDate:time] > (m * 60)) { b(); time = [NSDate date]; }}
 #define OS_IS_POST_10_6			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
 #define OS_IS_POST_10_7			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8)
 #define OS_IS_POST_10_8			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)

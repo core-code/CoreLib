@@ -11,6 +11,8 @@
 
 #if __has_feature(modules)
 @import WebKit;
+@import WebKit.WebPolicyDelegate;
+@import WebKit.WebResourceLoadDelegate;
 #else
 #import <WebKit/WebKit.h>
 #endif
