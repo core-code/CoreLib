@@ -31,7 +31,11 @@
 
 - (void)checkAndReportCrashesContaining:(NSStringArray *)neccessarySubstringsOrNil to:(NSString *)destinationMail
 {
+#ifndef SANDBOX
 	CheckAndReportCrashes(destinationMail, neccessarySubstringsOrNil);
+#else
+	assert(0);
+#endif
 }
 
 - (void)checkAppMovements
@@ -42,8 +46,6 @@
 - (void)welcomeOrExpireDemo:(int)demoLimit welcomeText:(NSString *)welcomeText expiryText:(NSString *)expiryText
 {
 #ifdef TRYOUT // check for demo limitation
-
-
 	if (usagesThisVersionKey.defaultInt >= demoLimit)
 	{
 		alert(cc.appName, expiryText, @"OK", nil, nil);
@@ -86,12 +88,15 @@
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(TRYOUT)
-	if ([[NSDate date] timeIntervalSinceDate:[NSDate dateWithPreprocessorDate:preprocessorDateString]] > 60 * 60 * 24 * expiryDays)
+	dispatch_after_main(60, ^
 	{
-		alert_apptitled(@"Sorry this test-version has expired".localized,
-						@"OK".localized, nil, nil);
-		exit(1);
-	}
+		if ([[NSDate date] timeIntervalSinceDate:[NSDate dateWithPreprocessorDate:preprocessorDateString]] > 60 * 60 * 24 * expiryDays)
+		{
+			alert_apptitled(@"Sorry this test-version has expired".localized,
+							@"OK".localized, nil, nil);
+			exit(1);
+		}
+	});
 #endif
 }
 

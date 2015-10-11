@@ -24,13 +24,12 @@
 
 - (void)viewWillDraw
 {
-	ONCE_PER_OBJECT(self, @"WebViewLoad", ^
+	ONCE_PER_OBJECT(self, ^
 	{
 		if (self.localHTMLName && self.localHTMLName.length)
 		{
 			[self.mainFrame loadRequest:self.localHTMLName.resourceURL.request];
 		}
-
 
 		if (self.remoteHTMLURL && self.remoteHTMLURL.length)
 		{
@@ -61,8 +60,11 @@
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource
 {
-	if (!IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
+	if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
+	{
 		[sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.2f\"", self.zoomFactor.floatValue)];
+	}
+
 }
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource

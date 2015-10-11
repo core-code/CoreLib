@@ -23,8 +23,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @import Darwin.POSIX.unistd;
 @import Darwin.POSIX.sys.types;
 @import Darwin.POSIX.strings;
-@import Darwin.POSIX.pwd;
-@import Darwin.POSIX.grp;
 @import Darwin.sys.param;
 @import Darwin.sys.mount;
 #ifdef USE_IOKIT
@@ -47,8 +45,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <unistd.h>
 #include <sys/types.h>
 #include <strings.h>
-#include <pwd.h>
-#include <grp.h>
 #include <sys/param.h>
 #include <sys/mount.h>
 #ifdef USE_IOKIT
@@ -406,22 +402,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 }
 #endif
 
-
+BOOL _isUserAdmin();
 + (BOOL)isUserAdmin
 {
-	uid_t current_user_id = getuid();
-	struct passwd *pwentry = getpwuid(current_user_id);
-	struct group *admin_group = getgrnam("admin");
-	while(*admin_group->gr_mem != NULL)
-	{
-		if (strcmp(pwentry->pw_name, *admin_group->gr_mem) == 0)
-		{
-			return YES;
-		}
-		admin_group->gr_mem++;
-	}
-
-	return NO;
+    return _isUserAdmin();
 }
 
 + (NSURL *)growlInstallURL
@@ -622,7 +606,6 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 #endif
 
 NSString *_machineType();
-
 + (NSString *)machineType
 {
 	return _machineType();

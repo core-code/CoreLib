@@ -10,7 +10,6 @@
  */
 
 #import "CoreLib.h"
-#import "JMHostInformation.h"
 #ifndef CORELIB
 #error you need to include CoreLib.h in your PCH file
 #endif
@@ -20,6 +19,7 @@
 
 
 NSString *_machineType(void);
+BOOL _isUserAdmin(void);
 
 CoreLib *cc;
 NSUserDefaults *userDefaults;
@@ -63,7 +63,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	if ((self = [super init]))
     {
         cc = self;
-        
+
+
+
         
     #ifdef DEBUG
         asl_add_log_file(NULL, STDERR_FILENO);
@@ -428,8 +430,8 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #pragma clang diagnostic pop
 #endif
 #endif
-        
-        
+
+
         NSString *visibleDetails = details;
         if (visibleDetails.length > maxLen)
             visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
@@ -438,16 +440,18 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
                   makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails),
 				  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
 		{
-			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report&body=Hello\nA fatal error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n",
+			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n",
 											  cc.appName,
 											  cc.appVersionString,
 											  cc.appBuildNumber,
+											  cc.appChecksumSHA,
+											  fatal ? @"fatal" : @"",
 											  cc.appName,
 											  usermsg,
 											  details,
 											  _machineType(),
 											  [[NSProcessInfo processInfo] operatingSystemVersionString],
-											  [JMHostInformation isUserAdmin],
+											  _isUserAdmin(),
 											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
                                               encodedPrefs);
 			
@@ -784,9 +788,13 @@ void dispatch_sync_back(dispatch_block_t block)
 #if __has_feature(modules)
 @import Darwin.POSIX.sys.types;
 @import Darwin.sys.sysctl;
+@import Darwin.POSIX.pwd;
+@import Darwin.POSIX.grp;
 #else
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <pwd.h>
+#include <grp.h>
 #endif
 NSString *_machineType()
 {
@@ -801,4 +809,20 @@ NSString *_machineType()
 	{
 		return @"";
 	}
+}
+BOOL _isUserAdmin()
+{
+    uid_t current_user_id = getuid();
+    struct passwd *pwentry = getpwuid(current_user_id);
+    struct group *admin_group = getgrnam("admin");
+    while(*admin_group->gr_mem != NULL)
+    {
+        if (strcmp(pwentry->pw_name, *admin_group->gr_mem) == 0)
+        {
+            return YES;
+        }
+        admin_group->gr_mem++;
+    }
+    
+    return NO;
 }

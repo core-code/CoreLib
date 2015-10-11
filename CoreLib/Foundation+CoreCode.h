@@ -99,6 +99,7 @@
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@property (readonly, nonatomic) BOOL fileIsRestricted;
 @property (readonly, nonatomic) BOOL fileIsAlias;
 @property (readonly, nonatomic) NSString *fileAliasTarget;
 #endif
@@ -223,6 +224,7 @@
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@property (readonly, nonatomic) BOOL fileIsRestricted;
 @property (readonly, nonatomic) BOOL fileIsAlias;
 @property (readonly, nonatomic) NSURL *fileAliasTarget;
 #endif
@@ -328,8 +330,8 @@
 @interface NSObject (CoreCode)
 
 @property (readonly, nonatomic) id id;
-- (id)associatedValueForKey:(NSString *)key;
-- (void)setAssociatedValue:(id)value forKey:(NSString *)key;
+- (id)associatedValueForKey:(const NSString *)key;
+- (void)setAssociatedValue:(id)value forKey:(const NSString *)key;
 @property (retain, nonatomic) id associatedValue;
 + (instancetype)newWith:(NSDictionary *)dict;
 

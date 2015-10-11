@@ -56,7 +56,7 @@
 			asl_NSLog(ASL_LEVEL_ERR, @"Error: localHTMLName not set on JMRTFView");
 	};
 
-	ONCE_PER_OBJECT(self, @"RTFViewLoad", block);
+	ONCE_PER_OBJECT(self, block);
 }
 
 @end

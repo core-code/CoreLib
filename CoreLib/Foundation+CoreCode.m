@@ -29,6 +29,12 @@
 	#import <snappy/snappy-c.h>
 #endif
 
+#if __has_feature(modules)
+@import Darwin.POSIX.sys.stat;
+#else
+#include <sys/stat.h>
+#endif
+
 
 CONST_KEY(CoreCodeAssociatedValue)
 
@@ -505,7 +511,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 @dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget;
+@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
 #endif
 
 #ifdef USE_SECURITY
@@ -527,6 +533,14 @@ CONST_KEY(CoreCodeAssociatedValue)
 #endif
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
+- (BOOL)fileIsRestricted
+{
+	struct stat info;
+	lstat(self.UTF8String, &info);
+	return (info.st_flags & SF_RESTRICTED) > 0;
+}
+
 - (BOOL)fileIsAlias
 {
     NSURL *url = [NSURL fileURLWithPath:self];
@@ -541,9 +555,8 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)stringByResolvingSymlinksInPathFixed
 {
     NSString *ret = [self stringByResolvingSymlinksInPath];
-    if ([self hasPrefix:@"/tmp"])
-        LOGSUCC;
-    
+
+
     for (NSString *exception in @[@"/etc/", @"/tmp/", @"/var/"])
     {
         if ([ret hasPrefix:exception])
@@ -1302,7 +1315,14 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget;
+@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
+
+- (BOOL)fileIsRestricted
+{
+	struct stat info;
+	lstat(self.path.UTF8String, &info);
+	return (info.st_flags & SF_RESTRICTED) > 0;
+}
 
 - (BOOL)fileIsAlias
 {
@@ -1868,7 +1888,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @dynamic associatedValue, id;
 
-- (void)setAssociatedValue:(id)value forKey:(NSString *)key
+- (void)setAssociatedValue:(id)value forKey:(const NSString *)key
 {
 #if	TARGET_OS_IPHONE
 #pragma clang diagnostic push
@@ -1882,9 +1902,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     objc_setAssociatedObject(self, (BRIDGE const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (id)associatedValueForKey:(NSString *)key
+- (id)associatedValueForKey:(const NSString *)key
 {
-    return objc_getAssociatedObject(self, (BRIDGE const void *)(key));
+    id value = objc_getAssociatedObject(self, (BRIDGE const void *)(key));
+
+	return value;
 }
 
 - (void)setAssociatedValue:(id)value
