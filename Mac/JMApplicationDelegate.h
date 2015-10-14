@@ -24,12 +24,16 @@
 - (void)increaseUsages:(int)allowReviewLimit requestReview:(int)requestReviewLimit feedbackText:(NSString *)feedbackText;
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays;
 - (void)checkMASReceipt;
-- (void)checkAndReportCrashesContaining:(NSStringArray *)neccessarySubstringsOrNil to:(NSString *)destinationMail;
+#ifndef SANDBOX
+- (void)checkAndReportCrashesContaining:(NSArray <NSString *>*)neccessarySubstringsOrNil to:(NSString *)destinationMail;
+#endif
 - (void)checkAppMovements;
 
 #ifdef USE_SPARKLE
 - (IBAction)initUpdateCheck;
 - (IBAction)setUpdateCheck:(id)sender;
+- (IBAction)checkForUpdatesAction:(id)sender;
+CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 #endif
 
 

@@ -32,7 +32,7 @@ CONST_KEY(CCProgressIndicator)
 
 - (NSInteger)selectedTabViewIndex
 {
-	NSTabViewItem *selectedView = [self selectedTabViewItem];
+	NSTabViewItem *selectedView = self.selectedTabViewItem;
 	return [self indexOfTabViewItem:selectedView];
 }
 
@@ -81,10 +81,10 @@ CONST_KEY(CCProgressIndicator)
 			[textField setDrawsBackground:NO];
 			[textField setEditable:NO];
 			[textField setSelectable:NO];
-			[[progressPanel contentView] addSubview:textField];
+			[progressPanel.contentView addSubview:textField];
 		}
 
-		[[progressPanel contentView] addSubview:progressIndicator];
+		[progressPanel.contentView addSubview:progressIndicator];
 #if ! __has_feature(objc_arc)
 		[progressIndicator release];
 		[waitLabel release];
@@ -134,9 +134,9 @@ CONST_KEY(CCProgressIndicator)
 
 - (IBAction)performBorderlessClose:(id)sender
 {
-	if ([[self delegate] respondsToSelector:@selector(windowShouldClose:)])
+	if ([self.delegate respondsToSelector:@selector(windowShouldClose:)])
 	{
-		if (![[self delegate] windowShouldClose:self])
+		if (![self.delegate windowShouldClose:self])
 			return;
 	}
 	[self close];
@@ -167,12 +167,12 @@ CONST_KEY(CCProgressIndicator)
 - (void)adjustFontSize
 {
     double width = self.frame.size.width;
-    NSFont *curr = [self font];
-    int currentFontSize = (int)[curr pointSize];
+    NSFont *curr = self.font;
+    int currentFontSize = (int)curr.pointSize;
     NSSize strSize;
     do
     {
-        NSDictionary* attrs = @{NSFontAttributeName: [NSFont fontWithName:[curr fontName] size:currentFontSize]};
+        NSDictionary* attrs = @{NSFontAttributeName: [NSFont fontWithName:curr.fontName size:currentFontSize]};
         strSize = [[self stringValue] sizeWithAttributes:attrs];
 
         currentFontSize --;

@@ -293,6 +293,16 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return [self sortedArrayUsingDescriptors:@[sd]];
 }
 
+- (NSArray *)subarrayFromIndex:(NSUInteger)location
+{
+	return [self subarrayWithRange:NSMakeRange(location, self.count-location)];
+}
+
+- (NSArray *)subarrayToIndex:(NSUInteger)location
+{
+	return [self subarrayWithRange:NSMakeRange(0, self.count-location-1)];
+}
+
 - (NSMutableArray *)mutableObject
 {
 	return [NSMutableArray arrayWithArray:self];
@@ -330,7 +340,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return value;
 }
 
-- (NSArray *)filtered:(ObjectInIntOutBlock)block
+- (NSArray *)filtered:(BOOL (^)(id input))block
 {
     NSMutableArray *resultArray = [NSMutableArray new];
 
@@ -708,7 +718,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         return NO;
 
 
-    NSStringArray *portions = [self split:@"@"];
+    NSArray <NSString *> *portions = [self split:@"@"];
 
     if (portions.count != 2)
         return FALSE;
@@ -741,39 +751,43 @@ CONST_KEY(CoreCodeAssociatedValue)
     return YES;
 }
 
-- (NSStringArray *)dirContents
+- (NSArray <NSString *> *)dirContents
 {
-    return (NSStringArray *)[fileManager contentsOfDirectoryAtPath:self error:NULL];
+    return [fileManager contentsOfDirectoryAtPath:self error:NULL];
 }
 
-- (NSStringArray *)dirContentsRecursive
+- (NSArray <NSString *> *)dirContentsRecursive
 {
-    return (NSStringArray *)[fileManager subpathsOfDirectoryAtPath:self error:NULL];
+    return [fileManager subpathsOfDirectoryAtPath:self error:NULL];
 }
 
-- (NSStringArray *)dirContentsAbsolute
+- (NSArray <NSString *> *)dirContentsAbsolute
 {
-    NSStringArray *c = self.dirContents;
-    return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+    NSArray <NSString *> *c = self.dirContents;
+    return [c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
 }
 
-- (NSStringArray *)dirContentsRecursiveAbsolute
+- (NSArray <NSString *> *)dirContentsRecursiveAbsolute
 {
-    NSStringArray *c = self.dirContentsRecursive;
-    return (NSStringArray *)[c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+    NSArray <NSString *> *c = self.dirContentsRecursive;
+    return [c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
 }
 
 
 - (NSString *)uniqueFile
 {
     assert(fileManager);
-    if (![fileManager fileExistsAtPath:self])	return self;
+    if (![fileManager fileExistsAtPath:self])
+		return self;
     else
     {
-        NSString *ext = [self pathExtension];
-        NSString *namewithoutext = [self stringByDeletingPathExtension];
+        NSString *ext = self.pathExtension;
+        NSString *namewithoutext = self.stringByDeletingPathExtension;
         int i = 0;
-        while ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]]) i++;
+
+        while ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]])
+			i++;
+
         return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
     }
 }
@@ -855,14 +869,14 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByExpandingTildeInPath];
 }
 
-- (NSStringArray *)words
+- (NSArray <NSString *> *)words
 {
-    return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    return [self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
-- (NSStringArray *)lines
+- (NSArray <NSString *> *)lines
 {
-    return (NSStringArray *)[self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    return [self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
 - (NSString *)trimmedOfWhitespace
@@ -918,29 +932,27 @@ CONST_KEY(CoreCodeAssociatedValue)
     return ret;
 }
 
-- (NSString *)capitalizedStringWithUppercaseWords:(NSStringArray *)uppercaseWords
+- (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords
 {
-    NSString *res = [self capitalizedString];
+    NSString *res = self.capitalizedString;
 
     for (NSString *word in uppercaseWords)
     {
         res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\W)", word.capitalizedString)
                                              withString:makeString(@"$1%@$2", word.uppercaseString)
                                                 options:NSRegularExpressionSearch range: res.fullRange];
-
     }
     for (NSString *word in uppercaseWords)
     {
         res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\W)%@(\\Z)", word.capitalizedString)
                                              withString:makeString(@"$1%@", word.uppercaseString)
                                                 options:NSRegularExpressionSearch range:res.fullRange];
-
     }
 
     return res;
 }
 
-- (NSString *)titlecaseStringWithLowercaseWords:(NSStringArray *)lowercaseWords andUppercaseWords:(NSStringArray *)uppercaseWords
+- (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords
 {
     NSString *res = [self capitalizedStringWithUppercaseWords:uppercaseWords];
 
@@ -1032,9 +1044,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByReplacingOccurrencesOfString:str1 withString:str2];
 }
 
-- (NSStringArray *)split:(NSString *)sep								// componentsSeparatedByString:
+- (NSArray <NSString *> *)split:(NSString *)sep								// componentsSeparatedByString:
 {
-    return (NSStringArray *)[self componentsSeparatedByString:sep];
+    return [self componentsSeparatedByString:sep];
 }
 
 - (NSArray *)defaultArray
@@ -1117,7 +1129,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return @(self.doubleValue);
 }
 
-- (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter
+- (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter
 {	// credits to Drew McCormack
     NSMutableArray *rows = [NSMutableArray array];
 
@@ -1196,7 +1208,7 @@ CONST_KEY(CoreCodeAssociatedValue)
             [rows addObject:columns];
     }
 
-    return (NSArrayArray *)rows;
+    return rows;
 }
 
 - (NSData *)data
@@ -1374,7 +1386,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self URLByAppendingPathComponent:component];
 }
 
-- (NSURLArray *)dirContents
+- (NSArray <NSURL *> *)dirContents
 {
     if (![self isFileURL]) return nil;
 
@@ -1382,10 +1394,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 	NSError *err;
 	NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:&err];
 	assert(c && !err);
-    return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
+    return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
-- (NSURLArray *)dirContentsRecursive
+- (NSArray <NSURL *> *)dirContentsRecursive
 {
     if (![self isFileURL]) return nil;
     
@@ -1393,7 +1405,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	NSError *err;
     NSArray *c = [fileManager subpathsOfDirectoryAtPath:path error:&err];
 	assert(c && !err);
-    return (NSURLArray *)[c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
+    return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
 - (NSURL *)uniqueFile
@@ -1796,7 +1808,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     [invocation invokeWithTarget:self];
 }
 
-- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key
+- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(id)key
 {
 	NSMutableDictionary *mutable = self.mutableObject;
 
@@ -1805,7 +1817,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return mutable.immutableObject;
 }
 
-- (NSDictionary *)dictionaryByRemovingKey:(NSString *)key
+- (NSDictionary *)dictionaryByRemovingKey:(id)key
 {
 	NSMutableDictionary *mutable = self.mutableObject;
 
@@ -1814,7 +1826,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return mutable.immutableObject;
 }
 
-- (NSDictionary *)dictionaryByRemovingKeys:(NSStringArray *)keys
+- (NSDictionary *)dictionaryByRemovingKeys:(NSArray <NSString *>*)keys
 {
 	NSMutableDictionary *mutable = self.mutableObject;
 

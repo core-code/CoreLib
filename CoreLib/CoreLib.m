@@ -139,6 +139,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
             if (!smylinkToBinaryPath.fileIsAlias)
             {
+#ifdef DEBUG
+                if ([framework hasPrefix:@"libclang"]) continue;
+#endif
                 alert_apptitled(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and use the ZIP decrompression built into Mac OS X.", @"OK", nil, nil);
                 exit(0);
             }
@@ -164,7 +167,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSArray *)appCrashLogs // doesn't do anything in sandbox!
 {
-	NSStringArray *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	NSArray <NSString *> *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
 
@@ -477,7 +480,7 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details)
 	alert_feedback(usermsg, details, NO);
 }
 
-NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *choices, NSInteger *result)
+NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSArray <NSString *> *choices, NSInteger *result)
 {
     assert(buttons);
     assert(choices);

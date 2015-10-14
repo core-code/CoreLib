@@ -29,14 +29,12 @@
 
 @dynamic isRateable;
 
-- (void)checkAndReportCrashesContaining:(NSStringArray *)neccessarySubstringsOrNil to:(NSString *)destinationMail
-{
 #ifndef SANDBOX
-	CheckAndReportCrashes(destinationMail, neccessarySubstringsOrNil);
-#else
-	assert(0);
-#endif
+- (void)checkAndReportCrashesContaining:(NSArray <NSString *> *)neccessarySubstringsOrNil to:(NSString *)destinationMail
+{
+	CheckAndReportCrashes(destinationMail, neccessarySubstringsOrNil);;
 }
+#endif
 
 - (void)checkAppMovements
 {
@@ -147,13 +145,27 @@
 {
 	[application terminate:self];
 }
+
 #ifdef USE_SPARKLE
+
+static SUUpdater *updater;
+CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
+
+- (IBAction)checkForUpdatesAction:(id)sender
+{
+	LOGFUNC;
+	if (updater)
+		[updater checkForUpdates:self];
+	else
+		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: the sparkle updater is not available!");
+}
 
 - (IBAction)initUpdateCheck
 {
 	updater = [[SUUpdater alloc] init];
 	[updater setDelegate:self];
-	[self setUpdateCheck:@{@"tag" : @"updatecheckMenuindex".defaultObject}];
+	assert(kUpdatecheckMenuindexKey.defaultObject);
+	[self setUpdateCheck:@{@"tag" : kUpdatecheckMenuindexKey.defaultObject}];
 }
 
 - (IBAction)setUpdateCheck:(id)sender

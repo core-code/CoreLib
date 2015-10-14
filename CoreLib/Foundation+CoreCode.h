@@ -13,13 +13,11 @@
 #include "CoreLib.h"
 
 
-
-
-@interface NSArray (CoreCode)
+@interface NSArray <ObjectType> (CoreCode)
 
 @property (readonly, nonatomic) NSArray *flattenedArray;
-@property (readonly, nonatomic) NSArray *reverseArray;
-@property (readonly, nonatomic) NSMutableArray *mutableObject;
+@property (readonly, nonatomic) NSArray <ObjectType> *reverseArray;
+@property (readonly, nonatomic) NSMutableArray <ObjectType> *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
 @property (readonly, nonatomic) NSData *XMLData;
 #if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
@@ -27,60 +25,62 @@
 #endif
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *path;
-@property (readonly, nonatomic) NSArray *sorted;
+@property (readonly, nonatomic) NSArray <ObjectType> *sorted;
 @property (readonly, nonatomic) NSString *literalString;
 
-- (NSArray *)arrayByAddingNewObject:(id)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
-- (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject;
-- (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects;
-- (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index;
-- (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
-- (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject;
-- (id)safeObjectAtIndex:(NSUInteger)index;
-- (NSString *)safeStringAtIndex:(NSUInteger)index;
+- (NSArray <ObjectType>*)arrayByAddingNewObject:(ObjectType)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
+- (NSArray <ObjectType>*)arrayByRemovingObjectIdenticalTo:(ObjectType)anObject;
+- (NSArray <ObjectType>*)arrayByRemovingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;
+- (NSArray <ObjectType>*)arrayByRemovingObjectAtIndex:(NSUInteger)index;
+- (NSArray <ObjectType>*)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray <ObjectType>*)arrayByReplacingObject:(ObjectType)anObject withObject:(ObjectType)newObject;
+- (ObjectType)safeObjectAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
-- (NSArray *)sortedArrayByKey:(NSString *)key;
-- (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
-- (BOOL)contains:(id)object;
-- (CCIntRange2D)calculateExtentsOfPoints:(ObjectInPointOutBlock)block;
-- (CCIntRange1D)calculateExtentsOfValues:(ObjectInIntOutBlock)block;
+- (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;
+- (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
+- (BOOL)contains:(ObjectType)object;
+- (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
+- (CCIntRange1D)calculateExtentsOfValues:(int (^)(ObjectType input))block;
+
+- (NSArray <ObjectType>*)subarrayFromIndex:(NSUInteger)index;
+- (NSArray <ObjectType>*)subarrayToIndex:(NSUInteger)index;
+
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask;
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
 #endif
-
-- (NSArray *)mapped:(ObjectInOutBlock)block;
-- (NSArray *)filtered:(ObjectInIntOutBlock)block;
-- (NSArray *)filteredUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
-- (NSInteger)reduce:(ObjectInIntOutBlock)block;
+- (NSArray *)mapped:(id (^)(ObjectType input))block;
+- (NSArray <ObjectType>*)filtered:(BOOL (^)(ObjectType input))block;
+- (NSArray <ObjectType>*)filteredUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
+- (NSInteger)reduce:(int (^)(ObjectType input))block;
 
 // versions similar to cocoa methods
-- (void)apply:(ObjectInBlock)block;								// enumerateObjectsUsingBlock:
+- (void)apply:(void (^)(ObjectType input))block;								// enumerateObjectsUsingBlock:
 
 // forwards for less typing
 - (NSString *)joined:(NSString *)sep;							// = componentsJoinedByString:
 
-@property (readonly, nonatomic) NSSet *set;
+@property (readonly, nonatomic) NSSet <ObjectType> *set;
 
 
 @end
 
 
 
-@interface NSMutableArray (CoreCode)
+@interface NSMutableArray <ObjectType>(CoreCode)
 
-@property (readonly, nonatomic) NSArray *immutableObject;
+@property (readonly, nonatomic) NSArray <ObjectType> *immutableObject;
 
-- (void)addNewObject:(id)anObject;
-- (void)addObjectSafely:(id)anObject;
-- (void)map:(ObjectInOutBlock)block;
-- (void)filter:(ObjectInIntOutBlock)block;
+- (void)addNewObject:(ObjectType)anObject;
+- (void)addObjectSafely:(ObjectType)anObject;
+- (void)map:(ObjectType (^)(ObjectType input))block;
+- (void)filter:(int (^)(ObjectType input))block;
 - (void)filterUsingPredicateString:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 - (void)removeFirstObject;
 - (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;
-- (void)removeObjectPassingTest:(ObjectInIntOutBlock)block;
+- (void)removeObjectPassingTest:(int (^)(ObjectType input))block;
 
 
 @end
@@ -92,10 +92,10 @@
 @interface NSString (CoreCode)
 
 // filesystem support
-@property (readonly, nonatomic) NSStringArray *dirContents;
-@property (readonly, nonatomic) NSStringArray *dirContentsRecursive;
-@property (readonly, nonatomic) NSStringArray *dirContentsAbsolute;
-@property (readonly, nonatomic) NSStringArray *dirContentsRecursiveAbsolute;
+@property (readonly, nonatomic) NSArray <NSString *> *dirContents;
+@property (readonly, nonatomic) NSArray <NSString *> *dirContentsRecursive;
+@property (readonly, nonatomic) NSArray <NSString *> *dirContentsAbsolute;
+@property (readonly, nonatomic) NSArray <NSString *> *dirContentsRecursiveAbsolute;
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -142,8 +142,8 @@
 #endif
 
 // string things
-@property (readonly, nonatomic) NSStringArray *lines;
-@property (readonly, nonatomic) NSStringArray *words;
+@property (readonly, nonatomic) NSArray <NSString *> *lines;
+@property (readonly, nonatomic) NSArray <NSString *> *words;
 @property (readonly, nonatomic) unichar firstCharacter;
 @property (readonly, nonatomic) unichar lastCharacter;
 
@@ -173,7 +173,7 @@
 @property (readonly, nonatomic) NSData *dataFromHexString;
 
 
-- (NSArrayArray *)parsedDSVWithDelimiter:(NSString *)delimiter;
+- (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter;
 
 - (NSString *)stringValue;
 
@@ -185,8 +185,8 @@
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
 
-- (NSString *)capitalizedStringWithUppercaseWords:(NSStringArray *)uppercaseWords;
-- (NSString *)titlecaseStringWithLowercaseWords:(NSStringArray *)lowercaseWords andUppercaseWords:(NSStringArray *)uppercaseWords;
+- (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
+- (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet;
 - (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet;
@@ -199,7 +199,7 @@
 
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
-- (NSStringArray *)split:(NSString *)sep;								// = componentsSeparatedByString:
+- (NSArray <NSString *> *)split:(NSString *)sep;								// = componentsSeparatedByString:
 
 @end
 
@@ -219,8 +219,8 @@
 
 @property (readonly, nonatomic) BOOL fileIsDirectory;
 //@property (readonly, nonatomic) NSString *path;
-@property (readonly, nonatomic) NSURLArray *dirContents;
-@property (readonly, nonatomic) NSURLArray *dirContentsRecursive;
+@property (readonly, nonatomic) NSArray <NSURL *> *dirContents;
+@property (readonly, nonatomic) NSArray <NSURL *> *dirContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -286,24 +286,24 @@
 
 
 
-@interface NSDictionary (CoreCode)
+@interface NSDictionary <KeyType, ObjectType>(CoreCode)
 
 #if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
 @property (readonly, nonatomic) NSData *XMLData;
-@property (readonly, nonatomic) NSMutableDictionary *mutableObject;
-- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(NSString *)key;
-- (NSDictionary *)dictionaryByRemovingKey:(NSString *)key;
-- (NSDictionary *)dictionaryByRemovingKeys:(NSStringArray *)keys;
+@property (readonly, nonatomic) NSMutableDictionary <KeyType, ObjectType> *mutableObject;
+- (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key;
+- (NSDictionary *)dictionaryByRemovingKey:(KeyType)key;
+- (NSDictionary *)dictionaryByRemovingKeys:(NSArray <KeyType> *)keys;
 @property (readonly, nonatomic) NSString *literalString;
 
 @end
 
 
-@interface NSMutableDictionary (CoreCode)
+@interface NSMutableDictionary <KeyType, ObjectType>(CoreCode)
 
-@property (readonly, nonatomic) NSDictionary *immutableObject;
+@property (readonly, nonatomic) NSDictionary <KeyType, ObjectType> *immutableObject;
 
 @end
 
@@ -320,7 +320,7 @@
 
 @interface NSLocale (CoreCode)
 
-+ (NSArray *)preferredLanguages3Letter;
++ (NSArray <NSString *> *)preferredLanguages3Letter;
 
 @end
 

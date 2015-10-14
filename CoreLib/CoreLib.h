@@ -101,7 +101,7 @@ CC_ENUM(uint8_t, openChoice)
 };
 
 
-
+/*
 // !!!: CUSTOM TEMPLATE COLLECTIONS
 // lets you define custom types for collection classes that so that the compiler knows what type they return
 #define CUSTOM_ARRAY(classname) \
@@ -184,6 +184,7 @@ CUSTOM_DICTIONARY(NSString)
 CUSTOM_DICTIONARY(NSNumber)
 CUSTOM_MUTABLE_DICTIONARY(NSString)
 CUSTOM_MUTABLE_DICTIONARY(NSNumber)
+ */
 #define MAKE_MAKER(classname) \
 static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
 MAKE_MAKER(MutableArray)
@@ -236,7 +237,7 @@ extern NSProcessInfo *processInfo;
 
 
 // !!!: ALERT FUNCTIONS
-NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSStringArray *choices, NSInteger *result); // alert with popup button for selection of choice
+NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSArray<NSString *> *choices, NSInteger *result); // alert with popup button for selection of choice
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
 NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result);
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
