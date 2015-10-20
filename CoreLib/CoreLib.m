@@ -44,7 +44,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL
+@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL, appSystemLogEntries
 #ifdef USE_SECURITY
 , appChecksumSHA;
 #else
@@ -88,11 +88,13 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
     #ifdef DEBUG
         BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
-        #ifdef SANDBOX
+
+		#ifdef SANDBOX
             assert(isSandbox);
         #else
             assert(!isSandbox);
         #endif
+
 
         #ifdef NDEBUG
             LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
@@ -167,18 +169,51 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSArray *)appCrashLogs // doesn't do anything in sandbox!
 {
-	NSArray <NSString *> *logs = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	NSArray <NSString *> *logs = [logs1 arrayByAddingObjectsFromArray:logs2];
+	
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+}
+
+- (NSArray <NSString *> *)appSystemLogEntries
+{
+#ifndef SANDBOX
+	NSMutableArray <NSString *>*messages = makeMutableArray();
+	aslmsg query = asl_new(ASL_TYPE_QUERY);
+
+	if (asl_set_query(query, ASL_KEY_SENDER, cc.appName.UTF8String , (ASL_QUERY_OP_EQUAL | ASL_QUERY_OP_SUBSTRING | ASL_QUERY_OP_CASEFOLD))) return nil;
+
+	aslresponse response = asl_search(NULL, query);
+
+	asl_free(query);
+
+	aslmsg msg;
+	while ((msg = aslresponse_next(response)))
+	{
+		const char *m = asl_get(msg, ASL_KEY_MSG);
+		NSString *line = @(m);
+
+		[messages addObject:line];
+	}
+
+
+	aslresponse_free(response);
+
+	return messages.immutableObject;
+#else
+	return nil;
+#endif
 }
 
 - (NSString *)appBundleIdentifier
 {
-	return [NSBundle mainBundle].bundleIdentifier;
+	return NSBundle.mainBundle.bundleIdentifier;
 }
 
 - (NSString *)appVersionString
 {
-	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+	return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 
 - (NSString *)appName
@@ -186,23 +221,23 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #if defined(XCTEST) && XCTEST
 	return @"TEST";
 #else
-	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];
 #endif
 }
 
 - (int)appBuildNumber
 {
-	return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
+	return [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
 }
 
 - (NSString *)resDir
 {
-	return [[NSBundle mainBundle] resourcePath];
+	return NSBundle.mainBundle.resourcePath;
 }
 
 - (NSURL *)resURL
 {
-	return [[NSBundle mainBundle] resourceURL];
+	return NSBundle.mainBundle.resourceURL;
 }
 
 - (NSString *)docDir
@@ -222,12 +257,12 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSURL *)docURL
 {
-	return [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
+	return [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
 }
 
 - (NSURL *)deskURL
 {
-	return [[NSFileManager defaultManager] URLsForDirectory:NSDesktopDirectory inDomains:NSUserDomainMask][0];
+	return [NSFileManager.defaultManager URLsForDirectory:NSDesktopDirectory inDomains:NSUserDomainMask][0];
 }
 
 - (NSString *)suppDir
@@ -237,7 +272,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - ( NSURL * __nonnull)suppURL
 {
-	NSURL *dir = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
+	NSURL *dir = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
 	assert(dir && self.appName);
 
@@ -439,11 +474,11 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         if (visibleDetails.length > maxLen)
             visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
 
-		if (alert(@"Fatal Error",
+		if (alert(fatal ? @"Fatal Error" : @"Error",
                   makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails),
 				  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
 		{
-			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n",
+			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n Messages: %@\n",
 											  cc.appName,
 											  cc.appVersionString,
 											  cc.appBuildNumber,
@@ -456,7 +491,8 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 											  [[NSProcessInfo processInfo] operatingSystemVersionString],
 											  _isUserAdmin(),
 											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
-                                              encodedPrefs);
+                                              encodedPrefs,
+											  cc.appSystemLogEntries);
 			
 			[mailtoLink.escaped.URL open];
 		}
@@ -721,6 +757,20 @@ UIColor *makeColor255(float r, float g, float b, float a)
 }
 #endif
 
+__inline__ CGFloat generateRandomFloatBetween(CGFloat a, CGFloat b)
+{
+	return a + (b - a) * (random() / (CGFloat) RAND_MAX);
+}
+
+__inline__ int generateRRandomIntBetween(int a, int b)
+{
+	int range = b - a < 0 ? b - a - 1 : b - a + 1;
+	long rand = random();
+	int value = (int)(range * ((CGFloat)rand  / (CGFloat) RAND_MAX));
+	return value == range ? a : a + value;
+}
+
+
 // logging support
 #undef asl_log
 void asl_NSLog(int level, NSString *format, ...)
@@ -829,3 +879,4 @@ BOOL _isUserAdmin()
     
     return NO;
 }
+

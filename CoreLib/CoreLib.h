@@ -101,90 +101,6 @@ CC_ENUM(uint8_t, openChoice)
 };
 
 
-/*
-// !!!: CUSTOM TEMPLATE COLLECTIONS
-// lets you define custom types for collection classes that so that the compiler knows what type they return
-#define CUSTOM_ARRAY(classname) \
-@interface classname ## Array : NSArray \
-_Pragma("GCC diagnostic push") \
-_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
-_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
-+ (instancetype)arrayWithObject:(id)anObject; \
-- (NSArray *)arrayByAddingObject:(classname *)anObject; \
-- (BOOL)containsObject:(classname *)anObject; \
-- (NSUInteger)indexOfObject:(classname *)anObject; \
-- (NSUInteger)indexOfObject:(classname *)anObject inRange:(NSRange)range; \
-- (NSUInteger)indexOfObjectIdenticalTo:(classname *)anObject; \
-- (NSUInteger)indexOfObjectIdenticalTo:(classname *)anObject inRange:(NSRange)range; \
-- (classname *)objectAtIndexedSubscript:(NSUInteger)index; \
-- (classname *)firstObject; \
-- (classname *)lastObject; \
-@end \
-static inline classname ## Array * make ## classname ## Array (void)    { return (classname ## Array *)[NSArray new];} \
-_Pragma("GCC diagnostic pop")
-#define CUSTOM_MUTABLE_ARRAY(classname) \
-_Pragma("GCC diagnostic push") \
-_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
-_Pragma("GCC diagnostic ignored \"-Wsuper-class-method-mismatch\"") \
-_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
-@interface Mutable ## classname ## Array : NSMutableArray \
-- (classname *)objectAtIndexedSubscript:(NSUInteger)index;\
-- (void)setObject:(classname *)anObject atIndexedSubscript:(NSUInteger)index; \
-- (void)addObject:(classname *)anObject; \
-- (void)insertObject:(id)anObject atIndex:(NSUInteger)index; \
-- (void)removeObject:(classname *)anObject; \
-- (void)removeObject:(classname *)anObject inRange:(NSRange)aRange; \
-- (void)removeObjectIdenticalTo:(classname *)anObject; \
-- (void)removeObjectIdenticalTo:(classname *)anObject inRange:(NSRange)aRange; \
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(classname *)anObject; \
-- (classname *)firstObject; \
-- (classname *)lastObject; \
-@end \
-static inline Mutable ## classname ## Array * make ## Mutable ## classname ## Array (void)    { return (Mutable ## classname ## Array *)[NSMutableArray new];} \
-_Pragma("GCC diagnostic pop")
-#define CUSTOM_DICTIONARY(classname) \
-@interface classname ## Dictionary : NSDictionary \
-_Pragma("GCC diagnostic push") \
-_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
-_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
-- (classname *)objectForKeyedSubscript:(id)key;\
-+ (instancetype)dictionaryWithObject:(classname *)anObject forKey:(id<NSCopying>)aKey; \
-- (NSArray *)allKeysForObject:(classname *)anObject; \
-- (classname *)objectForKey:(id)aKey; \
-- (void)getObjects:(classname * __unsafe_unretained [])objects andKeys:(id __unsafe_unretained [])keys; \
-@end \
-static inline classname ## Dictionary * make ## classname ## Dictionary (void)    { return (classname ## Dictionary *)[NSDictionary new];} \
-_Pragma("GCC diagnostic pop")
-#define CUSTOM_MUTABLE_DICTIONARY(classname) \
-@interface Mutable ## classname ## Dictionary : NSMutableDictionary \
-_Pragma("GCC diagnostic push") \
-_Pragma("GCC diagnostic ignored \"-Woverriding-method-mismatch\"") \
-_Pragma("GCC diagnostic ignored \"-Wsuper-class-method-mismatch\"") \
-_Pragma("GCC diagnostic ignored \"-Wunused-function\"") \
-- (classname *)objectForKeyedSubscript:(id)key;\
-- (void)setObject:(classname *)object forKeyedSubscript:(id < NSCopying >)aKey; \
-- (void)setObject:(classname *)anObject forKey:(id < NSCopying >)aKey; \
-@end \
-static inline Mutable ## classname ## Dictionary * make ## Mutable ## classname ## Dictionary (void)    { return (Mutable ## classname ## Dictionary *)[NSMutableDictionary new];} \
-_Pragma("GCC diagnostic pop")
-CUSTOM_ARRAY(NSString)
-CUSTOM_ARRAY(NSNumber)
-CUSTOM_ARRAY(NSArray)
-CUSTOM_ARRAY(NSURL)
-CUSTOM_ARRAY(NSDictionary)
-CUSTOM_ARRAY(NSMutableArray)
-CUSTOM_ARRAY(NSMutableDictionary)
-CUSTOM_MUTABLE_ARRAY(NSString)
-CUSTOM_MUTABLE_ARRAY(NSNumber)
-CUSTOM_MUTABLE_ARRAY(NSArray)
-CUSTOM_MUTABLE_ARRAY(NSDictionary)
-CUSTOM_MUTABLE_ARRAY(NSMutableArray)
-CUSTOM_MUTABLE_ARRAY(NSMutableDictionary)
-CUSTOM_DICTIONARY(NSString)
-CUSTOM_DICTIONARY(NSNumber)
-CUSTOM_MUTABLE_DICTIONARY(NSString)
-CUSTOM_MUTABLE_DICTIONARY(NSNumber)
- */
 #define MAKE_MAKER(classname) \
 static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
 MAKE_MAKER(MutableArray)
@@ -214,8 +130,9 @@ MAKE_MAKER(MutableString)
 @property (readonly, nonatomic) NSURL *homeURL;
 // misc
 @property (readonly, nonatomic) NSArray *appCrashLogs;
+@property (readonly, nonatomic) NSArray *appSystemLogEntries;
 @property (readonly, nonatomic) NSString *appChecksumSHA;
-- (void)openURL:(openChoice)choice; // todo: move to
+- (void)openURL:(openChoice)choice;
 @end
 
 
@@ -275,6 +192,12 @@ void dispatch_sync_back(dispatch_block_t block);
 
 
 
+#define RANDOM_INIT			{srandom((int)time(0));}
+#define RANDOM_FLOAT(a,b)	((a) + ((b) - (a)) * (random() / (CGFloat) RAND_MAX))
+#define RANDOM_INT(a,b)		((int)((a) + ((b) - (a) + 1) * (random() / (CGFloat) RAND_MAX)))		// this is INCLUSIVE; a and b will be part of the results
+
+
+
 // !!!: CONSTANT KEYS
 #define CONST_KEY(name) \
 static NSString *const k ## name ## Key = @ #name;
@@ -303,7 +226,9 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #else
   #define asl_NSLog_debug(...)
 #endif
+#define LOGFUNCA				asl_NSLog_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), self)
 #define LOGFUNC					asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), self)
+#define LOGFUNCPARAMA(x)		asl_NSLog_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), self, [(x) description])
 #define LOGFUNCPARAM(x)			asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), self, [(x) description])
 #define LOGSUCC					asl_NSLog_debug(@"success %@ %d", @(__FILE__), __LINE__)
 #define LOGFAIL					asl_NSLog_debug(@"failure %@ %d", @(__FILE__), __LINE__)

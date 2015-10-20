@@ -18,6 +18,7 @@
 
 	sv.borderType = NSBezelBorder;
 
+
 	self.policyDelegate = self;
 	self.resourceLoadDelegate = self;
 }
@@ -63,6 +64,7 @@
 	if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
 	{
 		[sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.4f\"", self.zoomFactor.floatValue)];
+		self.zoomFactor = nil;
 	}
 }
 

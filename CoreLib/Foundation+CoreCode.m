@@ -118,7 +118,12 @@ CONST_KEY(CoreCodeAssociatedValue)
             range.min.x = MIN(range.min.x, p.x);
             range.min.y = MIN(range.min.y, p.y);
         }
+
+		range.length.x = range.max.x - range.min.x;
+		range.length.y = range.max.y - range.min.y;
     }
+
+
 
 	return range;
 }
@@ -1579,20 +1584,40 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)string
 {
-	for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSUTF16StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding)])
+	if (OS_IS_POST_10_9)
 	{
-		NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
+		NSString *result;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-		if (!s)
-			continue;
-	#if ! __has_feature(objc_arc)
-		[s autorelease];
-	#endif
-		return s;
+		[NSString stringEncodingForData:self
+						encodingOptions:nil
+						convertedString:&result
+					usedLossyConversion:nil];
+#pragma clang diagnostic pop
+
+		if (result) return result;
+
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
+		return nil;
 	}
+	else
+	{
+		for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
+		{
+			NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
 
-	asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
-	return nil;
+			if (!s)
+				continue;
+		#if ! __has_feature(objc_arc)
+			[s autorelease];
+		#endif
+			return s;
+		}
+
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
+		return nil;
+	}
 }
 
 - (NSString *)hexString

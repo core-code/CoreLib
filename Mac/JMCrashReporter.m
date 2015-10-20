@@ -26,29 +26,50 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 	if ([[NSUserDefaults standardUserDefaults] integerForKey:kNeverCheckCrashesKey] == 0)
 	{
 		NSString *path = nil;
-		NSString *dpath = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
-		NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dpath error:NULL];
-
 		NSDate *newestcrashdate = [NSDate dateWithString:@"2007 01 01" format:@"yyyy dd MM"];
-		NSString *newestcrashfile = nil;
-		NSString *fname;
 
-		for (fname in contents)
 		{
-			if ([fname hasPrefix:cc.appName])
-			{
-				NSDate *date = [[[NSFileManager defaultManager] attributesOfItemAtPath:[dpath stringByAppendingPathComponent:fname] error:NULL] objectForKey:@"NSFileModificationDate"];
+			NSString *dpath = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
+			NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dpath error:NULL];
 
-				if ([date compare:newestcrashdate] == NSOrderedDescending)
+			NSString *fname;
+
+			for (fname in contents)
+			{
+				if ([fname hasPrefix:cc.appName])
 				{
-					newestcrashdate = date;
-					newestcrashfile = fname;
+					NSString *fullPath = [dpath stringByAppendingPathComponent:fname];
+					NSDate *date = [[[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL] objectForKey:@"NSFileModificationDate"];
+
+					if ([date compare:newestcrashdate] == NSOrderedDescending)
+					{
+						newestcrashdate = date;
+						path = fullPath;
+					}
 				}
 			}
 		}
+		{
+			NSString *dpath = [@"/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath];
+			NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dpath error:NULL];
 
-		if (newestcrashfile)
-			path = [dpath stringByAppendingPathComponent:newestcrashfile];
+			NSString *fname;
+
+			for (fname in contents)
+			{
+				if ([fname hasPrefix:cc.appName])
+				{
+					NSString *fullPath = [dpath stringByAppendingPathComponent:fname];
+					NSDate *date = [[[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL] objectForKey:@"NSFileModificationDate"];
+
+					if ([date compare:newestcrashdate] == NSOrderedDescending)
+					{
+						newestcrashdate = date;
+						path = fullPath;
+					}
+				}
+			}
+		}
 
 		if (path)
 		{

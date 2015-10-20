@@ -23,6 +23,10 @@ CoreLib has these components:
 
 * support for pseudo static typing in collection classes (for invoking properties on objects from collections without casting) and much more convenience stuff (CoreLib)
 
+### Requirements
+
+CoreLib up to version 1.8 requires Xcode 6
+CoreLib versio 1.9 and above requires Xcode 7
 
 ### Initialization
 

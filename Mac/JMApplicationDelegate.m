@@ -101,7 +101,7 @@
 - (void)checkMASReceipt
 {
 #ifdef APPSTORE_VALIDATERECEIPT
-	dispatch_after_main(^
+	dispatch_after_main(10.0, ^
 	{
 		RVNValidateApplication();
 
