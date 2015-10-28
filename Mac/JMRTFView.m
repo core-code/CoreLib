@@ -22,7 +22,12 @@
 	{
 		if (self.localRTFName && self.localRTFName.length)
 		{
-			NSAttributedString *rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL documentAttributes:NULL];
+            NSAttributedString *rtfStr;
+            if (OS_IS_POST_10_10)
+                rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL options:@{} documentAttributes:NULL error:NULL];
+            else
+                rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL documentAttributes:NULL];
+
 			assert(rtfStr);
 			[self.textStorage setAttributedString:rtfStr];
 #if ! __has_feature(objc_arc)

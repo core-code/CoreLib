@@ -124,7 +124,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 					}
 
 					NSString *subject = [NSString stringWithFormat:@"%@ Crashreport", cc.appName];
-					NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", cc.appName, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuildNumber, crashlog, [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] description]];
+					NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", cc.appName, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuildNumber, crashlog, [[[NSUserDefaults standardUserDefaults] persistentDomainForName:cc.appBundleIdentifier] description]];
 
 
 					NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", email, subject, body];

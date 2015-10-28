@@ -523,7 +523,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, encoded, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
@@ -882,6 +882,23 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSArray <NSString *> *)lines
 {
     return [self componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+}
+
+
+- (NSAttributedString *)hyperlinkWithURL:(NSURL *)url
+{
+	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
+
+	[attributedString beginEditing];
+	[attributedString addAttribute:NSLinkAttributeName value:url.absoluteString range:self.fullRange];
+	[attributedString addAttribute:NSForegroundColorAttributeName value:makeColor(0, 0, 1, 1) range:self.fullRange];
+	[attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:self.fullRange];
+	[attributedString endEditing];
+
+#if ! __has_feature(objc_arc)
+	[attributedString autorelease];
+#endif
+	return attributedString;
 }
 
 - (NSString *)trimmedOfWhitespace
@@ -1247,6 +1264,15 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)unescaped
 {
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	if (OS_IS_POST_10_8)
+#else
+	if (1)
+#endif
+		return [self stringByRemovingPercentEncoding];
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	else
+	{
 #if  __has_feature(objc_arc)
     NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
     return encodedString;
@@ -1254,10 +1280,24 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSString *encodedString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR(""));
     return [encodedString autorelease];
 #endif
+	}
+#endif
 }
 
 - (NSString *)escaped
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	if (OS_IS_POST_10_8)
+#else
+		if (1)
+#endif
+			return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+	else
+	{
+
 #if  __has_feature(objc_arc)
     NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8));
     return encodedString;
@@ -1265,18 +1305,22 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8);
     return [encodedString autorelease];
 #endif
+	}
+#endif
+#pragma clang diagnostic pop
 }
 
-- (NSString *)encoded
-{
-#if  __has_feature(objc_arc)
-    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
-    return encodedString;
-#else
-    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
-    return [encodedString autorelease];
-#endif
-}
+//- (NSString *)encoded
+//{
+//#if  __has_feature(objc_arc)
+//	#warning depre
+//    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
+//    return encodedString;
+//#else
+//    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
+//    return [encodedString autorelease];
+//#endif
+//}
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet
 {
@@ -1296,6 +1340,59 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     return [self substringToIndex:rangeOfLastWantedCharacter.location+1];
 }
+
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+void directoryObservingReleaseCallback(const void *info)
+{
+	CFBridgingRelease(info);
+}
+
+void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
+{
+	void (^block)() = (__bridge void (^)())(clientCallBackInfo);
+	block();
+}
+
+CONST_KEY(CCDirectoryObserving)
+- (void)startObserving:(BasicBlock)block
+{
+#if ! __has_feature(objc_arc)
+	void *ptr = (void *)[block retain];
+#else
+	void *ptr = (__bridge_retained void *)block;
+#endif
+	FSEventStreamContext context = {0, ptr, NULL, directoryObservingReleaseCallback, NULL};
+	CFStringRef mypath = (BRIDGE CFStringRef)self.stringByExpandingTildeInPath;
+	CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
+	FSEventStreamRef stream;
+	CFAbsoluteTime latency = 2.0;
+
+
+	stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, 0);
+
+	CFRelease(pathsToWatch);
+	FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+
+	FSEventStreamStart(stream);
+
+	[self setAssociatedValue:[NSValue valueWithPointer:stream] forKey:kCCDirectoryObservingKey];
+}
+
+- (void)stopObserving
+{
+	NSValue *v = [self associatedValueForKey:kCCDirectoryObservingKey];
+	if (v)
+	{
+		FSEventStreamRef stream = v.pointerValue;
+
+		FSEventStreamStop(stream);
+		FSEventStreamInvalidate(stream);
+		FSEventStreamRelease(stream);
+	}
+	else
+		asl_NSLog_debug(@"Warning: stopped observing on location which was never observed %@", self);
+}
+#endif
 
 //- (NSString *)arg:(id)arg, ...
 //{
@@ -1584,7 +1681,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)string
 {
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	if (OS_IS_POST_10_9)
+#else
+	if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0)
+#endif
 	{
 		NSString *result;
 #pragma clang diagnostic push

@@ -3,8 +3,8 @@
  */
 
 #if __has_feature(modules)
-#import <AppKit/AppKit.h>
-#import <ScriptingBridge/ScriptingBridge.h>
+@import AppKit;
+@import ScriptingBridge;
 #else
 #import <AppKit/AppKit.h>
 #import <ScriptingBridge/ScriptingBridge.h>
@@ -89,6 +89,7 @@ typedef enum SafariEnum SafariEnum;
 
 @end
 
+
 // A window.
 @interface SafariWindow : SafariItem
 
@@ -96,7 +97,10 @@ typedef enum SafariEnum SafariEnum;
 @property (readonly) BOOL closeable;  // Whether the window has a close box.
 @property (copy, readonly) SafariDocument *document;  // The document whose contents are being displayed in the window.
 @property (readonly) BOOL floating;  // Whether the window floats.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverriding-method-mismatch"
 - (NSInteger) id;  // The unique identifier of the window.
+#pragma clang diagnostic pop
 @property NSInteger index;  // The index of the window, ordered front to back.
 @property (readonly) BOOL miniaturizable;  // Whether the window can be miniaturized.
 @property BOOL miniaturized;  // Whether the window is currently miniaturized.

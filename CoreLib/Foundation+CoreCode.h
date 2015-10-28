@@ -152,7 +152,7 @@
 @property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;
 @property (readonly, nonatomic) NSString *unescaped;
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
-@property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
+//@property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
 @property (readonly, nonatomic) NSMutableString *mutableObject;
 #ifdef USE_SECURITY
@@ -185,6 +185,11 @@
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
 
+
+
+- (NSAttributedString *)hyperlinkWithURL:(NSURL *)url;
+
+
 - (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 - (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 
@@ -193,6 +198,9 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth;
+// FSEvents directory observing
+- (void)startObserving:(BasicBlock)block;
+- (void)stopObserving;
 #endif
 
 - (NSString *)removed:(NSString *)stringToRemove;
@@ -200,6 +208,8 @@
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
 - (NSArray <NSString *> *)split:(NSString *)sep;								// = componentsSeparatedByString:
+
+
 
 @end
 

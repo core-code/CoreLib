@@ -25,8 +25,10 @@ extern "C"
 // include system headers and make sure requrements are met
 #if __has_feature(modules)
 @import Darwin.TargetConditionals;
+#import <Availability.h>
 #else
 #import <TargetConditionals.h>
+#import <Availability.h>
 #endif
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #if __has_feature(modules)
@@ -34,8 +36,11 @@ extern "C"
 #else
 #import <Cocoa/Cocoa.h>
 #endif
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-#error CoreLib requires 10.6
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
+#error CoreLib only deploys back to Mac OS X 10.6
+#endif
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 70000
+#error CoreLib only deploys back to iOS 7
 #endif
 #endif
 
@@ -154,9 +159,11 @@ extern NSProcessInfo *processInfo;
 
 
 // !!!: ALERT FUNCTIONS
-NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSArray<NSString *> *choices, NSInteger *result); // alert with popup button for selection of choice
+NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result);	// alert with popup button for selection of choice
+NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result);  // alert with radiobutton matrix for selection of choice
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
-NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result);
+NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result); // alert with large text view prompting users
+NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus); // alert with a single checkbox
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
 NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
@@ -207,7 +214,7 @@ NSString *const k ## name ## Key = @ #name;
 extern NSString *const k ## name ## Key;
 #define CONST_KEY_ENUM(name, enumname) \
 @interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
-enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+static enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
 #define CONST_KEY_ENUM_IMPLEMENTATION(name, enumname) \
 enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
 #define CONST_KEY_ENUM_DECLARATION(name, enumname) \

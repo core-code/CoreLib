@@ -176,10 +176,15 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSArray <NSString *> *)appSystemLogEntries
 {
 #ifndef SANDBOX
 	NSMutableArray <NSString *>*messages = makeMutableArray();
+
+#if ! __has_feature(objc_arc)
+	[messages autorelease];
+#endif
 	aslmsg query = asl_new(ASL_TYPE_QUERY);
 
 	if (asl_set_query(query, ASL_KEY_SENDER, cc.appName.UTF8String , (ASL_QUERY_OP_EQUAL | ASL_QUERY_OP_SUBSTRING | ASL_QUERY_OP_CASEFOLD))) return nil;
@@ -189,22 +194,45 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	asl_free(query);
 
 	aslmsg msg;
-	while ((msg = aslresponse_next(response)))
-	{
-		const char *m = asl_get(msg, ASL_KEY_MSG);
-		NSString *line = @(m);
 
-		[messages addObject:line];
-	}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
+    if (OS_IS_POST_10_9)
+    {
+        while ((msg = asl_next(response)))
+        {
+            const char *m = asl_get(msg, ASL_KEY_MSG);
+            NSString *line = @(m);
 
-	aslresponse_free(response);
+            [messages addObject:line];
+        }
+    }
+    else
+    {
+        while ((msg = aslresponse_next(response)))
+        {
+            const char *m = asl_get(msg, ASL_KEY_MSG);
+            NSString *line = @(m);
+
+            [messages addObject:line];
+        }
+    }
+
+    if (OS_IS_POST_10_9)
+        asl_release(response);
+    else
+        aslresponse_free(response);
+
+#pragma clang diagnostic pop
+
 
 	return messages.immutableObject;
 #else
 	return nil;
 #endif
 }
+#endif
 
 - (NSString *)appBundleIdentifier
 {
@@ -516,41 +544,6 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details)
 	alert_feedback(usermsg, details, NO);
 }
 
-NSInteger alert_selection(NSString *prompt, NSArray *buttons, NSArray <NSString *> *choices, NSInteger *result)
-{
-    assert(buttons);
-    assert(choices);
-    assert(result);
-    assert([NSThread currentThread] == [NSThread mainThread]);
-
-    NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = prompt;
-    
-    if (buttons.count > 0)
-        [alert addButtonWithTitle:buttons[0]];
-    if (buttons.count > 1)
-        [alert addButtonWithTitle:buttons[1]];
-    if (buttons.count > 2)
-        [alert addButtonWithTitle:buttons[2]];
-    
-	NSPopUpButton *input = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
-	for (NSString *str in choices)
-		[input addItemWithTitle:str];
-#if ! __has_feature(objc_arc)
-	[input autorelease];
-#endif
-	[alert setAccessoryView:input];
-	NSInteger selectedButton = [alert runModal];
-
-	[input validateEditing];
-	*result = [input indexOfSelectedItem];
-
-#if ! __has_feature(objc_arc)
-    [alert release];
-#endif
-    
-	return selectedButton;
-}
 
 NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BOOL useSecurePrompt)
 {
@@ -590,6 +583,41 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
 	return selectedButton;
 }
 
+NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus)
+{
+	assert(buttons);
+	assert(checkboxStatus);
+	assert([NSThread currentThread] == [NSThread mainThread]);
+
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = prompt;
+
+	if (buttons.count > 0)
+		[alert addButtonWithTitle:buttons[0]];
+	if (buttons.count > 1)
+		[alert addButtonWithTitle:buttons[1]];
+	if (buttons.count > 2)
+		[alert addButtonWithTitle:buttons[2]];
+
+	NSButton *input = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+	[input setButtonType:NSSwitchButton];
+	[input setState:(NSInteger )*checkboxStatus];
+	[input setTitle:checkboxTitle];
+
+	[alert setAccessoryView:input];
+	NSInteger selectedButton = [alert runModal];
+
+	*checkboxStatus = (NSUInteger)[input state];
+
+#if ! __has_feature(objc_arc)
+	[input release];
+	[alert release];
+#endif
+
+	return selectedButton;
+}
+
+
 NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 {
 	assert(buttons);
@@ -617,6 +645,98 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 	*result = [input string];
 
 #if ! __has_feature(objc_arc)
+	[alert release];
+#endif
+
+	return selectedButton;
+}
+
+NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result)
+{
+	assert(buttons);
+	assert(choices);
+	assert(result);
+	assert([NSThread currentThread] == [NSThread mainThread]);
+
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = prompt;
+
+	if (buttons.count > 0)
+		[alert addButtonWithTitle:buttons[0]];
+	if (buttons.count > 1)
+		[alert addButtonWithTitle:buttons[1]];
+	if (buttons.count > 2)
+		[alert addButtonWithTitle:buttons[2]];
+
+	NSPopUpButton *input = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+	for (NSString *str in choices)
+		[input addItemWithTitle:str];
+#if ! __has_feature(objc_arc)
+	[input autorelease];
+#endif
+	[alert setAccessoryView:input];
+	NSInteger selectedButton = [alert runModal];
+
+	[input validateEditing];
+	*result = (NSUInteger)[input indexOfSelectedItem];
+
+#if ! __has_feature(objc_arc)
+	[alert release];
+#endif
+
+	return selectedButton;
+}
+
+NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result)
+{
+	assert(buttons);
+	assert(result);
+	assert([NSThread currentThread] == [NSThread mainThread]);
+
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = prompt;
+
+	if (buttons.count > 0)
+		[alert addButtonWithTitle:buttons[0]];
+	if (buttons.count > 1)
+		[alert addButtonWithTitle:buttons[1]];
+	if (buttons.count > 2)
+		[alert addButtonWithTitle:buttons[2]];
+
+	NSButtonCell *thepushbutton = [[NSButtonCell alloc] init];
+	[thepushbutton setButtonType:NSRadioButton];
+
+	NSMatrix *thepushbuttons = [[NSMatrix alloc]initWithFrame:NSMakeRect(0,0,269,17 * choices.count)
+											   mode:NSRadioModeMatrix
+										  prototype:thepushbutton
+									   numberOfRows:(int)choices.count
+									numberOfColumns:1];
+
+	for (NSUInteger i = 0; i < choices.count; i++)
+	{
+		[thepushbuttons selectCellAtRow:(int)i column:0];
+
+        NSString *title = choices[i];
+        if (title.length > 150)
+            title = makeString(@"%@ […] %@", [title substringToIndex:70], [title substringFromIndex:title.length-70]);
+
+		[[thepushbuttons selectedCell] setTitle:title];
+	}
+	[thepushbuttons selectCellAtRow:0 column:0];
+
+	[thepushbuttons sizeToFit];
+
+	[alert setAccessoryView:thepushbuttons];
+	[[alert window] makeFirstResponder:thepushbuttons];
+
+	NSInteger selectedButton = [alert runModal];
+//U	[[alert window] setInitialFirstResponder: thepushbuttons];
+
+	*result = (NSUInteger)[thepushbuttons selectedRow];
+
+#if ! __has_feature(objc_arc)
+	[thepushbuttons release];
+	[thepushbutton release];
 	[alert release];
 #endif
 

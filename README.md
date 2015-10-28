@@ -25,8 +25,8 @@ CoreLib has these components:
 
 ### Requirements
 
-CoreLib up to version 1.8 requires Xcode 6
-CoreLib versio 1.9 and above requires Xcode 7
+CoreLib up to version 1.8 requires Xcode 6 and deploys back to Mac OS X 10.6 / iOS 6
+CoreLib version 1.9 and above requires Xcode 7 and deploys back to Mac OS X 10.6 / iOS 7
 
 ### Initialization
 
