@@ -1264,6 +1264,8 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)unescaped
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	if (OS_IS_POST_10_8)
 #else
@@ -1282,6 +1284,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 #endif
 	}
 #endif
+#pragma clang diagnostic pop
 }
 
 - (NSString *)escaped
