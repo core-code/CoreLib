@@ -920,6 +920,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
 {
     NSString *ret = self;
+    assert(![self contains:@"k9BBV15zFYi44YyB"]);
 
     for (NSString *key in replacements)
     {
@@ -1593,6 +1594,92 @@ CONST_KEY(CCDirectoryObserving)
 - (NSData *)contents
 {
     return self.download;
+}
+
++ (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query
+{
+    return [NSURL URLWithHost:host path:path query:query user:nil password:nil fragment:nil scheme:@"https" port:nil];
+}
+
++ (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query user:(NSString *)user password:(NSString *)password fragment:(NSString *)fragment scheme:(NSString *)scheme port:(NSNumber *)port
+{
+    assert([path hasPrefix:@"/"]);
+    assert(![query contains:@"k9BBV15zFYi44YyB"]);
+    query = [query replaced:@"+" with:@"k9BBV15zFYi44YyB"];
+    NSURLComponents *urlComponents = [NSURLComponents new];
+    urlComponents.scheme = scheme;
+    urlComponents.host = host;
+    urlComponents.path = path;
+    urlComponents.query = query;
+    urlComponents.user = user;
+    urlComponents.password = password;
+    urlComponents.fragment = fragment;
+    urlComponents.port = port;
+    urlComponents.percentEncodedQuery = [urlComponents.percentEncodedQuery replaced:@"k9BBV15zFYi44YyB" with:@"%2B"];
+
+    NSURL *url = urlComponents.URL;
+    assert(url);
+
+    
+    return url;
+}
+
+- (NSData *)performBlockingPOST
+{
+    __block NSData *data;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+
+    [self performPOST:^(NSData *d)
+     {
+         data = d;
+         dispatch_semaphore_signal(sem);
+     }];
+     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+
+     return data;
+}
+
+- (NSData *)performBlockingGET
+{
+    __block NSData *data;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+
+    [self performGET:^(NSData *d)
+    {
+        data = d;
+        dispatch_semaphore_signal(sem);
+    }];
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+
+     return data;
+}
+
+- (void)performGET:(void (^)(NSData *))completion
+{
+    NSURLSessionDataTask *dataTask = [NSURLSession.sharedSession dataTaskWithURL:self completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
+    {
+        completion(data);
+    }];
+    [dataTask resume];
+}
+
+- (void)performPOST:(void (^)(NSData *))completion
+{
+    NSURL *newURL = [NSURL URLWithHost:self.host path:self.path query:nil user:self.user
+                              password:self.password fragment:self.fragment scheme:self.scheme port:self.port]; // don't want the query in there
+    NSMutableURLRequest *request = newURL.request.mutableCopy;
+
+    request.HTTPBody = self.query.data;
+    request.HTTPMethod = @"POST";
+    [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+
+
+    
+    NSURLSessionDataTask *dataTask = [NSURLSession.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
+    {
+        completion(data);
+    }];
+    [dataTask resume];
 }
 @end
 

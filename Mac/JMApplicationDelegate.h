@@ -10,10 +10,12 @@
  */
 
 #import "CoreLib.h"
+#ifdef USE_SPARKLE
+#import <Sparkle/SUUpdater.h>
+#endif
 
 
 @interface JMApplicationDelegate : NSObject 
-
 
 - (IBAction)openWindow:(__strong NSWindow **)window nibName:(NSString *)nibName;
 - (IBAction)openURL:(id)sender;

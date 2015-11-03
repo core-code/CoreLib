@@ -224,6 +224,18 @@
 
 @interface NSURL (CoreCode)
 
+
+
++ (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query;
++ (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query user:(NSString *)user password:(NSString *)password fragment:(NSString *)fragment scheme:(NSString *)scheme port:(NSNumber *)port;
+
+
+- (NSData *)performBlockingPOST;
+- (NSData *)performBlockingGET;
+- (void)performGET:(void (^)(NSData *))completion;
+- (void)performPOST:(void (^)(NSData *))completion;
+
+
 - (NSURL *)add:(NSString *)component;
 - (void)open;
 

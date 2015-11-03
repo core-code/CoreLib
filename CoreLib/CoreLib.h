@@ -25,7 +25,7 @@ extern "C"
 // include system headers and make sure requrements are met
 #if __has_feature(modules)
 @import Darwin.TargetConditionals;
-#import <Availability.h>
+@import Darwin.Availability;
 #else
 #import <TargetConditionals.h>
 #import <Availability.h>
