@@ -25,7 +25,7 @@
 
 - (void)viewDidLoad
 {
-	UIWebView *wv = [[UIWebView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	UIWebView *wv = [[UIWebView alloc] initWithFrame:UIScreen.mainScreen.bounds];
 	self.webView = wv;
 	self.webView.delegate = self.tmpDelegate;
 	self.tmpDelegate = nil;

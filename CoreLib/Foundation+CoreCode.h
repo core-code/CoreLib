@@ -20,7 +20,7 @@
 @property (readonly, nonatomic) NSMutableArray <ObjectType> *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
 @property (readonly, nonatomic) NSData *XMLData;
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
 @property (readonly, nonatomic) NSString *string;
@@ -225,16 +225,14 @@
 @interface NSURL (CoreCode)
 
 
-
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query;
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query user:(NSString *)user password:(NSString *)password fragment:(NSString *)fragment scheme:(NSString *)scheme port:(NSNumber *)port;
-
-
 - (NSData *)performBlockingPOST;
 - (NSData *)performBlockingGET;
-- (void)performGET:(void (^)(NSData *))completion;
-- (void)performPOST:(void (^)(NSData *))completion;
-
+- (void)performGET:(void (^)(NSData *data))completion;
+- (void)performPOST:(void (^)(NSData *data))completion;
+#endif
 
 - (NSURL *)add:(NSString *)component;
 - (void)open;
@@ -269,7 +267,7 @@
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *hexString;
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) 
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
 #endif
@@ -310,7 +308,7 @@
 
 @interface NSDictionary <KeyType, ObjectType>(CoreCode)
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @property (readonly, nonatomic) NSData *JSONData;
 #endif
 @property (readonly, nonatomic) NSData *XMLData;

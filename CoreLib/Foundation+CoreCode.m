@@ -65,7 +65,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 #pragma clang diagnostic pop
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @dynamic JSONData;
 
 - (NSData *)JSONData
@@ -1596,6 +1596,7 @@ CONST_KEY(CCDirectoryObserving)
     return self.download;
 }
 
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query
 {
     return [NSURL URLWithHost:host path:path query:query user:nil password:nil fragment:nil scheme:@"https" port:nil];
@@ -1620,7 +1621,9 @@ CONST_KEY(CCDirectoryObserving)
     NSURL *url = urlComponents.URL;
     assert(url);
 
-    
+#if  !__has_feature(objc_arc)
+	 [url autorelease];
+#endif
     return url;
 }
 
@@ -1654,7 +1657,7 @@ CONST_KEY(CCDirectoryObserving)
      return data;
 }
 
-- (void)performGET:(void (^)(NSData *))completion
+- (void)performGET:(void (^)(NSData *data))completion
 {
     NSURLSessionDataTask *dataTask = [NSURLSession.sharedSession dataTaskWithURL:self completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
     {
@@ -1663,7 +1666,7 @@ CONST_KEY(CCDirectoryObserving)
     [dataTask resume];
 }
 
-- (void)performPOST:(void (^)(NSData *))completion
+- (void)performPOST:(void (^)(NSData *data))completion
 {
     NSURL *newURL = [NSURL URLWithHost:self.host path:self.path query:nil user:self.user
                               password:self.password fragment:self.fragment scheme:self.scheme port:self.port]; // don't want the query in there
@@ -1681,6 +1684,7 @@ CONST_KEY(CCDirectoryObserving)
     }];
     [dataTask resume];
 }
+#endif
 @end
 
 
@@ -1832,7 +1836,7 @@ CONST_KEY(CCDirectoryObserving)
 	return [NSMutableData dataWithData:self];
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @dynamic JSONArray, JSONDictionary;
 - (id)JSONObject
 {
@@ -1968,7 +1972,7 @@ CONST_KEY(CCDirectoryObserving)
 	return tmp;
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @dynamic JSONData;
 
 - (NSData *)JSONData
