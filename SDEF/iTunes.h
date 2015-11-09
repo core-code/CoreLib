@@ -467,6 +467,7 @@ typedef enum iTunesEAPD iTunesEAPD;
 
 @property BOOL shared;  // is this playlist shared?
 @property (readonly) BOOL smart;  // is this a Smart Playlist?
+@property (readonly) BOOL genius;  // is this a Genius Playlist?
 
 
 @end

@@ -3,8 +3,8 @@
  */
 
 #if __has_feature(modules)
-#import <AppKit/AppKit.h>
-#import <ScriptingBridge/ScriptingBridge.h>
+@import AppKit;
+@import ScriptingBridge;
 #else
 #import <AppKit/AppKit.h>
 #import <ScriptingBridge/ScriptingBridge.h>
