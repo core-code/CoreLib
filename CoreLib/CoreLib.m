@@ -87,14 +87,15 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                   withIntermediateDirectories:YES attributes:nil error:NULL];
 
     #ifdef DEBUG
-        BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
+		#ifndef XCTEST
+		BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
 
 		#ifdef SANDBOX
             assert(isSandbox);
         #else
             assert(!isSandbox);
         #endif
-
+		#endif
 
         #ifdef NDEBUG
             LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");

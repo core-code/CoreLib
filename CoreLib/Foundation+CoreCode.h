@@ -363,6 +363,7 @@
 
 @property (readonly, nonatomic) NSMutableCharacterSet *mutableObject;
 @property (readonly, nonatomic) NSString *stringRepresentation;
+@property (readonly, nonatomic) NSString *stringRepresentationLong;
 
 @end
 

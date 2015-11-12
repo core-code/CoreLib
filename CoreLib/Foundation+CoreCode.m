@@ -1676,8 +1676,6 @@ CONST_KEY(CCDirectoryObserving)
     request.HTTPMethod = @"POST";
     [request addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
 
-
-    
     NSURLSessionDataTask *dataTask = [NSURLSession.sharedSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
     {
         completion(data);
@@ -2173,7 +2171,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation  NSCharacterSet (CoreCode)
 
-@dynamic stringRepresentation, mutableObject;
+@dynamic stringRepresentation, stringRepresentationLong, mutableObject;
 
 - (NSString *)stringRepresentation
 {
@@ -2200,6 +2198,21 @@ CONST_KEY(CCDirectoryObserving)
 
 	if (index != 0)
 		tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
+
+	return tmp;
+}
+
+- (NSString *)stringRepresentationLong
+{
+	NSString *tmp = @"";
+
+	for (unichar uc = 0; uc < (0xFFFF); uc++)
+	{
+		if (uc && [self characterIsMember:uc])
+		{
+			tmp = [tmp stringByAppendingString:makeString(@"unichar %i: %@\n", uc, [NSString stringWithCharacters:&uc length:1])];
+		}
+	}
 
 	return tmp;
 }
