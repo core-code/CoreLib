@@ -204,7 +204,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         while ((msg = asl_next(response)))
         {
             const char *m = asl_get(msg, ASL_KEY_MSG);
-            NSString *line = @(m);
+			NSDate *time = [NSDate dateWithTimeIntervalSince1970:@(asl_get(msg, ASL_KEY_TIME)).doubleValue];
+			NSString *line = makeString(@"%@: %@", time.description, @(m));
 
             [messages addObject:line];
         }
@@ -214,7 +215,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         while ((msg = aslresponse_next(response)))
         {
             const char *m = asl_get(msg, ASL_KEY_MSG);
-            NSString *line = @(m);
+			NSDate *time = [NSDate dateWithTimeIntervalSince1970:@(asl_get(msg, ASL_KEY_TIME)).doubleValue];
+			NSString *line = makeString(@"%@: %@", time.description, @(m));
 
             [messages addObject:line];
         }

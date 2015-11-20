@@ -249,6 +249,7 @@
 @property (readonly, nonatomic) NSURL *fileAliasTarget;
 #endif
 @property (readonly, nonatomic) unsigned long long fileSize;
+@property (readonly, nonatomic) unsigned long long fileOrDirectorySize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) NSURLRequest *request;
 @property (readonly, nonatomic) NSMutableURLRequest *mutableRequest;
@@ -279,6 +280,8 @@
 
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
+@property (readonly, nonatomic) NSString *MD5;
+@property (readonly, nonatomic) NSString *SHA256;
 #endif
 
 @end

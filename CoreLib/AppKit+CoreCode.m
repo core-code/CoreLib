@@ -122,7 +122,10 @@ CONST_KEY(CCProgressIndicator)
 
 		[progressIndicator stopAnimation:self];
 		[NSApp activateIgnoringOtherApps:YES];
-		[NSApp endSheet:progressPanel];
+        if (OS_IS_POST_10_8)
+			[self endSheet:progressPanel];
+		else
+			[NSApp endSheet:progressPanel];
 		[progressPanel orderOut:self];
 
 		[self setAssociatedValue:nil forKey:kCCProgressDetailInfoKey];

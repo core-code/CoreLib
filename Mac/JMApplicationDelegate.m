@@ -14,7 +14,9 @@
 #import "JMCrashReporter.h"
 #import "JMAppMovedHandler.h"
 #import "CoreLib.h"
-
+#if defined(APPSTORE_VALIDATERECEIPT) || defined(APPSTORE)
+#import "RVNReceiptValidation.h"
+#endif
 
 @interface JMApplicationDelegate ()
 	@property (assign, nonatomic) NSInteger minimumUsagesForRating;
@@ -107,6 +109,8 @@
 
 		RVNCheckInvalidReceiptHash();
 	});
+#elif defined(APPSTORE) && APPSTORE
+	RVNCheckBundleIDAndVersion();
 #endif
 }
 

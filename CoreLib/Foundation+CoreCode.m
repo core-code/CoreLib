@@ -652,6 +652,8 @@ CONST_KEY(CoreCodeAssociatedValue)
         return [self characterAtIndex:len-1];
     return 0;
 }
+
+
 - (unsigned long long)fileSize
 {
     NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
@@ -1431,7 +1433,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory; // , path
+@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
 
@@ -1525,6 +1527,13 @@ CONST_KEY(CCDirectoryObserving)
     NSString *path = self.path;
     return [self isFileURL] && [fileManager fileExistsAtPath:path];
 }
+
+
+- (unsigned long long)fileOrDirectorySize
+{
+	return (self.fileIsDirectory ? self.directorySize : self.fileSize);
+}
+
 
 - (unsigned long long)fileSize
 {
@@ -1691,7 +1700,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @dynamic string, hexString, mutableObject;
 #ifdef USE_SECURITY
-@dynamic SHA1;
+@dynamic SHA1, MD5, SHA256;
 #endif
 
 
@@ -1711,6 +1720,42 @@ CONST_KEY(CCDirectoryObserving)
 				   ];
 
     return s;
+}
+
+- (NSString *)MD5
+{
+	const char *cStr = [self bytes];
+	unsigned char result[CC_MD5_DIGEST_LENGTH];
+	CC_MD5(cStr, (CC_LONG)[self length], result);
+	NSString *s = [NSString  stringWithFormat:
+				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+				   result[0], result[1], result[2], result[3], result[4],
+				   result[5], result[6], result[7],
+				   result[8], result[9], result[10], result[11], result[12],
+				   result[13], result[14], result[15]
+				   ];
+
+	return s;
+}
+
+- (NSString *)SHA256
+{
+	const char *cStr = [self bytes];
+	unsigned char result[CC_SHA256_DIGEST_LENGTH];
+	CC_SHA256(cStr, (CC_LONG)[self length], result);
+	NSString *s = [NSString  stringWithFormat:
+				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+				   result[0], result[1], result[2], result[3], result[4],
+				   result[5], result[6], result[7],
+				   result[8], result[9], result[10], result[11], result[12],
+				   result[13], result[14], result[15],
+				   result[16], result[17], result[18], result[19],
+				   result[20], result[21], result[22], result[23],
+				   result[24], result[25], result[26], result[27],
+				   result[28], result[29], result[30], result[31]
+				   ];
+
+	return s;
 }
 #endif
 
@@ -1789,28 +1834,24 @@ CONST_KEY(CCDirectoryObserving)
 					usedLossyConversion:nil];
 #pragma clang diagnostic pop
 
-		if (result) return result;
-
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
-		return nil;
+		if (result)
+			return result;
 	}
-	else
+
+	for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
 	{
-		for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
-		{
-			NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
+		NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
 
-			if (!s)
-				continue;
-		#if ! __has_feature(objc_arc)
-			[s autorelease];
-		#endif
-			return s;
-		}
-
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
-		return nil;
+		if (!s)
+			continue;
+	#if ! __has_feature(objc_arc)
+		[s autorelease];
+	#endif
+		return s;
 	}
+
+	asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
+	return nil;
 }
 
 - (NSString *)hexString
