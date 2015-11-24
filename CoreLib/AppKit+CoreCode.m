@@ -122,10 +122,13 @@ CONST_KEY(CCProgressIndicator)
 
 		[progressIndicator stopAnimation:self];
 		[NSApp activateIgnoringOtherApps:YES];
-        if (OS_IS_POST_10_8)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+		if (OS_IS_POST_10_8)
 			[self endSheet:progressPanel];
 		else
 			[NSApp endSheet:progressPanel];
+#pragma clang diagnostic pop
 		[progressPanel orderOut:self];
 
 		[self setAssociatedValue:nil forKey:kCCProgressDetailInfoKey];

@@ -42,7 +42,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet;
 
 - (NSString *)literalString
 {
@@ -198,6 +198,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSArray *)reverseArray
 {
 	return [[self reverseObjectEnumerator] allObjects];
+}
+
+- (NSOrderedSet *)orderedSet
+{
+	return [NSOrderedSet orderedSetWithArray:self];
 }
 
 - (NSSet *)set
@@ -523,7 +528,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
@@ -678,6 +683,21 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound;
 }
 
+- (BOOL)isNumber
+{
+	if (!self.length)
+		return NO;
+
+	if (self.isIntegerNumberOnly)
+		return YES;
+
+	if (self.isFloatNumber)
+		return YES;
+
+	return NO;
+}
+
+
 - (BOOL)isIntegerNumberOnly
 {
     return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location == NSNotFound;
@@ -702,8 +722,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 #endif
     }
 
-    return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) &&
-    ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
+    return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
 }
 
 - (BOOL)isWriteablePath
@@ -2283,5 +2302,53 @@ CONST_KEY(CCDirectoryObserving)
 - (NSString *)literalString
 {
 	return makeString(@"@(%@)", self.description);
+}
+@end
+
+
+
+
+@implementation NSMutableOrderedSet (CoreCode)
+
+@dynamic immutableObject;
+
+- (NSOrderedSet *)immutableObject
+{
+	return [NSOrderedSet orderedSetWithOrderedSet:self];
+}
+
+@end
+
+@implementation NSMutableSet  (CoreCode)
+
+@dynamic immutableObject;
+
+- (NSSet *)immutableObject
+{
+	return [NSSet setWithSet:self];
+}
+
+@end
+
+@implementation NSOrderedSet (CoreCode)
+
+@dynamic mutableObject;
+
+
+- (NSMutableOrderedSet *)mutableObject
+{
+	return [NSMutableOrderedSet orderedSetWithOrderedSet:self];
+}
+
+
+@end
+
+@implementation NSSet (CoreCode)
+
+@dynamic mutableObject;
+
+- (NSMutableSet *)mutableObject
+{
+	return [NSMutableSet setWithSet:self];
 }
 @end

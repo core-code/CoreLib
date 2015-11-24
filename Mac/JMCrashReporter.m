@@ -96,6 +96,9 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 							foundNeccessaryString = TRUE;
 				}
 
+				if ([crashlog rangeOfString:@"Crashed Thread"].location == NSNotFound)
+					foundNeccessaryString = FALSE;
+
 				if (!foundNeccessaryString)
 				{
 #if ! __has_feature(objc_arc)

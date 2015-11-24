@@ -63,7 +63,7 @@
 - (NSString *)joined:(NSString *)sep;							// = componentsJoinedByString:
 
 @property (readonly, nonatomic) NSSet <ObjectType> *set;
-
+@property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
 
 @end
 
@@ -166,6 +166,7 @@
 @property (readonly, nonatomic) BOOL isIntegerNumberOnly;
 @property (readonly, nonatomic) BOOL isFloatNumber;
 @property (readonly, nonatomic) BOOL isValidEmail;
+@property (readonly, nonatomic) BOOL isNumber;
 
 
 
@@ -381,5 +382,30 @@
 @interface NSNumber (CoreCode)
 
 @property (readonly, nonatomic) NSString *literalString;
+
+@end
+
+
+@interface NSMutableOrderedSet <ObjectType> (CoreCode)
+
+@property (readonly, nonatomic) NSOrderedSet <ObjectType> *immutableObject;
+
+@end
+
+@interface NSMutableSet <ObjectType> (CoreCode)
+
+@property (readonly, nonatomic) NSSet <ObjectType> *immutableObject;
+
+@end
+
+@interface NSOrderedSet <ObjectType> (CoreCode)
+
+@property (readonly, nonatomic) NSMutableOrderedSet <ObjectType> *mutableObject;
+
+@end
+
+@interface NSSet <ObjectType> (CoreCode)
+
+@property (readonly, nonatomic) NSMutableSet <ObjectType> *mutableObject;
 
 @end
