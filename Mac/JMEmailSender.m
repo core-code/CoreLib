@@ -48,7 +48,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
         [mail setTimeout:secs*60];
 
-		/* create a new outgoing message object */
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
+		if ( [attachmentFilePath length] > 0 && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
+			content = [content stringByAppendingFormat:@"\n\ninline-attachment-base64:\n%@", [attachmentFilePath.fileURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]];
+#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
+#pragma clang diagnostic pop
+#endif
+#endif
+
 		NSDictionary *messageProperties = [NSDictionary dictionaryWithObjectsAndKeys:subject, @"subject", content, @"content", nil];
 		MailOutgoingMessage *emailMessage =	[[[mail classForScriptingClass:@"outgoing message"] alloc] initWithProperties:messageProperties];
 
@@ -82,9 +93,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		asl_NSLog_debug(@"going to send");
 		if (validAddressFound != TRUE)
 			return kSMTPToNilFailure;
-		
-		
-		if ( [attachmentFilePath length] > 0 )
+
+
+
+
+
+		if ( [attachmentFilePath length] > 0 && ![NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
 		{
 			MailAttachment *theAttachment;
 			
@@ -105,12 +119,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #if ! __has_feature(objc_arc)
 			[theAttachment release];
 #endif
-            /* Test for errors */
-			if ( [mail lastError] != nil )
-				return kSMTPScriptingBridgeFailure;
 		}
-		
-		
+		if ( [mail lastError] != nil )
+			return kSMTPScriptingBridgeFailure;
+
 		if ([emailMessage send])
 			res = kSMTPSuccess;
 		else

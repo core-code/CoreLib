@@ -1168,10 +1168,10 @@ CONST_KEY(CoreCodeAssociatedValue)
     return self;
 }
 
-- (NSNumber *)numberValue
-{
-    return @(self.doubleValue);
-}
+//- (NSNumber *)numberValue
+//{
+//    return @(self.doubleValue);
+//}
 
 - (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter
 {	// credits to Drew McCormack

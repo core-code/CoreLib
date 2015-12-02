@@ -213,13 +213,13 @@ NSString *const k ## name ## Key = @ #name;
 #define CONST_KEY_DECLARATION(name) \
 extern NSString *const k ## name ## Key;
 #define CONST_KEY_ENUM(name, enumname) \
-@interface enumname ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
-static enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+@interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
+static name ## Key *const k ## name ## Key = ( name ## Key *) @ #name;
 #define CONST_KEY_ENUM_IMPLEMENTATION(name, enumname) \
-enumname ## Key *const k ## name ## Key = ( enumname ## Key *) @ #name;
+name ## Key *const k ## name ## Key = ( name ## Key *) @ #name;
 #define CONST_KEY_ENUM_DECLARATION(name, enumname) \
 @interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
-extern enumname ## Key *const k ## name ## Key;
+extern name ## Key *const k ## name ## Key;
 
 
 
