@@ -111,7 +111,7 @@ static inline NS ## classname * make ## classname (void) { return (NS ## classna
 MAKE_MAKER(MutableArray)
 MAKE_MAKER(MutableDictionary)
 MAKE_MAKER(MutableString)
-
+MAKE_MAKER(MutableSet)
 
 
 // !!!: CORELIB OBJ INTERFACE

@@ -145,7 +145,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #ifdef DEBUG
                 if ([framework hasPrefix:@"libclang"]) continue;
 #endif
-                alert_apptitled(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and use the ZIP decrompression built into Mac OS X.", @"OK", nil, nil);
+                alert_apptitled(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.", @"OK", nil, nil);
                 exit(0);
             }
         }
