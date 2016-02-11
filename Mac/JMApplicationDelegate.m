@@ -87,7 +87,10 @@
 
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
-#if !defined(APPSTORE_VALIDATERECEIPT) && !defined(TRYOUT)
+#if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
+
+	asl_NSLog(ASL_LEVEL_ERR, @"Warning: this version will expire");
+	
 	dispatch_after_main(60, ^
 	{
 		if ([[NSDate date] timeIntervalSinceDate:[NSDate dateWithPreprocessorDate:preprocessorDateString]] > 60 * 60 * 24 * expiryDays)

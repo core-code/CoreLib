@@ -11,7 +11,11 @@
 
 #import "CoreLib.h"
 #ifdef USE_SPARKLE
+#if __has_feature(modules)
+@import Sparkle.SUUpdater;
+#else
 #import <Sparkle/SUUpdater.h>
+#endif
 #endif
 
 

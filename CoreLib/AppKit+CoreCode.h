@@ -27,9 +27,11 @@
 @end
 
 
-@interface NSView (NSView_ClassSelection)
+@interface NSView (CoreCode)
 
 - (NSView *)viewWithClass:(Class)classofview;
+
+- (NSArray <NSView *> *)allSubviews;
 
 @end
 

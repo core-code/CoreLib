@@ -164,6 +164,20 @@ CONST_KEY(CCProgressIndicator)
 	return nil;
 }
 
+
+- (NSArray <NSView *> *)allSubviews
+{
+	NSMutableArray *allSubviews = [NSMutableArray arrayWithObject:self];
+
+	NSArray *subviews = [self subviews];
+
+	for (NSView *view in subviews)
+		[allSubviews addObjectsFromArray:[view allSubviews]];
+
+	return allSubviews.immutableObject;
+}
+
+
 @end
 
 
@@ -179,14 +193,14 @@ CONST_KEY(CCProgressIndicator)
     do
     {
         NSDictionary* attrs = @{NSFontAttributeName: [NSFont fontWithName:curr.fontName size:currentFontSize]};
-        strSize = [[self stringValue] sizeWithAttributes:attrs];
+        strSize = [self.stringValue sizeWithAttributes:attrs];
 
-        currentFontSize --;
+		currentFontSize --;
 
     } while (strSize.width > width);
 
 
-    [self setFont:[NSFont fontWithName:[curr fontName] size:currentFontSize+1]];
+    [self setFont:[NSFont fontWithName:curr.fontName size:currentFontSize+1]];
 }
 @end
 

@@ -17,8 +17,13 @@
 	NSScrollView *sv = [[[[self mainFrame] frameView] documentView] enclosingScrollView];
 
 	sv.borderType = NSBezelBorder;
-	sv.hasHorizontalScroller = NO;
-	sv.hasVerticalScroller = NO;
+
+	if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
+	{
+		sv.hasHorizontalScroller = NO;
+		sv.hasVerticalScroller = NO;
+		self.mainFrame.frameView.allowsScrolling = NO;
+	}
 
 	self.policyDelegate = self;
 	self.resourceLoadDelegate = self;
