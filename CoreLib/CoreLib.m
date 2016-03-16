@@ -83,8 +83,17 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     #endif
 
         if (!self.suppURL.fileExists)
-            [fileManager createDirectoryAtURL:self.suppURL
-                  withIntermediateDirectories:YES attributes:nil error:NULL];
+		{
+			if (OS_IS_POST_10_6)
+				[fileManager createDirectoryAtURL:self.suppURL
+					  withIntermediateDirectories:YES attributes:nil error:NULL];
+			else
+			{
+				NSString *p = self.suppURL.path;
+				[fileManager createDirectoryAtPath:p
+					   withIntermediateDirectories:YES attributes:nil error:NULL];
+			}
+		}
 
     #ifdef DEBUG
 		#ifndef XCTEST

@@ -63,7 +63,10 @@
 - (NSString *)joined:(NSString *)sep;							// = componentsJoinedByString:
 
 @property (readonly, nonatomic) NSSet <ObjectType> *set;
+
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
+#endif
 
 @end
 

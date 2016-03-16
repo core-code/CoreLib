@@ -42,7 +42,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString;
+
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+@dynamic orderedSet;
+#endif
 
 - (NSString *)literalString
 {
@@ -200,10 +204,12 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return [[self reverseObjectEnumerator] allObjects];
 }
 
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 - (NSOrderedSet *)orderedSet
 {
 	return [NSOrderedSet orderedSetWithArray:self];
 }
+#endif
 
 - (NSSet *)set
 {
@@ -2307,6 +2313,7 @@ CONST_KEY(CCDirectoryObserving)
 
 
 
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 
 @implementation NSMutableOrderedSet (CoreCode)
 
@@ -2319,16 +2326,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @end
 
-@implementation NSMutableSet  (CoreCode)
 
-@dynamic immutableObject;
-
-- (NSSet *)immutableObject
-{
-	return [NSSet setWithSet:self];
-}
-
-@end
 
 @implementation NSOrderedSet (CoreCode)
 
@@ -2340,6 +2338,20 @@ CONST_KEY(CCDirectoryObserving)
 	return [NSMutableOrderedSet orderedSetWithOrderedSet:self];
 }
 
+
+@end
+
+#endif
+
+
+@implementation NSMutableSet  (CoreCode)
+
+@dynamic immutableObject;
+
+- (NSSet *)immutableObject
+{
+	return [NSSet setWithSet:self];
+}
 
 @end
 
