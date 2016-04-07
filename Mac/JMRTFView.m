@@ -25,6 +25,7 @@
             NSAttributedString *rtfStr;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
             if (OS_IS_POST_10_10)
                 rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL options:@{} documentAttributes:NULL error:NULL];
             else

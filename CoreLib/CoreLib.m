@@ -207,6 +207,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
 
     if (OS_IS_POST_10_9)
     {
@@ -360,6 +361,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
 #endif
 		if (optionDown && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
 			encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
@@ -501,6 +503,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
 #endif
 		if ([NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
 			encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
@@ -629,6 +632,37 @@ NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSStrin
 	return selectedButton;
 }
 
+NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor)
+{
+    assert(buttons);
+    assert(selectedColor);
+    assert([NSThread currentThread] == [NSThread mainThread]);
+
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = prompt;
+
+    if (buttons.count > 0)
+        [alert addButtonWithTitle:buttons[0]];
+    if (buttons.count > 1)
+        [alert addButtonWithTitle:buttons[1]];
+    if (buttons.count > 2)
+        [alert addButtonWithTitle:buttons[2]];
+
+    NSColorWell *input = [[NSColorWell alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+    [input setColor:*selectedColor];
+
+    [alert setAccessoryView:input];
+    NSInteger selectedButton = [alert runModal];
+
+    *selectedColor = [input color];
+
+#if ! __has_feature(objc_arc)
+    [input release];
+    [alert release];
+#endif
+    
+    return selectedButton;
+}
 
 NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 {
@@ -870,20 +904,20 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 #pragma clang diagnostic pop
 
 
-NSColor *makeColor(float r, float g, float b, float a)
+NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
 	return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];
 }
-NSColor *makeColor255(float r, float g, float b, float a)
+NSColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
 	return [NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0];
 }
 #else
-UIColor *makeColor(float r, float g, float b, float a)
+UIColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
 	return [UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)];
 }
-UIColor *makeColor255(float r, float g, float b, float a)
+UIColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
 	return [UIColor colorWithRed:(r) / (CGFloat)255.0 green:(g) / (CGFloat)255.0 blue:(b) / (CGFloat)255.0 alpha:(a) / (CGFloat)255.0];
 }

@@ -201,7 +201,7 @@
 - (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth;
+- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(CGFloat)maxWidth;
 // FSEvents directory observing
 - (void)startObserving:(BasicBlock)block;
 - (void)stopObserving;

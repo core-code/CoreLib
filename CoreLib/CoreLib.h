@@ -164,6 +164,7 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
 NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result); // alert with large text view prompting users
 NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus); // alert with a single checkbox
+    NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor); // alert with a colorwell for choosing colors
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
 NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
@@ -181,11 +182,11 @@ NSString *makeTempFolder();
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-NSColor *makeColor(float r, float g, float b, float a);		// params from 0..1
-NSColor *makeColor255(float r, float g, float b, float a);	// params from 0..255
+NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a);		// params from 0..1
+NSColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);	// params from 0..255
 #else
-UIColor *makeColor(float r, float g, float b, float a);
-UIColor *makeColor255(float r, float g, float b, float a);
+UIColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a);
+UIColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);
 #endif
 
 

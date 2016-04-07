@@ -55,16 +55,16 @@ CONST_KEY(CCProgressIndicator)
 {
     dispatch_async_main(^
 	{
-		NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0f, 0.0f, 400.0f, 120.0f)
+		NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 400.0, 120.0)
 													   styleMask:NSTitledWindowMask
 														 backing:NSBackingStoreBuffered
 														   defer:NO];
 
 
-		NSTextField *progressInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0f, 90.0f, 364.0f, 17.0f)];
-		NSTextField *progressDetailInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0f, 65.0f, 364.0f, 17.0f)];
-		NSTextField *waitLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0f, 14.0f, 364.0f, 17.0f)];
-		NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(20.0f, 41.0f, 360.0f, 20.0f)];
+		NSTextField *progressInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 90.0, 364.0, 17.0)];
+		NSTextField *progressDetailInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 65.0, 364.0, 17.0)];
+		NSTextField *waitLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 14.0, 364.0, 17.0)];
+		NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(20.0, 41.0, 360.0, 20.0)];
 
 
 
@@ -101,7 +101,8 @@ CONST_KEY(CCProgressIndicator)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        if (OS_IS_POST_10_8)
+#pragma clang diagnostic ignored "-Wpartial-availability"
+if (OS_IS_POST_10_8)
             [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
         else
             [NSApp beginSheet:progressPanel modalForWindow:self
@@ -124,7 +125,8 @@ CONST_KEY(CCProgressIndicator)
 		[NSApp activateIgnoringOtherApps:YES];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-		if (OS_IS_POST_10_8)
+#pragma clang diagnostic ignored "-Wpartial-availability"
+if (OS_IS_POST_10_8)
 			[self endSheet:progressPanel];
 		else
 			[NSApp endSheet:progressPanel];

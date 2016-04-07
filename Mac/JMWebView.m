@@ -69,7 +69,7 @@
 {
 	if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
 	{
-		[sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.4f\"", self.zoomFactor.floatValue)];
+		[sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.4f\"", self.zoomFactor.doubleValue)];
 		self.zoomFactor = nil;
 	}
 }

@@ -15,7 +15,7 @@
 #import "JMAppMovedHandler.h"
 #import "CoreLib.h"
 #if defined(APPSTORE_VALIDATERECEIPT) || defined(APPSTORE)
-#import "RVNReceiptValidation.h"
+#import "JMReceiptValidation.h"
 #endif
 
 @interface JMApplicationDelegate ()

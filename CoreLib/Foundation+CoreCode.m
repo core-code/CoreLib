@@ -615,10 +615,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 }
 
-- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(float)maxWidth
+- (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(CGFloat)maxWidth
 {
     NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self];
-    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth, FLT_MAX)];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth, DBL_MAX)];
     NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
     [layoutManager addTextContainer:textContainer];
     [textStorage addLayoutManager:layoutManager];
@@ -1294,6 +1294,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	if (OS_IS_POST_10_8)
 #else
@@ -1319,6 +1320,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 	if (OS_IS_POST_10_8)
 #else
@@ -1537,7 +1539,17 @@ CONST_KEY(CCDirectoryObserving)
     NSString *path = self.path;
 	NSError *err;
     NSArray *c = [fileManager subpathsOfDirectoryAtPath:path error:&err];
-	assert(c && !err);
+	if (!c || err)
+    {
+        if (!self.fileExists)
+        {
+            asl_NSLog_debug(@"Warning: trying to get contents of non-existant dir %@", self);
+
+            return nil;
+        }
+        else
+            assert(0);
+    }
     return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
@@ -1573,9 +1585,10 @@ CONST_KEY(CCDirectoryObserving)
 - (unsigned long long)directorySize
 {
     unsigned long long size = 0;
-    for (NSString *file in self.dirContentsRecursive)
+    for (NSURL *file in self.dirContentsRecursive)
     {
-        NSDictionary *attr = [fileManager attributesOfItemAtPath:@[self.path, file].path error:NULL];
+        NSString *filePath = file.path;
+        NSDictionary *attr = [fileManager attributesOfItemAtPath:filePath error:NULL];
         if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
             size += [attr[NSFileSize] unsignedLongLongValue];
     }
@@ -1852,6 +1865,7 @@ CONST_KEY(CCDirectoryObserving)
 		NSString *result;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
 
 		[NSString stringEncodingForData:self
 						encodingOptions:nil
