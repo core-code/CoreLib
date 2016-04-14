@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 12.04.12.
-/*	Copyright (c) 2015 CoreCode
+/*	Copyright (c) 2016 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -164,7 +164,9 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
 NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result); // alert with large text view prompting users
 NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus); // alert with a single checkbox
-    NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor); // alert with a colorwell for choosing colors
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor); // alert with a colorwell for choosing colors
+#endif
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
 NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
@@ -234,10 +236,10 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #else
   #define asl_NSLog_debug(...)
 #endif
-#define LOGFUNCA				asl_NSLog_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), self)
-#define LOGFUNC					asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), self)
-#define LOGFUNCPARAMA(x)		asl_NSLog_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), self, [(x) description])
-#define LOGFUNCPARAM(x)			asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), self, [(x) description])
+#define LOGFUNCA				asl_NSLog_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self)
+#define LOGFUNC					asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), (__bridge void *)self)
+#define LOGFUNCPARAMA(x)		asl_NSLog_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
+#define LOGFUNCPARAM(x)			asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
 #define LOGSUCC					asl_NSLog_debug(@"success %@ %d", @(__FILE__), __LINE__)
 #define LOGFAIL					asl_NSLog_debug(@"failure %@ %d", @(__FILE__), __LINE__)
 #define LOG(x)					asl_NSLog_debug(@"%@", [(x) description]);
@@ -252,7 +254,7 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define NON_NIL_STR(x)			((x) ? (x) : @"")
 #define NON_NIL_OBJ(x)			((x) ? (x) : [NSNull null])
 #define IS_FLOAT_EQUAL(x,y)		(fabsf((x)-(y)) < 0.0001f)
-#define IS_DOUBLE_EQUAL(x,y)	(fabs((x)-(y)) < 0.000001f)
+#define IS_DOUBLE_EQUAL(x,y)	(fabs((x)-(y)) < 0.000001)
 #define IS_IN_RANGE(v,l,h)		(((v) >= (l)) && ((v) <= (h)))
 #define CLAMP(x, low, high)		(((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define ONCE_PER_FUNCTION(b)	{ static dispatch_once_t onceToken; dispatch_once(&onceToken, b); }
