@@ -231,7 +231,7 @@ extern name ## Key *const k ## name ## Key;
 void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG
   #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_NOTICE, __VA_ARGS__ )
-#elif defined(DEBUG)
+#elif defined(DEBUG) && !defined(FORCE_NOLOG)
   #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_DEBUG, __VA_ARGS__ )
 #else
   #define asl_NSLog_debug(...)
@@ -249,7 +249,7 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 // !!!: CONVENIENCE MACROS
 #define PROPERTY_STR(p)			NSStringFromSelector(@selector(p))
 #define OBJECT_OR(x,y)			((x) ? (x) : (y))
-#define STRING_OR(x, y)			(((x) && ([x length])) ? (x) : (y))
+#define STRING_OR(x, y)			(((x) && ([x isKindOfClass:[NSString class]]) && ([((NSString *)x) length])) ? (x) : (y))
 #define VALID_STR(x)			(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
 #define NON_NIL_STR(x)			((x) ? (x) : @"")
 #define NON_NIL_OBJ(x)			((x) ? (x) : [NSNull null])
