@@ -154,29 +154,34 @@
 }
 
 #ifdef USE_SPARKLE
-
 static SUUpdater *updater;
 CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
+#endif
 
 - (IBAction)checkForUpdatesAction:(id)sender
 {
+#ifdef USE_SPARKLE
 	LOGFUNC;
 	if (updater)
 		[updater checkForUpdates:self];
 	else
 		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: the sparkle updater is not available!");
+#endif
 }
 
 - (IBAction)initUpdateCheck
 {
+#ifdef USE_SPARKLE
 	updater = [[SUUpdater alloc] init];
 	[updater setDelegate:self];
 	assert(kUpdatecheckMenuindexKey.defaultObject);
 	[self setUpdateCheck:@{@"tag" : kUpdatecheckMenuindexKey.defaultObject}];
+#endif
 }
 
 - (IBAction)setUpdateCheck:(id)sender
 {
+#ifdef USE_SPARKLE
 	int intervalIndex = [[sender valueForKey:@"tag"] intValue];
 	NSTimeInterval newInterval = 0;
 
@@ -200,7 +205,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 	}
 	else
 		[updater setAutomaticallyChecksForUpdates:FALSE];
-}
 #endif
+}
 
 @end
