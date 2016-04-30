@@ -110,6 +110,7 @@ CC_ENUM(uint8_t, openChoice)
 static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
 MAKE_MAKER(MutableArray)
 MAKE_MAKER(MutableDictionary)
+MAKE_MAKER(MutableIndexSet)
 MAKE_MAKER(MutableString)
 MAKE_MAKER(MutableSet)
 

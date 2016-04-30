@@ -83,9 +83,7 @@
 		B9EF05541865D5A200CF7A38 /* JMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05351865D5A200CF7A38 /* JMActionSheet.m */; };
 		B9EF05551865D5A200CF7A38 /* JMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertView.m */; };
 		B9EF05561865D5A200CF7A38 /* JMChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05391865D5A200CF7A38 /* JMChoiceController.m */; };
-		B9EF05571865D5A200CF7A38 /* JMPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053B1865D5A200CF7A38 /* JMPopoverController.m */; };
 		B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */; };
-		B9EF05691865F18300CF7A38 /* JMPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053B1865D5A200CF7A38 /* JMPopoverController.m */; };
 		B9EF056B1865F18300CF7A38 /* JMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05351865D5A200CF7A38 /* JMActionSheet.m */; };
 		B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */; };
 		B9EF05731865F18300CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
@@ -192,8 +190,6 @@
 		B9EF05371865D5A200CF7A38 /* JMAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMAlertView.m; sourceTree = "<group>"; };
 		B9EF05381865D5A200CF7A38 /* JMChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMChoiceController.h; sourceTree = "<group>"; };
 		B9EF05391865D5A200CF7A38 /* JMChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMChoiceController.m; sourceTree = "<group>"; };
-		B9EF053A1865D5A200CF7A38 /* JMPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMPopoverController.h; sourceTree = "<group>"; };
-		B9EF053B1865D5A200CF7A38 /* JMPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMPopoverController.m; sourceTree = "<group>"; };
 		B9EF053C1865D5A200CF7A38 /* JMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebViewController.h; sourceTree = "<group>"; };
 		B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWebViewController.m; sourceTree = "<group>"; };
 		B9EF05631865EEF600CF7A38 /* CoreLibTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoreLibTests.h; path = Tests/CoreLibTests.h; sourceTree = "<group>"; };
@@ -311,8 +307,6 @@
 				B9EF05371865D5A200CF7A38 /* JMAlertView.m */,
 				B9EF05381865D5A200CF7A38 /* JMChoiceController.h */,
 				B9EF05391865D5A200CF7A38 /* JMChoiceController.m */,
-				B9EF053A1865D5A200CF7A38 /* JMPopoverController.h */,
-				B9EF053B1865D5A200CF7A38 /* JMPopoverController.m */,
 				B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */,
 				B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */,
 				B9EF053C1865D5A200CF7A38 /* JMWebViewController.h */,
@@ -501,7 +495,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B933AB3618BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
-				B9EF05571865D5A200CF7A38 /* JMPopoverController.m in Sources */,
 				B9EF05541865D5A200CF7A38 /* JMActionSheet.m in Sources */,
 				B933AB3A18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */,
@@ -520,7 +513,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B933AB3718BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
-				B9EF05691865F18300CF7A38 /* JMPopoverController.m in Sources */,
 				B9EF056B1865F18300CF7A38 /* JMActionSheet.m in Sources */,
 				B933AB3B18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */,

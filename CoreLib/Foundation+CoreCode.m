@@ -1528,7 +1528,7 @@ CONST_KEY(CCDirectoryObserving)
     NSString *path = self.path;
 	NSError *err;
 	NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:&err];
-	assert(c && !err);
+
     return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
