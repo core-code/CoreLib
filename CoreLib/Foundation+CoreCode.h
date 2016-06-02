@@ -390,16 +390,10 @@
 
 @end
 
-
+#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @interface NSMutableOrderedSet <ObjectType> (CoreCode)
 
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *immutableObject;
-
-@end
-
-@interface NSMutableSet <ObjectType> (CoreCode)
-
-@property (readonly, nonatomic) NSSet <ObjectType> *immutableObject;
 
 @end
 
@@ -408,6 +402,15 @@
 @property (readonly, nonatomic) NSMutableOrderedSet <ObjectType> *mutableObject;
 
 @end
+#endif
+
+@interface NSMutableSet <ObjectType> (CoreCode)
+
+@property (readonly, nonatomic) NSSet <ObjectType> *immutableObject;
+
+@end
+
+
 
 @interface NSSet <ObjectType> (CoreCode)
 

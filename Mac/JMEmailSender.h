@@ -60,6 +60,8 @@ typedef enum
 					  subject:(NSString *)subject
 						   to:(NSString *)recipients
 					  timeout:(float)timeout
-			  checkBlocklists:(BOOL)checkBlocklists;
+			  checkBlocklists:(BOOL)checkBlocklists
+					 testOnly:(BOOL)testOnly;
+
 @end
 #endif

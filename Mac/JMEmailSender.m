@@ -216,7 +216,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 //	smtpResult result = kSMTPCGIFailure;
 //
 //#ifdef USE_CGIMAIL
-//	if (result != kSMTPSuccess)	result = [self sendMailWithCGI:content subject:subject to:recipient timeout:60 checkBlocklists:NO];
+//	if (result != kSMTPSuccess)	result = [self sendMailWithCGI:content subject:subject to:recipient timeout:60 checkBlocklists:NO testOnly:NO];
 //#endif
 //
 //#ifdef USE_APPLEMAIL

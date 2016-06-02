@@ -574,6 +574,21 @@ BOOL _isUserAdmin();
 #pragma clang diagnostic pop
 
 #ifdef USE_SYSTEMCONFIGURATION
++ (BOOL)isOnline
+{
+	struct sockaddr_in zeroAddress;
+	bzero(&zeroAddress, sizeof(zeroAddress));
+	zeroAddress.sin_len = sizeof(zeroAddress);
+	zeroAddress.sin_family = AF_INET;
+
+	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&zeroAddress);
+	SCNetworkReachabilityFlags flags;
+	BOOL connected = SCNetworkReachabilityGetFlags(reachability, &flags);
+	BOOL isConnected = connected && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
+	CFRelease(reachability);
+	return isConnected;
+}
+
 + (NSString *)ipName
 {
 	//return [[NSHost currentHost] name]; // [NSHost currentHost]  broken

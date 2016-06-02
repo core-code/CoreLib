@@ -44,6 +44,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 
 
 #ifdef USE_SYSTEMCONFIGURATION // requires linking SystemConfiguration.framework
++ (BOOL)isOnline;
 + (NSString *)ipName;
 #endif
 #ifdef USE_IOKIT // requires linking IOKit.framework
