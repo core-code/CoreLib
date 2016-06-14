@@ -914,10 +914,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSAttributedString *)hyperlinkWithURL:(NSURL *)url
 {
+    NSString *urlstring = url.absoluteString;
 	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
 
 	[attributedString beginEditing];
-	[attributedString addAttribute:NSLinkAttributeName value:url.absoluteString range:self.fullRange];
+	[attributedString addAttribute:NSLinkAttributeName value:urlstring range:self.fullRange];
 	[attributedString addAttribute:NSForegroundColorAttributeName value:makeColor(0, 0, 1, 1) range:self.fullRange];
 	[attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:self.fullRange];
 	[attributedString endEditing];
