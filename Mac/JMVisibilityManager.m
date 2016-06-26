@@ -185,4 +185,15 @@ CONST_KEY(JMVisibilityManagerValue)
 	TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
 	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.dockIcon = nil;
+    self.menubarIcon = nil;
+    self.statusItemMenu = nil;
+    self.menuTooltip = nil;
+
+    [super dealloc];
+}
+#endif
 @end

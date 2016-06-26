@@ -133,7 +133,8 @@ MAKE_MAKER(MutableSet)
 @property (readonly, nonatomic) NSURL *docURL;
 @property (readonly, nonatomic) NSURL *deskURL;
 @property (readonly, nonatomic) NSURL *suppURL;
-@property (readonly, nonatomic) NSURL *homeURL;
+@property (readonly, nonatomic) NSURL *homeURLInsideSandbox;
+@property (readonly, nonatomic) NSURL *homeURLOutsideSandbox;
 // misc
 @property (readonly, nonatomic) NSArray *appCrashLogs;
 @property (readonly, nonatomic) NSArray *appSystemLogEntries;
@@ -228,7 +229,7 @@ extern name ## Key *const k ## name ## Key;
 
 
 // !!!: LOGGING
-#if __has_feature(modules) && (MAC_OS_X_VERSION_MIN_REQUIRED >= 101200)
+#if __has_feature(modules) && ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 101200) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 100000)))
 @import asl;
 #else
 #include <asl.h>

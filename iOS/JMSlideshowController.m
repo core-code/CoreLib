@@ -185,4 +185,17 @@
 	self.pageControl.numberOfPages = self.images.count;
 	self.pageControl.currentPage = self.currentImage;
 }
+
+
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.images = nil;
+    self.navigationTitle = nil;
+    self.imageView = nil;
+    self.pageControl = nil;
+
+    [super dealloc];
+}
+#endif
 @end

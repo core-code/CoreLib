@@ -56,7 +56,9 @@
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request
 		  frame:(WebFrame *)frame decisionListener:(id < WebPolicyDecisionListener >)listener
 {
-	if ([request.URL.absoluteString isEqualToString:self.localHTMLName.resourceURL.absoluteString] ||
+    NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
+
+	if ([request.URL.absoluteString isEqualToString:localHTMLPath] ||
 		[request.URL.absoluteString isEqualToString:self.remoteHTMLURL])
 		[listener use];
 	else
@@ -86,5 +88,16 @@
 		[self.mainFrame loadRequest:self.localHTMLName.resourceURL.request];  // online version failed, fall back to offline
 	}
 }
+
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.localHTMLName = nil;
+    self.remoteHTMLURL = nil;
+    self.zoomFactor = nil;
+
+    [super dealloc];
+}
+#endif
 
 @end

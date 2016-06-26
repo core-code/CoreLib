@@ -17,6 +17,19 @@
 #include <CommonCrypto/CommonDigest.h>
 #endif
 
+#if __has_feature(modules)
+@import Darwin.POSIX.unistd;
+@import Darwin.POSIX.sys.types;
+@import Darwin.POSIX.pwd;
+#include <assert.h>
+#else
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <assert.h>
+#endif
+
+
 
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
@@ -44,7 +57,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURL, appSystemLogEntries
+@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURLInsideSandbox, homeURLOutsideSandbox, appSystemLogEntries
 #ifdef USE_SECURITY
 , appChecksumSHA;
 #else
@@ -291,10 +304,21 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES)[0];
 }
 
-- (NSURL *)homeURL
+- (NSURL *)homeURLInsideSandbox
 {
 	return NSHomeDirectory().fileURL;
 }
+
+- (NSURL *)homeURLOutsideSandbox
+{
+    struct passwd *pw = getpwuid(getuid());
+    assert(pw);
+    NSString *realHomePath = @(pw->pw_dir);
+    NSURL *realHomeURL = [NSURL fileURLWithPath:realHomePath];
+
+    return realHomeURL;
+}
+
 
 - (NSURL *)docURL
 {

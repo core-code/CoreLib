@@ -70,4 +70,14 @@
 	ONCE_PER_OBJECT(self, block);
 }
 
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.localRTFName = nil;
+    self.remoteHTMLURL = nil;
+
+    [super dealloc];
+}
+#endif
+
 @end

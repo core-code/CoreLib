@@ -143,6 +143,15 @@
 	if (!*window)
 		[[NSBundle mainBundle] loadNibNamed:nibName owner:self topLevelObjects:NULL];
 
+	if ([*window frame].size.height > 680)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			asl_NSLog_debug(@"WARNING: opened window with height %i but it should be below 680 (Macbook Air 11) or better below 630 (Macbook 12 native) to fit on every screen", (int)[*window frame].size.height);
+		}
+	}
+
+
 	[NSApp activateIgnoringOtherApps:YES];
 	[*window makeKeyAndOrderFront:self];
 	assert((*window).delegate == (id <NSWindowDelegate>)self);

@@ -73,4 +73,16 @@
 {
 	return OBJECT_OR(self.tmpDelegate, self.webView.delegate);
 }
+
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.url = nil;
+    self.navigationTitle = nil;
+    self.webView = nil;
+    self.tmpDelegate = nil;
+
+    [super dealloc];
+}
+#endif
 @end

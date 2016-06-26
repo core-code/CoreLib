@@ -149,4 +149,20 @@
         self.dismissBlock();
     }
 }
+
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.font = nil;
+    self.topTitle = nil;
+    self.choices = nil;
+    self.detail = nil;
+    self.completionBlock = nil;
+    self.dismissBlock = nil;
+    self.deleteBlock = nil;
+
+    [super dealloc];
+}
+#endif
+
 @end

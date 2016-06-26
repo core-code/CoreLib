@@ -213,6 +213,14 @@ if (OS_IS_POST_10_8)
 @end
 @implementation BlockWrapper
 - (void)invoke:(id)sender { self.block(sender); }
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    self.block = nil;
+
+    [super dealloc];
+}
+#endif
 @end
 
 
