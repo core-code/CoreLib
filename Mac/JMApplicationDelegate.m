@@ -143,7 +143,7 @@
 	if (!*window)
 		[[NSBundle mainBundle] loadNibNamed:nibName owner:self topLevelObjects:NULL];
 
-	if ([*window frame].size.height > 680)
+	if ([*window minSize].height > 680)
 	{
 		for (int i = 0; i < 10; i++)
 		{

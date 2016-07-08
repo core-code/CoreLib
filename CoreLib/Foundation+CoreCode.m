@@ -1383,6 +1383,20 @@ void directoryObservingReleaseCallback(const void *info)
 
 void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
 {
+//	NSMutableArray <NSDictionary *> *tmp = makeMutableArray();
+//	char **paths = eventPaths;
+//	for (NSUInteger i = 0; i < numEvents; i++)
+//	{
+//		char *eventPath = paths[i];
+//
+//		[tmp addObject:@{@"path" : @(eventPath),
+//						 @"flags" : @(eventFlags[i])}];
+//
+//	}
+//
+//	void (^block)(id input) = (__bridge void (^)())(clientCallBackInfo);
+//	block(tmp);
+
 	void (^block)() = (__bridge void (^)())(clientCallBackInfo);
 	block();
 }
