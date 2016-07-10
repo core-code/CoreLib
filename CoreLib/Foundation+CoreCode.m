@@ -278,14 +278,6 @@ CONST_KEY(CoreCodeAssociatedValue)
         return nil;
 }
 
-- (NSString *)safeStringAtIndex:(NSUInteger)index
-{
-    if ([self count] > index)
-        return self[index];
-    else
-        return @"";
-}
-
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value
 {
 	for (NSDictionary *dict in self)
