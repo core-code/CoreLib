@@ -1994,7 +1994,7 @@
 
 @implementation NSTypesetter (Properties)
 
-@dynamic  paragraphSeparatorCharacterRange;
+@dynamic paragraphSeparatorCharacterRange;
 @dynamic typesetterBehavior;
 @dynamic attributesForExtraLineFragment;
 @dynamic currentParagraphStyle;

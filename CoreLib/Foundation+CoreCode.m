@@ -854,13 +854,22 @@ CONST_KEY(CoreCodeAssociatedValue)
     return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
 }
 
-- (BOOL)containsAny:(NSArray *)otherStrings
+- (BOOL)containsAny:(NSArray <NSString *>*)otherStrings
 {
     for (NSString *otherString in otherStrings)
         if ([self rangeOfString:otherString].location != NSNotFound)
             return YES;
 
     return NO;
+}
+
+- (BOOL)containsAll:(NSArray <NSString *>*)otherStrings
+{
+    for (NSString *otherString in otherStrings)
+        if ([self rangeOfString:otherString].location == NSNotFound)
+            return NO;
+
+    return YES;
 }
 
 - (NSString *)localized
@@ -937,7 +946,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements
+- (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements
 {
     NSString *ret = self;
     assert(![self contains:@"k9BBV15zFYi44YyB"]);
@@ -2055,7 +2064,7 @@ CONST_KEY(CCDirectoryObserving)
 		[tmp appendFormat:@"%@ : %@, ", [key literalString], [self[key] literalString]];
 
 	[tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)				// replace trailing ', '
-					   withString:@"}"];									// with terminating ']'
+					   withString:@"}"];									// with terminating '}'
 
 	return tmp;
 }
@@ -2147,7 +2156,7 @@ CONST_KEY(CCDirectoryObserving)
 @end
 
 
-@implementation  NSMutableDictionary (CoreCode)
+@implementation NSMutableDictionary (CoreCode)
 
 @dynamic immutableObject;
 
@@ -2186,7 +2195,7 @@ CONST_KEY(CCDirectoryObserving)
 
 	NSMutableArray *tmp = [NSMutableArray new];
 	
-	for (NSString *twoLetterCode in [NSLocale  preferredLanguages])
+	for (NSString *twoLetterCode in [NSLocale preferredLanguages])
 	{
 		NSString *threeLetterCode = iso2LetterTo3Letter[twoLetterCode];
 
@@ -2260,7 +2269,7 @@ CONST_KEY(CCDirectoryObserving)
 
 
 
-@implementation  NSCharacterSet (CoreCode)
+@implementation NSCharacterSet (CoreCode)
 
 @dynamic stringRepresentation, stringRepresentationLong, mutableObject;
 
@@ -2315,7 +2324,7 @@ CONST_KEY(CCDirectoryObserving)
 @end
 
 
-@implementation  NSMutableCharacterSet (CoreCode)
+@implementation NSMutableCharacterSet (CoreCode)
 
 @dynamic immutableObject;
 
@@ -2326,7 +2335,7 @@ CONST_KEY(CCDirectoryObserving)
 @end
 
 
-@implementation  NSNumber (CoreCode)
+@implementation NSNumber (CoreCode)
 
 @dynamic literalString;
 
@@ -2369,7 +2378,7 @@ CONST_KEY(CCDirectoryObserving)
 #endif
 
 
-@implementation NSMutableSet  (CoreCode)
+@implementation NSMutableSet (CoreCode)
 
 @dynamic immutableObject;
 

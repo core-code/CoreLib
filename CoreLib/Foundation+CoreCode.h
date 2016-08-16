@@ -184,8 +184,9 @@
 - (NSUInteger)countOccurencesOfString:(NSString *)str;
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;
-- (BOOL)containsAny:(NSArray *)otherStrings;
-- (NSString *)stringByReplacingMultipleStrings:(NSDictionary *)replacements;
+- (BOOL)containsAny:(NSArray <NSString *>*)otherStrings;
+- (BOOL)containsAll:(NSArray <NSString *>*)otherStrings;
+- (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;
 
