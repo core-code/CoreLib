@@ -1185,7 +1185,8 @@ CONST_KEY(CoreCodeAssociatedValue)
 {	// credits to Drew McCormack
     NSMutableArray *rows = [NSMutableArray array];
 
-    NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *whitespaceCharacterSet = [NSMutableCharacterSet whitespaceCharacterSet];
+    [whitespaceCharacterSet removeCharactersInString:delimiter];
     NSMutableCharacterSet *newlineCharacterSetMutable = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
     [newlineCharacterSetMutable formIntersectionWithCharacterSet:[whitespaceCharacterSet invertedSet]];
     NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
