@@ -270,6 +270,7 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define OS_IS_POST_10_8			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
 #define OS_IS_POST_10_9			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
 #define OS_IS_POST_10_10		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_11)
+#define OS_IS_POST_10_11		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_12)
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
@@ -300,6 +301,9 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #endif
 #ifndef NSAppKitVersionNumber10_11
 #define NSAppKitVersionNumber10_11 1404.11
+#endif
+#ifndef NSAppKitVersionNumber10_12
+#define NSAppKitVersionNumber10_12 1504
 #endif
 #if ! __has_feature(objc_arc)
 #define BRIDGE

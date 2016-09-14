@@ -540,13 +540,21 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSImage *)namedImage
 {
     NSImage *image = [NSImage imageNamed:self];
+
+	if (!image)
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: there is no named image with name: %@", self);
+
     return image;
 }
 #else
 - (UIImage *)namedImage
 {
     UIImage *image = [UIImage imageNamed:self];
-    return image;
+
+	if (!image)
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: there is no named image with name: %@", self);
+
+	return image;
 }
 #endif
 
