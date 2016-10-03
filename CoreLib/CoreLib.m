@@ -545,21 +545,22 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
                   makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails),
 				  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
 		{
-			NSString *mailtoLink = makeString(@"mailto:feedback@corecode.at?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n Messages: %@\n",
-											  cc.appName,
-											  cc.appVersionString,
-											  cc.appBuildNumber,
-											  cc.appChecksumSHA,
-											  fatal ? @"fatal" : @"",
-											  cc.appName,
-											  usermsg,
-											  details,
-											  _machineType(),
-											  [[NSProcessInfo processInfo] operatingSystemVersionString],
-											  _isUserAdmin(),
-											  ([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
-                                              encodedPrefs,
-											  cc.appSystemLogEntries);
+			NSString *mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n Messages: %@\n",
+											kFeedbackEmail,
+											cc.appName,
+											cc.appVersionString,
+											cc.appBuildNumber,
+											cc.appChecksumSHA,
+											fatal ? @"fatal" : @"",
+											cc.appName,
+											usermsg,
+											details,
+											_machineType(),
+											[[NSProcessInfo processInfo] operatingSystemVersionString],
+											_isUserAdmin(),
+											([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
+                                            encodedPrefs,
+											cc.appSystemLogEntries);
 			
 			[mailtoLink.escaped.URL open];
 		}
