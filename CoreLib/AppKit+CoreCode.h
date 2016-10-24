@@ -17,11 +17,11 @@
 
 @interface NSWindow (CoreCode)
 
-- (void)setProgressMessage:(NSString *)message;
-- (void)beginProgress:(NSString *)title;
+- (void)setProgressMessage:(NSString * _Nullable)message;
+- (void)beginProgress:(NSString * _Nullable)title;
 - (void)endProgress;
 
-- (IBAction)performBorderlessClose:(id)sender;
+- (IBAction)performBorderlessClose:(id _Nullable)sender;
 
 
 @end
@@ -29,9 +29,11 @@
 
 @interface NSView (CoreCode)
 
-- (NSView *)viewWithClass:(Class)classofview;
+- (nonnull __kindof NSView *)assertedViewWithTag:(NSInteger)tag;
 
-- (NSArray <NSView *> *)allSubviews;
+- (NSView * _Nullable)viewWithClass:(Class _Nonnull)classofview;
+
+- (NSArray <NSView *> * _Nonnull)allSubviews;
 
 @end
 
@@ -46,7 +48,7 @@
 
 @interface NSControl (NSControl_BlockAction)
 
-@property (copy, nonatomic) ObjectInBlock actionBlock;
+@property (copy, nonatomic) ObjectInBlock _Nullable actionBlock;
 
 @end
 

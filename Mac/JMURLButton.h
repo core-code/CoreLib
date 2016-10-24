@@ -1,8 +1,8 @@
 //
-//  JMRTFView.h
+//  JMURLButton.h
 //  CoreLib
 //
-//  Created by CoreCode on 06.03.15.
+//  Created by CoreCode on 07/10/2016.
 /*	Copyright (c) 2016 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -12,10 +12,11 @@
 
 #import "CoreLib.h"
 
+@interface JMURLButton : NSButton
 
-@interface JMRTFView : NSTextView
-
-@property (strong, nonatomic) IBInspectable NSString *localRTFName;	// this is loaded first
-@property (strong, nonatomic) IBInspectable NSString *remoteHTMLURL;	// if this is set and internet is online the contents are replaced with the live version
+@property (strong, nonatomic) IBInspectable NSString *targetURL;
+@property (strong, nonatomic) IBInspectable NSString *escapedTargetURL;
+@property (strong, nonatomic) IBInspectable NSString *resourceURL;
+@property (strong, nonatomic) IBInspectable NSString *fileURL;
 
 @end

@@ -186,6 +186,7 @@
 - (BOOL)contains:(NSString *)otherString;
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings;
 - (BOOL)containsAll:(NSArray <NSString *>*)otherStrings;
+- (BOOL)equalsAny:(NSArray <NSString *>*)otherStrings;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 //- (NSString *)arg:(id)arg, ...;

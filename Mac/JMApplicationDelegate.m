@@ -61,6 +61,8 @@
 
 - (void)increaseUsages:(int)allowReviewLimit requestReview:(int)requestReviewLimit feedbackText:(NSString *)feedbackText
 {
+#warning TODO this needs to be changed to ask the user if he is happy and either point him to support channels or ask for rating on the mac app store
+    
 	self.minimumUsagesForRating = allowReviewLimit;
 
 	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + 1;
@@ -141,9 +143,9 @@
 	LOGFUNCPARAM(nibName);
 
 	if (!*window)
-		[[NSBundle mainBundle] loadNibNamed:nibName owner:self topLevelObjects:NULL];
+		[NSBundle.mainBundle loadNibNamed:nibName owner:self topLevelObjects:NULL];
 
-	if ([*window minSize].height > 680)
+	if ((*window).minSize.height > 680)
 	{
 		for (int i = 0; i < 10; i++)
 		{

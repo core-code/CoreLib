@@ -871,6 +871,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return NO;
 }
 
+
 - (BOOL)containsAll:(NSArray <NSString *>*)otherStrings
 {
     for (NSString *otherString in otherStrings)
@@ -878,6 +879,15 @@ CONST_KEY(CoreCodeAssociatedValue)
             return NO;
 
     return YES;
+}
+
+- (BOOL)equalsAny:(NSArray <NSString *>*)otherStrings
+{
+    for (NSString *otherString in otherStrings)
+        if ([self isEqualToString:otherString])
+            return YES;
+    
+    return NO;
 }
 
 - (NSString *)localized

@@ -1,8 +1,8 @@
 //
-//  JMRTFView.h
+//  JMURLButton.m
 //  CoreLib
 //
-//  Created by CoreCode on 06.03.15.
+//  Created by CoreCode on 07/10/2016.
 /*	Copyright (c) 2016 CoreCode
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -10,12 +10,42 @@
  */
 
 
-#import "CoreLib.h"
+#import "JMURLButton.h"
 
+@implementation JMURLButton
 
-@interface JMRTFView : NSTextView
+- (instancetype)initWithFrame:(NSRect)frameRect
+{
+    if ((self = [super initWithFrame:frameRect]))
+    {
+        self.target = self;
+        self.action = @selector(buttonClicked:);
+    }
+    return self;
+}
 
-@property (strong, nonatomic) IBInspectable NSString *localRTFName;	// this is loaded first
-@property (strong, nonatomic) IBInspectable NSString *remoteHTMLURL;	// if this is set and internet is online the contents are replaced with the live version
+- (nullable instancetype)initWithCoder:(NSCoder *)coder
+{
+    if ((self = [super initWithCoder:coder]))
+    {
+        self.target = self;
+        self.action = @selector(buttonClicked:);
+    }
+    return self;
+}
+
+- (void)buttonClicked:(NSButton *)button
+{
+    if (self.targetURL.length)
+        [self.targetURL.URL open];
+    else if (self.escapedTargetURL.length)
+        [self.escapedTargetURL.escaped.URL open];
+    else if (self.resourceURL.length)
+        [self.resourceURL.resourceURL open];
+    else if (self.fileURL.length)
+        [self.fileURL.fileURL open];
+    else
+        asl_NSLog(ASL_LEVEL_INFO, @"JMURLButton clicked but no data!");
+}
 
 @end

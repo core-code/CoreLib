@@ -24,6 +24,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		B90B0D351DA7F64D000CA590 /* JMURLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B0D341DA7F64D000CA590 /* JMURLButton.m */; };
+		B90B0D361DA7F64D000CA590 /* JMURLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B0D341DA7F64D000CA590 /* JMURLButton.m */; };
 		B90E8DF31B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */; };
 		B90E8DF41B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */; };
 		B90E8DF51B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */; };
@@ -134,6 +136,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B90B0D331DA7F64D000CA590 /* JMURLButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMURLButton.h; sourceTree = "<group>"; };
+		B90B0D341DA7F64D000CA590 /* JMURLButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMURLButton.m; sourceTree = "<group>"; };
 		B90E8DD71B1787B1007C0FB4 /* JMApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMApplicationDelegate.h; sourceTree = "<group>"; };
 		B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMApplicationDelegate.m; sourceTree = "<group>"; };
 		B90E8DD91B1787B1007C0FB4 /* JMAppMovedHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMAppMovedHandler.h; sourceTree = "<group>"; };
@@ -348,6 +352,8 @@
 				B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */,
 				B90E8DF11B1787B1007C0FB4 /* JMWebView.h */,
 				B90E8DF21B1787B1007C0FB4 /* JMWebView.m */,
+				B90B0D331DA7F64D000CA590 /* JMURLButton.h */,
+				B90B0D341DA7F64D000CA590 /* JMURLButton.m */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -429,7 +435,7 @@
 		B9EF04F21865D42C00CF7A38 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = CoreCode;
 				TargetAttributes = {
 					B9EF05141865D42C00CF7A38 = {
@@ -546,6 +552,7 @@
 				B90E8E091B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
 				B97A5E941CC1536C00201C2C /* JMBlockFormatter.m in Sources */,
 				B90E8E0D1B1787B1007C0FB4 /* JMWebView.m in Sources */,
+				B90B0D351DA7F64D000CA590 /* JMURLButton.m in Sources */,
 				B90E8E071B1787B1007C0FB4 /* JMRTFView.m in Sources */,
 				B90E8E011B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */,
 				B90E8DF71B1787B1007C0FB4 /* JMClickableImageView.m in Sources */,
@@ -574,6 +581,7 @@
 				B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
 				B97A5E951CC1536C00201C2C /* JMBlockFormatter.m in Sources */,
 				B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */,
+				B90B0D361DA7F64D000CA590 /* JMURLButton.m in Sources */,
 				B90E8E081B1787B1007C0FB4 /* JMRTFView.m in Sources */,
 				B90E8E021B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */,
 				B90E8DF81B1787B1007C0FB4 /* JMClickableImageView.m in Sources */,
@@ -621,9 +629,11 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -683,9 +693,11 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

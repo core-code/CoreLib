@@ -102,12 +102,11 @@ CONST_KEY(CCProgressIndicator)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic ignored "-Wpartial-availability"
-if (OS_IS_POST_10_8)
+        if (OS_IS_POST_10_8)
             [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
         else
             [NSApp beginSheet:progressPanel modalForWindow:self
                 modalDelegate:nil didEndSelector:nil contextInfo:NULL];
-
 #pragma clang diagnostic pop
 
 		[progressIndicator startAnimation:self];
@@ -138,7 +137,6 @@ if (OS_IS_POST_10_8)
 		[self setAssociatedValue:nil forKey:kCCProgressIndicatorKey];
 	});
 }
-
 
 - (IBAction)performBorderlessClose:(id)sender
 {
@@ -179,6 +177,14 @@ if (OS_IS_POST_10_8)
 	return allSubviews.immutableObject;
 }
 
+- (nonnull __kindof NSView *)assertedViewWithTag:(NSInteger)tag
+{
+    __kindof NSView *view = [self viewWithTag:tag];
+    
+    assert(view);
+    
+    return view;
+}
 
 @end
 
