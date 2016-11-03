@@ -1204,10 +1204,10 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSMutableArray *rows = [NSMutableArray array];
 
     NSMutableCharacterSet *whitespaceCharacterSet = [NSMutableCharacterSet whitespaceCharacterSet];
-    [whitespaceCharacterSet removeCharactersInString:delimiter];
     NSMutableCharacterSet *newlineCharacterSetMutable = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
     [newlineCharacterSetMutable formIntersectionWithCharacterSet:[whitespaceCharacterSet invertedSet]];
-    NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
+	[whitespaceCharacterSet removeCharactersInString:delimiter];
+	NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
     NSMutableCharacterSet *importantCharactersSetMutable = [NSMutableCharacterSet characterSetWithCharactersInString:[delimiter stringByAppendingString:@"\""]];
     [importantCharactersSetMutable formUnionWithCharacterSet:newlineCharacterSet];
     NSCharacterSet *importantCharactersSet = [NSCharacterSet characterSetWithBitmapRepresentation:[importantCharactersSetMutable bitmapRepresentation]];
@@ -1239,7 +1239,7 @@ CONST_KEY(CoreCodeAssociatedValue)
             }
             else if ([scanner scanCharactersFromSet:newlineCharacterSet intoString:&tempString])
             {
-                if (insideQuotes)
+                if (insideQuotes) 
                 {
                     [currentColumn appendString:tempString];
                 }
