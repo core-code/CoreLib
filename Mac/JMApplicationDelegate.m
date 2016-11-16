@@ -61,8 +61,6 @@
 
 - (void)increaseUsages:(int)allowReviewLimit requestReview:(int)requestReviewLimit feedbackText:(NSString *)feedbackText
 {
-#warning TODO this needs to be changed to ask the user if he is happy and either point him to support channels or ask for rating on the mac app store
-    
 	self.minimumUsagesForRating = allowReviewLimit;
 
 	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + 1;
