@@ -21,7 +21,8 @@
 
 	sv.borderType = NSBezelBorder;
 
-	if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
+	if ((self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f)) ||
+        self.disableScrolling)
 	{
 		sv.hasHorizontalScroller = NO;
 		sv.hasVerticalScroller = NO;
