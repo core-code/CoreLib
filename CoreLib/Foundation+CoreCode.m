@@ -403,6 +403,9 @@ CONST_KEY(CoreCodeAssociatedValue)
 	[task setStandardError:taskPipe];
 	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
 
+	if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
+		asl_NSLog(ASL_LEVEL_ERR, @"Error: task argument size approaching or above limit, spawn will fail");
+
     @try
     {
         [task launch];

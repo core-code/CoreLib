@@ -570,17 +570,34 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 		if (fatal)
 		{
 			NSString *title = makeString(@"%@ Fatal Error", cc.appName);
+			mailtoLink  = [mailtoLink clamp:100000]; // will expand to twice the size and kern.argmax: 262144 causes NSTask with too long arguments to 'silently' fail with a posix spawn error 7
 			NSDictionary *dict = @{@"title" : title, @"message" : message, @"mailto" : mailtoLink};
 			NSData *dictjsondata = dict.JSONData;
 			NSString *dictjsondatahexstring = dictjsondata.hexString;
 			NSString *crashhelperpath = @[cc.resDir, @"CrashHelper.app/Contents/MacOS/CrashHelper"].path;
 			NSTask *taskApp = [[NSTask alloc] init];
 
-			taskApp.launchPath = crashhelperpath;
-			taskApp.arguments = @[dictjsondatahexstring];
 
-			[taskApp launch];
-			[taskApp waitUntilExit];
+			
+			@try
+			{
+				taskApp.launchPath = crashhelperpath;
+				taskApp.arguments = @[dictjsondatahexstring];
+
+				[taskApp launch];
+				[taskApp waitUntilExit];
+			}
+			@catch (NSException *exception)
+			{
+				asl_NSLog(ASL_LEVEL_ERR, @"could not spawn crash helper %@", exception.userInfo);
+
+				if (alert(fatal ? @"Fatal Error" : @"Error",
+						  message,
+						  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+				{
+					[mailtoLink.escaped.URL open];
+				}
+			}
 		}
 		else
 #endif
