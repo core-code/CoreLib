@@ -536,39 +536,72 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #endif
 #endif
 
-
-        NSString *visibleDetails = details;
-        if (visibleDetails.length > maxLen)
-            visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
-
-		if (alert(fatal ? @"Fatal Error" : @"Error",
-                  makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails),
-				  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+		NSString *visibleDetails = details;
+		if (visibleDetails.length > maxLen)
+			visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
+		NSString *message = makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails);
+		NSString *mailtoLink = @"";
+		@try
 		{
-			NSString *mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n Messages: %@\n",
-											kFeedbackEmail,
-											cc.appName,
-											cc.appVersionString,
-											cc.appBuildNumber,
-											cc.appChecksumSHA,
-											fatal ? @"fatal" : @"",
-											cc.appName,
-											usermsg,
-											details,
-											_machineType(),
-											[[NSProcessInfo processInfo] operatingSystemVersionString],
-											_isUserAdmin(),
-											([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
-                                            encodedPrefs,
-											cc.appSystemLogEntries);
-			
-			[mailtoLink.escaped.URL open];
+			mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n Messages: %@\n",
+												kFeedbackEmail,
+												cc.appName,
+												cc.appVersionString,
+												cc.appBuildNumber,
+												cc.appChecksumSHA,
+												fatal ? @"fatal" : @"",
+												cc.appName,
+												usermsg,
+												details,
+												_machineType(),
+												[[NSProcessInfo processInfo] operatingSystemVersionString],
+												_isUserAdmin(),
+												([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
+												encodedPrefs,
+												cc.appSystemLogEntries);
+
+		}
+		@catch (NSException *)
+		{
+		}
+
+
+#if defined(USE_CRASHHELPER) && USE_CRASHHELPER
+		if (fatal)
+		{
+			NSString *title = makeString(@"%@ Fatal Error", cc.appName);
+			NSDictionary *dict = @{@"title" : title, @"message" : message, @"mailto" : mailtoLink};
+			NSData *dictjsondata = dict.JSONData;
+			NSString *dictjsondatahexstring = dictjsondata.hexString;
+			NSString *crashhelperpath = @[cc.resDir, @"CrashHelper.app/Contents/MacOS/CrashHelper"].path;
+			NSTask *taskApp = [[NSTask alloc] init];
+
+			taskApp.launchPath = crashhelperpath;
+			taskApp.arguments = @[dictjsondatahexstring];
+
+			[taskApp launch];
+			[taskApp waitUntilExit];
+		}
+		else
+#endif
+		{
+			if (alert(fatal ? @"Fatal Error" : @"Error",
+					  message,
+					  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+			{
+				[mailtoLink.escaped.URL open];
+			}
 		}
 
 		if (fatal)
 			exit(1);
     };
-    
+
+
+
+
+
+
 
 	dispatch_sync_main(block);
 }
