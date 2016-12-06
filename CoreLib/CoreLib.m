@@ -110,24 +110,24 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
     #ifdef DEBUG
 		#ifndef XCTEST
-		BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
+            BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
 
-		#ifdef SANDBOX
-            assert(isSandbox);
-        #else
-            assert(!isSandbox);
-        #endif
+            #ifdef SANDBOX
+                assert(isSandbox);
+            #else
+                assert(!isSandbox);
+            #endif
 		#endif
 
         #ifdef NDEBUG
             LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
         #endif
 
-#if !defined(XCTEST) || !XCTEST
-        NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-        if (![[self appBundleIdentifier] isEqualToString:bundleID])
-            exit(666);
-#endif
+        #if !defined(XCTEST) || !XCTEST
+            NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+            if (![[self appBundleIdentifier] isEqualToString:bundleID])
+                exit(666);
+        #endif
 
         if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
             ![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
@@ -151,6 +151,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         #endif
     #endif
 
+        
     #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     #ifndef DONT_CRASH_ON_EXCEPTIONS
         NSSetUncaughtExceptionHandler(&exceptionHandler);
@@ -170,6 +171,26 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                 alert_apptitled(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.", @"OK", nil, nil);
                 exit(0);
             }
+#ifdef DEBUG
+            NSString *versionsPath = makeString(@"%@/%@/Versions", frameworkPath, framework);
+            for (NSString *versionsEntry in versionsPath.dirContents)
+            {
+                if ((![versionsEntry isEqualToString:@"A"]) && (![versionsEntry isEqualToString:@"Current"]))
+                {
+                    asl_NSLog(ASL_LEVEL_ERR, @"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
+                    exit(0);
+                }
+            }
+            NSString *versionAPath = makeString(@"%@/%@/Versions/A", frameworkPath, framework);
+            for (NSString *entry in versionAPath.dirContents)
+            {
+                if (([entry isEqualToString:@"headers"]) && (![entry isEqualToString:@"resources"]))
+                {
+                    asl_NSLog(ASL_LEVEL_ERR, @"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
+                    exit(0);
+                }
+            }
+#endif
         }
     #endif
     }
@@ -1039,7 +1060,19 @@ void asl_NSLog(int level, NSString *format, ...)
 	[str release];
 #endif
 }
+void log_to_prefs(NSString *str)
+{
+    static int lastPosition = 0;
 
+    NSString *key = makeString(@"corelib_logtoprefs_pos%i", lastPosition);
+
+    key.defaultString = makeString(@"date: %@ message: %@", NSDate.date.description, str);
+
+    lastPosition++;
+
+    if (lastPosition > 42)
+        lastPosition = 0;
+}
 
 // gcd convenience
 void dispatch_after_main(float seconds, dispatch_block_t block)

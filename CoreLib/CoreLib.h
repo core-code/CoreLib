@@ -233,6 +233,7 @@ extern name ## Key *const k ## name ## Key;
 #else
 #include <asl.h>
 #endif
+void log_to_prefs(NSString *string);
 void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG
   #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_NOTICE, __VA_ARGS__ )

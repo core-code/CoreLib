@@ -169,6 +169,7 @@
 @property (readonly, nonatomic) BOOL isIntegerNumberOnly;
 @property (readonly, nonatomic) BOOL isFloatNumber;
 @property (readonly, nonatomic) BOOL isValidEmail;
+@property (readonly, nonatomic) BOOL isValidEmails;
 @property (readonly, nonatomic) BOOL isNumber;
 
 

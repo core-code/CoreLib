@@ -436,7 +436,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0800;
-				ORGANIZATIONNAME = CoreCode;
+				ORGANIZATIONNAME = "CoreCode Limited";
 				TargetAttributes = {
 					B9EF05141865D42C00CF7A38 = {
 						TestTargetID = B9EF04F91865D42C00CF7A38;

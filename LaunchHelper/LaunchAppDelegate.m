@@ -3,7 +3,7 @@
 //  LaunchHelper
 //
 //  Created by CoreCode on 12.04.12.
-//  Copyright (c) 2012 CoreCode. All rights reserved.
+//  Copyright (c) 2016 CoreCode Limited. All rights reserved.
 //
 
 #import "LaunchAppDelegate.h"

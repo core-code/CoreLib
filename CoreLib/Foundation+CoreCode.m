@@ -747,6 +747,15 @@ CONST_KEY(CoreCodeAssociatedValue)
     return YES;
 }
 
+- (BOOL)isValidEmails
+{
+    for (NSString *line in self.lines)
+        if (!line.isValidEmail)
+            return NO;
+    
+    return YES;
+}
+
 - (BOOL)isValidEmail
 {
     if (self.length > 254)
