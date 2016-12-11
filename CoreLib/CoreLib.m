@@ -848,11 +848,11 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 	NSButtonCell *thepushbutton = [[NSButtonCell alloc] init];
 	[thepushbutton setButtonType:NSRadioButton];
 
-	NSMatrix *thepushbuttons = [[NSMatrix alloc]initWithFrame:NSMakeRect(0,0,269,17 * choices.count)
-											   mode:NSRadioModeMatrix
-										  prototype:thepushbutton
-									   numberOfRows:(int)choices.count
-									numberOfColumns:1];
+	NSMatrix *thepushbuttons = [[NSMatrix alloc] initWithFrame:NSMakeRect(0,0,269,17 * choices.count)
+                                                          mode:NSRadioModeMatrix
+                                                     prototype:thepushbutton
+                                                  numberOfRows:(int)choices.count
+                                               numberOfColumns:1];
 
 	for (NSUInteger i = 0; i < choices.count; i++)
 	{
