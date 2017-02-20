@@ -88,6 +88,7 @@
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
+	LOGFUNC;
 
 	asl_NSLog(ASL_LEVEL_ERR, @"Warning: this version will expire");
 	
