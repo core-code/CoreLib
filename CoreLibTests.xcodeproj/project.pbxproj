@@ -166,6 +166,7 @@
 		B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMVisibilityManager.m; sourceTree = "<group>"; };
 		B90E8DF11B1787B1007C0FB4 /* JMWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebView.h; sourceTree = "<group>"; };
 		B90E8DF21B1787B1007C0FB4 /* JMWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWebView.m; sourceTree = "<group>"; };
+		B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CoreLibTests.xcconfig; sourceTree = "<group>"; };
 		B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
 		B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
 		B933AB2118BBDFA1006E42B9 /* AppKit+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+Properties.h"; sourceTree = "<group>"; };
@@ -269,6 +270,7 @@
 		B9EF04F11865D42C00CF7A38 = {
 			isa = PBXGroup;
 			children = (
+				B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */,
 				B9EF05631865EEF600CF7A38 /* CoreLibTests.h */,
 				B9EF052C1865D57400CF7A38 /* CoreLibTests.m */,
 				B9EF059E1865F24800CF7A38 /* Mac */,
@@ -439,7 +441,14 @@
 				ORGANIZATIONNAME = "CoreCode Limited";
 				TargetAttributes = {
 					B9EF05141865D42C00CF7A38 = {
+						DevelopmentTeam = 9D78DG5ACV;
 						TestTargetID = B9EF04F91865D42C00CF7A38;
+					};
+					B9EF05641865F18300CF7A38 = {
+						DevelopmentTeam = 9D78DG5ACV;
+					};
+					B9EF05DA1865F53600CF7A38 = {
+						DevelopmentTeam = 9D78DG5ACV;
 					};
 				};
 			};
@@ -739,6 +748,7 @@
 		};
 		B9EF052A1865D42C00CF7A38 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -757,6 +767,7 @@
 		};
 		B9EF052B1865D42C00CF7A38 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -771,6 +782,7 @@
 		};
 		B9EF057E1865F18300CF7A38 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -788,6 +800,7 @@
 		};
 		B9EF057F1865F18300CF7A38 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -875,6 +888,7 @@
 		};
 		B9EF05DC1865F53600CF7A38 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -882,6 +896,7 @@
 		};
 		B9EF05DD1865F53600CF7A38 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

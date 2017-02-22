@@ -42,7 +42,7 @@
     
     CGFloat ourWidth;
     
-    if (IS_DOUBLE_EQUAL(self.minWidth,self.maxWidth))
+    if (IS_DOUBLE_EQUAL((double)self.minWidth,(double)self.maxWidth))
         ourWidth = self.minWidth;
     else
     {

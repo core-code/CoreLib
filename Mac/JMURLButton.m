@@ -48,4 +48,16 @@
         asl_NSLog(ASL_LEVEL_INFO, @"JMURLButton clicked but no data!");
 }
 
+#if ! __has_feature(objc_arc)
+- (void)dealloc
+{
+    [_targetURL release];
+    [_escapedTargetURL release];
+    [_resourceURL release];
+    [_fileURL release];
+
+    [super dealloc];
+}
+#endif
+
 @end

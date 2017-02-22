@@ -17,8 +17,8 @@
 
 @interface NSWindow (CoreCode)
 
-- (void)setProgressMessage:(NSString * _Nullable)message;
-- (void)beginProgress:(NSString * _Nullable)title;
+- (void)setProgressMessage:(NSString * _Nonnull)message;
+- (void)beginProgress:(NSString * _Nonnull)title;
 - (void)endProgress;
 
 - (IBAction)performBorderlessClose:(id _Nullable)sender;

@@ -131,11 +131,9 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
 
 					NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", email, subject, body];
-					CFStringRef urlstring = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)mailtoLink, NULL, NULL, kCFStringEncodingUTF8);
-					NSURL *url = [NSURL URLWithString:(__bridge NSString *)urlstring];
 
-					CFRelease(urlstring);
-					if (![[NSWorkspace sharedWorkspace] openURL:url])
+
+					if (![[NSWorkspace sharedWorkspace] openURL:mailtoLink.escaped.URL])
 						asl_NSLog(ASL_LEVEL_WARNING, @"Warning: %@ was unable to open the URL.", cc.appName);
 
 				}

@@ -1101,7 +1101,7 @@ void dispatch_async_back(dispatch_block_t block)
 void dispatch_sync_main(dispatch_block_t block)
 {
 	if ([NSThread currentThread] == [NSThread mainThread])
-		block();	// this would deadlock when performed with dispatch_sync
+		block();	// using with dispatch_sync would deadlock when on the main thread
 	else
 		dispatch_sync(dispatch_get_main_queue(), block);
 }
@@ -1110,6 +1110,15 @@ void dispatch_sync_back(dispatch_block_t block)
 {
 	dispatch_sync(dispatch_get_global_queue(0, 0), block);
 }
+#if ((MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 80000))
+BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds) // returns 0 on succ
+{
+    dispatch_block_t newblock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS, block);
+    dispatch_async(dispatch_get_global_queue(0, 0), newblock);
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeoutSeconds * NSEC_PER_SEC));
+    return dispatch_block_wait(newblock, popTime) != 0;
+}
+#endif
 
 // private
 #if __has_feature(modules)
