@@ -466,23 +466,21 @@ typedef enum MailTypeOfAccount MailTypeOfAccount;
 
 @property (copy) id deliveryAccount;  // The delivery account used when sending mail from this account
 @property (copy) NSString *name;  // The name of an account
+- (NSString *) id;  // The unique identifier of the account
 @property (copy) NSString *password;  // Password for this account. Can be set, but not read via scripting
 @property MailAuthentication authentication;  // Preferred authentication scheme for account
 @property (readonly) MailTypeOfAccount accountType;  // The type of an account
 @property (copy) NSArray<NSString *> *emailAddresses;  // The list of email addresses configured for an account
 @property (copy) NSString *fullName;  // The users full name configured for an account
 @property NSInteger emptyJunkMessagesFrequency;  // Number of days before junk messages are deleted (0 = delete on quit, -1 = never delete)
-@property NSInteger emptySentMessagesFrequency;  // Number of days before archived sent messages are deleted (0 = delete on quit, -1 = never delete)
 @property NSInteger emptyTrashFrequency;  // Number of days before messages in the trash are permanently deleted (0 = delete on quit, -1 = never delete)
 @property BOOL emptyJunkMessagesOnQuit;  // Indicates whether the messages in the junk messages mailboxes will be deleted on quit
-@property BOOL emptySentMessagesOnQuit;  // Indicates whether the messages in the sent messages mailboxes will be deleted on quit
 @property BOOL emptyTrashOnQuit;  // Indicates whether the messages in deleted messages mailboxes will be permanently deleted on quit
 @property BOOL enabled;  // Indicates whether the account is enabled or not
 @property (copy) NSString *userName;  // The user name used to connect to an account
 @property (copy, readonly) NSURL *accountDirectory;  // The directory where the account stores things on disk
 @property NSInteger port;  // The port used to connect to an account
 @property (copy) NSString *serverName;  // The host name used to connect to an account
-@property BOOL includeWhenGettingNewMail;  // Indicates whether the account will be included when getting new mail
 @property BOOL moveDeletedMessagesToTrash;  // Indicates whether messages that are deleted will be moved to the trash mailbox
 @property BOOL usesSsl;  // Indicates whether SSL is enabled for this receiving account
 

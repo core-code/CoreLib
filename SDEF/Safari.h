@@ -89,7 +89,6 @@ typedef enum SafariEnum SafariEnum;
 
 @end
 
-
 // A window.
 @interface SafariWindow : SafariItem
 
