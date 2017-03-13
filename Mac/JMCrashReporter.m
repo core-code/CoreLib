@@ -134,14 +134,14 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
 
 					if (![[NSWorkspace sharedWorkspace] openURL:mailtoLink.escaped.URL])
-						asl_NSLog(ASL_LEVEL_WARNING, @"Warning: %@ was unable to open the URL.", cc.appName);
+						cc_log_error(@"Warning: %@ was unable to open the URL.", cc.appName);
 
 				}
 				else if (code == NSAlertSecondButtonReturn)
 					[[NSUserDefaults standardUserDefaults] setInteger:1 forKey:kNeverCheckCrashesKey];
 
 				if (![[NSUserDefaultsController sharedUserDefaultsController] commitEditing])
-					asl_NSLog(ASL_LEVEL_WARNING, @"Warning: shared user defaults controller could not commit editing");
+					cc_log_error(@"Warning: shared user defaults controller could not commit editing");
 
 #if ! __has_feature(objc_arc)
 				[crashlogsource release]; 

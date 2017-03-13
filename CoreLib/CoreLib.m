@@ -78,11 +78,6 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         cc = self;
 
 
-
-        
-    #ifdef DEBUG
-        asl_add_log_file(NULL, STDERR_FILENO);
-    #endif
         userDefaults = [NSUserDefaults standardUserDefaults];
         fileManager = [NSFileManager defaultManager];
         notificationCenter = [NSNotificationCenter defaultCenter];
@@ -131,23 +126,23 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
             ![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
-            asl_NSLog_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
+            cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 
         if (![[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-            asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
+            cc_log_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
 
         if ([[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
-            asl_NSLog_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
+            cc_log_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
 
         if (![[[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-            asl_NSLog_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
+            cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
         if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
             LOG(@"Warning: LSApplicationCategoryType not properly set");
     #else
         #ifndef NDEBUG
-            asl_NSLog(ASL_LEVEL_WARNING, @"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");
+            cc_log_error(@"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");
         #endif
     #endif
 
@@ -177,7 +172,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             {
                 if ((![versionsEntry isEqualToString:@"A"]) && (![versionsEntry isEqualToString:@"Current"]))
                 {
-                    asl_NSLog(ASL_LEVEL_ERR, @"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
+                    cc_log_error(@"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
                     exit(0);
                 }
             }
@@ -186,7 +181,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             {
                 if (([entry isEqualToString:@"headers"]) && (![entry isEqualToString:@"resources"]))
                 {
-                    asl_NSLog(ASL_LEVEL_ERR, @"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
+                    cc_log_error(@"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
                     exit(0);
                 }
             }
@@ -219,67 +214,6 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
 }
-
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-- (NSArray <NSString *> *)appSystemLogEntries
-{
-#ifndef SANDBOX
-	NSMutableArray <NSString *>*messages = makeMutableArray();
-
-#if ! __has_feature(objc_arc)
-	[messages autorelease];
-#endif
-	aslmsg query = asl_new(ASL_TYPE_QUERY);
-
-	if (asl_set_query(query, ASL_KEY_SENDER, cc.appName.UTF8String , (ASL_QUERY_OP_EQUAL | ASL_QUERY_OP_SUBSTRING | ASL_QUERY_OP_CASEFOLD))) return nil;
-
-	aslresponse response = asl_search(NULL, query);
-
-	asl_free(query);
-
-	aslmsg msg;
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-
-    if (OS_IS_POST_10_9)
-    {
-        while ((msg = asl_next(response)))
-        {
-            const char *m = asl_get(msg, ASL_KEY_MSG);
-			NSDate *time = [NSDate dateWithTimeIntervalSince1970:@(asl_get(msg, ASL_KEY_TIME)).doubleValue];
-			NSString *line = makeString(@"%@: %@", time.description, @(m));
-
-            [messages addObject:line];
-        }
-    }
-    else
-    {
-        while ((msg = aslresponse_next(response)))
-        {
-            const char *m = asl_get(msg, ASL_KEY_MSG);
-			NSDate *time = [NSDate dateWithTimeIntervalSince1970:@(asl_get(msg, ASL_KEY_TIME)).doubleValue];
-			NSString *line = makeString(@"%@: %@", time.description, @(m));
-
-            [messages addObject:line];
-        }
-    }
-
-    if (OS_IS_POST_10_9)
-        asl_release(response);
-    else
-        aslresponse_free(response);
-
-#pragma clang diagnostic pop
-
-
-	return messages.immutableObject;
-#else
-	return nil;
-#endif
-}
-#endif
 
 - (NSString *)appBundleIdentifier
 {
@@ -536,7 +470,7 @@ NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
 
 void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 {
-    asl_NSLog(ASL_LEVEL_ERR, @"alert_feedback %@ %@", usermsg, details);
+    cc_log_error(@"alert_feedback %@ %@", usermsg, details);
 
 	dispatch_block_t block = ^
 	{
@@ -610,7 +544,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 			}
 			@catch (NSException *exception)
 			{
-				asl_NSLog(ASL_LEVEL_ERR, @"could not spawn crash helper %@", exception.userInfo);
+				cc_log_error(@"could not spawn crash helper %@", exception.userInfo);
 
 				if (alert(fatal ? @"Fatal Error" : @"Error",
 						  message,
@@ -1034,32 +968,140 @@ __inline__ int generateRRandomIntBetween(int a, int b)
 
 
 // logging support
+
+
 #undef asl_log
-void asl_NSLog(int level, NSString *format, ...)
+#undef os_log
+#if __has_feature(modules) && ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 101200) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 100000)))
+@import asl;
+@import os.log;
+#else
+#include <asl.h>
+#include <os/log.h>
+#endif
+
+
+
+static NSFileHandle *logfileHandle;
+void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit) // ASL broken on 10.12+ and especially logging to file not working anymore
 {
+    assert(!logfileHandle);
+
+    if (!fileURL.fileExists)
+        [NSData.data writeToURL:fileURL atomically:YES]; // create file with weird API
+    else if (filesizeLimit) // truncate first
+    {
+        NSString *path = fileURL.path;
+
+        unsigned long long filesize = [[[fileManager attributesOfItemAtPath:path error:NULL] objectForKey:@"NSFileSize"] unsignedLongLongValue];
+
+        if (filesize > filesizeLimit)
+        {
+            NSFileHandle *fh = [NSFileHandle fileHandleForUpdatingURL:fileURL error:nil];
+
+            [fh seekToFileOffset:(filesize - filesizeLimit)];
+
+            NSData *data = [fh readDataToEndOfFile];
+
+            [fh seekToFileOffset:0];
+            [fh writeData:data];
+            [fh truncateFileAtOffset:filesizeLimit];
+            [fh synchronizeFile];
+            [fh closeFile];
+        }
+    }
+
+    // now open for appending
+    logfileHandle = [NSFileHandle fileHandleForUpdatingURL:fileURL error:nil];
+
+    if (!logfileHandle)
+    {
+        cc_log_error(@"could not open file %@ for log file usage", fileURL.path);
+    }
+#if  !__has_feature(objc_arc)
+    [logfileHandle retain];
+#endif
+}
+
+void _cc_log_tologfile(int level, NSString *string)
+{
+    if (logfileHandle)
+    {
+        static char* levelNames[8] = {ASL_STRING_EMERG, ASL_STRING_ALERT, ASL_STRING_CRIT, ASL_STRING_ERR, ASL_STRING_WARNING, ASL_STRING_NOTICE, ASL_STRING_INFO, ASL_STRING_DEBUG};
+        assert(level < 8);
+        NSString *levelStr = @(levelNames[level]);
+        NSString *dayString = [NSDate.date stringUsingFormat:@"MMM dd"];
+        NSString *timeString = [NSDate.date stringUsingDateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
+        NSString *finalString = makeString(@"%@ %@  %@[%i] <%@>: %@\n",
+                                           dayString,
+                                           timeString,
+                                           cc.appName,
+                                           NSProcessInfo.processInfo.processIdentifier,
+                                           levelStr,
+                                           string);
+
+        [logfileHandle seekToEndOfFile];
+
+        NSData *data = [finalString dataUsingEncoding:NSUTF8StringEncoding];
+
+        if (data)
+            [logfileHandle writeData:data];
+        else
+            cc_log_error(@"could not open create data from string %@ for log", finalString);
+    }
+}
+
+void _cc_log_toprefs(int level, NSString *string)
+{
+#ifndef DONTLOGASLTOUSERDEFAULTS
+    static int lastPosition[8] = {0,0,0,0,0,0,0,0};
+    assert(level < 8);
+    NSString *key = makeString(@"corelib_asl_lev%i_pos%i", level, lastPosition[level]);
+    key.defaultString = makeString(@"date: %@ message: %@", NSDate.date.description, string);
+    lastPosition[level]++;
+    if (lastPosition[level] > 9)
+        lastPosition[level] = 0;
+#endif
+}
+
+
+void cc_log_level(int level, NSString *format, ...)
+{
+    assert(level >= 0);
+    assert(level < 8);
 	va_list args;
 	va_start(args, format);
 	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
 	va_end(args);
 
-    asl_log(NULL, NULL, level, "%s", [str UTF8String]);
+    _cc_log_tologfile(level, str);
+    _cc_log_toprefs(level, str);
 
-    
-#ifndef DONTLOGASLTOUSERDEFAULTS
-    static int lastPosition[8] = {0,0,0,0,0,0,0,0};
-    assert(level < 8);
-    NSString *key = makeString(@"corelib_asl_lev%i_pos%i", level, lastPosition[level]);
-    key.defaultString = makeString(@"date: %@ message: %@", NSDate.date.description, str);
-    lastPosition[level]++;
-	if (lastPosition[level] > 9)
-		lastPosition[level] = 0;
-#endif
-    
-    
+
+    if (OS_IS_POST_10_11)
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
+
+        if (level == ASL_LEVEL_DEBUG || level == ASL_LEVEL_INFO)
+            os_log_debug(OS_LOG_DEFAULT, str.UTF8String);
+        else if (level == ASL_LEVEL_NOTICE || level == ASL_LEVEL_WARNING)
+            os_log(OS_LOG_DEFAULT, str.UTF8String);
+        else if (level == ASL_LEVEL_ERR)
+            os_log_error(OS_LOG_DEFAULT, str.UTF8String);
+        else if (level == ASL_LEVEL_CRIT || level == ASL_LEVEL_ALERT || level == ASL_LEVEL_EMERG)
+            os_log_fault(OS_LOG_DEFAULT, str.UTF8String);
+#pragma clang diagnostic pop
+    }
+    else
+        asl_log(NULL, NULL, level, "%s", str.UTF8String);
+
 #if ! __has_feature(objc_arc)
 	[str release];
 #endif
 }
+
 void log_to_prefs(NSString *str)
 {
     static int lastPosition = 0;

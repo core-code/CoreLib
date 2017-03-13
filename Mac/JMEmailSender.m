@@ -31,7 +31,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifdef USE_APPLEMAIL
 + (smtpResult)sendMailWithScriptingBridge:(NSString *)content subject:(NSString *)subject to:(NSString *)recipients timeout:(uint16_t)secs attachment:(NSString *)attachmentFilePath
 {
-	asl_NSLog_debug(@"sendMailWithScriptingBridge %@\n\n sub: %@\n rec: %@", content, subject, recipients);
+	cc_log_debug(@"sendMailWithScriptingBridge %@\n\n sub: %@\n rec: %@", content, subject, recipients);
 
 	BOOL validAddressFound = FALSE;
 	NSArray *recipientList = [recipients componentsSeparatedByString:@"\n"];
@@ -74,7 +74,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		{
 			if (recipient.isValidEmail)
 			{
-				asl_NSLog_debug(@"sendMail: messageframework - sending to: %@", recipient);
+				cc_log_debug(@"sendMail: messageframework - sending to: %@", recipient);
 
 				validAddressFound = TRUE;
 				NSDictionary *recipientProperties = [NSDictionary dictionaryWithObjectsAndKeys:recipient, @"address", nil];
@@ -86,11 +86,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			}
 			else
 			{
-				asl_NSLog_debug(@"sendMail: %@ is not valid email!", recipient);
+				cc_log_debug(@"sendMail: %@ is not valid email!", recipient);
 			}
 		}
 
-		asl_NSLog_debug(@"going to send");
+		cc_log_debug(@"going to send");
 		if (validAddressFound != TRUE)
 			return kSMTPToNilFailure;
 
@@ -127,7 +127,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			res = kSMTPSuccess;
 		else
 			res = kSMTPScriptingBridgeFailure;
-		asl_NSLog_debug(@"sent!");
+		cc_log_debug(@"sent!");
 #if ! __has_feature(objc_arc)
 		[emailMessage release];
 #endif
@@ -135,7 +135,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	}
 	@catch (NSException *e)
 	{
-		asl_NSLog(ASL_LEVEL_WARNING, @"sendMailWithScriptingBridge, exception %@", [e description]);
+		cc_log_error(@"sendMailWithScriptingBridge, exception %@", [e description]);
 
 		return kSMTPScriptingBridgeFailure;
 	}
@@ -147,7 +147,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifdef USE_MAILCORE
 + (smtpResult)sendMailWithMailCore:(NSString *)mail subject:(NSString *)subject timeout:(uint16_t)secs server:(NSString *)server port:(uint16_t)port from:(NSString *)sender to:(NSString *)recipients auth:(BOOL)auth tls:(BOOL)tls username:(NSString *)username password:(NSString *)password
 {
-	asl_NSLog_debug(@"sendMailWithMailCore %@\n\n sub: %@\n sender: %@\nrec: %@", mail, subject, sender, recipients);
+	cc_log_debug(@"sendMailWithMailCore %@\n\n sub: %@\n sender: %@\nrec: %@", mail, subject, sender, recipients);
 
 	BOOL validAddressFound = FALSE;
 	NSArray *recipientList = [recipients componentsSeparatedByString:@"\n"];
@@ -170,14 +170,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		{
 			if (recipient.isValidEmail)
 			{
-				asl_NSLog_debug(@"sendMail: mailcore - sending to: %@", recipient);
+				cc_log_debug(@"sendMail: mailcore - sending to: %@", recipient);
 
 				validAddressFound = TRUE;
 				[set addObject:[CTCoreAddress addressWithName:@"" email:recipient]];
 			}
 			else
 			{
-				asl_NSLog_debug(@"sendMail: %@ is not valid email!", recipient);
+				cc_log_debug(@"sendMail: %@ is not valid email!", recipient);
 			}
 		}
 
@@ -199,7 +199,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	}
 	@catch (NSException *e)
 	{
-		asl_NSLog(ASL_LEVEL_WARNING, @"e-mail delivery failed with unknown problem, exception %@", [e description]);
+		cc_log_error(@"e-mail delivery failed with unknown problem, exception %@", [e description]);
 
 		return kSMTPMailCoreFailure;
 	}

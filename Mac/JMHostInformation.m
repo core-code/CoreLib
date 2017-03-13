@@ -67,7 +67,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #ifdef USE_DISKARBITRATION
 #ifdef FORCE_LOG
-#define LOGMOUNTEDHARDDISK asl_NSLog_debug
+#define LOGMOUNTEDHARDDISK cc_log_debug
 #else
 #define LOGMOUNTEDHARDDISK(x, ...) 
 #endif
@@ -95,7 +95,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	assert(session);
 	if (!session)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	DASessionCreate returned NULL");
+		cc_log_error(@"Error:	DASessionCreate returned NULL");
 		return nil;
 	}
 
@@ -149,7 +149,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	assert(session);
 	if (!session)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	DASessionCreate returned NULL");
+		cc_log_error(@"Error:	DASessionCreate returned NULL");
 		return nil;
 	}
 
@@ -206,7 +206,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	assert(session);
 	if (!session)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	DASessionCreate returned NULL");
+		cc_log_error(@"Error:	DASessionCreate returned NULL");
 		return nil;
 	}
 
@@ -242,24 +242,24 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 					CFRelease(property);
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error:	could not IORegistryEntryCreateCFProperty() for IORegistryEntryFromPath()");
+					cc_log_error(@"Error:	could not IORegistryEntryCreateCFProperty() for IORegistryEntryFromPath()");
 
 				IOObjectRelease(entry);
 			}
 			else
-				asl_NSLog(ASL_LEVEL_ERR, @"Error:	could not IORegistryEntryFromPath() for DADevicePath");
+				cc_log_error(@"Error:	could not IORegistryEntryFromPath() for DADevicePath");
 #endif
 		}
 		else
 		{
-			asl_NSLog(ASL_LEVEL_ERR, @"Error:	DADiskCopyDescription returned NULL");
+			cc_log_error(@"Error:	DADiskCopyDescription returned NULL");
 		}
 
 		CFRelease(disk);
 	}
 	else
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	DADiskCreateFromBSDName returned NULL");
+		cc_log_error(@"Error:	DADiskCreateFromBSDName returned NULL");
 	}
 
 	CFRelease(session);
@@ -302,7 +302,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 
 			if (result != noErr)
-				asl_NSLog(ASL_LEVEL_ERR, @"Error:	FSGetVolumeParms returned %d", result);
+				cc_log_error(@"Error:	FSGetVolumeParms returned %d", result);
 			else
 			{
 				if ((char *)volumeParms.vMDeviceID != NULL)
@@ -323,10 +323,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 					}
 					else
-						asl_NSLog(ASL_LEVEL_ERR, @"Error: volNameAsCFString == NULL, %i", __LINE__);
+						cc_log_error(@"Error: volNameAsCFString == NULL, %i", __LINE__);
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error: bsdPathForVolume volumeParms.vMDeviceID == NULL, %i", __LINE__);
+					cc_log_error(@"Error: bsdPathForVolume volumeParms.vMDeviceID == NULL, %i", __LINE__);
 			}
 		}
 	}
@@ -367,7 +367,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			result = FSGetVolumeParms (actualVolume, &volumeParms, sizeof(volumeParms));
 
 			if (result != noErr)
-				asl_NSLog(ASL_LEVEL_ERR, @"Error:	FSGetVolumeParms returned %d", result);
+				cc_log_error(@"Error:	FSGetVolumeParms returned %d", result);
 			else
 			{
 				if ((char *)volumeParms.vMDeviceID != NULL)
@@ -393,7 +393,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 					}
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error: volumeNamesForDevice	volumeParms.vMDeviceID == NULL, %i", __LINE__);
+					cc_log_error(@"Error: volumeNamesForDevice	volumeParms.vMDeviceID == NULL, %i", __LINE__);
 			}
 		}
 	}
@@ -437,13 +437,13 @@ BOOL _isUserAdmin();
 	kernResult = FindEthernetInterfaces(&intfIterator);
 
 	if (KERN_SUCCESS != kernResult)
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	FindEthernetInterfaces returned 0x%08x", kernResult);
+		cc_log_error(@"Error:	FindEthernetInterfaces returned 0x%08x", kernResult);
 	else
 	{
 		kernResult = GetMACAddress(intfIterator, MACAddress);
 
 		if (KERN_SUCCESS != kernResult)
-			asl_NSLog(ASL_LEVEL_ERR, @"Error:	GetMACAddress returned 0x%08x", kernResult);
+			cc_log_error(@"Error:	GetMACAddress returned 0x%08x", kernResult);
 		else
 		{
 			uint8_t i;
@@ -604,7 +604,7 @@ BOOL _isUserAdmin();
 
 		if (!hostnameCF)
 		{
-			asl_NSLog(ASL_LEVEL_ERR, @"Error: SCDynamicStoreCopyLocalHostName == NULL, %i", __LINE__);
+			cc_log_error(@"Error: SCDynamicStoreCopyLocalHostName == NULL, %i", __LINE__);
 			return @"";
 		}
 		NSString *hostname = [NSString stringWithFormat:@"%@.local", (BRIDGE NSString *)hostnameCF];
@@ -614,7 +614,7 @@ BOOL _isUserAdmin();
 	}
 	else
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: SCDynamicStoreCreate == NULL, %i", __LINE__);
+		cc_log_error(@"Error: SCDynamicStoreCreate == NULL, %i", __LINE__);
 		return @"";
 	}
 }
@@ -655,7 +655,7 @@ NSString *_machineType();
 			NSString *currentName = [disk objectForKey:kDiskNameKey];
 			[disk setObject:[name stringByAppendingFormat:@", %@", currentName] forKey:kDiskNameKey];
 			
-			//asl_NSLog_debug(@"_addDiskToList replace name unique %@\n", [disk description]);
+			//cc_log_debug(@"_addDiskToList replace name unique %@\n", [disk description]);
 
 			found = TRUE;
 		}
@@ -668,7 +668,7 @@ NSString *_machineType();
 		[diskDict setObject:num forKey:kDiskNumberKey];
 		[diskDict setObject:((detail) ? makeString(@"%@ (%@)", name, detail) : name) forKey:kDiskNameKey];
 		
-		//asl_NSLog_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
+		//cc_log_debug(@"_addDiskToList add unique %@\n", [diskDict description]);
 		
 		[array addObject:diskDict];
 	}
@@ -684,7 +684,7 @@ NSString *_machineType();
     CFTypeRef s = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
     if (s)
     {
-        asl_NSLog_debug(@"Serial Number: %@", (BRIDGE NSString *) s);
+        cc_log_debug(@"Serial Number: %@", (BRIDGE NSString *) s);
         serial = [(BRIDGE NSString *)s copy];
         CFRelease(s);
     }
@@ -693,7 +693,7 @@ NSString *_machineType();
         s = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
         if (s)
         {
-            asl_NSLog_debug(@"Serial Number: %@", (BRIDGE NSString *) s);
+            cc_log_debug(@"Serial Number: %@", (BRIDGE NSString *) s);
             serial = [(BRIDGE NSString *)s copy];
             CFRelease(s);
         }
@@ -702,13 +702,13 @@ NSString *_machineType();
             s = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
             if (s)
             {
-                asl_NSLog_debug(@"USB Serial Number: %@", (BRIDGE NSString *) s);
+                cc_log_debug(@"USB Serial Number: %@", (BRIDGE NSString *) s);
                 serial = [(BRIDGE NSString *)s copy];
                 
                 CFRelease(s);
             }
             //																							else
-            //																								asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get serial number");
+            //																								cc_log_error(@"Error: couldn't get serial number");
         }
     }
     
@@ -787,7 +787,7 @@ NSString *_machineType();
                                                 [diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
                                             }
                                             else
-                                                asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
+                                                cc_log_error(@"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
                                             
                                             CFRelease(data);
                                             
@@ -810,7 +810,7 @@ NSString *_machineType();
                                             }
                                         }
                                         else
-                                            asl_NSLog(ASL_LEVEL_ERR, @"Error: couldn't get bsd name");
+                                            cc_log_error(@"Error: couldn't get bsd name");
                                         
                                         IOObjectRelease(gparent);
                                     }
@@ -902,7 +902,7 @@ NSString *_machineType();
                                         foundBacking = true;
                                     }
                                     else
-                                        asl_NSLog(ASL_LEVEL_ERR, @"Error: 1bsd name doesn't look good %@", (NSString *) name);
+                                        cc_log_error(@"Error: 1bsd name doesn't look good %@", (NSString *) name);
                                     
                                 }
                                 CFRelease(d);
@@ -952,7 +952,7 @@ NSString *_machineType();
                                                                 [diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
                                                             }
                                                             else
-                                                                asl_NSLog(ASL_LEVEL_ERR, @"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
+                                                                cc_log_error(@"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
                                                             
                                                             CFRelease(data);
                                                             
@@ -1043,7 +1043,7 @@ NSString *_machineType();
 	assert(session);
 	if (!session)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	DASessionCreate returned NULL");
+		cc_log_error(@"Error:	DASessionCreate returned NULL");
 		return nil;
 	}
 
@@ -1072,7 +1072,7 @@ NSString *_machineType();
                     NSString *mountPath = [mountURL path];
 
 
-					asl_NSLog_debug(@"Volume mounted at: %@  %@ %@", mountPath, volumeName, bsdName);
+					cc_log_debug(@"Volume mounted at: %@  %@ %@", mountPath, volumeName, bsdName);
 
 					LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", volumeName);
 
@@ -1128,7 +1128,7 @@ NSString *_machineType();
 									CFRelease(propsCF);
 								}
 								else
-									asl_NSLog(ASL_LEVEL_ERR, @"Error: DADiskCopyDescription == NULL, %i", __LINE__);
+									cc_log_error(@"Error: DADiskCopyDescription == NULL, %i", __LINE__);
 							}
 
 							if (!foundBacking)
@@ -1151,7 +1151,7 @@ NSString *_machineType();
 			}
 		}
 		else
-			asl_NSLog(ASL_LEVEL_ERR, @"Error: getResourceValue == NULL, %i", __LINE__);
+			cc_log_error(@"Error: getResourceValue == NULL, %i", __LINE__);
 	}
 
 	CFRelease(session);
@@ -1219,7 +1219,7 @@ NSString *_machineType();
 		assert(session);
 		if (!session)
 		{
-			asl_NSLog(ASL_LEVEL_ERR, @"Error:	DASessionCreate returned NULL");
+			cc_log_error(@"Error:	DASessionCreate returned NULL");
 			return nil;
 		}
 	}
@@ -1257,7 +1257,7 @@ NSString *_machineType();
 
 
 			if (result != noErr)
-				asl_NSLog(ASL_LEVEL_ERR, @"Error:	FSGetVolumeParms returned %d", result);
+				cc_log_error(@"Error:	FSGetVolumeParms returned %d", result);
 			else
 			{
 				if ((char *)volumeParms.vMDeviceID != NULL)
@@ -1348,10 +1348,10 @@ NSString *_machineType();
 													props = nil;
 												}
 												else
-													asl_NSLog(ASL_LEVEL_ERR, @"Error: DADiskCopyDescription == NULL");
+													cc_log_error(@"Error: DADiskCopyDescription == NULL");
 											}
 											else
-												asl_NSLog(ASL_LEVEL_ERR, @"Error: DADiskCreateFromBSDName == NULL");
+												cc_log_error(@"Error: DADiskCreateFromBSDName == NULL");
 										}
 										
 										if (!foundBacking)
@@ -1374,17 +1374,17 @@ NSString *_machineType();
 							volNameAsCFString = NULL;
 						}
 						else
-							asl_NSLog(ASL_LEVEL_ERR, @"Error: volNameAsCFString == NULL");
+							cc_log_error(@"Error: volNameAsCFString == NULL");
 
 						CFRelease(mountURLCF);
 						mountURLCF = NULL;
 					}
 					else
-						asl_NSLog(ASL_LEVEL_ERR, @"Error: mountURLCF == NULL");
+						cc_log_error(@"Error: mountURLCF == NULL");
 
 				}
 				else
-					asl_NSLog(ASL_LEVEL_ERR, @"Error: mountedHarddisks volumeParms.vMDeviceID == NULL");
+					cc_log_error(@"Error: mountedHarddisks volumeParms.vMDeviceID == NULL");
 			}
 		}
 	}
@@ -1497,7 +1497,7 @@ NSString *_machineType();
 	if ((status == kSMARTStatusOK) && (err != 0)) // downgrade status
 	{
 		status = kSMARTStatusUnknown;
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: S.M.A.R.T. check downgraded result for disk%i from VERIFIED to UNKNOWN because some error(%i) occured.", disk, err);
+		cc_log_error(@"Error: S.M.A.R.T. check downgraded result for disk%i from VERIFIED to UNKNOWN because some error(%i) occured.", disk, err);
 	}
 
 	return status;
@@ -1509,7 +1509,7 @@ NSString *_machineType();
 
 	if (err != kIOReturnSuccess)
 	{
-		asl_NSLog_debug(@"Info: S.M.A.R.T. attribute check failed for disk with status %i", err);
+		cc_log_debug(@"Info: S.M.A.R.T. attribute check failed for disk with status %i", err);
 		return nil;
 	}
 	else
@@ -1535,7 +1535,7 @@ static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
 	kernResult = IOMasterPort(MACH_PORT_NULL, &masterPort);
 	if (KERN_SUCCESS != kernResult)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	IOMasterPort returned %d", kernResult);
+		cc_log_error(@"Error:	IOMasterPort returned %d", kernResult);
 		return kernResult;
 	}
 
@@ -1548,7 +1548,7 @@ static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
 	// matchingDict = IOBSDMatching("en0");
 
 	if (NULL == matchingDict)
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	IOServiceMatching returned a NULL dictionary.");
+		cc_log_error(@"Error:	IOServiceMatching returned a NULL dictionary.");
 	else
 	{
 		// Each IONetworkInterface object has a Boolean property with the key kIOPrimaryInterface. Only the
@@ -1577,7 +1577,7 @@ static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
 		                                              &kCFTypeDictionaryValueCallBacks);
 
 		if (NULL == propertyMatchDict)
-			asl_NSLog(ASL_LEVEL_ERR, @"Error:	CFDictionaryCreateMutable returned a NULL dictionary.");
+			cc_log_error(@"Error:	CFDictionaryCreateMutable returned a NULL dictionary.");
 		else
 		{
 			// Set the value in the dictionary of the property with the given key, or add the key
@@ -1598,7 +1598,7 @@ static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
 	kernResult = IOServiceGetMatchingServices(masterPort, matchingDict, matchingServices);
 
 	if (KERN_SUCCESS != kernResult)
-		asl_NSLog(ASL_LEVEL_ERR, @"Error:	IOServiceGetMatchingServices returned %d", kernResult);
+		cc_log_error(@"Error:	IOServiceGetMatchingServices returned %d", kernResult);
 
 	return kernResult;
 }
@@ -1632,7 +1632,7 @@ static kern_return_t GetMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 		                                           &controllerService);
 
 		if (KERN_SUCCESS != kernResult)
-			asl_NSLog(ASL_LEVEL_ERR, @"Error:	IORegistryEntryGetParentEntry returned 0x%08x", kernResult);
+			cc_log_error(@"Error:	IORegistryEntryGetParentEntry returned 0x%08x", kernResult);
 		else
 		{
 			// Retrieve the MAC address property from the I/O Registry in the form of a CFData
@@ -1774,17 +1774,17 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 							}
 							else
 							{
-								asl_NSLog_debug(@"S.M.A.R.T. check disk: %i  SMARTReturnStatus() failed with %x",  bsdDeviceNumber, err);
+								cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReturnStatus() failed with %x",  bsdDeviceNumber, err);
 							}
 						}
 						else
 						{
-							asl_NSLog_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableAutosave() failed with %x",  bsdDeviceNumber, err);
+							cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableAutosave() failed with %x",  bsdDeviceNumber, err);
 						}
 					}
 					else
 					{
-						asl_NSLog_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableOperations() failed with %x",  bsdDeviceNumber, err);
+						cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableOperations() failed with %x",  bsdDeviceNumber, err);
 					}
 
 					(*smartInterface)->Release(smartInterface);
@@ -1793,23 +1793,23 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 				else
 				{
 					err = herr;
-					asl_NSLog_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
+					cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
 				}
 
 				IODestroyPlugInInterface(cfPlugInInterface);
 			}
 			else
 			{
-				asl_NSLog_debug(@"S.M.A.R.T. check disk: %i  IOCreatePlugInInterfaceForService() failed with %x",  bsdDeviceNumber, err);
+				cc_log_debug(@"S.M.A.R.T. check disk: %i  IOCreatePlugInInterfaceForService() failed with %x",  bsdDeviceNumber, err);
 			}
 
 			found = true;
 		}
 		else
-			asl_NSLog_debug(@"S.M.A.R.T. check disk: %i not SMART capable", bsdDeviceNumber);
+			cc_log_debug(@"S.M.A.R.T. check disk: %i not SMART capable", bsdDeviceNumber);
 	}
 	else
-		asl_NSLog_debug(@"S.M.A.R.T. check disk: %i not of kIOBlockStorageDeviceClass", bsdDeviceNumber);
+		cc_log_debug(@"S.M.A.R.T. check disk: %i not of kIOBlockStorageDeviceClass", bsdDeviceNumber);
 
 
 	if (object != MACH_PORT_NULL)
@@ -1956,10 +1956,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			found = true;
 		}
 		else
-			asl_NSLog_debug(@"S.M.A.R.T. check disk: %i not SMART capable", bsdDeviceNumber);
+			cc_log_debug(@"S.M.A.R.T. check disk: %i not SMART capable", bsdDeviceNumber);
 	}
 	else
-		asl_NSLog_debug(@"S.M.A.R.T. check disk: %i not of kIOBlockStorageDeviceClass", bsdDeviceNumber);
+		cc_log_debug(@"S.M.A.R.T. check disk: %i not of kIOBlockStorageDeviceClass", bsdDeviceNumber);
 	
 	
 	if (object != MACH_PORT_NULL)

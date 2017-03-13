@@ -79,7 +79,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     if (!data || err)
     {
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
+        cc_log_error(@"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
         return nil;
     }
 
@@ -97,7 +97,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 	if (!data || err)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: XML write fails! input %@ data %@ err %@", self, data, err);
+		cc_log_error(@"Error: XML write fails! input %@ data %@ err %@", self, data, err);
 		return nil;
 	}
 
@@ -404,7 +404,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
 
 	if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: task argument size approaching or above limit, spawn will fail");
+		cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
 
     @try
     {
@@ -545,7 +545,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSImage *image = [NSImage imageNamed:self];
 
 	if (!image)
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: there is no named image with name: %@", self);
+		cc_log_error(@"Error: there is no named image with name: %@", self);
 
     return image;
 }
@@ -555,7 +555,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     UIImage *image = [UIImage imageNamed:self];
 
 	if (!image)
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: there is no named image with name: %@", self);
+		cc_log_error(@"Error: there is no named image with name: %@", self);
 
 	return image;
 }
@@ -1470,7 +1470,7 @@ CONST_KEY(CCDirectoryObserving)
 		FSEventStreamRelease(stream);
 	}
 	else
-		asl_NSLog_debug(@"Warning: stopped observing on location which was never observed %@", self);
+		cc_log_debug(@"Warning: stopped observing on location which was never observed %@", self);
 }
 #endif
 
@@ -1590,7 +1590,7 @@ CONST_KEY(CCDirectoryObserving)
     {
         if (!self.fileExists)
         {
-            asl_NSLog_debug(@"Warning: trying to get contents of non-existant dir %@", self);
+            cc_log_debug(@"Warning: trying to get contents of non-existant dir %@", self);
 
             return nil;
         }
@@ -1856,7 +1856,7 @@ CONST_KEY(CCDirectoryObserving)
 
     if( snappy_uncompressed_length(self.bytes, self.length, &uncompressedSize) != SNAPPY_OK )
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: can't calculate the uncompressed length!\n");
+		cc_log_error(@"Error: can't calculate the uncompressed length!\n");
 		return nil;
     }
 
@@ -1869,7 +1869,7 @@ CONST_KEY(CCDirectoryObserving)
 	int res = snappy_uncompress(self.bytes, self.length, buf, &uncompressedSize);
     if(res != SNAPPY_OK)
 	{
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: can't uncompress the file!\n");
+        cc_log_error(@"Error: can't uncompress the file!\n");
 		free(buf);
 		return nil;
     }
@@ -1891,7 +1891,7 @@ CONST_KEY(CCDirectoryObserving)
 	int res = snappy_compress(self.bytes, self.length, buf, &output_length);
 	if (res != SNAPPY_OK )
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"Error: problem compressing the file\n");
+		cc_log_error(@"Error: problem compressing the file\n");
 		free(buf);
 		return nil;
 	}
@@ -1939,7 +1939,7 @@ CONST_KEY(CCDirectoryObserving)
 		return s;
 	}
 
-	asl_NSLog(ASL_LEVEL_ERR, @"Error: could not create string from data %@", self);
+	cc_log_error(@"Error: could not create string from data %@", self);
 	return nil;
 }
 
@@ -1973,7 +1973,7 @@ CONST_KEY(CCDirectoryObserving)
 
     if (!dict || err)
     {
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON read fails! input %@ dict %@ err %@", self, dict, err);
+        cc_log_error(@"Error: JSON read fails! input %@ dict %@ err %@", self, dict, err);
         return nil;
     }
 
@@ -1986,7 +1986,7 @@ CONST_KEY(CCDirectoryObserving)
 
 	if (![res isKindOfClass:[NSArray class]])
 	{
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
+        cc_log_error(@"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
         return nil;
     }
 
@@ -1999,7 +1999,7 @@ CONST_KEY(CCDirectoryObserving)
 
 	if (![res isKindOfClass:[NSDictionary class]])
 	{
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
+        cc_log_error(@"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
         return nil;
     }
 
@@ -2110,7 +2110,7 @@ CONST_KEY(CCDirectoryObserving)
 
     if (!data || err)
     {
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
+        cc_log_error(@"Error: JSON write fails! input %@ data %@ err %@", self, data, err);
         return nil;
     }
 
@@ -2128,7 +2128,7 @@ CONST_KEY(CCDirectoryObserving)
 
     if (!data || err)
     {
-        asl_NSLog(ASL_LEVEL_ERR, @"Error: XML write fails! input %@ data %@ err %@", self, data, err);
+        cc_log_error(@"Error: XML write fails! input %@ data %@ err %@", self, data, err);
         return nil;
     }
 

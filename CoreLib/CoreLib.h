@@ -231,27 +231,29 @@ extern name ## Key *const k ## name ## Key;
 
 
 // !!!: LOGGING
-#if __has_feature(modules) && ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 101200) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 100000)))
-@import asl;
-#else
-#include <asl.h>
-#endif
 void log_to_prefs(NSString *string);
-void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
+void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit);
+
+void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG
-  #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_NOTICE, __VA_ARGS__ )
+#define cc_log_debug(...)     cc_log_level(5, __VA_ARGS__) // ASL_LEVEL_NOTICE
 #elif defined(DEBUG) && !defined(FORCE_NOLOG)
-  #define asl_NSLog_debug(...)	asl_NSLog(ASL_LEVEL_DEBUG, __VA_ARGS__ )
+#define cc_log_debug(...)     cc_log_level(7, __VA_ARGS__) // ASL_LEVEL_DEBUG
 #else
-  #define asl_NSLog_debug(...)
+#define cc_log_debug(...)
 #endif
-#define LOGFUNCA				asl_NSLog_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self)
-#define LOGFUNC					asl_NSLog_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), (__bridge void *)self)
-#define LOGFUNCPARAMA(x)		asl_NSLog_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
-#define LOGFUNCPARAM(x)			asl_NSLog_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
-#define LOGSUCC					asl_NSLog_debug(@"success %@ %d", @(__FILE__), __LINE__)
-#define LOGFAIL					asl_NSLog_debug(@"failure %@ %d", @(__FILE__), __LINE__)
-#define LOG(x)					asl_NSLog_debug(@"%@", [(x) description]);
+#define cc_log(...)           cc_log_level(5, __VA_ARGS__) // ASL_LEVEL_NOTICE
+#define cc_log_error(...)     cc_log_level(3, __VA_ARGS__) // ASL_LEVEL_ERR
+#define cc_log_emerg(...)     cc_log_level(0, __VA_ARGS__) // ASL_LEVEL_EMERG
+
+
+#define LOGFUNCA				cc_log_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self)
+#define LOGFUNC					cc_log_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), (__bridge void *)self)
+#define LOGFUNCPARAMA(x)		cc_log_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
+#define LOGFUNCPARAM(x)			cc_log_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
+#define LOGSUCC					cc_log_debug(@"success %@ %d", @(__FILE__), __LINE__)
+#define LOGFAIL					cc_log_debug(@"failure %@ %d", @(__FILE__), __LINE__)
+#define LOG(x)					cc_log_debug(@"%@", [(x) description]);
 
 
 
@@ -281,6 +283,9 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
 #define BYTES_TO_MB(x)			((double)(x) / (1024.0 * 1024.0))
 #define BYTES_TO_GB(x)			((double)(x) / (1024.0 * 1024.0 * 1024.0))
+#define KB_TO_BYTES(x)			((x) * (1024))
+#define MB_TO_BYTES(x)			((x) * (1024 * 1024))
+#define GB_TO_BYTES(x)			((x) * (1024 * 1024 * 1024))
 #define SECONDS_PER_MINUTES(x)  ((x) * 60)
 #define SECONDS_PER_HOURS(x)    (SECONDS_PER_MINUTES(x) * 60)
 #define SECONDS_PER_DAYS(x)     (SECONDS_PER_HOURS(x) * 24)
@@ -356,9 +361,17 @@ void asl_NSLog(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
     #define NSOKButton
     #define NSCancelButton
 #endif
-#define asl_log
-#define NSLog
-    
+#ifndef DISABLELOGGINGIMPLEMENTATION
+    #define asl_log
+    #define asl_NSLog_debug
+    #define NSLog
+    #define os_log
+    #define os_log_info
+    #define os_log_debug
+    #define os_log_error
+    #define os_log_fault
+#endif
+
 #ifdef __cplusplus
 }
 #endif

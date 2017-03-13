@@ -123,14 +123,14 @@
 		self.timer = nil;
 	}
 	else
-		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: receiveSleepNote but no timer");
+		cc_log_error(@"JMCorrectTimer: receiveSleepNote but no timer");
 }
 
 - (void)receiveWakeNote:(id)sender
 {
 	if (self.timer)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: receiveWakeNote but timer");
+		cc_log_error(@"JMCorrectTimer: receiveWakeNote but timer");
 		[self.timer invalidate];
 		self.timer = nil;
 	}
@@ -160,7 +160,7 @@
 #endif
 		}
 		else
-			asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: error dropBlock was nil");
+			cc_log_error(@"JMCorrectTimer: error dropBlock was nil");
 	}
 	else
 	{
@@ -176,7 +176,7 @@
 
 	if (_timer)
 	{
-		asl_NSLog(ASL_LEVEL_ERR, @"JMCorrectTimer: error dealloced while still in use");
+		cc_log_error(@"JMCorrectTimer: error dealloced while still in use");
 	}
 
 	
