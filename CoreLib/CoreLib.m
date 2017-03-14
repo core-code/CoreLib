@@ -1027,7 +1027,7 @@ void _cc_log_tologfile(int level, NSString *string)
 {
     if (logfileHandle)
     {
-        static char* levelNames[8] = {ASL_STRING_EMERG, ASL_STRING_ALERT, ASL_STRING_CRIT, ASL_STRING_ERR, ASL_STRING_WARNING, ASL_STRING_NOTICE, ASL_STRING_INFO, ASL_STRING_DEBUG};
+        static const char* levelNames[8] = {ASL_STRING_EMERG, ASL_STRING_ALERT, ASL_STRING_CRIT, ASL_STRING_ERR, ASL_STRING_WARNING, ASL_STRING_NOTICE, ASL_STRING_INFO, ASL_STRING_DEBUG};
         assert(level < 8);
         NSString *levelStr = @(levelNames[level]);
         NSString *dayString = [NSDate.date stringUsingFormat:@"MMM dd"];
@@ -1083,15 +1083,16 @@ void cc_log_level(int level, NSString *format, ...)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic ignored "-Wpartial-availability"
+        const char *utf = str.UTF8String;
 
         if (level == ASL_LEVEL_DEBUG || level == ASL_LEVEL_INFO)
-            os_log_debug(OS_LOG_DEFAULT, str.UTF8String);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEBUG, "%s", utf);
         else if (level == ASL_LEVEL_NOTICE || level == ASL_LEVEL_WARNING)
-            os_log(OS_LOG_DEFAULT, str.UTF8String);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEFAULT, "%s", utf);
         else if (level == ASL_LEVEL_ERR)
-            os_log_error(OS_LOG_DEFAULT, str.UTF8String);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_ERROR, "%s", utf);
         else if (level == ASL_LEVEL_CRIT || level == ASL_LEVEL_ALERT || level == ASL_LEVEL_EMERG)
-            os_log_fault(OS_LOG_DEFAULT, str.UTF8String);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%s", utf);
 #pragma clang diagnostic pop
     }
     else

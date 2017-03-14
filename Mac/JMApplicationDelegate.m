@@ -90,7 +90,7 @@
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
 	LOGFUNC;
 
-	asl_NSLog(ASL_LEVEL_ERR, @"Warning: this version will expire");
+	cc_log_error(@"Warning: this version will expire");
 	
 	dispatch_after_main(60, ^
 	{
@@ -148,7 +148,7 @@
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			asl_NSLog_debug(@"WARNING: opened window with height %i but it should be below 680 (Macbook Air 11) or better below 630 (Macbook 12 native) to fit on every screen", (int)[*window frame].size.height);
+			cc_log_debug(@"WARNING: opened window with height %i but it should be below 680 (Macbook Air 11) or better below 630 (Macbook 12 native) to fit on every screen", (int)[*window frame].size.height);
 		}
 	}
 
@@ -175,7 +175,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 	if (updater)
 		[updater checkForUpdates:self];
 	else
-		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: the sparkle updater is not available!");
+		cc_log(@"Warning: the sparkle updater is not available!");
 #endif
 }
 

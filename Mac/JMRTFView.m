@@ -64,7 +64,7 @@
 			}
 		}
 		else
-			asl_NSLog(ASL_LEVEL_ERR, @"Error: localHTMLName not set on JMRTFView");
+			cc_log_error(@"Error: localHTMLName not set on JMRTFView");
 	};
 
 	ONCE_PER_OBJECT(self, block);

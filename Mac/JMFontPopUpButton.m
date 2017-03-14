@@ -42,7 +42,7 @@
 #endif
 	}
 	else
-		asl_NSLog(ASL_LEVEL_WARNING, @"Warning: font with name '%@' is damaged and can not be instantiated.", [newItem title]);
+		cc_log(@"Warning: font with name '%@' is damaged and can not be instantiated.", [newItem title]);
 }
 
 @end
