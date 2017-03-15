@@ -2,6 +2,22 @@
 
 
 
+NSString *randomString(int maxLength)
+{
+    NSMutableString *str = [NSMutableString string];
+    int len = generateRandomIntBetween(0,maxLength);
+
+    for (int i = 0; i < len; i++)
+    {
+        unsigned char r = (unsigned char) generateRandomIntBetween(1,255);
+
+        NSString *c = [[NSString alloc] initWithBytes:&r length:1 encoding:NSASCIIStringEncoding];
+
+        [str appendString:c];
+    }
+    return str;
+}
+
 
 @interface Test : NSDictionary
 @property (nonatomic, readonly) NSString *title;
@@ -9,6 +25,8 @@
 @implementation Test
 @dynamic title;
 @end
+
+
 
 
 @interface CoreLibTests : XCTestCase
@@ -56,7 +74,7 @@
 #if ((MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10) || (__IPHONE_OS_VERSION_MIN_REQUIRED >= 80000))
 - (void)testTimeout
 {
-    BOOL res1 = dispatch_sync_back_timeout(^{ asl_NSLog_debug(@"testTimeout");}, 1);
+    BOOL res1 = dispatch_sync_back_timeout(^{ cc_log_debug(@"testTimeout");}, 1);
     XCTAssert(res1 == 0);
 
 
@@ -64,7 +82,7 @@
     XCTAssert(res2 == 1);
 
     __block BOOL shit1 = FALSE;
-    BOOL res3 = dispatch_sync_back_timeout(^{ shit1 = TRUE; asl_NSLog_debug(@"testTimeout");}, 1);
+    BOOL res3 = dispatch_sync_back_timeout(^{ shit1 = TRUE; cc_log_debug(@"testTimeout");}, 1);
     XCTAssert(res3 == 0);
     XCTAssert(shit1 == 1);
 
@@ -74,4 +92,18 @@
     XCTAssert(shit2 == 1);
 }
 #endif
+
+- (void)testLogging
+{
+    for (int i = 0; i < 100; i++)
+    {
+    NSString *str = randomString(100);
+
+    cc_log_debug(@"%@", str);
+    cc_log(@"%@", str);
+    cc_log_error(@"%@", str);
+    cc_log_emerg(@"%@", str);
+    cc_log_level(2, @"%@", str);
+    }
+}
 @end

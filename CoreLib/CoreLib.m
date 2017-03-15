@@ -958,7 +958,7 @@ __inline__ CGFloat generateRandomFloatBetween(CGFloat a, CGFloat b)
 	return a + (b - a) * (random() / (CGFloat) RAND_MAX);
 }
 
-__inline__ int generateRRandomIntBetween(int a, int b)
+__inline__ int generateRandomIntBetween(int a, int b)
 {
 	int range = b - a < 0 ? b - a - 1 : b - a + 1;
 	long rand = random();
@@ -1077,8 +1077,11 @@ void cc_log_level(int level, NSString *format, ...)
     _cc_log_tologfile(level, str);
     _cc_log_toprefs(level, str);
 
-
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     if (OS_IS_POST_10_11)
+#else
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_9_x_Max)
+#endif
     {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"

@@ -45,7 +45,7 @@
     else if (self.fileURL.length)
         [self.fileURL.fileURL open];
     else
-        asl_NSLog(ASL_LEVEL_INFO, @"JMURLButton clicked but no data!");
+        cc_log(@"JMURLButton clicked but no data!");
 }
 
 #if ! __has_feature(objc_arc)

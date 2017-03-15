@@ -192,6 +192,9 @@ NSColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);	// params fro
 UIColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a);
 UIColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);
 #endif
+CGFloat generateRandomFloatBetween(CGFloat a, CGFloat b);
+int generateRandomIntBetween(int a, int b);
+
 
 
 // !!!: GRAND CENTRAL DISPATCH FUNCTIONS
