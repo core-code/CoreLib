@@ -70,7 +70,7 @@ CONST_KEY(CCProgressIndicator)
 
 		[progressInfo setStringValue:title];
 		[progressDetailInfo setStringValue:@""];
-		[waitLabel setStringValue:@"Please wait until the operation finishes…"];
+		[waitLabel setStringValue:@"Please wait until the operation finishes…".localized];
 
 		[progressInfo setFont:[NSFont boldSystemFontOfSize:13]];
 

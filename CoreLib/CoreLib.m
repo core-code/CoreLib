@@ -829,7 +829,7 @@ NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **resul
 	return _alert_input(prompt, buttons, result, YES);
 }
 
-
+__attribute__((annotate("returns_localized_nsstring"))) static inline NSString *LocalizationNotNeeded(NSString *s) { return s; }
 NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
 	assert([NSThread currentThread] == [NSThread mainThread]);
@@ -839,10 +839,10 @@ NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSS
     
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = title;
-    alert.informativeText = message;
+    alert.informativeText = LocalizationNotNeeded(message);
     
     if (defaultButton)
-        [alert addButtonWithTitle:defaultButton];
+        [alert addButtonWithTitle:LocalizationNotNeeded(defaultButton)];
     if (alternateButton)
         [alert addButtonWithTitle:alternateButton];
     if (otherButton)
