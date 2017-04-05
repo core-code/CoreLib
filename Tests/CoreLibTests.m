@@ -95,15 +95,15 @@ NSString *randomString(int maxLength)
 
 - (void)testLogging
 {
-    for (int i = 0; i < 100; i++)
+//  for (int i = 0; i < 100; i++)
     {
-    NSString *str = randomString(100);
-
-    cc_log_debug(@"%@", str);
-    cc_log(@"%@", str);
-    cc_log_error(@"%@", str);
-    cc_log_emerg(@"%@", str);
-    cc_log_level(2, @"%@", str);
+        NSString *str = randomString(100);
+        
+        cc_log_debug(@"%@", str);
+        cc_log(@"%@", str);
+        cc_log_error(@"%@", str);
+        cc_log_emerg(@"%@", str);
+        cc_log_level(2, @"%@", str);
     }
 }
 @end

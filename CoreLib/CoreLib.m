@@ -57,7 +57,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURLInsideSandbox, homeURLOutsideSandbox, appSystemLogEntries
+@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURLInsideSandbox, homeURLOutsideSandbox
 #ifdef USE_SECURITY
 , appChecksumSHA;
 #else
@@ -498,7 +498,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 		NSString *mailtoLink = @"";
 		@try
 		{
-			mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n Messages: %@\n",
+			mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n",
 												kFeedbackEmail,
 												cc.appName,
 												cc.appVersionString,
@@ -512,8 +512,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 												[[NSProcessInfo processInfo] operatingSystemVersionString],
 												_isUserAdmin(),
 												([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
-												encodedPrefs,
-												cc.appSystemLogEntries);
+												encodedPrefs);
 
 		}
 		@catch (NSException *)
