@@ -1509,7 +1509,7 @@ NSString *_machineType();
 
 	if (err != kIOReturnSuccess)
 	{
-		cc_log_debug(@"Info: S.M.A.R.T. attribute check failed for disk with status %i", err);
+		cc_log_debug(@"Info: S.M.A.R.T. attribute check failed for disk %i with status %i", disk, err);
 		return nil;
 	}
 	else
