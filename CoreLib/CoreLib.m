@@ -1095,10 +1095,10 @@ void cc_log_level(int level, NSString *format, ...)
             os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_ERROR, "%s", utf);
         else if (level == ASL_LEVEL_CRIT || level == ASL_LEVEL_ALERT || level == ASL_LEVEL_EMERG)
             os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%s", utf);
-#pragma clang diagnostic pop
     }
     else
         asl_log(NULL, NULL, level, "%s", str.UTF8String);
+#pragma clang diagnostic pop
 
 #if ! __has_feature(objc_arc)
 	[str release];
