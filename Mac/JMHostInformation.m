@@ -1009,35 +1009,8 @@ NSString *_machineType();
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
-	NSMutableArray	*volumeNamesToIgnore = [NSMutableArray array];
-	NSMutableArray	*volumePathsToIgnore = [NSMutableArray array];
 	NSMutableArray  *nonRemovableVolumes = [NSMutableArray array];
 
-	for (NSString *name in [[NSWorkspace sharedWorkspace] mountedRemovableMedia])
-	{
-		if ([name hasPrefix:@"/Volumes/"])
-			[volumeNamesToIgnore addObject:[name substringFromIndex:[@"/Volumes/" length]]];
-		else
-			[volumeNamesToIgnore addObject:name];
-
-		[volumePathsToIgnore addObject:name];
-	}
-
-	for (NSString *path in [[NSWorkspace sharedWorkspace] mountedLocalVolumePaths])
-	{
-		NSString *description, *type;
-		BOOL removable = NO, writable, unmountable;
-
-		[[NSWorkspace sharedWorkspace] getFileSystemInfoForPath:path
-													isRemovable:&removable
-													 isWritable:&writable
-												  isUnmountable:&unmountable
-													description:&description
-														   type:&type];
-
-		if (removable)
-			[volumePathsToIgnore addObject:path];
-	}
 
 	DASessionRef session = DASessionCreate(kCFAllocatorDefault);
 	assert(session);
@@ -1053,9 +1026,25 @@ NSString *_machineType();
 	NSArray *urls = [[NSFileManager defaultManager] mountedVolumeURLsIncludingResourceValuesForKeys:@[NSURLVolumeNameKey] options:(NSVolumeEnumerationOptions)0];
 	for (NSURL *mountURL in urls)
 	{
-		NSError *error;
-		NSString *volumeName;
-		[mountURL getResourceValue:&volumeName forKey:NSURLVolumeNameKey error:&error];
+        NSError *error;
+        NSNumber *isRemovable;
+        [mountURL getResourceValue:&isRemovable forKey:NSURLVolumeIsRemovableKey error:&error];
+        NSNumber *isEjectable;
+        [mountURL getResourceValue:&isEjectable forKey:NSURLVolumeIsEjectableKey error:&error];
+
+        if (isRemovable.intValue)
+        {
+            LOGMOUNTEDHARDDISK(@"ignoring because of removable: %@", mountURL);
+            continue;
+        }
+        if (isEjectable.intValue)
+        {
+            LOGMOUNTEDHARDDISK(@"ignoring because of ejectable: %@", mountURL);
+            continue;
+        }
+
+        NSString *volumeName;
+        [mountURL getResourceValue:&volumeName forKey:NSURLVolumeNameKey error:&error];
 
 
 		if (volumeName)
@@ -1076,8 +1065,6 @@ NSString *_machineType();
 
 					LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", volumeName);
 
-					if ([volumeNamesToIgnore indexOfObject:volumeName] == NSNotFound &&
-						[volumePathsToIgnore indexOfObject:mountPath] == NSNotFound) // not removable
 					{
 
 						LOGMOUNTEDHARDDISK(@"mountedHarddisks has BSD name %@", bsdName);

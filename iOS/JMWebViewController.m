@@ -55,12 +55,6 @@
 	[super viewDidAppear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
-
 - (void)setDelegate:(id<UIWebViewDelegate>)delegate
 {
 	if (self.webView)

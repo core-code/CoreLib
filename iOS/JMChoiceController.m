@@ -71,11 +71,6 @@
 	[super viewWillDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return YES;
-}
-
 #pragma mark *** UITableViewDataSource protocol-methods ***
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -137,16 +132,6 @@
         NSString *choice = [self.choices objectAtIndex:indexPath.row];
 
         self.deleteBlock(choice, indexPath.row);
-    }
-}
-
-#pragma mark - UIPopoverController delegate
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{
-    if (self.dismissBlock)
-    {
-        self.dismissBlock();
     }
 }
 

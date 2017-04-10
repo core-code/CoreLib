@@ -14,6 +14,10 @@ NSString *randomString(int maxLength)
         NSString *c = [[NSString alloc] initWithBytes:&r length:1 encoding:NSASCIIStringEncoding];
 
         [str appendString:c];
+
+#if ! __has_feature(objc_arc)
+        [c release];
+#endif
     }
     return str;
 }
@@ -91,6 +95,7 @@ NSString *randomString(int maxLength)
     XCTAssert(res4 == 1);
     XCTAssert(shit2 == 1);
 }
+
 #endif
 
 - (void)testLogging
@@ -106,4 +111,6 @@ NSString *randomString(int maxLength)
         cc_log_level(2, @"%@", str);
     }
 }
+
+
 @end

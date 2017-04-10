@@ -39,8 +39,8 @@ extern "C"
 #if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
 #error CoreLib only deploys back to Mac OS X 10.6
 #endif
-#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 70000
-#error CoreLib only deploys back to iOS 7
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
+#error CoreLib only deploys back to iOS 8
 #endif
 #endif
 

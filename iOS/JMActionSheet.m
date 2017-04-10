@@ -12,63 +12,129 @@
 
 #import "JMActionSheet.h"
 
+@interface JMActionSheet ()
+
+@property (unsafe_unretained, nonatomic) UIViewController *viewController;
+
+@end
+
+
+
 @implementation JMActionSheet
 
 @synthesize cancelBlock, alternativeBlock, destructiveBlock;
 
+
++ (instancetype _Nonnull )actionSheetWithTitle:(nullable NSString *)title
+                                viewController:(UIViewController *_Nonnull)viewController
+                             cancelButtonTitle:(nullable NSString *)cancelButtonTitle
+                        destructiveButtonTitle:(nullable NSString *)destructiveButtonTitle
+                             otherButtonTitles:(nullable NSArray <NSString *> *)otherButtonTitles
+{
+
+    JMActionSheet *actionSheet = [JMActionSheet alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    actionSheet.viewController = viewController;
+
+    if (cancelButtonTitle)
+        [actionSheet addAction:[UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
+        {
+            [actionSheet cancelButtonClicked];
+            [viewController dismissViewControllerAnimated:YES completion:^
+            {
+            }];
+        }]];
+
+    if (destructiveButtonTitle)
+        [actionSheet addAction:[UIAlertAction actionWithTitle:destructiveButtonTitle style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action)
+        {
+            [actionSheet destuctiveButtonClicked];
+            [viewController dismissViewControllerAnimated:YES completion:^
+             {
+             }];
+        }]];
+
+    if (otherButtonTitles)
+    {
+        for (NSUInteger i = 0; i < otherButtonTitles.count; i++)
+        {
+            NSString *otherButtonTitle = otherButtonTitles[i];
+
+            [actionSheet addAction:[UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
+            {
+                [actionSheet otherButtonClicked:(int)i];
+                [viewController dismissViewControllerAnimated:YES completion:^
+                 {
+                 }];
+            }]];
+        }
+    }
+
+    return actionSheet;
+}
+
+
+
 - (void)showFromBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated
 {
-    [self setDelegate:self];
-    [super showFromBarButtonItem:item animated:animated];
+    UIView *view = [item valueForKey:@"view"];
+
+    self.popoverPresentationController.sourceView = view;
+
+    [self.viewController presentViewController:self animated:animated completion:nil];
 }
 
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view animated:(BOOL)animated
 {
-    [self setDelegate:self];
-    [super showFromRect:rect inView:view animated:animated ];
+    self.popoverPresentationController.sourceRect = rect;
+
+    [self.viewController presentViewController:self animated:animated completion:nil];
 }
 
 - (void)showFromTabBar:(UITabBar *)view
 {
-    [self setDelegate:self];
-    [super showFromTabBar:view];
+    self.popoverPresentationController.sourceView = view;
+
+    [self.viewController presentViewController:self animated:YES completion:nil];
 }
 
 - (void)showFromToolbar:(UIToolbar *)view
 {
-    [self setDelegate:self];
-    [super showFromToolbar:view];
+    self.popoverPresentationController.sourceView = view;
+
+    [self.viewController presentViewController:self animated:YES completion:nil];
+
 }
 
 - (void)showInView:(UIView *)view
 {
-    [self setDelegate:self];
-    [super showInView:view];
+    self.popoverPresentationController.sourceView = view;
+
+    [self.viewController presentViewController:self animated:YES completion:nil];
+
 }
 
-#pragma mark UIActionSheetDelegate methods
+#pragma mark action methods
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+
+- (void)cancelButtonClicked
 {
-    if (buttonIndex == [self cancelButtonIndex])
-    {
-        if (self.cancelBlock)
-            self.cancelBlock();
-    }
-    else if (buttonIndex == [self destructiveButtonIndex])
-    {
-        if (self.destructiveBlock)
-            self.destructiveBlock();
-    }
-    else if (buttonIndex >= [self firstOtherButtonIndex])
-    {
-        if (self.alternativeBlock)
-		{
-             int sub = [self firstOtherButtonIndex] >= 0 ? (int)[self firstOtherButtonIndex] : (([self destructiveButtonIndex] != -1) + ([self cancelButtonIndex] != -1));
-             self.alternativeBlock((int)buttonIndex - sub);
-		}
-    }
+    if (self.cancelBlock)
+        self.cancelBlock();
 }
+
+- (void)destuctiveButtonClicked
+{
+    if (self.destructiveBlock)
+        self.destructiveBlock();
+}
+
+- (void)otherButtonClicked:(int)buttonIndex
+{
+    if (self.alternativeBlock)
+        self.alternativeBlock(buttonIndex);
+}
+
 
 #if ! __has_feature(objc_arc)
 - (void)dealloc

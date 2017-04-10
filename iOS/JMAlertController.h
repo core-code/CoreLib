@@ -1,8 +1,8 @@
 //
-//  JMActionSheet.h
+//  JMAlertController.h
 //  CoreLib
 //
-//  Created by CoreCode on 03.12.11.
+//  Created by CoreCode on 21.12.11.
 /*	Copyright © 2017 CoreCode Limited
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -13,17 +13,21 @@
 #import "CoreLib.h"
 
 
-@interface JMActionSheet : UIAlertController
-
-+ (instancetype _Nonnull )actionSheetWithTitle:(nullable NSString *)title
-                                viewController:(UIViewController *_Nonnull)viewController
-                             cancelButtonTitle:(nullable NSString *)cancelButtonTitle
-                        destructiveButtonTitle:(nullable NSString *)destructiveButtonTitle
-                             otherButtonTitles:(nullable NSArray <NSString *> *)otherButtonTitles;
+@interface JMAlertController : UIAlertController
 
 @property (copy, nonatomic) BasicBlock _Nullable cancelBlock;
-@property (copy, nonatomic) BasicBlock _Nullable destructiveBlock;
-@property (copy, nonatomic) IntInBlock _Nullable alternativeBlock;
+@property (copy, nonatomic) IntInBlock _Nullable otherBlock;
+
++ (instancetype _Nullable)localizedAlertWithName:(NSString *_Nonnull)name viewController:(UIViewController *_Nonnull)viewController;
+
+
++ (instancetype _Nullable)alertControllerWithTitle:(NSString *_Nullable)title
+                                    viewController:(UIViewController *_Nonnull)viewController
+                                           message:(NSString *_Nullable)message
+                                       cancelBlock:(BasicBlock _Nullable )cancelBlock
+                                 cancelButtonTitle:(NSString *_Nullable)cancelButtonTitle
+                                        otherBlock:(IntInBlock _Nullable )otherBlock
+                                 otherButtonTitles:(NSArray <NSString *>*_Nullable)otherButtonTitles;
 
 
 - (void)showFromToolbar:(UIToolbar *_Nonnull)view;

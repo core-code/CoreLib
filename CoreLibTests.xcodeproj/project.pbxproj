@@ -83,13 +83,13 @@
 		B9EF05191865D42C00CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
 		B9EF052D1865D57400CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
 		B9EF05541865D5A200CF7A38 /* JMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05351865D5A200CF7A38 /* JMActionSheet.m */; };
-		B9EF05551865D5A200CF7A38 /* JMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertView.m */; };
+		B9EF05551865D5A200CF7A38 /* JMAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertController.m */; };
 		B9EF05561865D5A200CF7A38 /* JMChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05391865D5A200CF7A38 /* JMChoiceController.m */; };
 		B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */; };
 		B9EF056B1865F18300CF7A38 /* JMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05351865D5A200CF7A38 /* JMActionSheet.m */; };
 		B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */; };
 		B9EF05731865F18300CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
-		B9EF05741865F18300CF7A38 /* JMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertView.m */; };
+		B9EF05741865F18300CF7A38 /* JMAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertController.m */; };
 		B9EF05771865F18300CF7A38 /* JMChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05391865D5A200CF7A38 /* JMChoiceController.m */; };
 		B9EF05791865F18300CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF057A1865F18300CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
@@ -191,8 +191,8 @@
 		B9EF052C1865D57400CF7A38 /* CoreLibTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreLibTests.m; path = Tests/CoreLibTests.m; sourceTree = "<group>"; };
 		B9EF05341865D5A200CF7A38 /* JMActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMActionSheet.h; sourceTree = "<group>"; };
 		B9EF05351865D5A200CF7A38 /* JMActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMActionSheet.m; sourceTree = "<group>"; };
-		B9EF05361865D5A200CF7A38 /* JMAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMAlertView.h; sourceTree = "<group>"; };
-		B9EF05371865D5A200CF7A38 /* JMAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMAlertView.m; sourceTree = "<group>"; };
+		B9EF05361865D5A200CF7A38 /* JMAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMAlertController.h; sourceTree = "<group>"; };
+		B9EF05371865D5A200CF7A38 /* JMAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMAlertController.m; sourceTree = "<group>"; };
 		B9EF05381865D5A200CF7A38 /* JMChoiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMChoiceController.h; sourceTree = "<group>"; };
 		B9EF05391865D5A200CF7A38 /* JMChoiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMChoiceController.m; sourceTree = "<group>"; };
 		B9EF053C1865D5A200CF7A38 /* JMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebViewController.h; sourceTree = "<group>"; };
@@ -309,8 +309,8 @@
 			children = (
 				B9EF05341865D5A200CF7A38 /* JMActionSheet.h */,
 				B9EF05351865D5A200CF7A38 /* JMActionSheet.m */,
-				B9EF05361865D5A200CF7A38 /* JMAlertView.h */,
-				B9EF05371865D5A200CF7A38 /* JMAlertView.m */,
+				B9EF05361865D5A200CF7A38 /* JMAlertController.h */,
+				B9EF05371865D5A200CF7A38 /* JMAlertController.m */,
 				B9EF05381865D5A200CF7A38 /* JMChoiceController.h */,
 				B9EF05391865D5A200CF7A38 /* JMChoiceController.m */,
 				B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */,
@@ -514,7 +514,7 @@
 				B933AB3A18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */,
 				B9EF052D1865D57400CF7A38 /* CoreLibTests.m in Sources */,
-				B9EF05551865D5A200CF7A38 /* JMAlertView.m in Sources */,
+				B9EF05551865D5A200CF7A38 /* JMAlertController.m in Sources */,
 				B9EF05561865D5A200CF7A38 /* JMChoiceController.m in Sources */,
 				B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
 				B933AB3218BBDFA1006E42B9 /* CoreLib.m in Sources */,
@@ -532,7 +532,7 @@
 				B933AB3B18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */,
 				B9EF05731865F18300CF7A38 /* CoreLibTests.m in Sources */,
-				B9EF05741865F18300CF7A38 /* JMAlertView.m in Sources */,
+				B9EF05741865F18300CF7A38 /* JMAlertController.m in Sources */,
 				B9EF05771865F18300CF7A38 /* JMChoiceController.m in Sources */,
 				B933AB2B18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
 				B933AB3318BBDFA1006E42B9 /* CoreLib.m in Sources */,
