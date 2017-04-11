@@ -1052,7 +1052,7 @@ void _cc_log_tologfile(int level, NSString *string)
 
 void _cc_log_toprefs(int level, NSString *string)
 {
-#ifndef DONTLOGASLTOUSERDEFAULTS
+#ifndef DONTLOGTOUSERDEFAULTS
     static int lastPosition[8] = {0,0,0,0,0,0,0,0};
     assert(level < 8);
     NSString *key = makeString(@"corelib_asl_lev%i_pos%i", level, lastPosition[level]);

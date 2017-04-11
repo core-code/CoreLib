@@ -107,7 +107,7 @@ also you can define VENDOR_HOMEPAGE and FEEDBACK_EMAIL for the built-in feedback
 
 some parts of CoreLib do more checking if DEBUG is defined
 
-CoreLib saves the last 10 messages logged with asl_NSLog() to the user defaults unless you define  DONTLOGASLTOUSERDEFAULTS
+CoreLib saves the last 10 messages logged with cc_log() to the user defaults unless you define  DONTLOGTOUSERDEFAULTS
 
 CoreLib has changed its return values of the alert*() functions away from deprecated NSAlertDefaultReturn/NSOKButton values and undefines those to make sure you update. define IMADESURENOTTOCOMPAREALERTRETURNVALUESAGAINSTOLDRETURNVALUES to make sure you can still use the old return values for old appkit functions
 
