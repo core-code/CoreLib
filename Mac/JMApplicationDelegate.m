@@ -12,7 +12,6 @@
 
 #import "JMApplicationDelegate.h"
 #import "JMCrashReporter.h"
-#import "JMAppMovedHandler.h"
 #import "CoreLib.h"
 #if defined(APPSTORE_VALIDATERECEIPT) || defined(APPSTORE)
 #import "JMReceiptValidation.h"
@@ -38,12 +37,6 @@
 }
 #endif
 
-#ifdef USE_APPMOVEDHANDLER
-- (void)checkAppMovements
-{
-	[JMAppMovedHandler startMoveObservation];
-}
-#endif
 
 - (void)welcomeOrExpireDemo:(int)demoLimit welcomeText:(NSString *)welcomeText expiryText:(NSString *)expiryText
 {
