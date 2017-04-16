@@ -38,14 +38,24 @@
 }
 #endif
 
+#ifdef USE_APPMOVEDHANDLER
 - (void)checkAppMovements
 {
 	[JMAppMovedHandler startMoveObservation];
 }
+#endif
 
 - (void)welcomeOrExpireDemo:(int)demoLimit welcomeText:(NSString *)welcomeText expiryText:(NSString *)expiryText
 {
 #ifdef TRYOUT // check for demo limitation
+    expiryText = [expiryText replaced:@"[USAGES_LEFT]" with:@(demoLimit - usagesThisVersionKey.defaultInt).stringValue];
+    expiryText = [expiryText replaced:@"[USAGES_MAX]" with:@(demoLimit).stringValue];
+    expiryText = [expiryText replaced:@"[APPNAME]" with:cc.appName];
+    
+    welcomeText = [welcomeText replaced:@"[USAGES_LEFT]" with:@(demoLimit - usagesThisVersionKey.defaultInt).stringValue];
+    welcomeText = [welcomeText replaced:@"[USAGES_MAX]" with:@(demoLimit).stringValue];
+    welcomeText = [welcomeText replaced:@"[APPNAME]" with:cc.appName];
+    
 	if (usagesThisVersionKey.defaultInt >= demoLimit)
 	{
 		alert(cc.appName, expiryText, @"OK", nil, nil);
@@ -54,7 +64,7 @@
 	}
 	else
 	{
-		alert(cc.appName, makeString(welcomeText, , demoLimit - usagesThisVersionKey.defaultInt)), @"OK", nil, nil);
+		alert(cc.appName, welcomeText, @"OK", nil, nil);
 	}
 #endif
 }
@@ -72,6 +82,9 @@
 
 	if 	(!askedThisVersionKey.defaultInt && usagesThisVersionKey.defaultInt >= requestReviewLimit)
 	{
+        feedbackText = [feedbackText replaced:@"[USAGES_ASKREVIEW]" with:@(requestReviewLimit).stringValue];
+        feedbackText = [feedbackText replaced:@"[APPNAME]" with:cc.appName];
+        
 		NSInteger res = alert(makeString(@"Rate %@?", cc.appName),
 							  feedbackText, @"Rate on MacAppStore", @"Don't rate", @"Rate on MacUpdate");
 

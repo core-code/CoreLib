@@ -35,7 +35,9 @@
 #ifndef SANDBOX
 - (void)checkAndReportCrashesContaining:(NSArray <NSString *>*)neccessarySubstringsOrNil to:(NSString *)destinationMail;
 #endif
+#ifdef USE_APPMOVEDHANDLER
 - (void)checkAppMovements;
+#endif
 
 #ifdef USE_SPARKLE
 - (IBAction)initUpdateCheck;
