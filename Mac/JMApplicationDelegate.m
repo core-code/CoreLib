@@ -12,13 +12,16 @@
 
 #import "JMApplicationDelegate.h"
 #import "JMCrashReporter.h"
+#import "JMRatingWindowController.h"
 #import "CoreLib.h"
 #if defined(APPSTORE_VALIDATERECEIPT) || defined(APPSTORE)
 #import "JMReceiptValidation.h"
 #endif
 
+
 @interface JMApplicationDelegate ()
 	@property (assign, nonatomic) NSInteger minimumUsagesForRating;
+    @property (strong, nonatomic) JMRatingWindowController *ratingWindowController;
 @end
 
 
@@ -69,7 +72,16 @@
 	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + 1;
 	usagesThisVersionKey.defaultInt = usagesThisVersionKey.defaultInt + 1;
 
-
+// TODO: wip
+    if (!self.ratingWindowController)
+    {
+        self.ratingWindowController = [JMRatingWindowController new];
+        __weak JMApplicationDelegate *weakSelf = self;
+        self.ratingWindowController.closeBlock = ^{weakSelf.ratingWindowController = nil;};
+    }
+    [self.ratingWindowController showWindow:nil];
+    
+    
 #ifndef TRYOUT
 	NSString *askedThisVersionKey = makeString(@"corelib_%@_asked", cc.appVersionString);
 
