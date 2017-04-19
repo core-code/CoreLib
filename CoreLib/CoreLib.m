@@ -323,51 +323,64 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 }
 
-- (void)openURL:(openChoice)choice
+- (void)sendSupportRequestMail:(NSString *)text
 {
-	NSString *urlString = @"";
+    NSString *urlString = @"";
 
-
-	if (choice == openSupportRequestMail)
-	{
+    
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+    BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
 #endif
-
-		NSString *encodedPrefs = @"";
-
+    
+    NSString *encodedPrefs = @"";
+    
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #pragma clang diagnostic ignored "-Wpartial-availability"
 #endif
-		if (optionDown && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
-			encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+    if (optionDown && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
+        encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
 #pragma clang diagnostic pop
 #endif
 #endif
+    
+    
+    NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
+    
+    NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
+                                   cc.appName,
+                                   cc.appVersionString,
+                                   cc.appBuildNumber,
+                                   cc.appChecksumSHA);
+    
+    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
+                                    text,
+                                    _machineType(),
+                                    [[NSProcessInfo processInfo] operatingSystemVersionString],
+                                    ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""),
+                                    encodedPrefs);
+    
+    
+    urlString = makeString(@"mailto:%@?subject=%@&body=%@", recipient, subject, content);
+    
+    [urlString.escaped.URL open];
+}
 
-
-		NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
-
-		NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
-							   cc.appName,
-							   cc.appVersionString,
-							   cc.appBuildNumber,
-							   cc.appChecksumSHA);
-
-		NSString *content =  makeString(@"<Insert Support Request Here>\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
-								_machineType(),
-								[[NSProcessInfo processInfo] operatingSystemVersionString],
-								([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""),
-								encodedPrefs);
-
-
-		urlString = makeString(@"mailto:%@?subject=%@&body=%@", recipient, subject, content);
+- (void)openURL:(openChoice)choice
+{
+	if (choice == openSupportRequestMail)
+	{
+        [self sendSupportRequestMail:@"<Insert Support Request Here>"];
+        return;
 	}
-	else if (choice == openBetaSignupMail)
+    
+	
+    NSString *urlString = @"";
+
+    if (choice == openBetaSignupMail)
 		urlString = makeString(@"s%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
 							   [bundle objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
 	else if (choice == openHomepageWebsite)

@@ -139,6 +139,7 @@ MAKE_MAKER(MutableSet)
 @property (readonly, nonatomic) NSArray *appCrashLogs;
 @property (readonly, nonatomic) NSString *appChecksumSHA;
 - (void)openURL:(openChoice)choice;
+- (void)sendSupportRequestMail:(NSString *)text;
 @end
 
 

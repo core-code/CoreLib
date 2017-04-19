@@ -65,42 +65,48 @@
 #endif
 }
 
-- (void)increaseUsages:(int)allowReviewLimit requestReview:(int)requestReviewLimit feedbackText:(NSString *)feedbackText
+- (void)increaseUsages:(int)allowReviewLimit
+         requestReview:(int)requestReviewLimit
+          feedbackText:(NSString *)feedbackText
+            debugForce:(BOOL)forceAppearance
 {
 	self.minimumUsagesForRating = allowReviewLimit;
 
 	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + 1;
 	usagesThisVersionKey.defaultInt = usagesThisVersionKey.defaultInt + 1;
 
-// TODO: wip
-    if (!self.ratingWindowController)
-    {
-        self.ratingWindowController = [JMRatingWindowController new];
-        __weak JMApplicationDelegate *weakSelf = self;
-        self.ratingWindowController.closeBlock = ^{weakSelf.ratingWindowController = nil;};
-    }
-    [self.ratingWindowController showWindow:nil];
-    
-    
+    BOOL showDialoge = FALSE;
+
 #ifndef TRYOUT
 	NSString *askedThisVersionKey = makeString(@"corelib_%@_asked", cc.appVersionString);
 
-	if 	(!askedThisVersionKey.defaultInt && usagesThisVersionKey.defaultInt >= requestReviewLimit)
+	if 	(!@"corelib_dontaskagain".defaultInt &&
+         !askedThisVersionKey.defaultInt &&
+         usagesThisVersionKey.defaultInt >= requestReviewLimit)
 	{
-        feedbackText = [feedbackText replaced:@"[USAGES_ASKREVIEW]" with:@(requestReviewLimit).stringValue];
-        feedbackText = [feedbackText replaced:@"[APPNAME]" with:cc.appName];
-        
-		NSInteger res = alert(makeString(@"Rate %@?", cc.appName),
-							  feedbackText, @"Rate on MacAppStore", @"Don't rate", @"Rate on MacUpdate");
-
-		if (res == NSAlertFirstButtonReturn)
-			[cc openURL:openAppStoreApp];
-		if (res == NSAlertThirdButtonReturn)
-			[cc openURL:openMacupdateWebsite];
+        showDialoge = YES;
 
 		askedThisVersionKey.defaultInt = 1;
 	}
 #endif
+    
+    if (forceAppearance || showDialoge)
+    {
+        feedbackText = [feedbackText replaced:@"[USAGES_ASKREVIEW]" with:@(requestReviewLimit).stringValue];
+        feedbackText = [feedbackText replaced:@"[APPNAME]" with:cc.appName];
+        
+        
+        if (!self.ratingWindowController)
+        {
+            self.ratingWindowController = [JMRatingWindowController new];
+            __weak JMApplicationDelegate *weakSelf = self;
+            self.ratingWindowController.closeBlock = ^{weakSelf.ratingWindowController = nil;};
+        }
+        [self.ratingWindowController showWindow:nil];
+        self.ratingWindowController.introTextField.stringValue = feedbackText;
+        
+    
+    }
 }
 
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays

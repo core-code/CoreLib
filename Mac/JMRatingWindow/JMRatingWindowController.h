@@ -15,5 +15,6 @@
 @interface JMRatingWindowController : NSWindowController
 
 @property (copy, nonatomic) BasicBlock closeBlock;
+@property (weak, nonatomic) IBOutlet NSTextField *introTextField;
 
 @end
