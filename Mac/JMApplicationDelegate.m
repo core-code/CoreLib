@@ -62,6 +62,7 @@
 	{
 		alert(cc.appName, welcomeText, @"OK", nil, nil);
 	}
+    // TODO: this needs a facility so we can call it at "operation" time to, not just start
 #endif
 }
 
@@ -77,6 +78,11 @@
 
     BOOL showDialoge = FALSE;
 
+    // TODO: this needs more control separating appstart from an successfullop
+    // TODO: this needs more control when the dialoge will actually appear
+    // TODO: this should not require linking the rating window if you don't want the feature
+
+    
 #ifndef TRYOUT
 	NSString *askedThisVersionKey = makeString(@"corelib_%@_asked", cc.appVersionString);
 
@@ -104,8 +110,6 @@
         }
         [self.ratingWindowController showWindow:nil];
         self.ratingWindowController.introTextField.stringValue = feedbackText;
-        
-    
     }
 }
 
