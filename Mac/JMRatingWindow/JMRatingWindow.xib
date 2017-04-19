@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12118"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,6 +14,8 @@
                 <outlet property="happyView" destination="G6D-tz-t63" id="gvH-Xj-GBJ"/>
                 <outlet property="initialView" destination="vcD-Kb-lcE" id="Ee2-OW-xbm"/>
                 <outlet property="introTextField" destination="A9S-tJ-Vng" id="bma-LU-nfP"/>
+                <outlet property="rateappstoreButton" destination="Ww1-aS-A59" id="kvO-jW-tuu"/>
+                <outlet property="ratemacupdateButton" destination="4SL-7V-PeX" id="x2Q-oU-EZZ"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>

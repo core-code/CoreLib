@@ -17,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet NSView *happyView;
 @property (weak, nonatomic) IBOutlet NSView *angryView;
 @property (weak, nonatomic) IBOutlet NSTextField *feedbackTextField;
+@property (weak, nonatomic) IBOutlet NSButton *ratemacupdateButton;
+@property (weak, nonatomic) IBOutlet NSButton *rateappstoreButton;
 
 @end
 
@@ -45,6 +47,11 @@
     self.initialView.hidden = YES;
     self.angryView.hidden = YES;
     self.happyView.hidden = NO;
+    
+    if (![(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] length])
+        self.ratemacupdateButton.enabled = NO;
+    if (![(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] length])
+        self.rateappstoreButton.enabled = NO;
 }
 
 - (IBAction)notsureClicked:(id)sender
