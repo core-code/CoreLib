@@ -19,6 +19,14 @@
 @property (weak, nonatomic) IBOutlet NSTextField *feedbackTextField;
 @property (weak, nonatomic) IBOutlet NSButton *ratemacupdateButton;
 @property (weak, nonatomic) IBOutlet NSButton *rateappstoreButton;
+@property (weak, nonatomic) IBOutlet NSButton *notnowButton;
+@property (weak, nonatomic) IBOutlet NSButton *happyButton;
+@property (weak, nonatomic) IBOutlet NSButton *notsureButton;
+@property (weak, nonatomic) IBOutlet NSButton *problemButton;
+@property (weak, nonatomic) IBOutlet NSButton *feedbackButton;
+@property (weak, nonatomic) IBOutlet NSTextFieldCell *awesomeText;
+@property (weak, nonatomic) IBOutlet NSTextField *introText;
+@property (weak, nonatomic) IBOutlet NSTextField *sorryText;
 
 @end
 
@@ -40,6 +48,17 @@
     self.angryView.hidden = YES;
     self.happyView.hidden = YES;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    if (OS_IS_POST_10_10) // doing this directly in the NIB would warn when deploying to < 10.11
+    {
+        for (NSButton *button in @[_ratemacupdateButton, _rateappstoreButton, _notnowButton, _happyButton, _notsureButton, _problemButton, _feedbackButton])
+            button.font = [NSFont systemFontOfSize:18 weight:NSFontWeightLight];
+        for (NSButton *tf in @[_awesomeText, _introText, _sorryText])
+            tf.font = [NSFont systemFontOfSize:14 weight:NSFontWeightLight];
+    }
+#pragma clang diagnostic pop
 }
 
 - (IBAction)happyClicked:(id)sender
