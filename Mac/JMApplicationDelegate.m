@@ -63,25 +63,27 @@
 		alert(cc.appName, welcomeText, @"OK", nil, nil);
 	}
     // TODO: this needs a facility so we can call it at "operation" time to, not just start
+    // TODO: we also want to support the model where we restrict features but don't expire
 #endif
 }
 
-- (void)increaseUsages:(int)allowReviewLimit
-         requestReview:(int)requestReviewLimit
-          feedbackText:(NSString *)feedbackText
-            debugForce:(BOOL)forceAppearance
+- (void)increaseUsagesBy:(int)usageIncrease
+        allowRatingsWith:(int)allowReviewLimit
+     requestFeedbackWith:(int)requestReviewLimit
+            feedbackText:(NSString *)feedbackText
+        allowFeedbackNow:(BOOL)allowNow
+        forceFeedbackNow:(BOOL)forceAppearance
 {
 	self.minimumUsagesForRating = allowReviewLimit;
 
-	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + 1;
-	usagesThisVersionKey.defaultInt = usagesThisVersionKey.defaultInt + 1;
+	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + usageIncrease;
+	usagesThisVersionKey.defaultInt = usagesThisVersionKey.defaultInt + usageIncrease;
 
-    BOOL showDialoge = FALSE;
+    BOOL showDialoge = forceAppearance;
 
-    // TODO: this needs more control separating appstart from an successfullop
-    // TODO: this needs more control when the dialoge will actually appear
     // TODO: this should not require linking the rating window if you don't want the feature
 
+    if (!allowNow) return;
     
 #ifndef TRYOUT
 	NSString *askedThisVersionKey = makeString(@"corelib_%@_asked", cc.appVersionString);
@@ -96,7 +98,7 @@
 	}
 #endif
     
-    if (forceAppearance || showDialoge)
+    if (showDialoge)
     {
         feedbackText = [feedbackText replaced:@"[USAGES_ASKREVIEW]" with:@(requestReviewLimit).stringValue];
         feedbackText = [feedbackText replaced:@"[APPNAME]" with:cc.appName];

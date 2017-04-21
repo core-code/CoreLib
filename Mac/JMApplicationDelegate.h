@@ -28,8 +28,14 @@
 @property (readonly, nonatomic) BOOL isRateable;
 
 
+- (void)increaseUsagesBy:(int)usageIncrease
+        allowRatingsWith:(int)allowReviewLimit
+     requestFeedbackWith:(int)requestReviewLimit
+            feedbackText:(NSString *)feedbackText
+        allowFeedbackNow:(BOOL)allowNow
+        forceFeedbackNow:(BOOL)forceAppearance;
+
 - (void)welcomeOrExpireDemo:(int)demoLimit welcomeText:(NSString *)welcomeText expiryText:(NSString *)expiryText;
-- (void)increaseUsages:(int)allowReviewLimit requestReview:(int)requestReviewLimit feedbackText:(NSString *)feedbackText debugForce:(BOOL)forceAppearance;
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays;
 - (void)checkMASReceipt;
 #ifndef SANDBOX
