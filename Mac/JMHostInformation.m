@@ -1058,10 +1058,8 @@ NSString *_machineType();
 				{
 
 					NSString *bsdName = @(utfBSDName);
-                    NSString *mountPath = [mountURL path];
 
-
-					cc_log_debug(@"Volume mounted at: %@  %@ %@", mountPath, volumeName, bsdName);
+					cc_log_debug(@"Volume mounted at: %@  %@ %@", [mountURL path], volumeName, bsdName);
 
 					LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", volumeName);
 
