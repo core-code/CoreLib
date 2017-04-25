@@ -248,4 +248,18 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 #endif
 }
 
+#pragma mark PADDLE
+
+- (IBAction)paddleDeactivateClicked:(id)sender
+{
+    [self doesNotRecognizeSelector:_cmd];
+
+}
+
+
+- (IBAction)paddleDetailsClicked:(id)sender
+{
+    [self doesNotRecognizeSelector:_cmd];
+}
+
 @end

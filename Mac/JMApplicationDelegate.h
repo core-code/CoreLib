@@ -23,9 +23,12 @@
 #ifdef USE_SPARKLE
 	<SUUpdaterDelegate>
 #endif
+
 - (IBAction)openWindow:(__strong NSWindow **)window nibName:(NSString *)nibName;
 - (IBAction)openURL:(id)sender;
+
 @property (readonly, nonatomic) BOOL isRateable;
+
 
 
 - (void)increaseUsagesBy:(int)usageIncrease
@@ -48,6 +51,14 @@
 - (IBAction)checkForUpdatesAction:(id)sender;
 CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 #endif
+
+
+// PADDLE
+- (IBAction)paddleDeactivateClicked:(id)sender;
+- (IBAction)paddleDetailsClicked:(id)sender;
+@property (assign, nonatomic) BOOL paddleEnabled;
+@property (assign, nonatomic) BOOL paddleActivated;
+
 
 
 @end
