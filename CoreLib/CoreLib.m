@@ -389,9 +389,12 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	else if (choice == openAppStoreWebsite)
 		urlString = [bundle objectForInfoDictionaryKey:@"StoreProductPage"];
 	else if (choice == openAppStoreApp)
-		urlString = [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
+    {
+        urlString = [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
+        urlString = [urlString stringByAppendingString:@"&at=1000lwks"];
+    }
 	else if (choice == openMacupdateWebsite)
-		urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
+    	urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
 
 	[urlString.escaped.URL open];
 }
