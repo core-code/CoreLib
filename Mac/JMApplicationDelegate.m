@@ -12,7 +12,9 @@
 
 #import "JMApplicationDelegate.h"
 #import "JMCrashReporter.h"
+#ifndef SKIP_RATINGWINDOW
 #import "JMRatingWindowController.h"
+#endif
 #import "CoreLib.h"
 #if defined(APPSTORE_VALIDATERECEIPT) || defined(APPSTORE)
 #import "JMReceiptValidation.h"
@@ -21,7 +23,9 @@
 
 @interface JMApplicationDelegate ()
 	@property (assign, nonatomic) NSInteger minimumUsagesForRating;
+#ifndef SKIP_RATINGWINDOW
     @property (strong, nonatomic) JMRatingWindowController *ratingWindowController;
+#endif
 @end
 
 
@@ -67,6 +71,7 @@
 #endif
 }
 
+#ifndef SKIP_RATINGWINDOW
 - (void)increaseUsagesBy:(int)usageIncrease
         allowRatingsWith:(int)allowReviewLimit
      requestFeedbackWith:(int)requestReviewLimit
@@ -114,7 +119,8 @@
         self.ratingWindowController.introTextField.stringValue = feedbackText;
     }
 }
-
+#endif
+    
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)

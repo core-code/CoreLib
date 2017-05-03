@@ -30,13 +30,14 @@
 @property (readonly, nonatomic) BOOL isRateable;
 
 
-
+#ifndef SKIP_RATINGWINDOW
 - (void)increaseUsagesBy:(int)usageIncrease
         allowRatingsWith:(int)allowReviewLimit
      requestFeedbackWith:(int)requestReviewLimit
             feedbackText:(NSString *)feedbackText
         allowFeedbackNow:(BOOL)allowNow
         forceFeedbackNow:(BOOL)forceAppearance;
+#endif
 
 - (void)welcomeOrExpireDemo:(int)demoLimit welcomeText:(NSString *)welcomeText expiryText:(NSString *)expiryText;
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays;

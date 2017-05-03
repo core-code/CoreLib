@@ -103,6 +103,10 @@ some features of CoreLib require linking additional frameworks and are therefore
 
 additionally some parts of CoreLib require setting the SANDBOX #define to indicate whether your app is sandbox
 
+you can also use this if you want to include JMApplicationDelegate but not JMRatingWindow
+	#define SKIP_RATINGWINDOW 1 
+	
+
 also you can define VENDOR_HOMEPAGE and FEEDBACK_EMAIL for the built-in feedback mechanism (openURL)	
 
 some parts of CoreLib do more checking if DEBUG is defined
