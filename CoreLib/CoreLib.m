@@ -140,6 +140,13 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
             LOG(@"Warning: LSApplicationCategoryType not properly set");
+        
+        if (NSClassFromString(@"JMRatingWindowController"))
+        {
+            assert(@"icon-appstore.png".resourceURL);
+            assert(@"icon-macupdate.png".resourceURL);
+            assert(@"JMRatingWindow.nib".resourceURL);
+        }
     #else
         #ifndef NDEBUG
             cc_log_error(@"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");
