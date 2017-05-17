@@ -29,7 +29,7 @@
 @end
 
 
-#if defined(TRYOUT) && TRYOUT && (!defined(SKIP_RATINGWINDOW) || !SKIP_RATINGWINDOW)
+#if (!defined(SKIP_RATINGWINDOW) || !SKIP_RATINGWINDOW)
 #define usagesThisVersionKey makeString(@"corelib_%@_usages", cc.appVersionString)
 #endif
 #define usagesAllVersionKey @"corelib_usages"
