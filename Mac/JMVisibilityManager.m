@@ -61,7 +61,7 @@ CONST_KEY(JMVisibilityManagerValue)
 		_templateSetting = kTemplateNever;
 
 
-		BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+        BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
 
 		if (storedSetting == kVisibleNowhere && optionDown)
 			[self setVisibilitySetting:kVisibleDock];
@@ -173,7 +173,7 @@ CONST_KEY(JMVisibilityManagerValue)
 
 - (void)handleAppReopen
 {
-	BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+    BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
 
 	if (self.visibilitySetting == kVisibleNowhere && optionDown)
 		[self setVisibilitySetting:kVisibleDock];

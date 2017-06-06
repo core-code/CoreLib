@@ -141,7 +141,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
             LOG(@"Warning: LSApplicationCategoryType not properly set");
         
-        if (NSClassFromString(@"JMRatingWindowController"))
+        
+        
+        if (NSClassFromString(@"JMRatingWindowController") &&
+            NSProcessInfo.processInfo.environment[@"XCInjectBundleInto"] != nil)
         {
             assert(@"icon-appstore.png".resourceURL);
             assert(@"icon-macupdate.png".resourceURL);
@@ -336,7 +339,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
     
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-    BOOL optionDown = ([NSEvent modifierFlags] & NSAlternateKeyMask) != 0;
+    BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
 #endif
     
     NSString *encodedPrefs = @"";

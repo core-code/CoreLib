@@ -18,8 +18,8 @@
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) id target;
 @property (strong, nonatomic) NSDate *date;
-@property (copy, nonatomic) void (^timerBlock)();
-@property (copy, nonatomic) void (^dropBlock)();
+@property (copy, nonatomic) void (^timerBlock)(void);
+@property (copy, nonatomic) void (^dropBlock)(void);
 
 @end
 

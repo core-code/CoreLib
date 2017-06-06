@@ -114,7 +114,12 @@
         if (!self.ratingWindowController)
         {
             self.ratingWindowController = [JMRatingWindowController new];
-            __weak JMApplicationDelegate *weakSelf = self;
+#if ! __has_feature(objc_arc)
+            __unsafe_unretained
+#else
+            __weak
+#endif
+            JMApplicationDelegate *weakSelf = self;
             self.ratingWindowController.closeBlock = ^{weakSelf.ratingWindowController = nil;};
         }
         [self.ratingWindowController showWindow:nil];

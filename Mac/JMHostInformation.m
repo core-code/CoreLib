@@ -402,7 +402,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 }
 #endif
 
-BOOL _isUserAdmin();
+BOOL _isUserAdmin(void);
 + (BOOL)isUserAdmin
 {
     return _isUserAdmin();
@@ -620,7 +620,7 @@ BOOL _isUserAdmin();
 }
 #endif
 
-NSString *_machineType();
+NSString *_machineType(void);
 + (NSString *)machineType
 {
 	return _machineType();

@@ -15,18 +15,14 @@ CoreLib has these components:
 
 * for Mac) convenience classes for e-mail sending, getting host information, managing login items, showing styled font lists, etc  (Mac/JM*)
 
-* categories on all Foundation&AppKit classes to provide properties instead of getters/setters. this is provided in the 10.10 SDK too, but we have it for pre Xcode 6 (AppKit+Properties, Foundation+Properties)
+* for Mac) subclasses for WebView, NSButton, NSTextView as well as custom view controllers to do many common tasks easier e.g. just configure properties in IB without any code (Mac/JM*)
 
-* support for object subscripting with old SDKs where Apple doesn't support it (Foundation+Indexing)
-
-* support for generating warnings on invocation of methods/classes that are not available on your deployment target (CoreLib_Availability)
-
-* support for pseudo static typing in collection classes (for invoking properties on objects from collections without casting) and much more convenience stuff (CoreLib)
+* CoreLib provided much important stuff earlier than Apple, which is still useful on older Xcode versions where this is not supported (API availability warnings, statically typed collections, properties for getters/setters, object subscripting)
 
 ### Requirements
 
-CoreLib up to version 1.8 requires Xcode 6 and deploys back to Mac OS X 10.6 / iOS 6
-CoreLib version 1.9 and above requires Xcode 7 and deploys back to Mac OS X 10.6 / iOS 7
+CoreLib up to version 1.8 requires Xcode 6 and deploys back to Mac OS X 10.6 / iOS 6  
+CoreLib version 1.9 requires Xcode 7 and deploys back to Mac OS X 10.6 / iOS 7  
 CoreLib version 1.10 and above requires Xcode 8 and deploys back to Mac OS X 10.6 / iOS 8
 
 ### Initialization
@@ -101,7 +97,7 @@ some features of CoreLib require linking additional frameworks and are therefore
 	#define USE_MAILCORE 1 // if you link MailCore.framework
 	#define USE_SNAPPY 1 // if you link Snappy.framework
 
-additionally some parts of CoreLib require setting the SANDBOX #define to indicate whether your app is sandbox
+additionally some parts of CoreLib require setting the SANDBOX #define to indicate whether your app is sandboxed
 
 you can also use this if you want to include JMApplicationDelegate but not JMRatingWindow
 	#define SKIP_RATINGWINDOW 1 

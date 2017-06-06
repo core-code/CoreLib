@@ -22,9 +22,9 @@
 - (void)sendEvent:(NSEvent *)event
 {
 
-    if ([event type] == NSKeyDown)
+    if ([event type] == NSEventTypeKeyDown)
 	{
-        if (([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSCommandKeyMask)
+        if (([event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagCommand)
 		{
             if ([[event charactersIgnoringModifiers] isEqualToString:@"x"])
 			{

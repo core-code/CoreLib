@@ -22,7 +22,7 @@
 @property (copy, nonatomic) NSArray *choices;
 @property (copy, nonatomic) NSArray *detail;
 @property (copy, nonatomic) void (^completionBlock)(NSString *choice, NSInteger index);
-@property (copy, nonatomic) void (^dismissBlock)();
+@property (copy, nonatomic) void (^dismissBlock)(void);
 @property (copy, nonatomic) void (^deleteBlock)(NSString *choice, NSInteger index);
 
 @end

@@ -1429,7 +1429,7 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
 //	void (^block)(id input) = (__bridge void (^)())(clientCallBackInfo);
 //	block(tmp);
 
-	void (^block)() = (__bridge void (^)())(clientCallBackInfo);
+	void (^block)(void) = (__bridge void (^)(void))(clientCallBackInfo);
 	block();
 }
 
@@ -1647,7 +1647,14 @@ CONST_KEY(CCDirectoryObserving)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     [[NSWorkspace sharedWorkspace] openURL:self];
 #else
-    [[UIApplication sharedApplication] openURL:self];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
+    if ([[UIDevice currentDevice] systemVersion].floatValue >= 10.0f)
+        [[UIApplication sharedApplication] openURL:self options:@{} completionHandler:NULL];
+    else
+        [[UIApplication sharedApplication] openURL:self];
+#pragma clang diagnostic pop
 #endif
 }
 

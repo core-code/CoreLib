@@ -56,7 +56,7 @@ CONST_KEY(CCProgressIndicator)
     dispatch_async_main(^
 	{
 		NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 400.0, 120.0)
-													   styleMask:NSTitledWindowMask
+                                                              styleMask:NSWindowStyleMaskTitled
 														 backing:NSBackingStoreBuffered
 														   defer:NO];
 
@@ -76,7 +76,7 @@ CONST_KEY(CCProgressIndicator)
 
 		for (NSTextField *textField in @[progressInfo, progressDetailInfo, waitLabel])
 		{
-			[textField setAlignment:NSCenterTextAlignment];
+            [textField setAlignment:NSTextAlignmentCenter];
 			[textField setBezeled:NO];
 			[textField setDrawsBackground:NO];
 			[textField setEditable:NO];
@@ -200,7 +200,8 @@ if (OS_IS_POST_10_8)
     NSSize strSize;
     do
     {
-        NSDictionary* attrs = @{NSFontAttributeName: [NSFont fontWithName:curr.fontName size:currentFontSize]};
+        NSFont *font = [NSFont fontWithName:curr.fontName size:currentFontSize];
+        NSDictionary *attrs = @{NSFontAttributeName : font};
         strSize = [self.stringValue sizeWithAttributes:attrs];
 
 		currentFontSize --;
