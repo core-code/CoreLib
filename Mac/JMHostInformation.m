@@ -17,7 +17,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @import Darwin.POSIX.sys.socket;
 @import Darwin.POSIX.netinet.in;
 @import Darwin.POSIX.arpa.inet;
-#include <ifaddrs.h>
+@import Darwin.POSIX.ifaddrs;
 @import Darwin.POSIX.net;
 @import Darwin.C.stdio;
 @import Darwin.POSIX.unistd;

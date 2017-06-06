@@ -267,6 +267,7 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define VALID_STR(x)			(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
 #define NON_NIL_STR(x)			((x) ? (x) : @"")
 #define NON_NIL_ARR(x)			((x) ? (x) : @[])
+#define NON_NIL_NUM(x)          ((x) ? (x) : @(0))
 #define NON_NIL_OBJ(x)			((x) ? (x) : [NSNull null])
 #define IS_FLOAT_EQUAL(x,y)		(fabsf((x)-(y)) < 0.0001f)
 #define IS_DOUBLE_EQUAL(x,y)	(fabs((x)-(y)) < 0.000001)
