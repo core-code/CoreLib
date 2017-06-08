@@ -17,7 +17,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @import Darwin.POSIX.sys.socket;
 @import Darwin.POSIX.netinet.in;
 @import Darwin.POSIX.arpa.inet;
+#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13
 @import Darwin.POSIX.ifaddrs;
+#else
+#include <ifaddrs.h>
+#endif
 @import Darwin.POSIX.net;
 @import Darwin.C.stdio;
 @import Darwin.POSIX.unistd;
