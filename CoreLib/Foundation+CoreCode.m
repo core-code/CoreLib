@@ -529,7 +529,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
@@ -538,6 +538,31 @@ CONST_KEY(CoreCodeAssociatedValue)
 #ifdef USE_SECURITY
 @dynamic SHA1;
 #endif
+
+- (NSString *)rot13
+{
+    const char *cstring = [self cStringUsingEncoding:NSASCIIStringEncoding];
+    char newcstring[self.length+1];
+    
+    NSUInteger x;
+    for(x = 0; x < self.length; x++)
+    {
+        unsigned int aCharacter = cstring[x];
+        
+        if( 0x40 < aCharacter && aCharacter < 0x5B ) // A - Z
+            newcstring[x] = (((aCharacter - 0x41) + 0x0D) % 0x1A) + 0x41;
+        else if ( 0x60 < aCharacter && aCharacter < 0x7B ) // a-z
+            newcstring[x] = (((aCharacter - 0x61) + 0x0D) % 0x1A) + 0x61;
+        else  // Not an alpha character
+            newcstring[x] = (((aCharacter - 0x61) + 0x0D) % 0x1A) + 0x61;
+    }
+    
+    newcstring[x] = '\0';
+    
+    NSString *rotString = [NSString stringWithCString:newcstring encoding:NSASCIIStringEncoding];
+    
+    return rotString;
+}
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSImage *)namedImage

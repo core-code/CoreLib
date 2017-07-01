@@ -158,6 +158,8 @@
 //@property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes the slashes
 
 @property (readonly, nonatomic) NSMutableString *mutableObject;
+
+@property (readonly, nonatomic) NSString *rot13;
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
 #endif
