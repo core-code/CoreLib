@@ -544,6 +544,8 @@ CONST_KEY(CoreCodeAssociatedValue)
     const char *cstring = [self cStringUsingEncoding:NSASCIIStringEncoding];
     char *newcstring = malloc(self.length+1);
     
+    if (!cstring) return nil;
+    
     NSUInteger x;
     for(x = 0; x < self.length; x++)
     {

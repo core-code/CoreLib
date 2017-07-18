@@ -1114,13 +1114,13 @@ void cc_log_level(int level, NSString *format, ...)
         const char *utf = str.UTF8String;
 
         if (level == ASL_LEVEL_DEBUG || level == ASL_LEVEL_INFO)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEBUG, "%s", utf);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEBUG, "%{public}s", utf);
         else if (level == ASL_LEVEL_NOTICE || level == ASL_LEVEL_WARNING)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEFAULT, "%s", utf);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEFAULT, "%{public}s", utf);
         else if (level == ASL_LEVEL_ERR)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_ERROR, "%s", utf);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_ERROR, "%{public}s", utf);
         else if (level == ASL_LEVEL_CRIT || level == ASL_LEVEL_ALERT || level == ASL_LEVEL_EMERG)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%s", utf);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%{public}s", utf);
     }
     else
         asl_log(NULL, NULL, level, "%s", str.UTF8String);
