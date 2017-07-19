@@ -542,9 +542,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)rot13
 {
     const char *cstring = [self cStringUsingEncoding:NSASCIIStringEncoding];
+
+    if (!cstring) return nil;
+
     char *newcstring = malloc(self.length+1);
     
-    if (!cstring) return nil;
     
     NSUInteger x;
     for(x = 0; x < self.length; x++)
