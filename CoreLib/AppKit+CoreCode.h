@@ -21,6 +21,12 @@
 - (void)beginProgress:(NSString * _Nonnull)title;
 - (void)endProgress;
 
+
+- (void)setCountedProgress:(double)progress message:(NSString * _Nonnull)message;
+- (void)beginCountedProgress:(NSString * _Nonnull)title;
+- (void)endCountedProgress;
+
+
 - (IBAction)performBorderlessClose:(id _Nullable)sender;
 
 

@@ -551,7 +551,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSUInteger x;
     for(x = 0; x < self.length; x++)
     {
-        unsigned int aCharacter = cstring[x];
+        unsigned int aCharacter = (unsigned int)cstring[x];
         
         if( 0x40 < aCharacter && aCharacter < 0x5B ) // A - Z
             newcstring[x] = (((aCharacter - 0x41) + 0x0D) % 0x1A) + 0x41;

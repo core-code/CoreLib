@@ -25,6 +25,10 @@
 CONST_KEY(CCProgressDetailInfo)
 CONST_KEY(CCProgressSheet)
 CONST_KEY(CCProgressIndicator)
+CONST_KEY(CCCountedProgressDetailInfo)
+CONST_KEY(CCCountedProgressSheet)
+CONST_KEY(CCCountedProgressIndicator)
+
 
 @implementation NSTabView (CoreCode)
 
@@ -136,6 +140,112 @@ if (OS_IS_POST_10_8)
 		[self setAssociatedValue:nil forKey:kCCProgressSheetKey];
 		[self setAssociatedValue:nil forKey:kCCProgressIndicatorKey];
 	});
+}
+
+
+
+
+- (void)setCountedProgress:(double)progress message:(NSString *)message
+{
+    dispatch_async_main(^
+    {
+        NSTextField *progressDetailInfo = [self associatedValueForKey:kCCCountedProgressDetailInfoKey];
+        
+        [progressDetailInfo setStringValue:message];
+        
+        
+        NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCCountedProgressIndicatorKey];
+
+        [progressIndicator setDoubleValue:progress];
+    });
+}
+
+- (void)beginCountedProgress:(NSString *)title
+{
+    dispatch_async_main(^
+    {
+        NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 400.0, 120.0)
+                                                              styleMask:NSWindowStyleMaskTitled
+                                                                backing:NSBackingStoreBuffered
+                                                                  defer:NO];
+        
+        
+        NSTextField *progressInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 90.0, 364.0, 17.0)];
+        NSTextField *progressDetailInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 65.0, 364.0, 17.0)];
+        NSTextField *waitLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 14.0, 364.0, 17.0)];
+        NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(20.0, 41.0, 360.0, 20.0)];
+        
+        
+        progressIndicator.indeterminate = NO;
+        
+        [progressInfo setStringValue:title];
+        [progressDetailInfo setStringValue:@""];
+        [waitLabel setStringValue:@"Please wait until the operation finishes…".localized];
+        
+        [progressInfo setFont:[NSFont boldSystemFontOfSize:13]];
+        
+        for (NSTextField *textField in @[progressInfo, progressDetailInfo, waitLabel])
+        {
+            [textField setAlignment:NSTextAlignmentCenter];
+            [textField setBezeled:NO];
+            [textField setDrawsBackground:NO];
+            [textField setEditable:NO];
+            [textField setSelectable:NO];
+            [progressPanel.contentView addSubview:textField];
+        }
+        
+        [progressPanel.contentView addSubview:progressIndicator];
+#if ! __has_feature(objc_arc)
+        [progressIndicator release];
+        [waitLabel release];
+        [progressDetailInfo release];
+        [progressInfo release];
+#endif
+        [progressPanel setReleasedWhenClosed:YES];
+        
+        [self setAssociatedValue:progressDetailInfo forKey:kCCCountedProgressDetailInfoKey];
+        [self setAssociatedValue:progressPanel forKey:kCCCountedProgressSheetKey];
+        [self setAssociatedValue:progressIndicator forKey:kCCCountedProgressIndicatorKey];
+        
+        [NSApp activateIgnoringOtherApps:YES];
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        if (OS_IS_POST_10_8)
+            [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
+        else
+            [NSApp beginSheet:progressPanel modalForWindow:self
+                modalDelegate:nil didEndSelector:nil contextInfo:NULL];
+#pragma clang diagnostic pop
+        
+        [progressIndicator startAnimation:self];
+    });
+}
+
+- (void)endCountedProgress
+{
+    dispatch_async_main(^
+    {
+        NSWindow *progressPanel = [self associatedValueForKey:kCCCountedProgressSheetKey];
+        NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCCountedProgressIndicatorKey];
+        
+        [progressIndicator stopAnimation:self];
+        [NSApp activateIgnoringOtherApps:YES];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        if (OS_IS_POST_10_8)
+            [self endSheet:progressPanel];
+        else
+            [NSApp endSheet:progressPanel];
+#pragma clang diagnostic pop
+        [progressPanel orderOut:self];
+        
+        [self setAssociatedValue:nil forKey:kCCCountedProgressDetailInfoKey];
+        [self setAssociatedValue:nil forKey:kCCCountedProgressSheetKey];
+        [self setAssociatedValue:nil forKey:kCCCountedProgressIndicatorKey];
+    });
 }
 
 - (IBAction)performBorderlessClose:(id)sender
