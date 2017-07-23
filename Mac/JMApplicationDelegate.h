@@ -50,6 +50,7 @@
 - (IBAction)initUpdateCheck;
 - (IBAction)setUpdateCheck:(id)sender;
 - (IBAction)checkForUpdatesAction:(id)sender;
+- (void)selectCurrentUpdateIntervalMenuItem:(NSMenu *)menu;
 CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 #endif
 

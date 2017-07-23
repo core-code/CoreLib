@@ -235,29 +235,46 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 - (IBAction)setUpdateCheck:(id)sender
 {
 #ifdef USE_SPARKLE
-	int intervalIndex = [[sender valueForKey:@"tag"] intValue];
-	NSTimeInterval newInterval = 0;
+	NSUInteger intervalIndex = [[sender valueForKey:@"tag"] unsignedIntegerValue];
+    NSArray <NSNumber *> *itemToDays = @[@0, @1, @2, @7, @14, @28];
 
-	if (intervalIndex == 0)
-		newInterval = 0;
-	else if (intervalIndex == 1)
-		newInterval = 86400;
-	else if (intervalIndex == 2)
-		newInterval = 2 * 86400;
-	else if (intervalIndex == 3)
-		newInterval = 7 * 86400;
-	else if (intervalIndex == 4)
-		newInterval = 14 * 86400;
-	else if (intervalIndex == 5)
-		newInterval = 28 * 86400;
+    int newIntervalInDays = itemToDays[intervalIndex].intValue;
+    int newIntervalInSeconds = newIntervalInDays * SECONDS_PER_DAYS(1);
 
-	if (newInterval >= 0.1)
+
+	if (newIntervalInSeconds >= 1)
 	{
 		[updater setAutomaticallyChecksForUpdates:TRUE];
-		[updater setUpdateCheckInterval:newInterval];
+		[updater setUpdateCheckInterval:newIntervalInSeconds];
 	}
 	else
 		[updater setAutomaticallyChecksForUpdates:FALSE];
+
+    kUpdatecheckMenuindexKey.defaultObject = @(intervalIndex);
+    
+    if ([sender isKindOfClass:NSMenuItem.class])
+        [self selectCurrentUpdateIntervalMenuItem:((NSMenuItem *)sender).menu];
+#endif
+}
+
+- (void)selectCurrentUpdateIntervalMenuItem:(NSMenu *)menu
+{
+#ifdef USE_SPARKLE
+    NSTimeInterval currentIntervalInSeconds = [updater automaticallyChecksForUpdates] ? [updater updateCheckInterval] : 0;
+    
+    NSArray <NSNumber *> *itemToDays = @[@0, @1, @2, @7, @14, @28];
+
+    
+    for (NSMenuItem *item in [menu itemArray])
+    {
+        int itemIntervalInDays = itemToDays[(NSUInteger)item.tag].intValue;
+        int itemIntervalInSeconds = itemIntervalInDays * SECONDS_PER_DAYS(1);
+        
+        if (IS_FLOAT_EQUAL((float)currentIntervalInSeconds, itemIntervalInSeconds))
+            [item setState:NSOnState];
+        else
+            [item setState:NSOffState];
+    }
 #endif
 }
 
