@@ -558,7 +558,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         else if ( 0x60 < aCharacter && aCharacter < 0x7B ) // a-z
             newcstring[x] = (((aCharacter - 0x61) + 0x0D) % 0x1A) + 0x61;
         else  // Not an alpha character
-            newcstring[x] = (((aCharacter - 0x61) + 0x0D) % 0x1A) + 0x61;
+            newcstring[x] = aCharacter;
     }
     
     newcstring[x] = '\0';
