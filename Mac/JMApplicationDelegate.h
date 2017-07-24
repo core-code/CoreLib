@@ -20,9 +20,7 @@
 
 
 @interface JMApplicationDelegate : NSObject
-#ifdef USE_SPARKLE
-	<SUUpdaterDelegate>
-#endif
+
 
 - (IBAction)openWindow:(__strong NSWindow **)window nibName:(NSString *)nibName;
 - (IBAction)openURL:(id)sender;

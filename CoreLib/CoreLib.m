@@ -150,6 +150,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             assert(@"icon-macupdate.png".resourceURL);
             assert(@"JMRatingWindow.nib".resourceURL);
         }
+        #ifdef USE_SPARKLE
+            assert(@"dsa_pub.pem".resourceURL);
+        #endif
     #else
         #ifndef NDEBUG
             cc_log_error(@"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");

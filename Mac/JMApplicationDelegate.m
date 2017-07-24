@@ -226,7 +226,6 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 {
 #ifdef USE_SPARKLE
 	updater = [[SUUpdater alloc] init];
-	[updater setDelegate:self];
 	assert(kUpdatecheckMenuindexKey.defaultObject);
 	[self setUpdateCheck:@{@"tag" : kUpdatecheckMenuindexKey.defaultObject}];
 #endif
@@ -283,7 +282,6 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 - (IBAction)paddleDeactivateClicked:(id)sender
 {
     [self doesNotRecognizeSelector:_cmd];
-
 }
 
 
