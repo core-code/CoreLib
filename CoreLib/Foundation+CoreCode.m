@@ -748,11 +748,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (!cs)
     {
         NSMutableCharacterSet *tmp = [NSMutableCharacterSet characterSetWithCharactersInString:@",."];
-        NSString *groupingSeperators = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
-        NSString *decimalSeperators = [[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator];
+        NSString *groupingSeparators = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
+        NSString *decimalSeparators = [[NSLocale currentLocale] objectForKey:NSLocaleDecimalSeparator];
 
-        [tmp addCharactersInString:groupingSeperators];
-        [tmp addCharactersInString:decimalSeperators];
+        [tmp addCharactersInString:groupingSeparators];
+        [tmp addCharactersInString:decimalSeparators];
         cs = tmp.immutableObject;
 
 #if  !__has_feature(objc_arc)
@@ -1145,6 +1145,47 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [NSMutableString stringWithString:self];
 }
 
+- (NSString *)language
+{
+    CFStringRef resultLanguage;
+    
+    resultLanguage = CFStringTokenizerCopyBestStringLanguage((CFStringRef)self, CFRangeMake(0, self.length > 500 ? 500 : (long)self.length));
+    
+    return CFBridgingRelease(resultLanguage);
+    
+    
+//   NSLinguisticTagger *tagger = [[NSLinguisticTagger alloc] initWithTagSchemes:@[NSLinguisticTagSchemeLanguage] options:0];
+//   tagger.string = self;
+//
+//   NSString *resultLanguage = [tagger tagAtIndex:0 scheme:NSLinguisticTagSchemeLanguage tokenRange:NULL sentenceRange:NULL];
+//   return resultLanguage;
+    
+
+
+    
+//    __block NSString *resultLanguage;
+//    dispatch_queue_t queue;
+//    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+//    NSSpellChecker *spellChecker = NSSpellChecker.sharedSpellChecker;
+//    spellChecker.automaticallyIdentifiesLanguages = YES;
+//    [spellChecker requestCheckingOfString:self
+//                                    range:(NSRange){0, self}
+//                                    types:NSTextCheckingTypeOrthography
+//                                  options:nil
+//                   inSpellDocumentWithTag:0
+//                        completionHandler:^(NSInteger sequenceNumber, NSArray *results, NSOrthography *orthography, NSInteger wordCount)
+//     {
+//         resultLanguage = orthography.dominantLanguage;
+//         dispatch_semaphore_signal(sema);
+//     }];
+//
+//
+//    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+//    sema = NULL;
+//
+//    return resultLanguage;
+}
+
 - (NSString *)removed:(NSString *)stringToRemove
 {
     return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
@@ -1477,6 +1518,7 @@ CONST_KEY(CCDirectoryObserving)
 	CFAbsoluteTime latency = 2.0;
 
 
+    assert(self.fileURL.fileIsDirectory);
 	stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, 0);
 
 	CFRelease(pathsToWatch);

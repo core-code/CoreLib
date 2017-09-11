@@ -1194,6 +1194,31 @@ BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds) //
 }
 #endif
 
+static dispatch_semaphore_t ccAsyncToSyncSema;
+static id ccAsyncToSyncResult;
+
+void dispatch_async_to_sync_resulthandler(id res)
+{
+    assert(ccAsyncToSyncSema);
+    assert(!ccAsyncToSyncResult);
+    ccAsyncToSyncResult = res;
+    dispatch_semaphore_signal(ccAsyncToSyncSema);
+}
+
+id dispatch_async_to_sync(BasicBlock block)
+{
+    assert(!ccAsyncToSyncResult);
+    assert(!ccAsyncToSyncSema);
+    ccAsyncToSyncSema = dispatch_semaphore_create(0);
+    block();
+    dispatch_semaphore_wait(ccAsyncToSyncSema, DISPATCH_TIME_FOREVER);
+    assert(ccAsyncToSyncResult);
+    ccAsyncToSyncSema = NULL;
+    id copy = ccAsyncToSyncResult;
+    ccAsyncToSyncResult = nil;
+    return copy;
+}
+
 // private
 #if __has_feature(modules)
 @import Darwin.POSIX.sys.types;
