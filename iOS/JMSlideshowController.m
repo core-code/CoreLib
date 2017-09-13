@@ -106,7 +106,9 @@
 		self.imageView.image = im;
 	else if ([im isKindOfClass:[NSString class]])
 	{
-		if ([im hasPrefix:@"http"])
+        NSString *im2 =  im;
+
+		if ([im2 hasPrefix:@"http"])
 		{
 			self.imageView.image = nil;
 			UILabel *label = [[UILabel alloc] initWithFrame:self.view.frame];
@@ -114,11 +116,13 @@
 			label.textColor = [UIColor lightGrayColor];
 			label.textAlignment = NSTextAlignmentCenter;
 			[self.imageView addSubview:label];
-			dispatch_async_back(^
-			{
-				NSData *data = ((NSString *)im).download;
 
-				dispatch_async_main(^
+			dispatch_async(dispatch_get_global_queue(0, 0), ^
+			{
+                NSURL *u = [NSURL URLWithString:im2];
+                NSData *data = [[NSData alloc] initWithContentsOfURL:u];
+
+				dispatch_async(dispatch_get_main_queue(), ^
 				{
 					[label removeFromSuperview];
 					if (data)
@@ -163,11 +167,11 @@
 			label.textAlignment = NSTextAlignmentCenter;
 			[self.imageView addSubview:label];
 
-			dispatch_async_back(^
+			dispatch_async(dispatch_get_global_queue(0, 0), ^
 			{
-				NSData *data = ((NSString *)im).download;
+                NSData *data = [[NSData alloc] initWithContentsOfURL:im2];
 
-				dispatch_async_main(^
+				dispatch_async(dispatch_get_main_queue(), ^
 				{
 					[label removeFromSuperview];
 					if (data)

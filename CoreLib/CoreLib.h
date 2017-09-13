@@ -10,7 +10,12 @@
  */
 
 
+
 #ifdef __OBJC__
+
+
+
+
 
 #ifndef CORELIB
 #define CORELIB 1
@@ -30,17 +35,26 @@ extern "C"
 #import <TargetConditionals.h>
 #import <Availability.h>
 #endif
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #if __has_feature(modules)
-@import Cocoa;
+    @import Cocoa;
 #else
-#import <Cocoa/Cocoa.h>
+    #import <Cocoa/Cocoa.h>
 #endif
 #if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-#error CoreLib only deploys back to Mac OS X 10.6
+    #error CoreLib only deploys back to Mac OS X 10.6
+#endif
+#endif
+
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+#if __has_feature(modules)
+    @import UIKit;
+#else
+    #import <UIKit/UIKit.h>
 #endif
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-#error CoreLib only deploys back to iOS 8
+    #error CoreLib only deploys back to iOS 8
 #endif
 #endif
 
@@ -249,7 +263,6 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define cc_log_error(...)     cc_log_level(3, __VA_ARGS__) // ASL_LEVEL_ERR
 #define cc_log_emerg(...)     cc_log_level(0, __VA_ARGS__) // ASL_LEVEL_EMERG
 
-
 #define LOGFUNCA				cc_log_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self)
 #define LOGFUNC					cc_log_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), (__bridge void *)self)
 #define LOGFUNCPARAMA(x)		cc_log_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
@@ -343,14 +356,6 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 
 
 
-// !!!: INCLUDES
-#import "AppKit+CoreCode.h"
-#import "Foundation+CoreCode.h"
-
-#if ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101000) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED < 90000)))
-#import "AppKit+Properties.h"
-#import "Foundation+Properties.h"
-#endif
 
 
 
@@ -381,4 +386,15 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #endif
 
 #endif
+#endif
+
+
+
+// !!!: INCLUDES
+#import "AppKit+CoreCode.h"
+#import "Foundation+CoreCode.h"
+
+#if ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101000) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED < 90000)))
+#import "AppKit+Properties.h"
+#import "Foundation+Properties.h"
 #endif

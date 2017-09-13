@@ -42,7 +42,7 @@
     
     CGFloat ourWidth;
     
-    if (IS_DOUBLE_EQUAL((double)self.minWidth,(double)self.maxWidth))
+    if (fabs((double)self.minWidth - (double)self.maxWidth) < 0.00001)
         ourWidth = self.minWidth;
     else
     {
@@ -55,7 +55,9 @@
                 max = s.width;
         }
         
-        ourWidth = CLAMP(max+20, self.minWidth, self.maxWidth);
+        ourWidth = max+20;
+        if (ourWidth > self.maxWidth) ourWidth = self.maxWidth;
+        if (ourWidth < self.minWidth) ourWidth = self.minWidth;
     }
 	self.preferredContentSize = (CGSize){ourWidth, [self.choices count] * 44};
 
@@ -100,7 +102,7 @@
 
 
     cell.textLabel.font = self.font;
-    cell.textLabel.text = makeString(@"%@", [self.choices objectAtIndex:indexPath.row]);
+    cell.textLabel.text = [self.choices objectAtIndex:indexPath.row];
     if (self.detail)
         cell.detailTextLabel.text = (self.detail)[indexPath.row];
 

@@ -2042,7 +2042,7 @@ CONST_KEY(CCDirectoryObserving)
 	return [NSMutableData dataWithData:self];
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
 @dynamic JSONArray, JSONDictionary;
 - (id)JSONObject
 {

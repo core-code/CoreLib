@@ -163,6 +163,7 @@
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
 #endif
+@property (readonly, nonatomic) NSString *language;
 
 
 @property (readonly, nonatomic) NSString *titlecaseString;
@@ -277,7 +278,7 @@
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *hexString;
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) 
+#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
 #endif

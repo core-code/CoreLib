@@ -65,7 +65,7 @@
 
 - (id<UIWebViewDelegate>)delegate
 {
-	return OBJECT_OR(self.tmpDelegate, self.webView.delegate);
+    return self.tmpDelegate ? self.tmpDelegate : self.webView.delegate;
 }
 
 #if ! __has_feature(objc_arc)
