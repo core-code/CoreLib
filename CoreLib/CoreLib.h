@@ -295,6 +295,7 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define OS_IS_POST_10_9			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
 #define OS_IS_POST_10_10		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_11)
 #define OS_IS_POST_10_11		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_12)
+#define OS_IS_POST_10_12		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_13)
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
@@ -331,6 +332,9 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #endif
 #ifndef NSAppKitVersionNumber10_12
 #define NSAppKitVersionNumber10_12 1504
+#endif
+#ifndef NSAppKitVersionNumber10_13
+#define NSAppKitVersionNumber10_13 1561
 #endif
 #if ! __has_feature(objc_arc)
 #define BRIDGE
