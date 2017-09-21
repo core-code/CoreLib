@@ -91,17 +91,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     #endif
 
         if (!self.suppURL.fileExists)
-		{
-			if ([fileManager respondsToSelector:@selector(createDirectoryAtURL:withIntermediateDirectories:attributes:error:)])
-				[fileManager createDirectoryAtURL:self.suppURL
-					  withIntermediateDirectories:YES attributes:nil error:NULL];
-			else
-			{
-				NSString *p = self.suppURL.path;
-				[fileManager createDirectoryAtPath:p
-					   withIntermediateDirectories:YES attributes:nil error:NULL];
-			}
-		}
+            [fileManager createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
+
 
     #ifdef DEBUG
 		#ifndef XCTEST
@@ -326,11 +317,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 		[ms appendFormat: @"%02x", (int)(result [i])];
 	}
 	
-#if ! __has_feature(objc_arc)
-	return [[ms copy] autorelease];
-#else
 	return [ms copy];
-#endif
 #else
 	return @"Unvailable";
 #endif
@@ -348,16 +335,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     NSString *encodedPrefs = @"";
     
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-#endif
-    if (optionDown && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
+    if (optionDown)
         encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
-#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
-#pragma clang diagnostic pop
-#endif
 #endif
     
     
@@ -442,10 +421,6 @@ NSString *makeDescription(id sender, NSArray *args)
 		[tmp appendFormat:@"\n%@: %@", arg, d];
 	}
 
-#if ! __has_feature(objc_arc)
-	[tmp autorelease];
-#endif
-
 	return tmp.immutableObject;
 }
 
@@ -455,10 +430,6 @@ NSString *makeString(NSString *format, ...)
 	va_start(args, format);
 	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
 	va_end(args);
-	
-#if ! __has_feature(objc_arc)
-	[str autorelease];
-#endif
 	
 	return str;
 }
@@ -508,16 +479,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         NSString *encodedPrefs = @"";
         
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-#endif
-		if ([NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
-			encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
-#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
-#pragma clang diagnostic pop
-#endif
+        encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
 #endif
 
 		NSString *visibleDetails = details;
@@ -640,18 +602,11 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
 	else
 		input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
 
-#if ! __has_feature(objc_arc)
-	[input autorelease];
-#endif
 	[alert setAccessoryView:input];
 	NSInteger selectedButton = [alert runModal];
 
 	[input validateEditing];
 	*result = [input stringValue];
-    
-#if ! __has_feature(objc_arc)
-    [alert release];
-#endif
     
 	return selectedButton;
 }
@@ -682,10 +637,6 @@ NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSStrin
 
 	*checkboxStatus = (NSUInteger)[input state];
 
-#if ! __has_feature(objc_arc)
-	[input release];
-	[alert release];
-#endif
 
 	return selectedButton;
 }
@@ -713,11 +664,6 @@ NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColo
     NSInteger selectedButton = [alert runModal];
 
     *selectedColor = [input color];
-
-#if ! __has_feature(objc_arc)
-    [input release];
-    [alert release];
-#endif
     
     return selectedButton;
 }
@@ -740,17 +686,10 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 
 	NSTextView *input = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
 
-#if ! __has_feature(objc_arc)
-	[input autorelease];
-#endif
 	[alert setAccessoryView:input];
 	NSInteger selectedButton = [alert runModal];
 
 	*result = [input string];
-
-#if ! __has_feature(objc_arc)
-	[alert release];
-#endif
 
 	return selectedButton;
 }
@@ -775,18 +714,12 @@ NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, 
 	NSPopUpButton *input = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
 	for (NSString *str in choices)
 		[input addItemWithTitle:str];
-#if ! __has_feature(objc_arc)
-	[input autorelease];
-#endif
+
 	[alert setAccessoryView:input];
 	NSInteger selectedButton = [alert runModal];
 
 	[input validateEditing];
 	*result = (NSUInteger)[input indexOfSelectedItem];
-
-#if ! __has_feature(objc_arc)
-	[alert release];
-#endif
 
 	return selectedButton;
 }
@@ -838,11 +771,6 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 
 	*result = (NSUInteger)[thepushbuttons selectedRow];
 
-#if ! __has_feature(objc_arc)
-	[thepushbuttons release];
-	[thepushbutton release];
-	[alert release];
-#endif
 
 	return selectedButton;
 }
@@ -877,11 +805,7 @@ NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSS
         [alert addButtonWithTitle:otherButton];
     
     NSInteger result = [alert runModal];
-    
-#if ! __has_feature(objc_arc)
-    [alert release];
-#endif
-    
+
     return result;
 }
 
@@ -912,11 +836,6 @@ void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString
             [alert runModal];
             
             defaultKey.defaultInt = alert.suppressionButton.state;
-            
-            
-#if ! __has_feature(objc_arc)
-            [alert release];
-#endif
 		}
 	};
 
@@ -946,11 +865,6 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
             [alert runModal];
             
             defaultKey.defaultInt = alert.suppressionButton.state;
-            
-            
-#if ! __has_feature(objc_arc)
-            [alert release];
-#endif
         }
 	};
 
@@ -1046,9 +960,6 @@ void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit
     {
         cc_log_error(@"could not open file %@ for log file usage", fileURL.path);
     }
-#if  !__has_feature(objc_arc)
-    [logfileHandle retain];
-#endif
 }
 
 void _cc_log_tologfile(int level, NSString *string)
@@ -1105,15 +1016,9 @@ void cc_log_level(int level, NSString *format, ...)
     _cc_log_tologfile(level, str);
     _cc_log_toprefs(level, str);
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-    if (OS_IS_POST_10_11)
-#else
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_9_x_Max)
-#endif
+
+    if (@available(macOS 10.12, iOS 10.0, *))
     {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
         const char *utf = str.UTF8String;
 
         if (level == ASL_LEVEL_DEBUG || level == ASL_LEVEL_INFO)
@@ -1127,11 +1032,6 @@ void cc_log_level(int level, NSString *format, ...)
     }
     else
         asl_log(NULL, NULL, level, "%s", str.UTF8String);
-#pragma clang diagnostic pop
-
-#if ! __has_feature(objc_arc)
-	[str release];
-#endif
 }
 
 void log_to_prefs(NSString *str)
@@ -1184,7 +1084,7 @@ void dispatch_sync_back(dispatch_block_t block)
 {
 	dispatch_sync(dispatch_get_global_queue(0, 0), block);
 }
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000))
+
 BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds) // returns 0 on succ
 {
     dispatch_block_t newblock = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS, block);
@@ -1192,7 +1092,6 @@ BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds) //
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeoutSeconds * NSEC_PER_SEC));
     return dispatch_block_wait(newblock, popTime) != 0;
 }
-#endif
 
 static dispatch_semaphore_t ccAsyncToSyncSema;
 static id ccAsyncToSyncResult;

@@ -13,6 +13,7 @@
 #include "CoreLib.h"
 
 
+
 @interface NSArray <ObjectType> (CoreCode)
 
 @property (readonly, nonatomic) NSArray *flattenedArray;
@@ -20,9 +21,7 @@
 @property (readonly, nonatomic) NSMutableArray <ObjectType> *mutableObject;
 @property (readonly, nonatomic) BOOL empty;
 @property (readonly, nonatomic) NSData *XMLData;
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @property (readonly, nonatomic) NSData *JSONData;
-#endif
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSArray <ObjectType> *sorted;
@@ -46,7 +45,6 @@
 - (NSArray <ObjectType>*)subarrayToIndex:(NSUInteger)index;
 
 
-
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask;
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
@@ -63,10 +61,8 @@
 - (NSString *)joined:(NSString *)sep;							// = componentsJoinedByString:
 
 @property (readonly, nonatomic) NSSet <ObjectType> *set;
-
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
-#endif
+
 
 @end
 
@@ -85,10 +81,7 @@
 - (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;
 - (void)removeObjectPassingTest:(int (^)(ObjectType input))block;
 
-
 @end
-
-
 
 
 
@@ -175,8 +168,6 @@
 @property (readonly, nonatomic) BOOL isValidEmails;
 @property (readonly, nonatomic) BOOL isNumber;
 
-
-
 @property (readonly, nonatomic) NSData *data;	// data of string contents
 @property (readonly, nonatomic) NSData *dataFromHexString;
 
@@ -193,12 +184,8 @@
 - (BOOL)equalsAny:(NSArray <NSString *>*)otherStrings;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
-//- (NSString *)arg:(id)arg, ...;
-
-
 
 - (NSAttributedString *)hyperlinkWithURL:(NSURL *)url;
-
 
 - (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 - (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
@@ -219,9 +206,8 @@
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
 - (NSArray <NSString *> *)split:(NSString *)sep;								// = componentsSeparatedByString:
 
-
-
 @end
+
 
 
 @interface NSMutableString (CoreCode)
@@ -234,15 +220,12 @@
 
 @interface NSURL (CoreCode)
 
-
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query;
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query user:(NSString *)user password:(NSString *)password fragment:(NSString *)fragment scheme:(NSString *)scheme port:(NSNumber *)port;
 - (NSData *)performBlockingPOST;
 - (NSData *)performBlockingGET;
 - (void)performGET:(void (^)(NSData *data))completion;
 - (void)performPOST:(void (^)(NSData *data))completion;
-#endif
 
 - (NSURL *)add:(NSString *)component;
 - (void)open;
@@ -278,16 +261,12 @@
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *hexString;
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
-#endif
-
 #ifdef USE_SNAPPY
 @property (readonly, nonatomic) NSData *snappyCompressed;
 @property (readonly, nonatomic) NSData *snappyDecompressed;
 #endif
-
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
 @property (readonly, nonatomic) NSString *MD5;
@@ -321,9 +300,7 @@
 
 @interface NSDictionary <KeyType, ObjectType>(CoreCode)
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
 @property (readonly, nonatomic) NSData *JSONData;
-#endif
 @property (readonly, nonatomic) NSData *XMLData;
 @property (readonly, nonatomic) NSMutableDictionary <KeyType, ObjectType> *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key;
@@ -332,6 +309,7 @@
 @property (readonly, nonatomic) NSString *literalString;
 
 @end
+
 
 
 @interface NSMutableDictionary <KeyType, ObjectType>(CoreCode)
@@ -359,16 +337,13 @@
 
 
 
-
 @interface NSObject (CoreCode)
 
 @property (readonly, nonatomic) id id;
+@property (retain, nonatomic) id associatedValue;
 - (id)associatedValueForKey:(const NSString *)key;
 - (void)setAssociatedValue:(id)value forKey:(const NSString *)key;
-@property (retain, nonatomic) id associatedValue;
 + (instancetype)newWith:(NSDictionary *)dict;
-
-
 
 @end
 
@@ -381,6 +356,8 @@
 @property (readonly, nonatomic) NSString *stringRepresentationLong;
 
 @end
+
+
 
 @interface NSMutableCharacterSet (CoreCode)
 
@@ -396,19 +373,23 @@
 
 @end
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+
+
 @interface NSMutableOrderedSet <ObjectType> (CoreCode)
 
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *immutableObject;
 
 @end
 
+
+
 @interface NSOrderedSet <ObjectType> (CoreCode)
 
 @property (readonly, nonatomic) NSMutableOrderedSet <ObjectType> *mutableObject;
 
 @end
-#endif
+
+
 
 @interface NSMutableSet <ObjectType> (CoreCode)
 

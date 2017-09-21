@@ -42,11 +42,9 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSArray (CoreCode)
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString;
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
-@dynamic orderedSet;
-#endif
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData;
+
 
 - (NSString *)literalString
 {
@@ -61,6 +59,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return tmp;
 }
 
+
 - (NSArray *)sorted
 {
 #pragma clang diagnostic push
@@ -69,8 +68,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 #pragma clang diagnostic pop
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
-@dynamic JSONData;
 
 - (NSData *)JSONData
 {
@@ -85,7 +82,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     return data;
 }
-#endif
+
 
 - (NSData *)XMLData
 {
@@ -132,6 +129,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return range;
 }
 
+
 - (CCIntRange1D)calculateExtentsOfValues:(ObjectInIntOutBlock)block
 {
     CCIntRange1D range = {INT_MAX, INT_MIN, -1};
@@ -151,8 +149,8 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     return range;
 }
-
 #pragma clang diagnostic pop
+
 
 + (void)_addArrayContents:(NSArray *)array toArray:(NSMutableArray *)newArray
 {
@@ -165,6 +163,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     }
 }
 
+
 - (NSArray *)flattenedArray
 {
     NSMutableArray *tmp = [NSMutableArray array];
@@ -174,15 +173,17 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return tmp.immutableObject;
 }
 
+
 - (NSString *)string
 {
 	NSString *ret = @"";
 
 	for (NSString *str in self)
-		ret = [ret stringByAppendingString:str];
+		ret = [ret stringByAppendingString:VALID_STR(str)];
 
 	return ret;
 }
+
 
 - (NSString *)path
 {
@@ -194,27 +195,30 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return ret;
 }
 
+
 - (BOOL)contains:(id)object
 {
 	return [self indexOfObject:object] != NSNotFound;
 }
+
 
 - (NSArray *)reverseArray
 {
 	return [[self reverseObjectEnumerator] allObjects];
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+
 - (NSOrderedSet *)orderedSet
 {
 	return [NSOrderedSet orderedSetWithArray:self];
 }
-#endif
+
 
 - (NSSet *)set
 {
 	return [NSSet setWithArray:self];
 }
+
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject
 {
@@ -224,6 +228,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 		return self;
 }
 
+
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
 	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
@@ -232,6 +237,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 	return [NSArray arrayWithArray:array];
 }
+
 
 - (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects
 {
@@ -243,6 +249,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return [NSArray arrayWithArray:array];
 }
 
+
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet
 {
 	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
@@ -251,6 +258,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 	return [NSArray arrayWithArray:array];
 }
+
 
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index
 {
@@ -261,6 +269,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return [NSArray arrayWithArray:array];
 }
 
+
 - (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject
 {
 	NSMutableArray *mut = self.mutableObject;
@@ -270,6 +279,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return mut.immutableObject;
 }
 
+
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
     if ([self count] > index)
@@ -277,6 +287,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     else
         return nil;
 }
+
 
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value
 {
@@ -287,39 +298,44 @@ CONST_KEY(CoreCodeAssociatedValue)
 	return FALSE;
 }
 
+
 - (NSArray *)sortedArrayByKey:(NSString *)key
 {
 	return [self sortedArrayByKey:key ascending:YES];
 }
 
+
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending
 {
 	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:key ascending:ascending];
-#if ! __has_feature(objc_arc)
-	[sd autorelease];
-#endif
+
 	return [self sortedArrayUsingDescriptors:@[sd]];
 }
+
 
 - (NSArray *)subarrayFromIndex:(NSUInteger)location
 {
 	return [self subarrayWithRange:NSMakeRange(location, self.count-location)];
 }
 
+
 - (NSArray *)subarrayToIndex:(NSUInteger)location
 {
 	return [self subarrayWithRange:NSMakeRange(0, self.count-location-1)];
 }
+
 
 - (NSMutableArray *)mutableObject
 {
 	return [NSMutableArray arrayWithArray:self];
 }
 
+
 - (BOOL)empty
 {
 	return [self count] == 0;
 }
+
 
 - (NSArray *)mapped:(ObjectInOutBlock)block
 {
@@ -331,12 +347,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 		if (result)
 			[resultArray addObject:result];
 	}
-#if ! __has_feature(objc_arc)
-	[resultArray autorelease];
-#endif
 
     return [NSArray arrayWithArray:resultArray];
 }
+
 
 - (NSInteger)reduce:(ObjectInIntOutBlock)block
 {
@@ -348,6 +362,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return value;
 }
 
+
 - (NSArray *)filtered:(BOOL (^)(id input))block
 {
     NSMutableArray *resultArray = [NSMutableArray new];
@@ -355,10 +370,6 @@ CONST_KEY(CoreCodeAssociatedValue)
     for (id object in self)
         if (block(object))
             [resultArray addObject:object];
-
-#if ! __has_feature(objc_arc)
-	[resultArray autorelease];
-#endif
 
     return [NSArray arrayWithArray:resultArray];
 }
@@ -424,11 +435,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 	if (terminationStatus)
 		(*terminationStatus) = [task terminationStatus];
-
-#if ! __has_feature(objc_arc)
-	[task release];
-	[string autorelease];
-#endif
 
 	return string;
 }
@@ -503,10 +509,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 
 	[self removeObjectsAtIndexes:indices];
-
-#if ! __has_feature(objc_arc)
-	[indices release];
-#endif
 }
 
 - (void)filterUsingPredicateString:(NSString *)format, ...
@@ -602,7 +604,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (BOOL)fileIsAlias
 {
     NSURL *url = [NSURL fileURLWithPath:self];
-    CFURLRef cfurl = (BRIDGE CFURLRef) url;
+    CFURLRef cfurl = (__bridge CFURLRef) url;
     CFBooleanRef aliasBool = kCFBooleanFalse;
     Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
     Boolean alias = CFBooleanGetValue(aliasBool);
@@ -633,16 +635,14 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)fileAliasTarget
 {
     CFErrorRef *err = NULL;
-    CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self.fileURL, err);
+    CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (__bridge CFURLRef)self.fileURL, err);
     if (bookmark == nil)
         return nil;
     CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
-    __autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
+    __autoreleasing NSURL *nurl = [(__bridge NSURL *)url copy];
     CFRelease(bookmark);
     CFRelease(url);
-#if  !__has_feature(objc_arc)
-    [nurl autorelease];
-#endif
+
     return [nurl path];
 
 }
@@ -662,11 +662,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     NSRect r = [layoutManager usedRectForTextContainer:textContainer];
 
-#if  !__has_feature(objc_arc)
-    [textStorage release];
-    [layoutManager release];
-    [textContainer release];
-#endif
     return r.size;
 }
 #endif
@@ -754,10 +749,6 @@ CONST_KEY(CoreCodeAssociatedValue)
         [tmp addCharactersInString:groupingSeparators];
         [tmp addCharactersInString:decimalSeparators];
         cs = tmp.immutableObject;
-
-#if  !__has_feature(objc_arc)
-        [cs retain];
-#endif
     }
 
     return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
@@ -808,11 +799,6 @@ CONST_KEY(CoreCodeAssociatedValue)
     {
         localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
         domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
-
-#if  !__has_feature(objc_arc)
-        [localValid retain];
-        [domainValid retain];
-#endif
     }
 
     if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
@@ -875,11 +861,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)contents
 {
-#if  __has_feature(objc_arc)
     return [[NSData alloc] initWithContentsOfFile:self];
-#else
-    return [[[NSData alloc] initWithContentsOfFile:self] autorelease];
-#endif
 }
 
 - (BOOL)fileExists
@@ -983,9 +965,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 	[attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:self.fullRange];
 	[attributedString endEditing];
 
-#if ! __has_feature(objc_arc)
-	[attributedString autorelease];
-#endif
 	return attributedString;
 }
 
@@ -1112,9 +1091,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         LOG(@"Warning: performing blocking download on main thread");
 #endif
     NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
-#if ! __has_feature(objc_arc)
-    [d autorelease];
-#endif
+
     return d;
 }
 
@@ -1395,67 +1372,18 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)unescaped
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	if (OS_IS_POST_10_8)
-#else
-	if (1)
-#endif
-		return [self stringByRemovingPercentEncoding];
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	else
-	{
-#if  __has_feature(objc_arc)
-    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR("")));
-    return encodedString;
-#else
-    NSString *encodedString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)self, CFSTR(""));
-    return [encodedString autorelease];
-#endif
-	}
-#endif
-#pragma clang diagnostic pop
+    return [self stringByRemovingPercentEncoding];
 }
 
 - (NSString *)escaped
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	if (OS_IS_POST_10_8)
-#else
-		if (1)
-#endif
-			return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	else
-	{
-
-#if  __has_feature(objc_arc)
-    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8));
-    return encodedString;
-#else
-    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, NULL, kCFStringEncodingUTF8);
-    return [encodedString autorelease];
-#endif
-	}
-#endif
-#pragma clang diagnostic pop
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 }
 
 //- (NSString *)encoded
 //{
-//#if  __has_feature(objc_arc)
-//	#warning depre
-//    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
-//    return encodedString;
-//#else
 //    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
 //    return [encodedString autorelease];
-//#endif
 //}
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet
@@ -1506,13 +1434,9 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
 CONST_KEY(CCDirectoryObserving)
 - (void)startObserving:(BasicBlock)block
 {
-#if ! __has_feature(objc_arc)
-	void *ptr = (void *)[block retain];
-#else
 	void *ptr = (__bridge_retained void *)block;
-#endif
 	FSEventStreamContext context = {0, ptr, NULL, directoryObservingReleaseCallback, NULL};
-	CFStringRef mypath = (BRIDGE CFStringRef)self.stringByExpandingTildeInPath;
+	CFStringRef mypath = (__bridge CFStringRef)self.stringByExpandingTildeInPath;
 	CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
 	FSEventStreamRef stream;
 	CFAbsoluteTime latency = 2.0;
@@ -1544,23 +1468,6 @@ CONST_KEY(CCDirectoryObserving)
 		cc_log_debug(@"Warning: stopped observing on location which was never observed %@", self);
 }
 #endif
-
-//- (NSString *)arg:(id)arg, ...
-//{
-//	va_list args;
-//	void *stackLocal = (__bridge void *)(arg);
-//	struct __va_list_tag *stackLocal2 = stackLocal;
-//    va_start(args, arg);
-//
-//    NSString *result = [[NSString alloc] initWithFormat:self arguments:stackLocal2];
-//    va_end(args);
-//
-//#if ! __has_feature(objc_arc)
-//	[d result];
-//#endif
-//	return result;
-//}
-
 @end
 
 
@@ -1591,7 +1498,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (BOOL)fileIsAlias
 {
-    CFURLRef cfurl = (BRIDGE CFURLRef) self;
+    CFURLRef cfurl = (__bridge CFURLRef) self;
     CFBooleanRef aliasBool = kCFBooleanFalse;
     Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
     Boolean alias = CFBooleanGetValue(aliasBool);
@@ -1609,18 +1516,15 @@ CONST_KEY(CCDirectoryObserving)
 - (NSURL *)fileAliasTarget
 {
     CFErrorRef *err = NULL;
-    CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (BRIDGE CFURLRef)self, err);
+    CFDataRef bookmark = CFURLCreateBookmarkDataFromFile(NULL, (__bridge CFURLRef)self, err);
     if (bookmark == nil)
         return nil;
     CFURLRef url = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NULL, err);
-    __autoreleasing NSURL *nurl = [(BRIDGE NSURL *)url copy];
+    __autoreleasing NSURL *nurl = [(__bridge NSURL *)url copy];
     CFRelease(bookmark);
     CFRelease(url);
-#if  __has_feature(objc_arc)
+
     return nurl;
-#else
-    return [nurl autorelease];
-#endif
 }
 #endif
 
@@ -1718,14 +1622,10 @@ CONST_KEY(CCDirectoryObserving)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     [[NSWorkspace sharedWorkspace] openURL:self];
 #else
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if ([[UIDevice currentDevice] systemVersion].floatValue >= 10.0f)
+    if (@available(iOS 10.0, *))
         [[UIApplication sharedApplication] openURL:self options:@{} completionHandler:NULL];
     else
         [[UIApplication sharedApplication] openURL:self];
-#pragma clang diagnostic pop
 #endif
 }
 
@@ -1768,7 +1668,6 @@ CONST_KEY(CCDirectoryObserving)
     return self.download;
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query
 {
     return [NSURL URLWithHost:host path:path query:query user:nil password:nil fragment:nil scheme:@"https" port:nil];
@@ -1791,13 +1690,7 @@ CONST_KEY(CCDirectoryObserving)
     urlComponents.percentEncodedQuery = [urlComponents.percentEncodedQuery replaced:@"k9BBV15zFYi44YyB" with:@"%2B"];
 
     NSURL *url = urlComponents.URL;
-	
-#if ! __has_feature(objc_arc)
-	[urlComponents release];
-#endif
-
     assert(url);
-
 
     return url;
 }
@@ -1857,14 +1750,14 @@ CONST_KEY(CCDirectoryObserving)
     }];
     [dataTask resume];
 }
-#endif
 @end
 
 
 
 @implementation NSData (CoreCode)
 
-@dynamic string, hexString, mutableObject;
+@dynamic string, hexString, mutableObject, JSONArray, JSONDictionary;
+
 #ifdef USE_SECURITY
 @dynamic SHA1, MD5, SHA256;
 #endif
@@ -1954,9 +1847,7 @@ CONST_KEY(CCDirectoryObserving)
 
 
 	NSData *d = [NSData dataWithBytesNoCopy:buf length:uncompressedSize];
-#if ! __has_feature(objc_arc)
-	[d autorelease];
-#endif
+
 	return d;
 }
 
@@ -1975,35 +1866,19 @@ CONST_KEY(CCDirectoryObserving)
 	}
 
 	NSData *d = [NSData dataWithBytesNoCopy:buf length:output_length];
-#if ! __has_feature(objc_arc)
-	[d autorelease];
-#endif
+
 	return d;
 }
 #endif
 
 - (NSString *)string
 {
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	if (OS_IS_POST_10_9)
-#else
-	if ([[UIDevice currentDevice] systemVersion].floatValue >= 8.0f)
-#endif
-	{
-		NSString *result;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
+	NSString *result;
+    
+	[NSString stringEncodingForData:self encodingOptions:nil convertedString:&result usedLossyConversion:nil];
 
-		[NSString stringEncodingForData:self
-						encodingOptions:nil
-						convertedString:&result
-					usedLossyConversion:nil];
-#pragma clang diagnostic pop
-
-		if (result)
-			return result;
-	}
+	if (result)
+		return result;
 
 	for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
 	{
@@ -2011,9 +1886,7 @@ CONST_KEY(CCDirectoryObserving)
 
 		if (!s)
 			continue;
-	#if ! __has_feature(objc_arc)
-		[s autorelease];
-	#endif
+
 		return s;
 	}
 
@@ -2042,8 +1915,6 @@ CONST_KEY(CCDirectoryObserving)
 	return [NSMutableData dataWithData:self];
 }
 
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 50000))
-@dynamic JSONArray, JSONDictionary;
 - (id)JSONObject
 {
     NSError *err;
@@ -2083,8 +1954,6 @@ CONST_KEY(CCDirectoryObserving)
 
 	return res;
 }
-#endif
-
 @end
 
 
@@ -2097,10 +1966,7 @@ CONST_KEY(CCDirectoryObserving)
 	[df setDateFormat:dateFormat];
 	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier];
 	[df setLocale:l];
-#if ! __has_feature(objc_arc)
-	[l release];
-	[df autorelease];
-#endif
+
 	return [df dateFromString:dateString];
 }
 
@@ -2120,10 +1986,7 @@ CONST_KEY(CCDirectoryObserving)
 	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
 	[df setLocale:l];
     [df setDateFormat:dateFormat];
-#if ! __has_feature(objc_arc)
-	[l release];
-	[df autorelease];
-#endif
+
     return [df stringFromDate:self];
 }
 
@@ -2134,9 +1997,7 @@ CONST_KEY(CCDirectoryObserving)
 	[df setLocale:[NSLocale currentLocale]];
     [df setDateStyle:dateStyle];
     [df setTimeStyle:timeStyle];
-#if ! __has_feature(objc_arc)
-	[df autorelease];
-#endif
+
     return [df stringFromDate:self];
 }
 
@@ -2163,7 +2024,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSDictionary (CoreCode)
 
-@dynamic mutableObject, XMLData, literalString;
+@dynamic mutableObject, XMLData, literalString, JSONData;
 
 - (NSString *)literalString
 {
@@ -2178,9 +2039,6 @@ CONST_KEY(CCDirectoryObserving)
 	return tmp;
 }
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
-@dynamic JSONData;
-
 - (NSData *)JSONData
 {
     NSError *err;
@@ -2194,7 +2052,6 @@ CONST_KEY(CCDirectoryObserving)
 
     return data;
 }
-#endif
 
 - (NSData *)XMLData
 {
@@ -2311,10 +2168,6 @@ CONST_KEY(CCDirectoryObserving)
 		[tmp addObject:(OBJECT_OR(threeLetterCode, twoLetterCode))];
 	}
 
-#if ! __has_feature(objc_arc)
-	[tmp autorelease];
-#endif
-
 	return [NSArray arrayWithArray:tmp];
 }
 
@@ -2338,12 +2191,12 @@ CONST_KEY(CCDirectoryObserving)
 #pragma clang diagnostic pop
 #endif
 
-    objc_setAssociatedObject(self, (BRIDGE const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, (__bridge const void *)(key), value, OBJC_ASSOCIATION_RETAIN);
 }
 
 - (id)associatedValueForKey:(const NSString *)key
 {
-    id value = objc_getAssociatedObject(self, (BRIDGE const void *)(key));
+    id value = objc_getAssociatedObject(self, (__bridge const void *)(key));
 
 	return value;
 }
@@ -2456,8 +2309,6 @@ CONST_KEY(CCDirectoryObserving)
 
 
 
-#if (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
-
 @implementation NSMutableOrderedSet (CoreCode)
 
 @dynamic immutableObject;
@@ -2484,7 +2335,6 @@ CONST_KEY(CCDirectoryObserving)
 
 @end
 
-#endif
 
 
 @implementation NSMutableSet (CoreCode)
@@ -2498,6 +2348,8 @@ CONST_KEY(CCDirectoryObserving)
 
 @end
 
+
+
 @implementation NSSet (CoreCode)
 
 @dynamic mutableObject;
@@ -2506,4 +2358,5 @@ CONST_KEY(CCDirectoryObserving)
 {
 	return [NSMutableSet setWithSet:self];
 }
+
 @end

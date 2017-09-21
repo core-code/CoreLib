@@ -15,8 +15,6 @@
 			dependencies = (
 				B9EF05DF1865F54100CF7A38 /* PBXTargetDependency */,
 				B9EF05E51865F54400CF7A38 /* PBXTargetDependency */,
-				B9EF05E31865F54300CF7A38 /* PBXTargetDependency */,
-				B9EF05E11865F54200CF7A38 /* PBXTargetDependency */,
 			);
 			name = CoreLibTests;
 			productName = CoreLibTests;
@@ -24,60 +22,29 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		B90B0D351DA7F64D000CA590 /* JMURLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B0D341DA7F64D000CA590 /* JMURLButton.m */; };
 		B90B0D361DA7F64D000CA590 /* JMURLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B0D341DA7F64D000CA590 /* JMURLButton.m */; };
-		B90E8DF31B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */; };
 		B90E8DF41B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */; };
-		B90E8DF51B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */; };
 		B90E8DF61B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */; };
-		B90E8DF71B1787B1007C0FB4 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDC1B1787B1007C0FB4 /* JMClickableImageView.m */; };
 		B90E8DF81B1787B1007C0FB4 /* JMClickableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDC1B1787B1007C0FB4 /* JMClickableImageView.m */; };
-		B90E8DF91B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDE1B1787B1007C0FB4 /* JMCorrectTimer.m */; };
 		B90E8DFA1B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DDE1B1787B1007C0FB4 /* JMCorrectTimer.m */; };
-		B90E8DFB1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE01B1787B1007C0FB4 /* JMCrashReporter.m */; };
 		B90E8DFC1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE01B1787B1007C0FB4 /* JMCrashReporter.m */; };
-		B90E8DFD1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE21B1787B1007C0FB4 /* JMDocklessApplication.m */; };
 		B90E8DFE1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE21B1787B1007C0FB4 /* JMDocklessApplication.m */; };
-		B90E8DFF1B1787B1007C0FB4 /* JMEmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE41B1787B1007C0FB4 /* JMEmailSender.m */; };
 		B90E8E001B1787B1007C0FB4 /* JMEmailSender.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE41B1787B1007C0FB4 /* JMEmailSender.m */; };
-		B90E8E011B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE61B1787B1007C0FB4 /* JMFontPopUpButton.m */; };
 		B90E8E021B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE61B1787B1007C0FB4 /* JMFontPopUpButton.m */; };
-		B90E8E031B1787B1007C0FB4 /* JMHostInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE81B1787B1007C0FB4 /* JMHostInformation.m */; };
 		B90E8E041B1787B1007C0FB4 /* JMHostInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DE81B1787B1007C0FB4 /* JMHostInformation.m */; };
-		B90E8E051B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEA1B1787B1007C0FB4 /* JMLoginItemManager.m */; };
 		B90E8E061B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEA1B1787B1007C0FB4 /* JMLoginItemManager.m */; };
-		B90E8E071B1787B1007C0FB4 /* JMRTFView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */; };
 		B90E8E081B1787B1007C0FB4 /* JMRTFView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */; };
-		B90E8E091B1787B1007C0FB4 /* JMValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */; };
 		B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */; };
-		B90E8E0B1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */; };
 		B90E8E0C1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */; };
-		B90E8E0D1B1787B1007C0FB4 /* JMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF21B1787B1007C0FB4 /* JMWebView.m */; };
 		B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF21B1787B1007C0FB4 /* JMWebView.m */; };
 		B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
-		B933AB2B18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
-		B933AB2C18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
 		B933AB2D18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
-		B933AB2E18BBDFA1006E42B9 /* AppKit+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */; };
-		B933AB2F18BBDFA1006E42B9 /* AppKit+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */; };
-		B933AB3018BBDFA1006E42B9 /* AppKit+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */; };
-		B933AB3118BBDFA1006E42B9 /* AppKit+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */; };
 		B933AB3218BBDFA1006E42B9 /* CoreLib.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2418BBDFA1006E42B9 /* CoreLib.m */; };
-		B933AB3318BBDFA1006E42B9 /* CoreLib.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2418BBDFA1006E42B9 /* CoreLib.m */; };
-		B933AB3418BBDFA1006E42B9 /* CoreLib.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2418BBDFA1006E42B9 /* CoreLib.m */; };
 		B933AB3518BBDFA1006E42B9 /* CoreLib.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2418BBDFA1006E42B9 /* CoreLib.m */; };
 		B933AB3618BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */; };
-		B933AB3718BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */; };
-		B933AB3818BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */; };
 		B933AB3918BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */; };
-		B933AB3A18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
-		B933AB3B18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
-		B933AB3C18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
-		B933AB3D18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */; };
-		B97A5E941CC1536C00201C2C /* JMBlockFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */; };
 		B97A5E951CC1536C00201C2C /* JMBlockFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */; };
 		B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
-		B97FDADB1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
 		B9EF05171865D42C00CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF05181865D42C00CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
 		B9EF05191865D42C00CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
@@ -86,18 +53,6 @@
 		B9EF05551865D5A200CF7A38 /* JMAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertController.m */; };
 		B9EF05561865D5A200CF7A38 /* JMChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05391865D5A200CF7A38 /* JMChoiceController.m */; };
 		B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */; };
-		B9EF056B1865F18300CF7A38 /* JMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05351865D5A200CF7A38 /* JMActionSheet.m */; };
-		B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */; };
-		B9EF05731865F18300CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
-		B9EF05741865F18300CF7A38 /* JMAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05371865D5A200CF7A38 /* JMAlertController.m */; };
-		B9EF05771865F18300CF7A38 /* JMChoiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF05391865D5A200CF7A38 /* JMChoiceController.m */; };
-		B9EF05791865F18300CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
-		B9EF057A1865F18300CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
-		B9EF057B1865F18300CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
-		B9EF05901865F20900CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
-		B9EF05961865F20900CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
-		B9EF05981865F20900CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
-		B9EF05B81865F33F00CF7A38 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05B71865F33F00CF7A38 /* Cocoa.framework */; };
 		B9EF05CE1865F4A000CF7A38 /* CoreLibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B9EF052C1865D57400CF7A38 /* CoreLibTests.m */; };
 		B9EF05D21865F4A000CF7A38 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05B71865F33F00CF7A38 /* Cocoa.framework */; };
 		B9EF05D31865F4A000CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
@@ -113,20 +68,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = B9EF05BB1865F4A000CF7A38;
 			remoteInfo = "CoreLibTests Mac ARC";
-		};
-		B9EF05E01865F54200CF7A38 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B9EF04F21865D42C00CF7A38 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B9EF05811865F20900CF7A38;
-			remoteInfo = "CoreLibTests Mac RR";
-		};
-		B9EF05E21865F54300CF7A38 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B9EF04F21865D42C00CF7A38 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B9EF05641865F18300CF7A38;
-			remoteInfo = "CoreLibTests iOS RR";
 		};
 		B9EF05E41865F54400CF7A38 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -171,16 +112,10 @@
 		B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CoreLibTests.xcconfig; sourceTree = "<group>"; };
 		B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
 		B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
-		B933AB2118BBDFA1006E42B9 /* AppKit+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+Properties.h"; sourceTree = "<group>"; };
-		B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+Properties.m"; sourceTree = "<group>"; };
 		B933AB2318BBDFA1006E42B9 /* CoreLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreLib.h; sourceTree = "<group>"; };
 		B933AB2418BBDFA1006E42B9 /* CoreLib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreLib.m; sourceTree = "<group>"; };
 		B933AB2518BBDFA1006E42B9 /* Foundation+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+CoreCode.h"; sourceTree = "<group>"; };
 		B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+CoreCode.m"; sourceTree = "<group>"; };
-		B933AB2718BBDFA1006E42B9 /* Foundation+Indexing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+Indexing.h"; sourceTree = "<group>"; };
-		B933AB2818BBDFA1006E42B9 /* Foundation+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+Properties.h"; sourceTree = "<group>"; };
-		B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Properties.m"; sourceTree = "<group>"; };
-		B947149C193D2CD4000408A0 /* CoreLib_Availability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreLib_Availability.h; sourceTree = "<group>"; };
 		B97A5E921CC1536C00201C2C /* JMBlockFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMBlockFormatter.h; sourceTree = "<group>"; };
 		B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMBlockFormatter.m; sourceTree = "<group>"; };
 		B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSlideshowController.h; sourceTree = "<group>"; };
@@ -200,8 +135,6 @@
 		B9EF053C1865D5A200CF7A38 /* JMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebViewController.h; sourceTree = "<group>"; };
 		B9EF053D1865D5A200CF7A38 /* JMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWebViewController.m; sourceTree = "<group>"; };
 		B9EF05631865EEF600CF7A38 /* CoreLibTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CoreLibTests.h; path = Tests/CoreLibTests.h; sourceTree = "<group>"; };
-		B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS RR.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac RR.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9EF05B71865F33F00CF7A38 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac ARC.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9F3268E1EE6C0590020E401 /* JMRatingWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMRatingWindowController.h; sourceTree = "<group>"; };
@@ -225,26 +158,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B9EF05781865F18300CF7A38 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B9EF05791865F18300CF7A38 /* XCTest.framework in Frameworks */,
-				B9EF057A1865F18300CF7A38 /* UIKit.framework in Frameworks */,
-				B9EF057B1865F18300CF7A38 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B9EF05951865F20900CF7A38 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B9EF05B81865F33F00CF7A38 /* Cocoa.framework in Frameworks */,
-				B9EF05961865F20900CF7A38 /* XCTest.framework in Frameworks */,
-				B9EF05981865F20900CF7A38 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B9EF05D11865F4A000CF7A38 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -261,18 +174,12 @@
 		B933AB1E18BBDFA1006E42B9 /* CoreLib */ = {
 			isa = PBXGroup;
 			children = (
-				B947149C193D2CD4000408A0 /* CoreLib_Availability.h */,
 				B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */,
 				B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */,
-				B933AB2118BBDFA1006E42B9 /* AppKit+Properties.h */,
-				B933AB2218BBDFA1006E42B9 /* AppKit+Properties.m */,
 				B933AB2318BBDFA1006E42B9 /* CoreLib.h */,
 				B933AB2418BBDFA1006E42B9 /* CoreLib.m */,
 				B933AB2518BBDFA1006E42B9 /* Foundation+CoreCode.h */,
 				B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */,
-				B933AB2718BBDFA1006E42B9 /* Foundation+Indexing.h */,
-				B933AB2818BBDFA1006E42B9 /* Foundation+Properties.h */,
-				B933AB2918BBDFA1006E42B9 /* Foundation+Properties.m */,
 			);
 			path = CoreLib;
 			sourceTree = "<group>";
@@ -296,8 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */,
-				B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */,
-				B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */,
 				B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */,
 			);
 			name = Products;
@@ -406,40 +311,6 @@
 			productReference = B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B9EF05641865F18300CF7A38 /* CoreLibTests iOS RR */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B9EF057D1865F18300CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests iOS RR" */;
-			buildPhases = (
-				B9EF05651865F18300CF7A38 /* Sources */,
-				B9EF05781865F18300CF7A38 /* Frameworks */,
-				B9EF057C1865F18300CF7A38 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "CoreLibTests iOS RR";
-			productName = CoreLibTests;
-			productReference = B9EF05801865F18300CF7A38 /* CoreLibTests iOS RR.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		B9EF05811865F20900CF7A38 /* CoreLibTests Mac RR */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B9EF059A1865F20900CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac RR" */;
-			buildPhases = (
-				B9EF05821865F20900CF7A38 /* Sources */,
-				B9EF05951865F20900CF7A38 /* Frameworks */,
-				B9EF05991865F20900CF7A38 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "CoreLibTests Mac RR";
-			productName = CoreLibTests;
-			productReference = B9EF059D1865F20900CF7A38 /* CoreLibTests Mac RR.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B9EF05D61865F4A000CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac ARC" */;
@@ -470,9 +341,6 @@
 						DevelopmentTeam = 9D78DG5ACV;
 						TestTargetID = B9EF04F91865D42C00CF7A38;
 					};
-					B9EF05641865F18300CF7A38 = {
-						DevelopmentTeam = 9D78DG5ACV;
-					};
 					B9EF05DA1865F53600CF7A38 = {
 						DevelopmentTeam = 9D78DG5ACV;
 					};
@@ -491,8 +359,6 @@
 			projectRoot = "";
 			targets = (
 				B9EF05141865D42C00CF7A38 /* CoreLibTests iOS ARC */,
-				B9EF05641865F18300CF7A38 /* CoreLibTests iOS RR */,
-				B9EF05811865F20900CF7A38 /* CoreLibTests Mac RR */,
 				B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */,
 				B9EF05DA1865F53600CF7A38 /* CoreLibTests */,
 			);
@@ -501,20 +367,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		B9EF05131865D42C00CF7A38 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B9EF057C1865F18300CF7A38 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B9EF05991865F20900CF7A38 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -537,62 +389,13 @@
 			files = (
 				B933AB3618BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
 				B9EF05541865D5A200CF7A38 /* JMActionSheet.m in Sources */,
-				B933AB3A18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9EF05581865D5A200CF7A38 /* JMWebViewController.m in Sources */,
 				B9EF052D1865D57400CF7A38 /* CoreLibTests.m in Sources */,
 				B9EF05551865D5A200CF7A38 /* JMAlertController.m in Sources */,
 				B9EF05561865D5A200CF7A38 /* JMChoiceController.m in Sources */,
 				B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
 				B933AB3218BBDFA1006E42B9 /* CoreLib.m in Sources */,
-				B933AB2E18BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
 				B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B9EF05651865F18300CF7A38 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B933AB3718BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
-				B9EF056B1865F18300CF7A38 /* JMActionSheet.m in Sources */,
-				B933AB3B18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
-				B9EF05721865F18300CF7A38 /* JMWebViewController.m in Sources */,
-				B9EF05731865F18300CF7A38 /* CoreLibTests.m in Sources */,
-				B9EF05741865F18300CF7A38 /* JMAlertController.m in Sources */,
-				B9EF05771865F18300CF7A38 /* JMChoiceController.m in Sources */,
-				B933AB2B18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
-				B933AB3318BBDFA1006E42B9 /* CoreLib.m in Sources */,
-				B933AB2F18BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
-				B97FDADB1933AA1900A93E6C /* JMSlideshowController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B9EF05821865F20900CF7A38 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B933AB3418BBDFA1006E42B9 /* CoreLib.m in Sources */,
-				B90E8DF31B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */,
-				B933AB3018BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
-				B933AB2C18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
-				B933AB3C18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
-				B90E8DFD1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */,
-				B90E8DF91B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */,
-				B90E8DFB1B1787B1007C0FB4 /* JMCrashReporter.m in Sources */,
-				B90E8E031B1787B1007C0FB4 /* JMHostInformation.m in Sources */,
-				B90E8E0B1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */,
-				B90E8E051B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */,
-				B90E8DFF1B1787B1007C0FB4 /* JMEmailSender.m in Sources */,
-				B933AB3818BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
-				B90E8E091B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
-				B97A5E941CC1536C00201C2C /* JMBlockFormatter.m in Sources */,
-				B90E8E0D1B1787B1007C0FB4 /* JMWebView.m in Sources */,
-				B90B0D351DA7F64D000CA590 /* JMURLButton.m in Sources */,
-				B90E8E071B1787B1007C0FB4 /* JMRTFView.m in Sources */,
-				B90E8E011B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */,
-				B90E8DF71B1787B1007C0FB4 /* JMClickableImageView.m in Sources */,
-				B9EF05901865F20900CF7A38 /* CoreLibTests.m in Sources */,
-				B90E8DF51B1787B1007C0FB4 /* JMAppMovedHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,9 +405,7 @@
 			files = (
 				B933AB3518BBDFA1006E42B9 /* CoreLib.m in Sources */,
 				B90E8DF41B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */,
-				B933AB3118BBDFA1006E42B9 /* AppKit+Properties.m in Sources */,
 				B933AB2D18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
-				B933AB3D18BBDFA1006E42B9 /* Foundation+Properties.m in Sources */,
 				B9F326971EE6CAEF0020E401 /* JMRatingWindowController.m in Sources */,
 				B90E8DFE1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */,
 				B90E8DFA1B1787B1007C0FB4 /* JMCorrectTimer.m in Sources */,
@@ -634,16 +435,6 @@
 			isa = PBXTargetDependency;
 			target = B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */;
 			targetProxy = B9EF05DE1865F54100CF7A38 /* PBXContainerItemProxy */;
-		};
-		B9EF05E11865F54200CF7A38 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B9EF05811865F20900CF7A38 /* CoreLibTests Mac RR */;
-			targetProxy = B9EF05E01865F54200CF7A38 /* PBXContainerItemProxy */;
-		};
-		B9EF05E31865F54300CF7A38 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B9EF05641865F18300CF7A38 /* CoreLibTests iOS RR */;
-			targetProxy = B9EF05E21865F54300CF7A38 /* PBXContainerItemProxy */;
 		};
 		B9EF05E51865F54400CF7A38 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -703,7 +494,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -764,7 +555,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -812,79 +603,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "USE_SECURITY=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-		B9EF057E1865F18300CF7A38 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				PRODUCT_NAME = "CoreLibTests iOS RR";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		B9EF057F1865F18300CF7A38 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				PRODUCT_NAME = "CoreLibTests iOS RR";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-		B9EF059B1865F20900CF7A38 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					"MAC=1",
-					"SKIP_RATINGWINDOW=1",
-				);
-				PRODUCT_NAME = "CoreLibTests Mac RR";
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		B9EF059C1865F20900CF7A38 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"MAC=1",
-					"NDEBUG=1",
-					"SKIP_RATINGWINDOW=1",
-				);
-				PRODUCT_NAME = "CoreLibTests Mac RR";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -957,24 +675,6 @@
 			buildConfigurations = (
 				B9EF052A1865D42C00CF7A38 /* Debug */,
 				B9EF052B1865D42C00CF7A38 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B9EF057D1865F18300CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests iOS RR" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B9EF057E1865F18300CF7A38 /* Debug */,
-				B9EF057F1865F18300CF7A38 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B9EF059A1865F20900CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac RR" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B9EF059B1865F20900CF7A38 /* Debug */,
-				B9EF059C1865F20900CF7A38 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

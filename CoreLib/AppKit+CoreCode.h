@@ -17,20 +17,22 @@
 
 @interface NSWindow (CoreCode)
 
+// progress with indeterminate bar
 - (void)setProgressMessage:(NSString * _Nonnull)message;
 - (void)beginProgress:(NSString * _Nonnull)title;
 - (void)endProgress;
 
 
+// progress with determinate bar from 0 to 100 %
 - (void)setCountedProgress:(double)progress message:(NSString * _Nonnull)message;
 - (void)beginCountedProgress:(NSString * _Nonnull)title;
 - (void)endCountedProgress;
 
-
+// borderless windows cant be closed normally
 - (IBAction)performBorderlessClose:(id _Nullable)sender;
 
-
 @end
+
 
 
 @interface NSView (CoreCode)
@@ -42,6 +44,7 @@
 - (NSArray <NSView *> * _Nonnull)allSubviews;
 
 @end
+
 
 
 @interface NSTextField (NSTextField_AutoFontsize)
@@ -59,19 +62,18 @@
 @end
 
 
+
 @interface NSTabView (CoreCode)
 
 @property (readonly, nonatomic) NSInteger selectedTabViewIndex;
 
 @end
-
 #else
+
 
 @interface UIView (UIView_RemoveSubviews)
 
 - (void)removeAllSubviews;
 
 @end
-
-
 #endif

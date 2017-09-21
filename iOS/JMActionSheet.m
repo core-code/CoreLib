@@ -14,7 +14,7 @@
 
 @interface JMActionSheet ()
 
-@property (unsafe_unretained, nonatomic) UIViewController *viewController;
+@property (weak, nonatomic) UIViewController *viewController;
 
 @end
 
@@ -134,17 +134,5 @@
     if (self.alternativeBlock)
         self.alternativeBlock(buttonIndex);
 }
-
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    [destructiveBlock release];
-    [cancelBlock release];
-    [alternativeBlock release];
-    
-    [super dealloc];
-}
-#endif
 
 @end

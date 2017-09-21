@@ -78,7 +78,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    NSArray *jobDicts = (BRIDGE NSArray *)SMCopyAllJobDictionaries(kSMDomainUserLaunchd); // this is deprecated but probably should not be: rdar://20510672
+    NSArray *jobDicts = (__bridge NSArray *)SMCopyAllJobDictionaries(kSMDomainUserLaunchd); // this is deprecated but probably should not be: rdar://20510672
 #pragma clang diagnostic pop
 
 	if (jobDicts != nil)
@@ -96,7 +96,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             }
         }
         
-        CFRelease((BRIDGE CFArrayRef)jobDicts);
+        CFRelease((__bridge CFArrayRef)jobDicts);
         jobDicts = nil;
         return onDemand;
         
@@ -116,12 +116,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 	if (launchesAtLogin && ![self launchesAtLogin]) // add it
     {
-        if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, true))
+        if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, true))
             LOG(@"SMLoginItemSetEnabled failed.");
     }
 	else if (!launchesAtLogin && [self launchesAtLogin]) // remove it
     {
-        if (!SMLoginItemSetEnabled((BRIDGE CFStringRef)helperBundleIdentifier, false))
+        if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, false))
             LOG(@"SMLoginItemSetEnabled failed.");
     }
         

@@ -12,6 +12,10 @@
 #error DOESNTWORK
 #endif
 
+#if ! __has_feature(objc_arc)
+	#error manual reference counting is no longer supported
+#endif
+
 static NSString *restartWithPID;
 
 @implementation LaunchAppDelegate
@@ -41,10 +45,6 @@ int main(int argc, const char *argv[])
 	if (argc >= 2)
     {
         restartWithPID = [NSString stringWithUTF8String:argv[1]];
-
-#if ! __has_feature(objc_arc)
-		[restartWithPID retain];
-#endif
     }
 	
 	return NSApplicationMain(argc, (const char **)argv);

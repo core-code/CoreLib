@@ -16,7 +16,7 @@
 
 @interface JMAlertController ()
 
-@property (unsafe_unretained, nonatomic) UIViewController *viewController;
+@property (weak, nonatomic) UIViewController *viewController;
 
 @end
 
@@ -50,9 +50,7 @@
                                                     otherBlock:nil
                                              otherButtonTitles:otherButtonTitles];
 
-#if ! __has_feature(objc_arc)
-    [otherButtonTitles release];
-#endif
+
 	return alert;
 }
 
@@ -156,15 +154,4 @@
     if (self.otherBlock)
         self.otherBlock(buttonIndex);
 }
-
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-	self.cancelBlock = nil;
-	self.otherBlock = nil;
-	
-	[super dealloc];
-}
-#endif
 @end

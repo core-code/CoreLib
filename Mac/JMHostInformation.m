@@ -94,7 +94,6 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 
 #ifdef USE_DISKARBITRATION
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7
 + (NSNumber *)bsdNumberForVolume:(NSString *)volume
 {
 	DASessionRef session = DASessionCreate(kCFAllocatorDefault);
@@ -115,7 +114,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 		if ([volumeName isEqualToString:volume])
 		{
-			DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (BRIDGE CFURLRef)mountURL);
+			DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (__bridge CFURLRef)mountURL);
 			assert(disk);
 
 			const char *utfBSDName = DADiskGetBSDName(disk);
@@ -163,7 +162,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 	for (NSURL *mountURL in urls)
 	{
-		DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (BRIDGE CFURLRef)mountURL);
+		DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (__bridge CFURLRef)mountURL);
 
 		if (disk)
 		{
@@ -225,7 +224,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 		CFDictionaryRef dict = DADiskCopyDescription(disk);
 		if (dict)
 		{
-			resultDict = [NSDictionary dictionaryWithDictionary:(BRIDGE NSDictionary *)dict];
+			resultDict = [NSDictionary dictionaryWithDictionary:(__bridge NSDictionary *)dict];
 			CFRelease(dict);
 
 #ifdef USE_IOKIT
@@ -239,7 +238,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 				if (property)
 				{
 
-					NSString *mediumType = [((BRIDGE NSDictionary *)property) objectForKey:@(kIOPropertyMediumTypeKey)];
+					NSString *mediumType = [((__bridge NSDictionary *)property) objectForKey:@(kIOPropertyMediumTypeKey)];
 
 					if ([mediumType isEqualToString:@(kIOPropertyMediumTypeSolidStateKey)])
 						resultDict = [resultDict dictionaryByAddingValue:@(YES)
@@ -271,140 +270,6 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	CFRelease(session);
 
 	return resultDict;
-}
-
-#endif
-#endif
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_7
-+ (NSString *)bsdPathForVolume:(NSString *)volume
-{
-	OSStatus			result = noErr;
-	ItemCount			volumeIndex;
-
-	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
-	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
-	for (volumeIndex = 1; result == noErr || result != nsvErr; volumeIndex++)
-	{
-		FSVolumeRefNum	actualVolume;
-		HFSUniStr255	volumeName;
-		FSVolumeInfo	volumeInfo;
-
-		bzero((void *) &volumeInfo, sizeof(volumeInfo));
-
-		// We're mostly interested in the volume reference number (actualVolume)
-		result = FSGetVolumeInfo(kFSInvalidVolumeRefNum,
-								 volumeIndex,
-								 &actualVolume,
-								 kFSVolInfoFSInfo,
-								 &volumeInfo,
-								 &volumeName,
-								 NULL);
-
-		if (result == noErr)
-		{
-			GetVolParmsInfoBuffer volumeParms;
-			result = FSGetVolumeParms (actualVolume, &volumeParms, sizeof(volumeParms));
-
-
-			if (result != noErr)
-				cc_log_error(@"Error:	FSGetVolumeParms returned %d", result);
-			else
-			{
-				if ((char *)volumeParms.vMDeviceID != NULL)
-				{
-					// This code is just to convert the volume name from a HFSUniCharStr to
-					// a plain C string so we can print it with printf. It'd be preferable to
-					// use CoreFoundation to work with the volume name in its Unicode form.
-					CFStringRef volNameAsCFString = CFStringCreateWithCharacters(kCFAllocatorDefault, volumeName.unicode, volumeName.length);
-					if (volNameAsCFString)
-					{
-						if ([volume isEqualToString:(BRIDGE NSString *)volNameAsCFString])
-						{
-							CFRelease(volNameAsCFString);
-							return [NSString stringWithFormat:@"/dev/rdisk%@", [[[[NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID] substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0]];
-						}
-						else
-							CFRelease(volNameAsCFString);
-
-					}
-					else
-						cc_log_error(@"Error: volNameAsCFString == NULL, %i", __LINE__);
-				}
-				else
-					cc_log_error(@"Error: bsdPathForVolume volumeParms.vMDeviceID == NULL, %i", __LINE__);
-			}
-		}
-	}
-	
-	return nil;
-}
-
-+ (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber
-{
-	NSMutableString *name = [NSMutableString stringWithCapacity:12];
-	OSStatus			result = noErr;
-	ItemCount			volumeIndex;
-
-
-	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
-	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
-	for (volumeIndex = 1; result == noErr || result != nsvErr; volumeIndex++)
-	{
-		FSVolumeRefNum	actualVolume;
-		HFSUniStr255	volumeName;
-		FSVolumeInfo	volumeInfo;
-
-		bzero((void *) &volumeInfo, sizeof(volumeInfo));
-
-		// We're mostly interested in the volume reference number (actualVolume)
-		result = FSGetVolumeInfo(kFSInvalidVolumeRefNum,
-								 volumeIndex,
-								 &actualVolume,
-								 kFSVolInfoFSInfo,
-								 &volumeInfo,
-								 &volumeName,
-								 NULL);
-
-		if (result == noErr)
-		{
-			GetVolParmsInfoBuffer volumeParms;
-
-			result = FSGetVolumeParms (actualVolume, &volumeParms, sizeof(volumeParms));
-
-			if (result != noErr)
-				cc_log_error(@"Error:	FSGetVolumeParms returned %d", result);
-			else
-			{
-				if ((char *)volumeParms.vMDeviceID != NULL)
-				{
-					NSString *bsdName = [NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID];
-
-					if ([bsdName hasPrefix:@"disk"])
-					{
-						NSString *shortBSDName = [bsdName substringFromIndex:4];
-
-						NSArray *components = [shortBSDName componentsSeparatedByString:@"s"];
-
-						if (([components count] > 1) && (!([shortBSDName isEqualToString:[components objectAtIndex:0]])))
-						{
-							if ([[components objectAtIndex:0] integerValue] == deviceNumber)
-							{
-								if (![name isEqualToString:@""])
-									[name appendString:@", "];
-
-								[name appendString:[NSString stringWithCharacters:volumeName.unicode length:volumeName.length]];
-							}
-						}
-					}
-				}
-				else
-					cc_log_error(@"Error: volumeNamesForDevice	volumeParms.vMDeviceID == NULL, %i", __LINE__);
-			}
-		}
-	}
-
-	return [NSString stringWithString:name];
 }
 #endif
 
@@ -600,7 +465,7 @@ BOOL _isUserAdmin(void);
 	//return [[NSHost currentHost] name]; // [NSHost currentHost]  broken
 
 	SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault,
-													(BRIDGE CFStringRef)cc.appName,
+													(__bridge CFStringRef)cc.appName,
 													NULL, NULL);
 
 	if (dynRef)
@@ -613,7 +478,7 @@ BOOL _isUserAdmin(void);
 			cc_log_error(@"Error: SCDynamicStoreCopyLocalHostName == NULL, %i", __LINE__);
 			return @"";
 		}
-		NSString *hostname = [NSString stringWithFormat:@"%@.local", (BRIDGE NSString *)hostnameCF];
+		NSString *hostname = [NSString stringWithFormat:@"%@.local", (__bridge NSString *)hostnameCF];
 		CFRelease(hostnameCF);
 
 		return hostname;
@@ -690,8 +555,8 @@ NSString *_machineType(void);
     CFTypeRef s = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
     if (s)
     {
-        cc_log_debug(@"Serial Number: %@", (BRIDGE NSString *) s);
-        serial = [(BRIDGE NSString *)s copy];
+        cc_log_debug(@"Serial Number: %@", (__bridge NSString *) s);
+        serial = [(__bridge NSString *)s copy];
         CFRelease(s);
     }
     else
@@ -699,8 +564,8 @@ NSString *_machineType(void);
         s = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("device serial"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
         if (s)
         {
-            cc_log_debug(@"Serial Number: %@", (BRIDGE NSString *) s);
-            serial = [(BRIDGE NSString *)s copy];
+            cc_log_debug(@"Serial Number: %@", (__bridge NSString *) s);
+            serial = [(__bridge NSString *)s copy];
             CFRelease(s);
         }
         else
@@ -708,8 +573,8 @@ NSString *_machineType(void);
             s = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("USB Serial Number"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
             if (s)
             {
-                cc_log_debug(@"USB Serial Number: %@", (BRIDGE NSString *) s);
-                serial = [(BRIDGE NSString *)s copy];
+                cc_log_debug(@"USB Serial Number: %@", (__bridge NSString *) s);
+                serial = [(__bridge NSString *)s copy];
                 
                 CFRelease(s);
             }
@@ -720,9 +585,6 @@ NSString *_machineType(void);
     
     NSString *info = serial ? [serial stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] : @"NOSERIAL";
 
-#if ! __has_feature(objc_arc)
-    [serial release];
-#endif
     
     return info;
 }
@@ -754,7 +616,7 @@ NSString *_machineType(void);
                 if (bsdVolume)
                 {
 					                    
-                    if ([(BRIDGE NSString *)bsdVolume isEqualToString:[NSString stringWithFormat:@"disk%li", bsdNum]])
+                    if ([(__bridge NSString *)bsdVolume isEqualToString:[NSString stringWithFormat:@"disk%li", bsdNum]])
                     {
 						LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match");
 
@@ -781,19 +643,19 @@ NSString *_machineType(void);
                                         CFTypeRef data = IORegistryEntrySearchCFProperty(gparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
                                         if (data)
                                         {
-											LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match %@", (BRIDGE NSString *)data);
+											LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match %@", (__bridge NSString *)data);
 
 
                                             NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
                                             
                                             
-                                            if ([(BRIDGE NSString *)data hasPrefix:@"disk"] && ([(BRIDGE NSString *)data length] >= 5))
+                                            if ([(__bridge NSString *)data hasPrefix:@"disk"] && ([(__bridge NSString *)data length] >= 5))
                                             {
-                                                NSInteger num = [[(BRIDGE NSString *)data substringFromIndex:4] integerValue];
+                                                NSInteger num = [[(__bridge NSString *)data substringFromIndex:4] integerValue];
                                                 [diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
                                             }
                                             else
-                                                cc_log_error(@"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
+                                                cc_log_error(@"Error: bsd name doesn't look good %@", (__bridge NSString *) data);
                                             
                                             CFRelease(data);
                                             
@@ -846,11 +708,11 @@ NSString *_machineType(void);
     BOOL foundBacking = false;
     LOGMOUNTEDHARDDISK(@"mountedHarddisks found props %@", bsdName);
     
-    CFUUIDRef DAMediaUUID = (BRIDGE CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
+    CFUUIDRef DAMediaUUID = (__bridge CFUUIDRef)[props objectForKey:@"DAMediaUUID"];
     if (DAMediaUUID)
     {
 		CFStringRef uuidCF = CFUUIDCreateString(kCFAllocatorDefault, DAMediaUUID);
-        NSString *uuid = (BRIDGE NSString *)uuidCF;
+        NSString *uuid = (__bridge NSString *)uuidCF;
 
 
         
@@ -876,7 +738,7 @@ NSString *_machineType(void);
                     CFTypeRef	ourUUID = IORegistryEntryCreateCFProperty(object, CFSTR(kIOMediaUUIDKey), kCFAllocatorDefault, 0);
                     if (ourUUID)
                     {
-                        if ([(BRIDGE NSString *)ourUUID isEqualToString:uuid])
+                        if ([(__bridge NSString *)ourUUID isEqualToString:uuid])
                         {
                             LOGMOUNTEDHARDDISK(@"mountedHarddisks found matching UUID %@", bsdName);
                             
@@ -887,7 +749,7 @@ NSString *_machineType(void);
                             {
                                 LOGMOUNTEDHARDDISK(@"mountedHarddisks SOFTRAID");
                                 
-                                for (NSString *name in (BRIDGE NSArray *)d)
+                                for (NSString *name in (__bridge NSArray *)d)
                                 {	
                                     if ([name hasPrefix:@"disk"] && ([name length] >= 5))
                                     {
@@ -952,13 +814,13 @@ NSString *_machineType(void);
                                                         data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
                                                         if (data)
                                                         {																			
-                                                            if ([(BRIDGE NSString *)data hasPrefix:@"disk"] && ([(BRIDGE NSString *)data length] >= 5))
+                                                            if ([(__bridge NSString *)data hasPrefix:@"disk"] && ([(__bridge NSString *)data length] >= 5))
                                                             {
-                                                                NSInteger num = [[(BRIDGE NSString *)data substringFromIndex:4] integerValue];
+                                                                NSInteger num = [[(__bridge NSString *)data substringFromIndex:4] integerValue];
                                                                 [diskDict2 setObject:[NSNumber numberWithInteger:num] forKey:kDiskNumberKey];
                                                             }
                                                             else
-                                                                cc_log_error(@"Error: bsd name doesn't look good %@", (BRIDGE NSString *) data);
+                                                                cc_log_error(@"Error: bsd name doesn't look good %@", (__bridge NSString *) data);
                                                             
                                                             CFRelease(data);
                                                             
@@ -1012,7 +874,7 @@ NSString *_machineType(void);
     }
     return foundBacking;
 }
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
+
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
 	NSMutableArray  *nonRemovableVolumes = [NSMutableArray array];
@@ -1026,7 +888,6 @@ NSString *_machineType(void);
 		return nil;
 	}
 
-	LOGMOUNTEDHARDDISK(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
 
 
 	NSArray *urls = [[NSFileManager defaultManager] mountedVolumeURLsIncludingResourceValuesForKeys:@[NSURLVolumeNameKey] options:(NSVolumeEnumerationOptions)0];
@@ -1055,7 +916,7 @@ NSString *_machineType(void);
 
 		if (volumeName)
 		{
-			DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (BRIDGE CFURLRef)mountURL);
+			DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (__bridge CFURLRef)mountURL);
 
 			if (disk)
 			{
@@ -1102,7 +963,7 @@ NSString *_machineType(void);
 								CFDictionaryRef propsCF = DADiskCopyDescription(disk);
 								if (propsCF)
 								{
-									NSDictionary *props = (BRIDGE NSDictionary *)propsCF;
+									NSDictionary *props = (__bridge NSDictionary *)propsCF;
 
 
 									LOGMOUNTEDHARDDISK(@"mountedHarddisks checking for raid backing %@", bsdName);
@@ -1167,243 +1028,6 @@ NSString *_machineType(void);
 
 	return nonRemovableVolumes;
 }
-#else
-+ (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
-{
-	OSStatus           result = noErr;
-	ItemCount       volumeIndex;
-    NSMutableArray	*volumeNamesToIgnore = [NSMutableArray array];
-    NSMutableArray	*volumePathsToIgnore = [NSMutableArray array];
-    NSMutableArray  *nonRemovableVolumes = [NSMutableArray array];
-
-    for (NSString *name in [[NSWorkspace sharedWorkspace] mountedRemovableMedia])
-    {
-        if ([name hasPrefix:@"/Volumes/"])
-            [volumeNamesToIgnore addObject:[name substringFromIndex:[@"/Volumes/" length]]];
-        else
-            [volumeNamesToIgnore addObject:name];
-
-		[volumePathsToIgnore addObject:name];
-    }
-
-	for (NSString *path in [[NSWorkspace sharedWorkspace] mountedLocalVolumePaths])
-	{		
-		NSString *description, *type;
-		BOOL removable = NO, writable, unmountable;
-		
-		[[NSWorkspace sharedWorkspace] getFileSystemInfoForPath:path
-		                                            isRemovable:&removable
-				                                     isWritable:&writable
-							                      isUnmountable:&unmountable
-										            description:&description
-													       type:&type];
-		
-		if (removable)
-			[volumePathsToIgnore addObject:path];
-	}
-
-	
-	DASessionRef session = NULL;
-	if (includeRAIDBackingDevices)
-	{
-		session = DASessionCreate(kCFAllocatorDefault);
-		assert(session);
-		if (!session)
-		{
-			cc_log_error(@"Error:	DASessionCreate returned NULL");
-			return nil;
-		}
-	}
-
-	LOGMOUNTEDHARDDISK(@"mountedHarddisks removableVolumeNames %@", ([volumeNamesToIgnore description]));
-
-
-    
-
-    
-	// Iterate across all mounted volumes using FSGetVolumeInfo. This will return nsvErr
-	// (no such volume) when volumeIndex becomes greater than the number of mounted volumes.
-	for (volumeIndex = 1; result == noErr || result != nsvErr; volumeIndex++)
-	{
-		FSVolumeRefNum	actualVolume;
-		HFSUniStr255	volumeName;
-		FSVolumeInfo	volumeInfo;
-		FSRef			volumeFSRef;
-
-		bzero((void *) &volumeInfo, sizeof(volumeInfo));
-        
-		// We're mostly interested in the volume reference number (actualVolume)
-		result = FSGetVolumeInfo(kFSInvalidVolumeRefNum,
-								 volumeIndex,
-								 &actualVolume,
-								 kFSVolInfoFSInfo,
-								 &volumeInfo,
-								 &volumeName,
-								 &volumeFSRef);
-        
-		if (result == noErr)
-		{
-			GetVolParmsInfoBuffer volumeParms;
-			result = FSGetVolumeParms (actualVolume, &volumeParms, sizeof(volumeParms));
-
-
-			if (result != noErr)
-				cc_log_error(@"Error:	FSGetVolumeParms returned %d", result);
-			else
-			{
-				if ((char *)volumeParms.vMDeviceID != NULL)
-				{
-					CFURLRef mountURLCF = CFURLCreateFromFSRef(NULL, &volumeFSRef);
-
-					if (mountURLCF)
-					{
-						NSURL *mountURL = (BRIDGE NSURL *)mountURLCF;
-
-						// This code is just to convert the volume name from a HFSUniCharStr to
-						// a plain C string so we can print it with printf. It'd be preferable to
-						// use CoreFoundation to work with the volume name in its Unicode form.
-						CFStringRef	volNameAsCFString = CFStringCreateWithCharacters(kCFAllocatorDefault,
-																					 volumeName.unicode,
-																					 volumeName.length);
-
-						if (volNameAsCFString)
-						{
-							//NSLog((NSString *)volNameAsCFString);
-							LOGMOUNTEDHARDDISK(@"mountedHarddisks found IOKit name %@", (BRIDGE NSString *)volNameAsCFString);
-
-							if ([volumeNamesToIgnore indexOfObject:(BRIDGE NSString *)volNameAsCFString] == NSNotFound &&
-								[volumePathsToIgnore indexOfObject:[mountURL path]] == NSNotFound) // not removable
-							{
-								
-								NSString *bsdName = [NSString stringWithUTF8String:(char *)volumeParms.vMDeviceID];
-								
-								LOGMOUNTEDHARDDISK(@"mountedHarddisks has BSD name %@", bsdName);
-
-								if ([bsdName hasPrefix:@"disk"])
-								{
-									NSString *bsdNumStr = [[[bsdName substringFromIndex:4] componentsSeparatedByString:@"s"] objectAtIndex:0];
-									NSInteger bsdNum = [bsdNumStr integerValue];
-									BOOL found = FALSE;
-									
-									for (NSMutableDictionary *disk in nonRemovableVolumes)  // check if we already added the disk because of another partition
-									{
-										if ([[disk objectForKey:kDiskNumberKey] integerValue] == bsdNum)
-										{
-											NSString *currentName = [disk objectForKey:kDiskNameKey];
-											[disk setObject:[currentName stringByAppendingFormat:@", %@", (BRIDGE NSString *)volNameAsCFString] forKey:kDiskNameKey];
-											found = TRUE;
-										}
-									}
-									
-									if (!found) // new disk
-									{
-										BOOL foundBacking = false;
-										
-										
-										if (includeRAIDBackingDevices)
-										{
-											NSString *bsdname = [NSString stringWithFormat:@"/dev/disk%li", bsdNum];
-											
-											DADiskRef disk = DADiskCreateFromBSDName(kCFAllocatorDefault, session, [bsdname UTF8String]);
-
-											if (disk)
-											{
-												CFDictionaryRef propsCF = DADiskCopyDescription(disk);
-
-												if (propsCF)
-												{
-													NSDictionary *props = (BRIDGE NSDictionary *)propsCF;
-
-													
-													CFRelease(disk);
-													disk = NULL;
-													
-													LOGMOUNTEDHARDDISK(@"mountedHarddisks checking for raid backing %@", bsdName);
-
-													if ([[props objectForKey:@"DAVolumeKind"] isEqualToString:@"zfs"])
-													{
-														[self _findZFSBacking:&foundBacking
-																   volumeName:(BRIDGE NSString *)volNameAsCFString
-														  nonRemovableVolumes:nonRemovableVolumes
-																	   bsdNum:bsdNum];
-													}
-													else if ([props objectForKey:@"DAMediaLeaf"] && [[props objectForKey:@"DAMediaLeaf"] intValue])
-													{
-														foundBacking = [self _findRAIDBacking:bsdName
-																						props:props
-																				   volumeName:(BRIDGE NSString *)volNameAsCFString
-																		  nonRemovableVolumes:nonRemovableVolumes];
-													}
-													CFRelease(propsCF);
-													propsCF = NULL;
-													props = nil;
-												}
-												else
-													cc_log_error(@"Error: DADiskCopyDescription == NULL");
-											}
-											else
-												cc_log_error(@"Error: DADiskCreateFromBSDName == NULL");
-										}
-										
-										if (!foundBacking)
-										{
-											[self _addDiskToList:nonRemovableVolumes
-														  number:[NSNumber numberWithInteger:bsdNum]
-															name:(BRIDGE NSString *)volNameAsCFString
-														  detail:nil];
-
-											
-											LOGMOUNTEDHARDDISK(@"mountedHarddisks is new disk without backing %@", bsdName);
-										}
-										else
-											LOGMOUNTEDHARDDISK(@"mountedHarddisks ignoring volume with raid/zfs backing %@", bsdName);
-									}
-								}
-							}
-
-							CFRelease(volNameAsCFString);
-							volNameAsCFString = NULL;
-						}
-						else
-							cc_log_error(@"Error: volNameAsCFString == NULL");
-
-						CFRelease(mountURLCF);
-						mountURLCF = NULL;
-					}
-					else
-						cc_log_error(@"Error: mountURLCF == NULL");
-
-				}
-				else
-					cc_log_error(@"Error: mountedHarddisks volumeParms.vMDeviceID == NULL");
-			}
-		}
-	}
-    
-	if (includeRAIDBackingDevices)
-		CFRelease(session);
-
-	
-	if ([nonRemovableVolumes count] >= 2) // move boot volume to first spot
-	{
-		NSInteger bootDisk = [self bootDiskBSDNum];
-
-		for (NSUInteger i = 1; i < [nonRemovableVolumes count]; i++)
-		{
-			NSDictionary *disk = [nonRemovableVolumes objectAtIndex:i];
-			
-			if ([[disk objectForKey:kDiskNumberKey] integerValue] == bootDisk)
-			{
-				[nonRemovableVolumes exchangeObjectAtIndex:0 withObjectAtIndex:i];
-				 
-				break;
-			}
-		}
-	}
-
-	return nonRemovableVolumes;
-}
-#endif
 
 + (NSArray *)allHarddisks
 {

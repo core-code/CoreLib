@@ -70,7 +70,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 + (void)startMoveObservation
 {
-	CFStringRef mypath = (BRIDGE CFStringRef)[[NSBundle mainBundle] bundlePath];
+	CFStringRef mypath = (__bridge CFStringRef)[[NSBundle mainBundle] bundlePath];
 	CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
 	void *callbackInfo = NULL;
 	FSEventStreamRef stream;

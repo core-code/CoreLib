@@ -48,17 +48,14 @@
     self.angryView.hidden = YES;
     self.happyView.hidden = YES;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-    if (OS_IS_POST_10_10) // doing this directly in the NIB would warn when deploying to < 10.11
+
+    if (@available(macOS 10.11, *)) // doing this directly in the NIB would warn when deploying to < 10.11
     {
         for (NSButton *button in @[self.ratemacupdateButton, self.rateappstoreButton, self.notnowButton, self.happyButton, self.notsureButton, self.problemButton, self.feedbackButton])
             button.font = [NSFont systemFontOfSize:18 weight:NSFontWeightLight];
         for (NSButton *tf in @[self.awesomeText, self.introText, self.sorryText])
             tf.font = [NSFont systemFontOfSize:14 weight:NSFontWeightLight];
     }
-#pragma clang diagnostic pop
 }
 
 - (IBAction)happyClicked:(id)sender

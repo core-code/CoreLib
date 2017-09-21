@@ -94,9 +94,6 @@
 	{
         cell = [[UITableViewCell alloc] initWithStyle:(self.detail ? UITableViewCellStyleValue1 : UITableViewCellStyleDefault)
 								      reuseIdentifier:CellIdentifier];
-#if ! __has_feature(objc_arc)
-		[cell autorelease];
-#endif
     }
 
 
@@ -136,20 +133,5 @@
         self.deleteBlock(choice, indexPath.row);
     }
 }
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.font = nil;
-    self.topTitle = nil;
-    self.choices = nil;
-    self.detail = nil;
-    self.completionBlock = nil;
-    self.dismissBlock = nil;
-    self.deleteBlock = nil;
-
-    [super dealloc];
-}
-#endif
 
 @end

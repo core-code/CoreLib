@@ -52,9 +52,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	id obj = [[class alloc] init];
 
 	[NSValueTransformer setValueTransformer:obj forName:className];
-#if ! __has_feature(objc_arc)
-	[obj release];
-#endif
 }
 @end
 

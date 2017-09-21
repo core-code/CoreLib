@@ -89,12 +89,7 @@ CONST_KEY(CCCountedProgressIndicator)
 		}
 
 		[progressPanel.contentView addSubview:progressIndicator];
-#if ! __has_feature(objc_arc)
-		[progressIndicator release];
-		[waitLabel release];
-		[progressDetailInfo release];
-		[progressInfo release];
-#endif
+
 		[progressPanel setReleasedWhenClosed:YES];
 
 		[self setAssociatedValue:progressDetailInfo forKey:kCCProgressDetailInfoKey];
@@ -103,15 +98,7 @@ CONST_KEY(CCCountedProgressIndicator)
 
 		[NSApp activateIgnoringOtherApps:YES];
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if (OS_IS_POST_10_8)
-            [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
-        else
-            [NSApp beginSheet:progressPanel modalForWindow:self
-                modalDelegate:nil didEndSelector:nil contextInfo:NULL];
-#pragma clang diagnostic pop
+        [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
 
 		[progressIndicator startAnimation:self];
 	});
@@ -126,14 +113,9 @@ CONST_KEY(CCCountedProgressIndicator)
 
 		[progressIndicator stopAnimation:self];
 		[NSApp activateIgnoringOtherApps:YES];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-if (OS_IS_POST_10_8)
-			[self endSheet:progressPanel];
-		else
-			[NSApp endSheet:progressPanel];
-#pragma clang diagnostic pop
+
+        [self endSheet:progressPanel];
+
 		[progressPanel orderOut:self];
 
 		[self setAssociatedValue:nil forKey:kCCProgressDetailInfoKey];
@@ -195,12 +177,7 @@ if (OS_IS_POST_10_8)
         }
         
         [progressPanel.contentView addSubview:progressIndicator];
-#if ! __has_feature(objc_arc)
-        [progressIndicator release];
-        [waitLabel release];
-        [progressDetailInfo release];
-        [progressInfo release];
-#endif
+
         [progressPanel setReleasedWhenClosed:YES];
         
         [self setAssociatedValue:progressDetailInfo forKey:kCCCountedProgressDetailInfoKey];
@@ -209,15 +186,8 @@ if (OS_IS_POST_10_8)
         
         [NSApp activateIgnoringOtherApps:YES];
         
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if (OS_IS_POST_10_8)
-            [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
-        else
-            [NSApp beginSheet:progressPanel modalForWindow:self
-                modalDelegate:nil didEndSelector:nil contextInfo:NULL];
-#pragma clang diagnostic pop
+        [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
+
         
         [progressIndicator startAnimation:self];
     });
@@ -232,14 +202,9 @@ if (OS_IS_POST_10_8)
         
         [progressIndicator stopAnimation:self];
         [NSApp activateIgnoringOtherApps:YES];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        if (OS_IS_POST_10_8)
-            [self endSheet:progressPanel];
-        else
-            [NSApp endSheet:progressPanel];
-#pragma clang diagnostic pop
+
+        [self endSheet:progressPanel];
+
         [progressPanel orderOut:self];
         
         [self setAssociatedValue:nil forKey:kCCCountedProgressDetailInfoKey];
@@ -330,14 +295,6 @@ if (OS_IS_POST_10_8)
 @end
 @implementation BlockWrapper
 - (void)invoke:(id)sender { self.block(sender); }
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.block = nil;
-
-    [super dealloc];
-}
-#endif
 @end
 
 
@@ -358,10 +315,6 @@ static const char *actionBlockAssociatedObjectName = "CoreCode_NSControl_BlockAc
 
 	self.target = wrapper;
 	self.action = @selector(invoke:);
-
-#if ! __has_feature(objc_arc)
-	[wrapper release];
-#endif
 }
 
 - (ObjectInBlock)actionBlock

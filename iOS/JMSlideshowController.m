@@ -14,8 +14,8 @@
 
 @interface JMSlideshowController ()
 
-@property (unsafe_unretained, nonatomic) UIImageView *imageView;
-@property (unsafe_unretained, nonatomic) UIPageControl *pageControl;
+@property (weak, nonatomic) UIImageView *imageView;
+@property (weak, nonatomic) UIPageControl *pageControl;
 @property (assign, nonatomic) int currentImage;
 
 @end
@@ -46,12 +46,6 @@
 	swiperight.direction = UISwipeGestureRecognizerDirectionRight;
 	[self.view addGestureRecognizer:swiperight];
 
-#if ! __has_feature(objc_arc)
-	[iv release];
-	[swiperight release];
-	[swipeleft release];
-	[pc release];
-#endif
 
     [super viewDidLoad];
 }
@@ -126,20 +120,13 @@
 				{
 					[label removeFromSuperview];
 					if (data)
-#if ! __has_feature(objc_arc)
-						self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
-#else
-					self.imageView.image = [[UIImage alloc] initWithData:data];
-#endif
+                        self.imageView.image = [[UIImage alloc] initWithData:data];
+
 				});
 			});
 		}
 		else if ([im hasPrefix:@"/"])
-#if ! __has_feature(objc_arc)
-			self.imageView.image = [[[UIImage alloc] initWithContentsOfFile:im] autorelease];
-#else
 			self.imageView.image = [[UIImage alloc] initWithContentsOfFile:im];
-#endif
 		else
 			self.imageView.image = [UIImage imageNamed:im];
 	}
@@ -151,10 +138,6 @@
         {
             NSString *im2Path = im2.path;
             UIImage *image = [[UIImage alloc] initWithContentsOfFile:im2Path];
-
-#if ! __has_feature(objc_arc)
-            [image autorelease];
-#endif
 
             self.imageView.image = image;
         }
@@ -175,11 +158,7 @@
 				{
 					[label removeFromSuperview];
 					if (data)
-#if ! __has_feature(objc_arc)
-						self.imageView.image = [[[UIImage alloc] initWithData:data] autorelease];
-#else
-					self.imageView.image = [[UIImage alloc] initWithData:data];
-#endif
+                        self.imageView.image = [[UIImage alloc] initWithData:data];
 				});
 			});
 
@@ -189,17 +168,4 @@
 	self.pageControl.numberOfPages = self.images.count;
 	self.pageControl.currentPage = self.currentImage;
 }
-
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.images = nil;
-    self.navigationTitle = nil;
-    self.imageView = nil;
-    self.pageControl = nil;
-
-    [super dealloc];
-}
-#endif
 @end

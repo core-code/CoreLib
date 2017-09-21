@@ -36,14 +36,17 @@ extern "C"
 #import <Availability.h>
 #endif
 
+#if ! __has_feature(objc_arc) // for some reason there are false positives here in Xcode 9, so we had to downgrade to warning
+    #warning CoreLib > 1.13 does not support manual reference counting anymore
+#endif
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 #if __has_feature(modules)
     @import Cocoa;
 #else
     #import <Cocoa/Cocoa.h>
 #endif
-#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_6
-    #error CoreLib only deploys back to Mac OS X 10.6
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
+    #error CoreLib only deploys back to Mac OS X 10.10
 #endif
 #endif
 
@@ -218,9 +221,7 @@ void dispatch_async_main(dispatch_block_t block);
 void dispatch_async_back(dispatch_block_t block);
 void dispatch_sync_main(dispatch_block_t block);
 void dispatch_sync_back(dispatch_block_t block);
-#if ((defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000))
 BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds); // returns 0 on succ
-#endif
 
 
 
@@ -289,13 +290,6 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define ONCE_PER_FUNCTION(b)	{ static dispatch_once_t onceToken; dispatch_once(&onceToken, b); }
 #define ONCE_PER_OBJECT(o,b)	@synchronized(o){ static dispatch_once_t onceToken; onceToken = [[o associatedValueForKey:o.id] longValue]; dispatch_once(&onceToken, b); [o setAssociatedValue:@(onceToken) forKey:o.id]; }
 #define ONCE_EVERY_MINUTES(b,m)	{ static NSDate *time = nil; if (!time || [[NSDate date] timeIntervalSinceDate:time] > (m * 60)) { b(); time = [NSDate date]; }}
-#define OS_IS_POST_10_6			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_7)
-#define OS_IS_POST_10_7			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_8)
-#define OS_IS_POST_10_8			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_9)
-#define OS_IS_POST_10_9			(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_10)
-#define OS_IS_POST_10_10		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_11)
-#define OS_IS_POST_10_11		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_12)
-#define OS_IS_POST_10_12		(NSAppKitVersionNumber >= (int)NSAppKitVersionNumber10_13)
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
@@ -310,40 +304,6 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS(x) * 7)
 
 
-
-// !!!: MISC MACROS
-#ifndef NSAppKitVersionNumber10_6
-#define NSAppKitVersionNumber10_6 1038
-#endif
-#ifndef NSAppKitVersionNumber10_7
-#define NSAppKitVersionNumber10_7 1138
-#endif
-#ifndef NSAppKitVersionNumber10_8
-#define NSAppKitVersionNumber10_8 1187
-#endif
-#ifndef NSAppKitVersionNumber10_9
-#define NSAppKitVersionNumber10_9 1265
-#endif
-#ifndef NSAppKitVersionNumber10_10
-#define NSAppKitVersionNumber10_10 1343.14
-#endif
-#ifndef NSAppKitVersionNumber10_11
-#define NSAppKitVersionNumber10_11 1404.11
-#endif
-#ifndef NSAppKitVersionNumber10_12
-#define NSAppKitVersionNumber10_12 1504
-#endif
-#ifndef NSAppKitVersionNumber10_13
-#define NSAppKitVersionNumber10_13 1561
-#endif
-#if ! __has_feature(objc_arc)
-#define BRIDGE
-#else
-#define BRIDGE __bridge
-#endif
-//#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
-//#define __IPHONE_OS_VERSION_MIN_REQUIRED 0
-//#endif
 
 
 // !!!: CONFIGURATION
@@ -398,7 +358,3 @@ void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #import "AppKit+CoreCode.h"
 #import "Foundation+CoreCode.h"
 
-#if ((defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101000) || (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && (__IPHONE_OS_VERSION_MAX_ALLOWED < 90000)))
-#import "AppKit+Properties.h"
-#import "Foundation+Properties.h"
-#endif

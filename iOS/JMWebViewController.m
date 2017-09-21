@@ -30,9 +30,6 @@
 	self.webView.delegate = self.tmpDelegate;
 	self.tmpDelegate = nil;
 
-#if ! __has_feature(objc_arc)
-	[wv release];
-#endif
 	[self.view addSubview:self.webView];
 
     [super viewDidLoad];
@@ -67,16 +64,4 @@
 {
     return self.tmpDelegate ? self.tmpDelegate : self.webView.delegate;
 }
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.url = nil;
-    self.navigationTitle = nil;
-    self.webView = nil;
-    self.tmpDelegate = nil;
-
-    [super dealloc];
-}
-#endif
 @end

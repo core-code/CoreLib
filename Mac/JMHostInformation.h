@@ -31,15 +31,10 @@ CC_ENUM(uint8_t, smartStatusEnum)
 
 + (NSString *)machineType;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_7
-+ (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber;
-+ (NSString *)bsdPathForVolume:(NSString *)volume;
-#else
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
 + (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber;
 + (NSNumber *)bsdNumberForVolume:(NSString *)volume;
 + (NSDictionary *)descriptionForDevice:(NSInteger)bsdNum;
-#endif
 #endif
 
 

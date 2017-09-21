@@ -65,18 +65,10 @@
 
 	[[NSRunLoop currentRunLoop] addTimer:t forMode:NSDefaultRunLoopMode];
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-	if ([t respondsToSelector:@selector(setTolerance:)])
-		t.tolerance = 0.1;
-#pragma clang diagnostic pop
+    t.tolerance = 0.1;
+
 
 	self.timer = t;
-
-#if ! __has_feature(objc_arc)
-	[t release];
-#endif
 }
 
 - (void)invalidate
@@ -93,11 +85,7 @@
 {
 	LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.timer.fireDate.description, NSDate.date.description));
 
-#if ! __has_feature(objc_arc)
-	[self retain];
-#else
 	__strong JMCorrectTimer *strongSelf = self;
-#endif
 
 	self.timerBlock();
 
@@ -106,11 +94,7 @@
 	self.timerBlock = nil;
 	self.dropBlock = nil;
 
-#if ! __has_feature(objc_arc)
-	[self release];
-#else
 	strongSelf = nil;
-#endif
 }
 
 - (void)receiveSleepNote:(id)sender
@@ -142,22 +126,15 @@
 
 		if (self.dropBlock)
 		{
-#if ! __has_feature(objc_arc)
-			[self retain];
-#else
 			__strong JMCorrectTimer *strongSelf = self;
-#endif
+
 			self.dropBlock();
 
 			self.timerBlock = nil;
 			self.dropBlock = nil;
 
 
-#if ! __has_feature(objc_arc)
-			[self release];
-#else
 			strongSelf = nil;
-#endif
 		}
 		else
 			cc_log_error(@"JMCorrectTimer: error dropBlock was nil");
@@ -181,9 +158,5 @@
 
 	
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-	
-#if ! __has_feature(objc_arc)
-	[super dealloc];
-#endif
 }
 @end

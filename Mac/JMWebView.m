@@ -89,16 +89,4 @@
 		[self.mainFrame loadRequest:self.localHTMLName.resourceURL.request];  // online version failed, fall back to offline
 	}
 }
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.localHTMLName = nil;
-    self.remoteHTMLURL = nil;
-    self.zoomFactor = nil;
-
-    [super dealloc];
-}
-#endif
-
 @end

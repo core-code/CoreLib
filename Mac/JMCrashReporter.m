@@ -101,9 +101,6 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
 				if (!foundNeccessaryString)
 				{
-#if ! __has_feature(objc_arc)
-					[crashlogsource release];
-#endif
 					return;
 				}
 
@@ -142,10 +139,6 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
 				if (![[NSUserDefaultsController sharedUserDefaultsController] commitEditing])
 					cc_log_error(@"Warning: shared user defaults controller could not commit editing");
-
-#if ! __has_feature(objc_arc)
-				[crashlogsource release]; 
-#endif
 			}
 		}
 	}

@@ -38,13 +38,4 @@
 	[super drawRect:frame];
 }
 
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.clickBlock = nil;
-
-    [super dealloc];
-}
-#endif
-
 @end

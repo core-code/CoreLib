@@ -49,15 +49,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         [mail setTimeout:secs*60];
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#endif
-		if ( [attachmentFilePath length] > 0 && [NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
+		if ([attachmentFilePath length])
 			content = [content stringByAppendingFormat:@"\n\ninline-attachment-base64:\n%@", [attachmentFilePath.fileURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]];
-#if (__MAC_OS_X_VERSION_MIN_REQUIRED < 1090)
-#pragma clang diagnostic pop
-#endif
 #endif
 
 		NSDictionary *messageProperties = [NSDictionary dictionaryWithObjectsAndKeys:subject, @"subject", content, @"content", nil];
@@ -80,9 +73,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 				NSDictionary *recipientProperties = [NSDictionary dictionaryWithObjectsAndKeys:recipient, @"address", nil];
 				MailToRecipient *theRecipient =	[[[mail classForScriptingClass:@"to recipient"] alloc] initWithProperties:recipientProperties];
 				[emailMessage.toRecipients addObject:theRecipient];
-#if ! __has_feature(objc_arc)
-				[theRecipient release];
-#endif
 			}
 			else
 			{
@@ -95,31 +85,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 			return kSMTPToNilFailure;
 
 
-
-
-
-		if ( [attachmentFilePath length] > 0 && ![NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
-		{
-			MailAttachment *theAttachment;
-			
-           if (OS_IS_POST_10_6)
-				theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
-								 [NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSURL URLWithString:attachmentFilePath], @"fileName",
-								  nil]];
-			else
-				theAttachment = [[[mail classForScriptingClass:@"attachment"] alloc] initWithProperties:
-								 [NSDictionary dictionaryWithObjectsAndKeys:
-								  [[NSURL URLWithString:attachmentFilePath] path], @"fileName",
-								  nil]];
-			
-
-			[[emailMessage.content attachments] addObject: theAttachment];
-			
-#if ! __has_feature(objc_arc)
-			[theAttachment release];
-#endif
-		}
 		if ( [mail lastError] != nil )
 			return kSMTPScriptingBridgeFailure;
 
@@ -128,9 +93,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		else
 			res = kSMTPScriptingBridgeFailure;
 		cc_log_debug(@"sent!");
-#if ! __has_feature(objc_arc)
-		[emailMessage release];
-#endif
+
 		return res;
 	}
 	@catch (NSException *e)

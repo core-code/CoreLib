@@ -25,20 +25,12 @@
 	{
 		if (self.localRTFName && self.localRTFName.length)
 		{
-            NSAttributedString *rtfStr;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wpartial-availability"
-            if (OS_IS_POST_10_10)
-                rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL options:@{} documentAttributes:NULL error:NULL];
-            else
-                rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL documentAttributes:NULL];
-#pragma clang diagnostic pop
-			assert(rtfStr);
+            NSAttributedString *rtfStr = [[NSAttributedString alloc] initWithURL:self.localRTFName.resourceURL options:@{} documentAttributes:NULL error:NULL];
+        
+
+            assert(rtfStr);
 			[self.textStorage setAttributedString:rtfStr];
-#if ! __has_feature(objc_arc)
-			[rtfStr release];
-#endif
+
 			if (self.remoteHTMLURL && self.remoteHTMLURL.length)
 			{
 				dispatch_async_back(^
@@ -49,16 +41,7 @@
 						dispatch_async_main(^
 						{
 							[self.textStorage setAttributedString:htmlStr];
-#if ! __has_feature(objc_arc)
-							[htmlStr release];
-#endif
 						});
-					}
-					else if (htmlStr)
-					{
-#if ! __has_feature(objc_arc)
-						[htmlStr release];
-#endif
 					}
 				});
 			}
@@ -69,15 +52,5 @@
 
 	ONCE_PER_OBJECT(self, block);
 }
-
-#if ! __has_feature(objc_arc)
-- (void)dealloc
-{
-    self.localRTFName = nil;
-    self.remoteHTMLURL = nil;
-
-    [super dealloc];
-}
-#endif
 
 @end

@@ -16,11 +16,7 @@
 
 - (NSAttributedString*)attributedTitle
 {
-#if ! __has_feature(objc_arc)
-	return [[[NSAttributedString alloc] initWithString:[self title] attributes:nil] autorelease];
-#else
 	return [[NSAttributedString alloc] initWithString:[self title] attributes:nil];
-#endif
 }
 
 @end
@@ -35,11 +31,10 @@
 	if (font)
 	{
 		NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:[newItem title] attributes:@{NSFontAttributeName : font}];
-		[newItem setAttributedTitle:attributedTitle];
-		[super insertItem:newItem atIndex:index];
-#if ! __has_feature(objc_arc)
-		[attributedTitle release];
-#endif
+		
+        [newItem setAttributedTitle:attributedTitle];
+		
+        [super insertItem:newItem atIndex:index];
 	}
 	else
 		cc_log(@"Warning: font with name '%@' is damaged and can not be instantiated.", [newItem title]);
