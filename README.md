@@ -23,12 +23,12 @@ CoreLib has these components:
 
 CoreLib up to version 1.8 requires Xcode 6 and deploys back to Mac OS X 10.6 / iOS 6  
 CoreLib version 1.9 requires Xcode 7 and deploys back to Mac OS X 10.6 / iOS 7  
-CoreLib version 1.10 and above requires Xcode 8 and deploys back to Mac OS X 10.6 / iOS 8
+CoreLib version 1.10 and above requires Xcode 8 and deploys back to Mac OS X 10.6 / iOS 8  
 CoreLib version 1.14 and above requires Xcode 9 and deploys back to Mac OS X 10.10 / iOS 8
 
 ### Initialization
 
-in your PCH file:
+in your PCH file if you have one, or at top of your source or header files you have to include the CoreLib master header:
  
 	#import <Cocoa/Cocoa.h> // you had that before
 	#import "CoreLib.h"
