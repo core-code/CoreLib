@@ -88,10 +88,10 @@
 @interface NSString (CoreCode)
 
 // filesystem support
-@property (readonly, nonatomic) NSArray <NSString *> *dirContents;
-@property (readonly, nonatomic) NSArray <NSString *> *dirContentsRecursive;
-@property (readonly, nonatomic) NSArray <NSString *> *dirContentsAbsolute;
-@property (readonly, nonatomic) NSArray <NSString *> *dirContentsRecursiveAbsolute;
+@property (readonly, nonatomic) NSArray <NSString *> *directoryContents;
+@property (readonly, nonatomic) NSArray <NSString *> *directoryContentsRecursive;
+@property (readonly, nonatomic) NSArray <NSString *> *directoryContentsAbsolute;
+@property (readonly, nonatomic) NSArray <NSString *> *directoryContentsRecursiveAbsolute;
 @property (readonly, nonatomic) NSString *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -102,10 +102,13 @@
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
+@property (readonly, nonatomic) NSString *stringByResolvingSymlinksInPathFixed;
+
+
+
 @property (readonly, nonatomic) NSRange fullRange;
 @property (readonly, nonatomic) NSString *literalString;
 
-@property (readonly, nonatomic) NSString *stringByResolvingSymlinksInPathFixed;
 
 // path string to url
 @property (readonly, nonatomic) NSURL *fileURL;
@@ -232,8 +235,8 @@
 
 @property (readonly, nonatomic) BOOL fileIsDirectory;
 //@property (readonly, nonatomic) NSString *path;
-@property (readonly, nonatomic) NSArray <NSURL *> *dirContents;
-@property (readonly, nonatomic) NSArray <NSURL *> *dirContentsRecursive;
+@property (readonly, nonatomic) NSArray <NSURL *> *directoryContents;
+@property (readonly, nonatomic) NSArray <NSURL *> *directoryContentsRecursive;
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -244,6 +247,7 @@
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long fileOrDirectorySize;
 @property (readonly, nonatomic) unsigned long long directorySize;
+
 @property (readonly, nonatomic) NSURLRequest *request;
 @property (readonly, nonatomic) NSMutableURLRequest *mutableRequest;
 @property (readonly, nonatomic) BOOL isWriteablePath;

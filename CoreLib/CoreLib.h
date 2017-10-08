@@ -199,7 +199,7 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 // !!!: OBJECT CREATION FUNCTIONS
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
-NSString *makeTempFolder(void);
+NSString *makeTempDirectory(void);
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

@@ -54,6 +54,27 @@ NSString *randomString(int maxLength)
 	XCTAssertNotNil(fileManager);
 }
 
+- (void)testDirectoryListing
+{
+    for (NSString *dir in @[@"/Library/"])
+    {
+        NSArray <NSURL *>*dirContents = dir.fileURL.directoryContentsRecursive;
+        
+        XCTAssert(dirContents.count > 10000);
+    }
+}
+
+- (void)testDirectorySize
+{
+    for (NSString *dir in @[@"/Library/"])
+    {
+        unsigned long long size = dir.fileURL.directorySize;
+        
+        XCTAssert(BYTES_TO_MB(size) > 1000);
+    }
+}
+
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)testDictionaryMisuse // we know this fails on iOS for a while now. no more fun with bad tricks
 {

@@ -158,7 +158,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         
         NSString *frameworkPath = bundle.privateFrameworksPath;
-        for (NSString *framework in frameworkPath.dirContents)
+        for (NSString *framework in frameworkPath.directoryContents)
         {
             NSString *smylinkToBinaryPath = makeString(@"%@/%@/%@", frameworkPath, framework, framework.stringByDeletingPathExtension);
 
@@ -172,7 +172,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             }
 #ifdef DEBUG
             NSString *versionsPath = makeString(@"%@/%@/Versions", frameworkPath, framework);
-            for (NSString *versionsEntry in versionsPath.dirContents)
+            for (NSString *versionsEntry in versionsPath.directoryContents)
             {
                 if ((![versionsEntry isEqualToString:@"A"]) && (![versionsEntry isEqualToString:@"Current"]))
                 {
@@ -181,7 +181,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                 }
             }
             NSString *versionAPath = makeString(@"%@/%@/Versions/A", frameworkPath, framework);
-            for (NSString *entry in versionAPath.dirContents)
+            for (NSString *entry in versionAPath.directoryContents)
             {
                 if (([entry isEqualToString:@"headers"]) && (![entry isEqualToString:@"resources"]))
                 {
@@ -212,8 +212,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSArray *)appCrashLogs // doesn't do anything in sandbox!
 {
-	NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.dirContents;
-	NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.dirContents;
+	NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.directoryContents;
+	NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.directoryContents;
 	NSArray <NSString *> *logs = [logs1 arrayByAddingObjectsFromArray:logs2];
 	
 	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
@@ -434,7 +434,7 @@ NSString *makeString(NSString *format, ...)
 	return str;
 }
 
-NSString *makeTempFolder()
+NSString *makeTempDirectory()
 {
     NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
 	NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:bundleID] stringByAppendingString:@".XXXXXX"];

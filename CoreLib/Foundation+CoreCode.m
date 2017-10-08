@@ -531,7 +531,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, dirContents, dirContentsRecursive, dirContentsAbsolute, dirContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13;
+@dynamic words, lines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
@@ -701,14 +701,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (unsigned long long)directorySize
 {
-    unsigned long long size = 0;
-    for (NSString *file in self.dirContentsRecursiveAbsolute)
-    {
-        NSDictionary *attr = [fileManager attributesOfItemAtPath:file error:NULL];
-        if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
-            size += [attr[NSFileSize] unsignedLongLongValue];
-    }
-    return size;
+    return self.fileURL.directorySize;
 }
 
 - (BOOL)isIntegerNumber
@@ -810,25 +803,25 @@ CONST_KEY(CoreCodeAssociatedValue)
     return YES;
 }
 
-- (NSArray <NSString *> *)dirContents
+- (NSArray <NSString *> *)directoryContents
 {
     return [fileManager contentsOfDirectoryAtPath:self error:NULL];
 }
 
-- (NSArray <NSString *> *)dirContentsRecursive
+- (NSArray <NSString *> *)directoryContentsRecursive
 {
     return [fileManager subpathsOfDirectoryAtPath:self error:NULL];
 }
 
-- (NSArray <NSString *> *)dirContentsAbsolute
+- (NSArray <NSString *> *)directoryContentsAbsolute
 {
-    NSArray <NSString *> *c = self.dirContents;
+    NSArray <NSString *> *c = self.directoryContents;
     return [c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
 }
 
-- (NSArray <NSString *> *)dirContentsRecursiveAbsolute
+- (NSArray <NSString *> *)directoryContentsRecursiveAbsolute
 {
-    NSArray <NSString *> *c = self.dirContentsRecursive;
+    NSArray <NSString *> *c = self.directoryContentsRecursive;
     return [c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
 }
 
@@ -1485,7 +1478,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic dirContents, dirContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize; // , path
+@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
 
@@ -1543,7 +1536,7 @@ CONST_KEY(CCDirectoryObserving)
     return [self URLByAppendingPathComponent:component];
 }
 
-- (NSArray <NSURL *> *)dirContents
+- (NSArray <NSURL *> *)directoryContents
 {
     if (![self isFileURL]) return nil;
 
@@ -1554,25 +1547,15 @@ CONST_KEY(CCDirectoryObserving)
     return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
 
-- (NSArray <NSURL *> *)dirContentsRecursive
+- (NSArray <NSURL *> *)directoryContentsRecursive
 {
-    if (![self isFileURL]) return nil;
+    NSDirectoryEnumerator *enumerator = [fileManager
+                                         enumeratorAtURL:self
+                                         includingPropertiesForKeys:nil
+                                         options:0
+                                         errorHandler:^(NSURL *url, NSError *error) { return YES; }];
     
-    NSString *path = self.path;
-	NSError *err;
-    NSArray *c = [fileManager subpathsOfDirectoryAtPath:path error:&err];
-	if (!c || err)
-    {
-        if (!self.fileExists)
-        {
-            cc_log_debug(@"Warning: trying to get contents of non-existant dir %@", self);
-
-            return nil;
-        }
-        else
-            assert(0);
-    }
-    return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
+    return enumerator.allObjects;
 }
 
 - (NSURL *)uniqueFile
@@ -1606,15 +1589,26 @@ CONST_KEY(CCDirectoryObserving)
 
 - (unsigned long long)directorySize
 {
-    unsigned long long size = 0;
-    for (NSURL *file in self.dirContentsRecursive)
+    unsigned long long directorySize = 0;
+    
+    NSDirectoryEnumerator *enumerator = [fileManager
+                                         enumeratorAtURL:self
+                                         includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLFileSizeKey]
+                                         options:0
+                                         errorHandler:^(NSURL *url, NSError *error) { return YES; }];
+    
+    for (NSURL *url in enumerator)
     {
-        NSString *filePath = file.path;
-        NSDictionary *attr = [fileManager attributesOfItemAtPath:filePath error:NULL];
-        if (attr && !([attr[NSFileType] isEqualToString:NSFileTypeDirectory]))
-            size += [attr[NSFileSize] unsignedLongLongValue];
+        NSDictionary *values = [url resourceValuesForKeys:@[NSURLIsDirectoryKey, NSURLFileSizeKey] error:NULL];
+        
+        if (values && ![values[NSURLIsDirectoryKey] boolValue])
+        {
+            NSNumber *fileSize = values[NSURLFileSizeKey];
+                
+            directorySize += fileSize.unsignedLongLongValue;
+        }
     }
-    return size;
+    return directorySize;
 }
 
 - (void)open
