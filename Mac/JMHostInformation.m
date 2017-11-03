@@ -893,6 +893,9 @@ NSString *_machineType(void);
 	NSArray *urls = [[NSFileManager defaultManager] mountedVolumeURLsIncludingResourceValuesForKeys:@[NSURLVolumeNameKey] options:(NSVolumeEnumerationOptions)0];
 	for (NSURL *mountURL in urls)
 	{
+        if ([mountURL.path isEqualToString:@"/private/var/vm"]) // ignore HighSierra 'VM' partition
+            continue;
+        
         NSError *error;
         NSNumber *isRemovable;
         [mountURL getResourceValue:&isRemovable forKey:NSURLVolumeIsRemovableKey error:&error];
@@ -1114,6 +1117,9 @@ NSString *_machineType(void);
 		status = kSMARTStatusUnknown;
 		cc_log_error(@"Error: S.M.A.R.T. check downgraded result for disk%i from VERIFIED to UNKNOWN because some error(%i) occured.", disk, err);
 	}
+    else if (err == kIOReturnNoResources)
+        status = kSMARTStatusNotSMARTCompatible;
+
 
 	return status;
 }

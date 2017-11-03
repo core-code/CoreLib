@@ -19,7 +19,8 @@ CC_ENUM(uint8_t, smartStatusEnum)
 {
 	kSMARTStatusUnknown = 0,
 	kSMARTStatusError = 1,
-	kSMARTStatusOK = 2
+	kSMARTStatusOK = 2,
+    kSMARTStatusNotSMARTCompatible = 3
 };
 
 
