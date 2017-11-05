@@ -36,7 +36,7 @@ extern "C"
 #import <Availability.h>
 #endif
 
-#if ! __has_feature(objc_arc) // for some reason there are false positives here in Xcode 9, so we had to downgrade to warning
+#if ! __has_feature(objc_arc) // this is hit even when including corelib in the PCH and any file in the project - maybe not even using corelib - still uses manual retain count, so its a warning and not an error
     #warning CoreLib > 1.13 does not support manual reference counting anymore
 #endif
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -247,22 +247,29 @@ name ## Key *const k ## name ## Key = ( name ## Key *) @ #name;
 @interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
 extern name ## Key *const k ## name ## Key;
 
-
 // !!!: LOGGING
 void log_to_prefs(NSString *string);
 void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit);
 
-void cc_log_level(int level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
+CC_ENUM(uint8_t, cc_log_type)
+    {
+        CC_LOG_LEVEL_DEBUG   = 7,
+        CC_LOG_LEVEL_DEFAULT = 5,
+        CC_LOG_LEVEL_ERROR   = 3,
+        CC_LOG_LEVEL_FAULT   = 0,
+    };
+
+void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG
-#define cc_log_debug(...)     cc_log_level(5, __VA_ARGS__) // ASL_LEVEL_NOTICE
+#define cc_log_debug(...)     cc_log_level(CC_LOG_LEVEL_DEFAULT, __VA_ARGS__)
 #elif defined(DEBUG) && !defined(FORCE_NOLOG)
-#define cc_log_debug(...)     cc_log_level(7, __VA_ARGS__) // ASL_LEVEL_DEBUG
+#define cc_log_debug(...)     cc_log_level(CC_LOG_LEVEL_DEBUG, __VA_ARGS__)
 #else
 #define cc_log_debug(...)
 #endif
-#define cc_log(...)           cc_log_level(5, __VA_ARGS__) // ASL_LEVEL_NOTICE
-#define cc_log_error(...)     cc_log_level(3, __VA_ARGS__) // ASL_LEVEL_ERR
-#define cc_log_emerg(...)     cc_log_level(0, __VA_ARGS__) // ASL_LEVEL_EMERG
+#define cc_log(...)           cc_log_level(CC_LOG_LEVEL_DEFAULT, __VA_ARGS__)
+#define cc_log_error(...)     cc_log_level(CC_LOG_LEVEL_ERROR, __VA_ARGS__)
+#define cc_log_emerg(...)     cc_log_level(CC_LOG_LEVEL_FAULT, __VA_ARGS__)
 
 #define LOGFUNCA				cc_log_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self)
 #define LOGFUNC					cc_log_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), (__bridge void *)self)

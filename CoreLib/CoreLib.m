@@ -1003,11 +1003,8 @@ void _cc_log_toprefs(int level, NSString *string)
 #endif
 }
 
-
-void cc_log_level(int level, NSString *format, ...)
+void cc_log_level(cc_log_type level, NSString *format, ...)
 {
-    assert(level >= 0);
-    assert(level < 8);
 	va_list args;
 	va_start(args, format);
 	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
@@ -1031,7 +1028,12 @@ void cc_log_level(int level, NSString *format, ...)
             os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%{public}s", utf);
     }
     else
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // we get a warning despite the @available, must be a compiler bug
         asl_log(NULL, NULL, level, "%s", str.UTF8String);
+#pragma clang diagnostic pop
+    }
 }
 
 void log_to_prefs(NSString *str)
