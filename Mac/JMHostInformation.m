@@ -1309,6 +1309,51 @@ typedef struct VendorSpecificDataThresholds
 } VendorSpecificDataThresholds;
 #pragma options align=reset
 
+struct NVMESMARTData
+{
+    UInt8 criticalWarning;
+    UInt8 temperature[2];
+    UInt8 availableSpare;
+    UInt8 availableSpareThreshold;
+    UInt8 percentageUsed;
+    UInt8 reserved1[26];
+    UInt8 dataUnitsRead[16];
+    UInt8 dataUnitsWritten[16];
+    UInt8 hostReadCommands[16];
+    UInt8 hostWriteCommands[16];
+    UInt8 controllerBusyTime[16];
+    UInt32 powerCycles[4];
+    UInt32 powerOnHours[4];
+    UInt32 unsafeShutdowns[4];
+    UInt32 mediaAndDataIntegrityErrors[4];
+    UInt32 numberOfErrorLogEntries[4];
+    UInt32 warningCompositeTemperatureTime;
+    UInt32 criticalCompositeTemperatureTime;
+    UInt16 temperatureSensors[8];
+    UInt32 thermalManagementTemperature1TransitionCount;
+    UInt32 thermalManagementTemperature2TransitionCount;
+    UInt32 totalTimeForThermalManagementTemperature1;
+    UInt32 totalTimeForThermalManagementTemperature2;
+    UInt8 reserved2[280];
+};
+typedef struct IONVMeSMARTInterface // reverse engineering thanks to https://smallhacks.wordpress.com/2017/09/20/how-to-monitor-nvme-drives-in-the-osx/
+{
+    IUNKNOWN_C_GUTS;
+    UInt16 version;
+    UInt16 revision;
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wpadded"
+    IOReturn ( *SMARTReadData )( void *  interface, struct NVMESMARTData * NVMeSMARTData );
+    #pragma clang diagnostic pop
+    IOReturn ( *GetIdentifyData )( void *  interface,  void * NVMeIdentifyControllerStruct, unsigned int ns );
+    IOReturn ( *GetFieldCounters )( void *   interface, char * FieldCounters );
+    IOReturn ( *ScheduleBGRefresh )( void *   interface);
+    IOReturn ( *GetLogPage )( void *  interface, void * data, unsigned int, unsigned int);
+    IOReturn ( *GetSystemCounters )( void *  interface, char *, unsigned int *);
+    IOReturn ( *GetAlgorithmCounters )( void *  interface, char *, unsigned int *);
+} IONVMeSMARTInterface;
+
+
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshift-sign-overflow"
@@ -1344,6 +1389,7 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 	{
 		Boolean hasSMART1 = FALSE;
 		BOOL hasSMART2 = FALSE;
+        Boolean hasSMART3 = FALSE;
 		CFTypeRef data;
 
 		data = IORegistryEntryCreateCFProperty(object, CFSTR(kIOPropertySMARTCapableKey), kCFAllocatorDefault, 0);
@@ -1359,7 +1405,14 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 			hasSMART2 = [(__bridge NSString *)data isEqualToString:@"ATASMARTUserClient"];
 			CFRelease(data);
 		}
-
+        
+        data = IORegistryEntryCreateCFProperty(object, CFSTR("NVMe SMART Capable"), kCFAllocatorDefault, 0);
+        if (data)
+        {
+            hasSMART3 = CFBooleanGetValue((CFBooleanRef) data);
+            CFRelease(data);
+        }
+        
 		if (hasSMART1 || hasSMART2)
 		{
 			IOCFPlugInInterface **cfPlugInInterface = NULL;
@@ -1426,6 +1479,57 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 
 			found = true;
 		}
+        else if (hasSMART3) // reverse engineering thanks to https://smallhacks.wordpress.com/2017/09/20/how-to-monitor-nvme-drives-in-the-osx/
+        {
+            #define kIONVMeSMARTUserClientTypeID CFUUIDGetConstantUUIDWithBytes(NULL, 0xAA, 0x0F, 0xA6, 0xF9, 0xC2, 0xD6, 0x45, 0x7F, 0xB1, 0x0B, 0x59, 0xA1, 0x32, 0x53, 0x29, 0x2F)
+            #define kIONVMeSMARTInterfaceID CFUUIDGetConstantUUIDWithBytes(NULL, 0xcc, 0xd1, 0xdb, 0x19, 0xfd, 0x9a, 0x4d, 0xaf, 0xbf, 0x95, 0x12, 0x45, 0x4b, 0x23, 0xa, 0xb6)
+            IOCFPlugInInterface **cfPlugInInterface = NULL;
+            IONVMeSMARTInterface **smartInterface = NULL;
+            HRESULT herr = S_OK;
+            SInt32 score = 0;
+            
+            err = IOCreatePlugInInterfaceForService(object, kIONVMeSMARTUserClientTypeID, kIOCFPlugInInterfaceID, &cfPlugInInterface, &score);
+            
+            if (err == kIOReturnSuccess)
+            {
+                herr = (*cfPlugInInterface)->QueryInterface(cfPlugInInterface, CFUUIDGetUUIDBytes(kIONVMeSMARTInterfaceID), (LPVOID) &smartInterface);
+                
+                if ((herr == S_OK) && (smartInterface != NULL))
+                {
+                    struct NVMESMARTData smartdata;
+                    
+                    bzero(&smartdata, sizeof(smartdata));
+                    
+                    err =  (*smartInterface)->SMARTReadData(smartInterface, &smartdata);
+                    if (err == kIOReturnSuccess)
+                    {
+                        UInt8 crit = smartdata.criticalWarning;
+                        
+                        if (crit != 0)
+                            *smart = kSMARTStatusError;
+                        else
+                            *smart = kSMARTStatusOK;
+                    }
+                    else
+                    {
+                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReadData() failed with %x",  bsdDeviceNumber, err);
+                    }
+                    (*smartInterface)->Release(smartInterface);
+                    smartInterface = NULL;
+                }
+                else
+                {
+                    err = herr;
+                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
+                }
+                
+                IODestroyPlugInInterface(cfPlugInInterface);
+            }
+            else
+                cc_log_debug(@"S.M.A.R.T. check disk: %i is NVME but could not open interface - probably blocked by sandbox", bsdDeviceNumber);
+            
+            found = true;
+        }
 		else
 			cc_log_debug(@"S.M.A.R.T. check disk: %i not SMART capable", bsdDeviceNumber);
 	}
@@ -1472,7 +1576,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	{
         Boolean hasSMART1 = FALSE;
         BOOL hasSMART2 = FALSE;
-		CFTypeRef data;
+       	CFTypeRef data;
 
 		data = IORegistryEntryCreateCFProperty(object, CFSTR(kIOPropertySMARTCapableKey), kCFAllocatorDefault, 0);
 		if (data)
@@ -1487,6 +1591,8 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			hasSMART2 = [(__bridge NSString *)data isEqualToString:@"ATASMARTUserClient"];
 			CFRelease(data);
 		}
+
+
 
 		if (hasSMART1 || hasSMART2)
 		{
