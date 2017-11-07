@@ -1,5 +1,5 @@
 #import <XCTest/XCTest.h>
-
+#import "JMHostInformation.h"
 
 
 NSString *randomString(int maxLength)
@@ -82,6 +82,51 @@ NSString *randomString(int maxLength)
 	NSString *result = bla.title;
 	XCTAssert([result isEqualToString:@"1"]);
 }
+
+
+- (void)testHostInformation
+{
+    NSString *ipv4 = [JMHostInformation ipAddress:NO];
+    XCTAssert([ipv4 countOccurencesOfString:@"."] == 4);
+    XCTAssert([ipv4 replaced:@"." with:@""].integerValue != 0);
+    NSString *ipv6 = [JMHostInformation ipAddress:YES];
+    XCTAssert([ipv6 countOccurencesOfString:@":"] >= 5);
+    NSString *ipn = [JMHostInformation ipName];
+    XCTAssert([ipn hasSuffix:@".local"]);
+    NSString *mt = [JMHostInformation machineType];
+    XCTAssert([mt countOccurencesOfString:@","] == 1);
+    NSString *mac = [JMHostInformation macAddress];
+    XCTAssert([mac countOccurencesOfString:@":"] == 5);
+    BOOL online = [JMHostInformation isOnline];
+    BOOL battery = [JMHostInformation runsOnBattery];
+    cc_log(@"%i %i", online, battery);
+    
+    NSArray *mhdds1 = [JMHostInformation mountedHarddisks:NO];
+    NSArray *mhdds2 = [JMHostInformation mountedHarddisks:YES];
+    NSArray *hdds = [JMHostInformation allHarddisks];
+    XCTAssert(mhdds1.count);
+    XCTAssert(mhdds2.count >= mhdds1.count);
+    XCTAssert(hdds.count >= mhdds2.count);
+    
+    for (NSDictionary *dict in hdds)
+    {
+        NSNumber *num = dict[@"DiskNumber"];
+        
+        smartStatusEnum status = [JMHostInformation getDiskSMARTStatus:num.intValue];
+        NSDictionary *attr = [JMHostInformation getDiskSMARTAttributes:num.intValue];
+        NSDictionary *desc = [JMHostInformation descriptionForDevice:num.intValue];
+        cc_log(@"%i %@", status, attr);
+        
+        XCTAssert(desc);
+        NSString *name = [JMHostInformation volumeNamesForDevice:num.intValue];
+        if (name)
+        {
+            NSNumber *backnum = [JMHostInformation bsdNumberForVolume:name];
+            
+            XCTAssert(backnum.intValue == num.intValue);
+        }
+    }
+}
 #endif
 
 - (void)testStringHexRoundtrip
@@ -113,7 +158,6 @@ NSString *randomString(int maxLength)
     XCTAssert(res4 == 1);
     XCTAssert(shit2 == 1);
 }
-
 
 - (void)testLogging
 {

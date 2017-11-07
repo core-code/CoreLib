@@ -123,7 +123,7 @@
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9EF04FF1865D42C00CF7A38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9EF05011865D42C00CF7A38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS ARC.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9EF05151865D42C00CF7A38 /* CoreLibTests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9EF05161865D42C00CF7A38 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		B9EF052C1865D57400CF7A38 /* CoreLibTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreLibTests.m; path = Tests/CoreLibTests.m; sourceTree = "<group>"; };
 		B9EF05341865D5A200CF7A38 /* JMActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMActionSheet.h; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 		B9EF04FB1865D42C00CF7A38 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */,
+				B9EF05151865D42C00CF7A38 /* CoreLibTests iOS.xctest */,
 				B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */,
 			);
 			name = Products;
@@ -294,9 +294,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B9EF05141865D42C00CF7A38 /* CoreLibTests iOS ARC */ = {
+		B9EF05141865D42C00CF7A38 /* CoreLibTests iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B9EF05291865D42C00CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests iOS ARC" */;
+			buildConfigurationList = B9EF05291865D42C00CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests iOS" */;
 			buildPhases = (
 				B9EF05111865D42C00CF7A38 /* Sources */,
 				B9EF05121865D42C00CF7A38 /* Frameworks */,
@@ -306,14 +306,14 @@
 			);
 			dependencies = (
 			);
-			name = "CoreLibTests iOS ARC";
+			name = "CoreLibTests iOS";
 			productName = CoreLibTests;
-			productReference = B9EF05151865D42C00CF7A38 /* CoreLibTests iOS ARC.xctest */;
+			productReference = B9EF05151865D42C00CF7A38 /* CoreLibTests iOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */ = {
+		B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B9EF05D61865F4A000CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac ARC" */;
+			buildConfigurationList = B9EF05D61865F4A000CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac" */;
 			buildPhases = (
 				B9EF05BC1865F4A000CF7A38 /* Sources */,
 				B9EF05D11865F4A000CF7A38 /* Frameworks */,
@@ -323,7 +323,7 @@
 			);
 			dependencies = (
 			);
-			name = "CoreLibTests Mac ARC";
+			name = "CoreLibTests Mac";
 			productName = CoreLibTests;
 			productReference = B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -358,8 +358,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B9EF05141865D42C00CF7A38 /* CoreLibTests iOS ARC */,
-				B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */,
+				B9EF05141865D42C00CF7A38 /* CoreLibTests iOS */,
+				B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac */,
 				B9EF05DA1865F53600CF7A38 /* CoreLibTests */,
 			);
 		};
@@ -433,12 +433,12 @@
 /* Begin PBXTargetDependency section */
 		B9EF05DF1865F54100CF7A38 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac ARC */;
+			target = B9EF05BB1865F4A000CF7A38 /* CoreLibTests Mac */;
 			targetProxy = B9EF05DE1865F54100CF7A38 /* PBXContainerItemProxy */;
 		};
 		B9EF05E51865F54400CF7A38 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B9EF05141865D42C00CF7A38 /* CoreLibTests iOS ARC */;
+			target = B9EF05141865D42C00CF7A38 /* CoreLibTests iOS */;
 			targetProxy = B9EF05E41865F54400CF7A38 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -670,7 +670,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B9EF05291865D42C00CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests iOS ARC" */ = {
+		B9EF05291865D42C00CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9EF052A1865D42C00CF7A38 /* Debug */,
@@ -679,7 +679,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B9EF05D61865F4A000CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac ARC" */ = {
+		B9EF05D61865F4A000CF7A38 /* Build configuration list for PBXNativeTarget "CoreLibTests Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9EF05D71865F4A000CF7A38 /* Debug */,

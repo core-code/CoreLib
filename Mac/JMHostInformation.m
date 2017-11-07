@@ -119,12 +119,9 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 			const char *utfBSDName = DADiskGetBSDName(disk);
 
-			if (disk)
-				CFRelease(disk);
-
 			if (utfBSDName)
 			{
-				NSString *bsdName = @(utfBSDName);
+                NSString *bsdName = @(utfBSDName);
 
 				assert(bsdName);
 				assert([bsdName hasPrefix:@"disk"]);
@@ -136,10 +133,15 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 				assert(bsdName.isIntegerNumberOnly);
 
+                if (disk)
+                    CFRelease(disk);
 				CFRelease(session);
 
 				return @(bsdName.integerValue);
 			}
+            
+            if (disk)
+                CFRelease(disk);
 		}
 	}
 
@@ -162,6 +164,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 	for (NSURL *mountURL in urls)
 	{
+        if ([mountURL.path isEqualToString:@"/private/var/vm"]) // ignore HighSierra 'VM' partition
+            continue;
+
+        
 		DADiskRef disk = DADiskCreateFromVolumePath(kCFAllocatorDefault, session, (__bridge CFURLRef)mountURL);
 
 		if (disk)
@@ -171,6 +177,8 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			if (utfBSDName)
 			{
 				NSString *bsdName = @(utfBSDName);
+                
+                
 				assert([bsdName hasPrefix:@"disk"]);
 
 				bsdName = [bsdName replaced:@"disk" with:@""];
@@ -241,8 +249,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 					NSString *mediumType = [((__bridge NSDictionary *)property) objectForKey:@(kIOPropertyMediumTypeKey)];
 
 					if ([mediumType isEqualToString:@(kIOPropertyMediumTypeSolidStateKey)])
-						resultDict = [resultDict dictionaryByAddingValue:@(YES)
-																  forKey:@"isSSD"];
+						resultDict = [resultDict dictionaryByAddingValue:@(YES) forKey:@"isSSD"];
 
 					CFRelease(property);
 				}
@@ -268,6 +275,9 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	}
 
 	CFRelease(session);
+    
+    if ([resultDict[@"DABusName"] contains:@"NVMe"] || [resultDict[@"DABusPath"] contains:@"NVMe"] || [resultDict[@"DADevicePath"] contains:@"NVMe"] || [resultDict[@"DAMediaPath"] contains:@"NVMe"])
+        resultDict = [resultDict dictionaryByAddingValue:@(YES) forKey:@"isNVME"];
 
 	return resultDict;
 }
@@ -1481,6 +1491,7 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 		}
         else if (hasSMART3) // reverse engineering thanks to https://smallhacks.wordpress.com/2017/09/20/how-to-monitor-nvme-drives-in-the-osx/
         {
+#warning this needs to be enabled without sandbox unless the sandbox exception is accepted on the app store
             #define kIONVMeSMARTUserClientTypeID CFUUIDGetConstantUUIDWithBytes(NULL, 0xAA, 0x0F, 0xA6, 0xF9, 0xC2, 0xD6, 0x45, 0x7F, 0xB1, 0x0B, 0x59, 0xA1, 0x32, 0x53, 0x29, 0x2F)
             #define kIONVMeSMARTInterfaceID CFUUIDGetConstantUUIDWithBytes(NULL, 0xcc, 0xd1, 0xdb, 0x19, 0xfd, 0x9a, 0x4d, 0xaf, 0xbf, 0x95, 0x12, 0x45, 0x4b, 0x23, 0xa, 0xb6)
             IOCFPlugInInterface **cfPlugInInterface = NULL;
@@ -1591,7 +1602,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			hasSMART2 = [(__bridge NSString *)data isEqualToString:@"ATASMARTUserClient"];
 			CFRelease(data);
 		}
-
+#warning this needs an NVMe path
 
 
 		if (hasSMART1 || hasSMART2)

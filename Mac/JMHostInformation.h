@@ -29,7 +29,6 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (BOOL)isUserAdmin;
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
-
 + (NSString *)machineType;
 
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
@@ -37,7 +36,6 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (NSNumber *)bsdNumberForVolume:(NSString *)volume;
 + (NSDictionary *)descriptionForDevice:(NSInteger)bsdNum;
 #endif
-
 
 #ifdef USE_SYSTEMCONFIGURATION // requires linking SystemConfiguration.framework
 + (BOOL)isOnline;
@@ -49,7 +47,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (smartStatusEnum)getDiskSMARTStatus:(int)disk;
 + (NSDictionary *)getDiskSMARTAttributes:(int)disk;
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
-+ (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices;
++ (NSArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices;
 + (NSArray *)allHarddisks;
 #endif
 #endif
