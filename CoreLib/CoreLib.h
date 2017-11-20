@@ -251,7 +251,7 @@ extern name ## Key *const k ## name ## Key;
 void log_to_prefs(NSString *string);
 void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit);
 
-CC_ENUM(uint8_t, cc_log_type)
+typedef NS_ENUM(uint8_t, cc_log_type)
     {
         CC_LOG_LEVEL_DEBUG   = 7,
         CC_LOG_LEVEL_DEFAULT = 5,
