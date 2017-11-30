@@ -1417,26 +1417,26 @@ void directoryObservingReleaseCallback(const void *info)
 
 void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
 {
-//	NSMutableArray <NSDictionary *> *tmp = makeMutableArray();
-//	char **paths = eventPaths;
-//	for (NSUInteger i = 0; i < numEvents; i++)
-//	{
-//		char *eventPath = paths[i];
-//
-//		[tmp addObject:@{@"path" : @(eventPath),
-//						 @"flags" : @(eventFlags[i])}];
-//
-//	}
-//
-//	void (^block)(id input) = (__bridge void (^)())(clientCallBackInfo);
-//	block(tmp);
+    NSMutableArray <NSDictionary *> *tmp = makeMutableArray();
+    char **paths = eventPaths;
+    for (NSUInteger i = 0; i < numEvents; i++)
+    {
+        char *eventPath = paths[i];
 
-	void (^block)(void) = (__bridge void (^)(void))(clientCallBackInfo);
-	block();
+        [tmp addObject:@{@"path" : @(eventPath),
+                         @"flags" : @(eventFlags[i])}];
+
+    }
+
+    void (^block)(id input) = (__bridge void (^)(id))(clientCallBackInfo);
+	block(tmp);
+//
+//    void (^block)(void) = (__bridge void (^)(void))(clientCallBackInfo);
+//    block();
 }
 
 CONST_KEY(CCDirectoryObserving)
-- (void)startObserving:(BasicBlock)block
+- (NSValue *)startObserving:(ObjectInBlock)block withFileLevelEvents:(BOOL)fileLevelEvents
 {
 	void *ptr = (__bridge_retained void *)block;
 	FSEventStreamContext context = {0, ptr, NULL, directoryObservingReleaseCallback, NULL};
@@ -1447,19 +1447,24 @@ CONST_KEY(CCDirectoryObserving)
 
 
     assert(self.fileURL.fileIsDirectory);
-	stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, 0);
+    stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, fileLevelEvents ? kFSEventStreamCreateFlagFileEvents : 0);
 
 	CFRelease(pathsToWatch);
 	FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 
 	FSEventStreamStart(stream);
 
-	[self setAssociatedValue:[NSValue valueWithPointer:stream] forKey:kCCDirectoryObservingKey];
+    NSValue *token = [NSValue valueWithPointer:stream];
+	[self setAssociatedValue:token forKey:kCCDirectoryObservingKey];
+    return token;
 }
 
-- (void)stopObserving
+- (void)stopObserving:(NSValue *)token
 {
 	NSValue *v = [self associatedValueForKey:kCCDirectoryObservingKey];
+    if (!v)
+        v = token;
+    
 	if (v)
 	{
 		FSEventStreamRef stream = v.pointerValue;
@@ -2174,8 +2179,17 @@ CONST_KEY(CCDirectoryObserving)
 	for (NSString *twoLetterCode in [NSLocale preferredLanguages])
 	{
 		NSString *threeLetterCode = iso2LetterTo3Letter[twoLetterCode];
+        
+        if (threeLetterCode)
+            [tmp addObject:threeLetterCode];
+        else
+        {
+            NSDictionary *d = [NSLocale componentsFromLocaleIdentifier:twoLetterCode];
+            NSString *backupTwoLetterCode = d[NSLocaleLanguageCode];
+            NSString *backupThreeLetterCode = iso2LetterTo3Letter[backupTwoLetterCode];
 
-		[tmp addObject:(OBJECT_OR(threeLetterCode, twoLetterCode))];
+            [tmp addObject:(OBJECT_OR(backupThreeLetterCode, twoLetterCode))];
+        }
 	}
 
 	return [NSArray arrayWithArray:tmp];
