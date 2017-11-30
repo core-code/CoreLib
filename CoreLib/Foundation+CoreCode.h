@@ -188,7 +188,8 @@
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 
-- (NSAttributedString *)hyperlinkWithURL:(NSURL *)url;
+- (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
+- (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url;
 
 - (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 - (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords;

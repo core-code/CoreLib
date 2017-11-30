@@ -947,7 +947,18 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSAttributedString *)hyperlinkWithURL:(NSURL *)url
+- (NSAttributedString *)attributedStringWithColor:(NSColor *)color
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
+    
+    [attributedString beginEditing];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:color range:self.fullRange];
+    [attributedString endEditing];
+    
+    return attributedString;
+}
+
+- (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url
 {
     NSString *urlstring = url.absoluteString;
 	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
