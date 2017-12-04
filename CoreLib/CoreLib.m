@@ -57,7 +57,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @implementation CoreLib
 
-@dynamic appCrashLogs, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURLInsideSandbox, homeURLOutsideSandbox
+@dynamic appCrashLogs, appCrashLogFilenames, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURLInsideSandbox, homeURLOutsideSandbox
 #ifdef USE_SECURITY
 , appChecksumSHA;
 #else
@@ -210,13 +210,26 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 	return self.prefsPath.fileURL;
 }
 
-- (NSArray *)appCrashLogs // doesn't do anything in sandbox!
+- (NSArray *)appCrashLogFilenames // doesn't do anything in sandbox!
 {
 	NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.directoryContents;
-	NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.directoryContents;
-	NSArray <NSString *> *logs = [logs1 arrayByAddingObjectsFromArray:logs2];
-	
-	return [logs filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+    logs1 = [logs1 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+    logs1 = [logs1 mapped:^id(NSString *input) { return [@"~/Library/Logs/DiagnosticReports/".stringByExpandingTildeInPath stringByAppendingPathComponent:input]; }];
+    NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.directoryContents;
+    logs2 = [logs2 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+    logs2 = [logs2 mapped:^id(NSString *input) { return [@"/Library/Logs/DiagnosticReports/" stringByAppendingPathComponent:input]; }];
+
+    
+    NSArray <NSString *> *logs = [logs1 arrayByAddingObjectsFromArray:logs2];
+    return logs;
+}
+
+- (NSArray *)appCrashLogs // doesn't do anything in sandbox!
+{
+    NSArray <NSString *> *logFilenames = [self appCrashLogFilenames];
+    NSArray <NSString *> *logs = [logFilenames mapped:^id(NSString *input) { return [input.contents.string split:@"/System/Library/"][0]; }];
+
+    return logs;
 }
 
 - (NSString *)appBundleIdentifier
@@ -327,19 +340,24 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
     NSString *urlString = @"";
 
-    
+    NSString *encodedPrefs = @"";
+    NSString *crashReports = @"";
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
-#endif
-    
-    NSString *encodedPrefs = @"";
-    
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     if (optionDown)
-        encodedPrefs = [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+    {
+        encodedPrefs = makeString(@"Preferences (BASE64): %@", [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]);
+    }
+#ifndef SANDBOX
+    if ([cc.appCrashLogFilenames count])
+    {
+        NSString *crashes = [cc.appCrashLogs joined:@"\n"];
+        crashReports = makeString(@"Crash Reports: \n\n%@", crashes);
+    }
 #endif
-    
-    
+#endif
+
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
     
     NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
@@ -348,12 +366,12 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                                    cc.appBuildNumber,
                                    cc.appChecksumSHA);
     
-    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@%@\n%@",
+    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@\n%@\n%@",
                                     text,
                                     _machineType(),
                                     [[NSProcessInfo processInfo] operatingSystemVersionString],
-                                    ([cc.appCrashLogs count] ? makeString(@" Problems: %li", (unsigned long)[cc.appCrashLogs count]) : @""),
-                                    encodedPrefs);
+                                    encodedPrefs,
+                                    crashReports);
     
     
     urlString = makeString(@"mailto:%@?subject=%@&body=%@", recipient, subject, content);
@@ -467,7 +485,6 @@ NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-
 void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 {
     cc_log_error(@"alert_feedback %@ %@", usermsg, details);
@@ -480,6 +497,14 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
         encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+#ifndef SANDBOX
+        if ([cc.appCrashLogFilenames count])
+        {
+            NSString *crashes = [cc.appCrashLogs joined:@"\n"];
+            encodedPrefs = [encodedPrefs stringByAppendingString:@"\n\n"];
+            encodedPrefs = [encodedPrefs stringByAppendingString:crashes];
+        }
+#endif
 #endif
 
 		NSString *visibleDetails = details;
@@ -489,7 +514,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 		NSString *mailtoLink = @"";
 		@try
 		{
-			mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i%@\n\nPreferences: %@\n",
+			mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
 												kFeedbackEmail,
 												cc.appName,
 												cc.appVersionString,
@@ -502,7 +527,6 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 												_machineType(),
 												[[NSProcessInfo processInfo] operatingSystemVersionString],
 												_isUserAdmin(),
-												([cc.appCrashLogs count] ? makeString(@" Problems: %li", [cc.appCrashLogs count]) : @""),
 												encodedPrefs);
 
 		}

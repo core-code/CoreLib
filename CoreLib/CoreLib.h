@@ -153,7 +153,8 @@ MAKE_MAKER(MutableSet)
 @property (readonly, nonatomic) NSURL *homeURLInsideSandbox;
 @property (readonly, nonatomic) NSURL *homeURLOutsideSandbox;
 // misc
-@property (readonly, nonatomic) NSArray *appCrashLogs;
+@property (readonly, nonatomic) NSArray <NSString *>*appCrashLogFilenames;
+@property (readonly, nonatomic) NSArray <NSString *>*appCrashLogs;
 @property (readonly, nonatomic) NSString *appChecksumSHA;
 - (void)openURL:(openChoice)choice;
 - (void)sendSupportRequestMail:(NSString *)text;
