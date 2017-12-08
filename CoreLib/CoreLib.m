@@ -1058,6 +1058,13 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
         asl_log(NULL, NULL, level, "%s", str.UTF8String);
 #pragma clang diagnostic pop
     }
+    
+#ifdef DEBUG
+    if (level <= CC_LOG_LEVEL_ERROR)
+    {
+        // just for breakpoints
+    }
+#endif
 }
 
 void log_to_prefs(NSString *str)
