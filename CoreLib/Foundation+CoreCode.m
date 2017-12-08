@@ -1710,7 +1710,7 @@ CONST_KEY(CCDirectoryObserving)
     return url;
 }
 
-- (NSData *)performBlockingPOST
+- (NSData *)performBlockingPOST:(double)timeoutSeconds
 {
     __block NSData *data;
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
@@ -1720,12 +1720,15 @@ CONST_KEY(CCDirectoryObserving)
          data = d;
          dispatch_semaphore_signal(sem);
      }];
-     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-
-     return data;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeoutSeconds * NSEC_PER_SEC));
+    long res = dispatch_semaphore_wait(sem, popTime);
+    if (res == 0)
+        return data;
+    else
+        return nil; // got timeout
 }
 
-- (NSData *)performBlockingGET
+- (NSData *)performBlockingGET:(double)timeoutSeconds
 {
     __block NSData *data;
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
@@ -1735,9 +1738,12 @@ CONST_KEY(CCDirectoryObserving)
         data = d;
         dispatch_semaphore_signal(sem);
     }];
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-
-     return data;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeoutSeconds * NSEC_PER_SEC));
+    long res = dispatch_semaphore_wait(sem, popTime);
+    if (res == 0)
+        return data;
+    else
+        return nil; // got timeout
 }
 
 - (void)performGET:(void (^)(NSData *data))completion

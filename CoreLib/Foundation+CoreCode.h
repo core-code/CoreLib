@@ -226,8 +226,8 @@
 
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query;
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query user:(NSString *)user password:(NSString *)password fragment:(NSString *)fragment scheme:(NSString *)scheme port:(NSNumber *)port;
-- (NSData *)performBlockingPOST;
-- (NSData *)performBlockingGET;
+- (NSData *)performBlockingPOST:(double)timeoutSeconds
+- (NSData *)performBlockingGET:(double)timeoutSeconds
 - (void)performGET:(void (^)(NSData *data))completion;
 - (void)performPOST:(void (^)(NSData *data))completion;
 
