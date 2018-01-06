@@ -2386,7 +2386,31 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSMutableSet *)mutableObject
 {
-	return [NSMutableSet setWithSet:self];
+    return [NSMutableSet setWithSet:self];
+}
+
+@end
+
+
+
+@implementation NSTask (CoreCode)
+
+- (BOOL)waitUntilExitWithTimeout:(NSTimeInterval)timeout
+{
+    NSDate *killDate = [NSDate dateWithTimeIntervalSinceNow:timeout];
+    BOOL killed = NO;
+    
+    while ([self isRunning])
+    {
+        if ([[NSDate date] laterDate:killDate] != killDate)
+        {
+            [self terminate];
+            killed = YES;
+        }
+        [NSThread sleepForTimeInterval:0.1];
+    }
+    
+    return killed;
 }
 
 @end

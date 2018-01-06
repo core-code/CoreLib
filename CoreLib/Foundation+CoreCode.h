@@ -409,3 +409,10 @@
 @property (readonly, nonatomic) NSMutableSet <ObjectType> *mutableObject;
 
 @end
+
+
+@interface NSTask (CoreCode)
+
+- (BOOL)waitUntilExitWithTimeout:(NSTimeInterval)timeout;
+
+@end
