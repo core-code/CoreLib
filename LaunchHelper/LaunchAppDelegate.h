@@ -3,7 +3,7 @@
 //  LaunchHelper
 //
 //  Created by CoreCode on 12.04.12.
-//  Copyright © 2017 CoreCode Limited. All rights reserved.
+//  Copyright © 2018 CoreCode Limited. All rights reserved.
 //
 
 #if __has_feature(modules)
