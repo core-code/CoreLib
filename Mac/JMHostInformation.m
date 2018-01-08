@@ -1491,7 +1491,7 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
 		}
         else if (hasSMART3) // reverse engineering thanks to https://smallhacks.wordpress.com/2017/09/20/how-to-monitor-nvme-drives-in-the-osx/
         {
-#warning this needs to be enabled without sandbox unless the sandbox exception is accepted on the app store
+            // this either needs to run outside the sandbox or have this entitlement: <key>com.apple.security.temporary-exception.iokit-user-client-class</key> <array> <string>AppleNVMeSMARTUserClient</string> </array>
             #define kIONVMeSMARTUserClientTypeID CFUUIDGetConstantUUIDWithBytes(NULL, 0xAA, 0x0F, 0xA6, 0xF9, 0xC2, 0xD6, 0x45, 0x7F, 0xB1, 0x0B, 0x59, 0xA1, 0x32, 0x53, 0x29, 0x2F)
             #define kIONVMeSMARTInterfaceID CFUUIDGetConstantUUIDWithBytes(NULL, 0xcc, 0xd1, 0xdb, 0x19, 0xfd, 0x9a, 0x4d, 0xaf, 0xbf, 0x95, 0x12, 0x45, 0x4b, 0x23, 0xa, 0xb6)
             IOCFPlugInInterface **cfPlugInInterface = NULL;
@@ -1587,6 +1587,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 	{
         Boolean hasSMART1 = FALSE;
         BOOL hasSMART2 = FALSE;
+        Boolean hasSMART3 = FALSE;
        	CFTypeRef data;
 
 		data = IORegistryEntryCreateCFProperty(object, CFSTR(kIOPropertySMARTCapableKey), kCFAllocatorDefault, 0);
@@ -1602,8 +1603,13 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			hasSMART2 = [(__bridge NSString *)data isEqualToString:@"ATASMARTUserClient"];
 			CFRelease(data);
 		}
-#warning this needs an NVMe path
-
+        data = IORegistryEntryCreateCFProperty(object, CFSTR("NVMe SMART Capable"), kCFAllocatorDefault, 0);
+        if (data)
+        {
+            hasSMART3 = CFBooleanGetValue((CFBooleanRef) data);
+            CFRelease(data);
+        }
+        
 
 		if (hasSMART1 || hasSMART2)
 		{
@@ -1693,6 +1699,57 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 			}
 			found = true;
 		}
+        else if (hasSMART3) // reverse engineering thanks to https://smallhacks.wordpress.com/2017/09/20/how-to-monitor-nvme-drives-in-the-osx/
+        {
+            // this either needs to run outside the sandbox or have this entitlement: <key>com.apple.security.temporary-exception.iokit-user-client-class</key> <array> <string>AppleNVMeSMARTUserClient</string> </array>
+
+#define kIONVMeSMARTUserClientTypeID CFUUIDGetConstantUUIDWithBytes(NULL, 0xAA, 0x0F, 0xA6, 0xF9, 0xC2, 0xD6, 0x45, 0x7F, 0xB1, 0x0B, 0x59, 0xA1, 0x32, 0x53, 0x29, 0x2F)
+#define kIONVMeSMARTInterfaceID CFUUIDGetConstantUUIDWithBytes(NULL, 0xcc, 0xd1, 0xdb, 0x19, 0xfd, 0x9a, 0x4d, 0xaf, 0xbf, 0x95, 0x12, 0x45, 0x4b, 0x23, 0xa, 0xb6)
+            IOCFPlugInInterface **cfPlugInInterface = NULL;
+            IONVMeSMARTInterface **smartInterface = NULL;
+            HRESULT herr = S_OK;
+            SInt32 score = 0;
+            
+            err = IOCreatePlugInInterfaceForService(object, kIONVMeSMARTUserClientTypeID, kIOCFPlugInInterfaceID, &cfPlugInInterface, &score);
+            
+            if (err == kIOReturnSuccess)
+            {
+                herr = (*cfPlugInInterface)->QueryInterface(cfPlugInInterface, CFUUIDGetUUIDBytes(kIONVMeSMARTInterfaceID), (LPVOID) &smartInterface);
+                
+                if ((herr == S_OK) && (smartInterface != NULL))
+                {
+                    struct NVMESMARTData smartdata;
+                    
+                    bzero(&smartdata, sizeof(smartdata));
+                    
+                    err =  (*smartInterface)->SMARTReadData(smartInterface, &smartdata);
+                    if (err == kIOReturnSuccess)
+                    {
+                        UInt8 pu = smartdata.percentageUsed;
+                        
+                        attributes[@(233)] = @{@"currentValue" : @(CLAMP(100 - pu, 0, 100)),
+                                               @"isOnline" : @(1)};
+                    }
+                    else
+                    {
+                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReadData() failed with %x",  bsdDeviceNumber, err);
+                    }
+                    (*smartInterface)->Release(smartInterface);
+                    smartInterface = NULL;
+                }
+                else
+                {
+                    err = herr;
+                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
+                }
+                
+                IODestroyPlugInInterface(cfPlugInInterface);
+            }
+            else
+                cc_log_debug(@"S.M.A.R.T. check disk: %i is NVME but could not open interface - probably blocked by sandbox", bsdDeviceNumber);
+            
+            found = true;
+        }
 		else
 			cc_log_debug(@"S.M.A.R.T. check disk: %i not SMART capable", bsdDeviceNumber);
 	}
