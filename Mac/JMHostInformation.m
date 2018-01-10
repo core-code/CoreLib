@@ -1725,10 +1725,74 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                     err =  (*smartInterface)->SMARTReadData(smartInterface, &smartdata);
                     if (err == kIOReturnSuccess)
                     {
+                        UInt8 cw = smartdata.criticalWarning;
+                        UInt16 t = ((smartdata.temperature[1] << 8) + smartdata.temperature[0]) - 273; // hello kelvin
+                        UInt8 as = smartdata.availableSpare;
+                        UInt8 ast = smartdata.availableSpareThreshold;
                         UInt8 pu = smartdata.percentageUsed;
+                        UInt64 dur =    (((UInt64)smartdata.dataUnitsRead[7]) << 56) +
+                                        (((UInt64)smartdata.dataUnitsRead[6]) << 48) +
+                                        (((UInt64)smartdata.dataUnitsRead[5]) << 40) +
+                                        (((UInt64)smartdata.dataUnitsRead[4]) << 32) +
+                                        (((UInt64)smartdata.dataUnitsRead[3]) << 24) +
+                                        (((UInt64)smartdata.dataUnitsRead[2]) << 16) +
+                                        (((UInt64)smartdata.dataUnitsRead[1]) << 8) +
+                                        smartdata.dataUnitsRead[0];
+                        UInt64 duw =    (((UInt64)smartdata.dataUnitsWritten[7]) << 56) +
+                                        (((UInt64)smartdata.dataUnitsWritten[6]) << 48) +
+                                        (((UInt64)smartdata.dataUnitsWritten[5]) << 40) +
+                                        (((UInt64)smartdata.dataUnitsWritten[4]) << 32) +
+                                        (((UInt64)smartdata.dataUnitsWritten[3]) << 24) +
+                                        (((UInt64)smartdata.dataUnitsWritten[2]) << 16) +
+                                        (((UInt64)smartdata.dataUnitsWritten[1]) << 8) +
+                                        smartdata.dataUnitsWritten[0];
+                        UInt64 hrc =    (((UInt64)smartdata.hostReadCommands[7]) << 56) +
+                                        (((UInt64)smartdata.hostReadCommands[6]) << 48) +
+                                        (((UInt64)smartdata.hostReadCommands[5]) << 40) +
+                                        (((UInt64)smartdata.hostReadCommands[4]) << 32) +
+                                        (((UInt64)smartdata.hostReadCommands[3]) << 24) +
+                                        (((UInt64)smartdata.hostReadCommands[2]) << 16) +
+                                        (((UInt64)smartdata.hostReadCommands[1]) << 8) +
+                                        smartdata.hostReadCommands[0];
+                        UInt64 hwc =    (((UInt64)smartdata.hostWriteCommands[7]) << 56) +
+                                        (((UInt64)smartdata.hostWriteCommands[6]) << 48) +
+                                        (((UInt64)smartdata.hostWriteCommands[5]) << 40) +
+                                        (((UInt64)smartdata.hostWriteCommands[4]) << 32) +
+                                        (((UInt64)smartdata.hostWriteCommands[3]) << 24) +
+                                        (((UInt64)smartdata.hostWriteCommands[2]) << 16) +
+                                        (((UInt64)smartdata.hostWriteCommands[1]) << 8) +
+                                        smartdata.hostWriteCommands[0];
+                        UInt64 cbt =    (((UInt64)smartdata.controllerBusyTime[7]) << 56) +
+                                        (((UInt64)smartdata.controllerBusyTime[6]) << 48) +
+                                        (((UInt64)smartdata.controllerBusyTime[5]) << 40) +
+                                        (((UInt64)smartdata.controllerBusyTime[4]) << 32) +
+                                        (((UInt64)smartdata.controllerBusyTime[3]) << 24) +
+                                        (((UInt64)smartdata.controllerBusyTime[2]) << 16) +
+                                        (((UInt64)smartdata.controllerBusyTime[1]) << 8) +
+                                        smartdata.controllerBusyTime[0];
+                        UInt64 pc =     (((UInt64)smartdata.powerCycles[1]) << 32) + smartdata.powerCycles[0];
+                        UInt64 poh =    (((UInt64)smartdata.powerOnHours[1]) << 32) + smartdata.powerOnHours[0];
+                        UInt64 us =    (((UInt64)smartdata.unsafeShutdowns[1]) << 32) + smartdata.unsafeShutdowns[0];
+                        UInt64 me =    (((UInt64)smartdata.mediaAndDataIntegrityErrors[1]) << 32) + smartdata.mediaAndDataIntegrityErrors[0];
+                        UInt64 le =    (((UInt64)smartdata.numberOfErrorLogEntries[1]) << 32) + smartdata.numberOfErrorLogEntries[0];
+
+
                         
-                        attributes[@(233)] = @{@"currentValue" : @(CLAMP(100 - pu, 0, 100)),
-                                               @"isOnline" : @(1)};
+                        attributes[@(900)] = @{@"currentValue" : @(cw), @"isOnline" : @(1)};
+                        attributes[@(901)] = @{@"currentValue" : @(t), @"isOnline" : @(1)};
+                        attributes[@(902)] = @{@"currentValue" : @(as), @"isOnline" : @(1)};
+                        attributes[@(903)] = @{@"currentValue" : @(ast), @"isOnline" : @(1)};
+                        attributes[@(904)] = @{@"currentValue" : @(pu), @"isOnline" : @(1)};
+                        attributes[@(905)] = @{@"currentValue" : @(dur), @"isOnline" : @(1)};
+                        attributes[@(906)] = @{@"currentValue" : @(duw), @"isOnline" : @(1)};
+                        attributes[@(907)] = @{@"currentValue" : @(hrc), @"isOnline" : @(1)};
+                        attributes[@(908)] = @{@"currentValue" : @(hwc), @"isOnline" : @(1)};
+                        attributes[@(909)] = @{@"currentValue" : @(cbt), @"isOnline" : @(1)};
+                        attributes[@(910)] = @{@"currentValue" : @(pc), @"isOnline" : @(1)};
+                        attributes[@(911)] = @{@"currentValue" : @(poh), @"isOnline" : @(1)};
+                        attributes[@(912)] = @{@"currentValue" : @(us), @"isOnline" : @(1)};
+                        attributes[@(913)] = @{@"currentValue" : @(me), @"isOnline" : @(1)};
+                        attributes[@(914)] = @{@"currentValue" : @(le), @"isOnline" : @(1)};
                     }
                     else
                     {
