@@ -312,6 +312,8 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS(x) * 7)
 
 
+#define var __auto_type
+#define let const __auto_type
 
 
 // !!!: CONFIGURATION
