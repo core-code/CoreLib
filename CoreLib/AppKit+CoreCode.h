@@ -68,6 +68,13 @@
 @property (readonly, nonatomic) NSInteger selectedTabViewIndex;
 
 @end
+
+@interface NSImage (CoreCode)
+
+- (NSImage * _Nullable)resizedImage:(NSSize)newSize;
+
+@end
+
 #else
 
 

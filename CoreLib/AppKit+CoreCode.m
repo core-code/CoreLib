@@ -42,6 +42,36 @@ CONST_KEY(CCCountedProgressIndicator)
 
 @end
 
+@implementation NSImage (CoreCode)
+
+- (NSImage *)resizedImage:(NSSize)newSize
+{
+    NSImage *sourceImage = self.copy;
+    
+    if (!sourceImage.isValid)
+    {
+        cc_log_error(@"Error: Image To Resize is Invalid");
+        return nil;
+    }
+
+    NSImage *smallImage = [[NSImage alloc] initWithSize:newSize];
+    
+    [smallImage lockFocus];
+    sourceImage.size = newSize;
+    NSGraphicsContext.currentContext.imageInterpolation = NSImageInterpolationHigh;
+    
+    [sourceImage drawAtPoint:NSZeroPoint
+                    fromRect:CGRectMake(0, 0, newSize.width, newSize.height)
+                   operation:NSCompositeCopy
+                    fraction:1.0];
+    [smallImage unlockFocus];
+    
+    return smallImage;
+}
+
+@end
+
+
 @implementation NSWindow (CoreCode)
 
 
