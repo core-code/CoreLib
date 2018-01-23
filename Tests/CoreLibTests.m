@@ -19,15 +19,28 @@ NSString *randomString(int maxLength)
 }
 
 
-@interface Test : NSDictionary
+@interface TestI : NSDictionary
 @property (nonatomic, readonly) NSString *title;
 @end
-@implementation Test
+@implementation TestI
 @dynamic title;
 @end
 
+@interface Test : NSDictionary
+@property (nonatomic, readonly) NSString *title;
+@end
 
 
+@interface TestW : NSMutableDictionary
+@property (nonatomic, strong) NSString *title;
+@end
+
+@interface TestWI : NSMutableDictionary
+@property (nonatomic, strong) NSString *title;
+@end
+@implementation TestWI
+@dynamic title;
+@end
 
 @interface CoreLibTests : XCTestCase
 
@@ -78,16 +91,35 @@ NSString *randomString(int maxLength)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)testDictionaryMisuse // we know this fails on iOS for a while now. no more fun with bad tricks
 {
-	Test *bla = (Test *)@{@"title" : @"1"};
-	NSString *result = bla.title;
-	XCTAssert([result isEqualToString:@"1"]);
+    {
+        TestI *bla = (TestI *)@{@"title" : @"1"};
+        NSString *result = bla.title;
+        XCTAssert([result isEqualToString:@"1"]);
+    }
+    {
+        Test *bla = (Test *)@{@"title" : @"1"};
+        NSString *result = bla.title;
+        XCTAssert([result isEqualToString:@"1"]);
+    }
+//    { // ok this doesn't work - even on the mac ;)
+//        TestW *bla = (TestW *)makeMutableDictionary();
+//        bla.title = @"1";
+//        NSString *result = bla.title;
+//        XCTAssert([result isEqualToString:@"1"]);
+//    }
+//    {
+//        TestWI *bla = (TestWI *)makeMutableDictionary();
+//        bla.title = @"1";
+//        NSString *result = bla.title;
+//        XCTAssert([result isEqualToString:@"1"]);
+//    }
 }
 
 
 - (void)testHostInformation
 {
     NSString *ipv4 = [JMHostInformation ipAddress:NO];
-    XCTAssert([ipv4 countOccurencesOfString:@"."] == 4);
+    XCTAssert([ipv4 countOccurencesOfString:@"."] == 3);
     XCTAssert([ipv4 replaced:@"." with:@""].integerValue != 0);
     NSString *ipv6 = [JMHostInformation ipAddress:YES];
     XCTAssert([ipv6 countOccurencesOfString:@":"] >= 5);

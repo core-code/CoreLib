@@ -189,7 +189,8 @@ NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColo
 #endif
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
-NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
+NSInteger alert_customicon(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, NSImage *customIcon);
+NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);    
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
 void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
 void alert_feedback_fatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
@@ -223,6 +224,7 @@ void dispatch_async_back(dispatch_block_t block);
 void dispatch_sync_main(dispatch_block_t block);
 void dispatch_sync_back(dispatch_block_t block);
 BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds); // returns 0 on succ
+id dispatch_async_to_sync(BasicBlock block);
 
 
 
