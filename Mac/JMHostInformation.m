@@ -37,7 +37,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @import IOKit.storage;
 @import IOKit.storage.ata;
 #endif
-#ifdef USE_IOKIT
+#ifdef USE_SYSTEMCONFIGURATION
 @import SystemConfiguration;
 #endif
 #else
@@ -65,7 +65,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <IOKit/storage/IOBlockStorageDevice.h>
 #include <IOKit/storage/IOStorageDeviceCharacteristics.h>
 #endif
-#ifdef USE_IOKIT
+#ifdef USE_SYSTEMCONFIGURATION
 #include <SystemConfiguration/SystemConfiguration.h>
 #endif
 #endif
@@ -464,7 +464,7 @@ BOOL _isUserAdmin(void);
 
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)&zeroAddress);
 	SCNetworkReachabilityFlags flags;
-	BOOL connected = SCNetworkReachabilityGetFlags(reachability, &flags);
+	Boolean connected = SCNetworkReachabilityGetFlags(reachability, &flags);
 	BOOL isConnected = connected && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
 	CFRelease(reachability);
 	return isConnected;

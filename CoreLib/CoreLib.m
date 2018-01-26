@@ -788,7 +788,7 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 	[thepushbuttons sizeToFit];
 
 	[alert setAccessoryView:thepushbuttons];
-	[[alert window] makeFirstResponder:thepushbuttons];
+	//[[alert window] makeFirstResponder:thepushbuttons];
 
 	NSInteger selectedButton = [alert runModal];
 //U	[[alert window] setInitialFirstResponder: thepushbuttons];

@@ -27,6 +27,8 @@ typedef NS_ENUM(uint8_t, templateSettingEnum)
 };
 
 
+CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
+
 
 @interface VisibilityManager : NSObject
 

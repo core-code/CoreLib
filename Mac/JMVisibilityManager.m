@@ -19,6 +19,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 CONST_KEY(JMVisibilityManagerValue)
+CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
+
 
 
 @interface VisibilityManager ()
@@ -95,6 +97,8 @@ CONST_KEY(JMVisibilityManagerValue)
 
 	kJMVisibilityManagerValueKey.defaultInt = newSetting;
 	[[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [notificationCenter postNotificationName:kVisibilitySettingDidChangeNotificationKey object:self];
 }
 
 - (visibilitySettingEnum)visibilitySetting
