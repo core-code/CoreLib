@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 15.03.12.
-/*	Copyright © 2018 CoreCode Limited
+/*    Copyright © 2018 CoreCode Limited
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -26,7 +26,7 @@
 
 
 #ifdef USE_SNAPPY
-	#import <snappy/snappy-c.h>
+    #import <snappy/snappy-c.h>
 #endif
 
 #if __has_feature(modules)
@@ -48,15 +48,15 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)literalString
 {
-	NSMutableString *tmp = [NSMutableString stringWithString:@"@["];
+    NSMutableString *tmp = [NSMutableString stringWithString:@"@["];
 
-	for (id obj in self)
-		[tmp appendFormat:@"%@, ", [obj literalString]];
+    for (id obj in self)
+        [tmp appendFormat:@"%@, ", [obj literalString]];
 
-	[tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)				// replace trailing ', '
-					   withString:@"]"];						// with terminating ']'
+    [tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)                // replace trailing ', '
+                       withString:@"]"];                        // with terminating ']'
 
-	return tmp;
+    return tmp;
 }
 
 
@@ -64,7 +64,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wselector"
-	return [self sortedArrayUsingSelector:@selector(compare:)];
+    return [self sortedArrayUsingSelector:@selector(compare:)];
 #pragma clang diagnostic pop
 }
 
@@ -86,19 +86,19 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)XMLData
 {
-	NSError *err;
-	NSData *data =  [NSPropertyListSerialization dataWithPropertyList:self
-															   format:NSPropertyListXMLFormat_v1_0
-															  options:(NSPropertyListWriteOptions)0
-																error:&err];
+    NSError *err;
+    NSData *data =  [NSPropertyListSerialization dataWithPropertyList:self
+                                                               format:NSPropertyListXMLFormat_v1_0
+                                                              options:(NSPropertyListWriteOptions)0
+                                                                error:&err];
 
-	if (!data || err)
-	{
-		cc_log_error(@"Error: XML write fails! input %@ data %@ err %@", self, data, err);
-		return nil;
-	}
+    if (!data || err)
+    {
+        cc_log_error(@"Error: XML write fails! input %@ data %@ err %@", self, data, err);
+        return nil;
+    }
 
-	return data;
+    return data;
 }
 
 #pragma clang diagnostic push
@@ -120,13 +120,13 @@ CONST_KEY(CoreCodeAssociatedValue)
             range.min.y = MIN(range.min.y, p.y);
         }
 
-		range.length.x = range.max.x - range.min.x;
-		range.length.y = range.max.y - range.min.y;
+        range.length.x = range.max.x - range.min.x;
+        range.length.y = range.max.y - range.min.y;
     }
 
 
 
-	return range;
+    return range;
 }
 
 
@@ -170,119 +170,119 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     [NSArray _addArrayContents:self toArray:tmp];
 
-	return tmp.immutableObject;
+    return tmp.immutableObject;
 }
 
 
 - (NSString *)string
 {
-	NSString *ret = @"";
+    NSString *ret = @"";
 
-	for (NSString *str in self)
-		ret = [ret stringByAppendingString:VALID_STR(str)];
+    for (NSString *str in self)
+        ret = [ret stringByAppendingString:VALID_STR(str)];
 
-	return ret;
+    return ret;
 }
 
 
 - (NSString *)path
 {
-	NSString *ret = @"";
-	
-	for (NSString *str in self)
-		ret = [ret stringByAppendingPathComponent:str];
+    NSString *ret = @"";
+    
+    for (NSString *str in self)
+        ret = [ret stringByAppendingPathComponent:str];
 
-	return ret;
+    return ret;
 }
 
 
 - (BOOL)contains:(id)object
 {
-	return [self indexOfObject:object] != NSNotFound;
+    return [self indexOfObject:object] != NSNotFound;
 }
 
 
 - (NSArray *)reverseArray
 {
-	return [[self reverseObjectEnumerator] allObjects];
+    return [self reverseObjectEnumerator].allObjects;
 }
 
 
 - (NSOrderedSet *)orderedSet
 {
-	return [NSOrderedSet orderedSetWithArray:self];
+    return [NSOrderedSet orderedSetWithArray:self];
 }
 
 
 - (NSSet *)set
 {
-	return [NSSet setWithArray:self];
+    return [NSSet setWithArray:self];
 }
 
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject
 {
-	if ([self indexOfObject:anObject] == NSNotFound)
-		return [self arrayByAddingObject:anObject];
-	else
-		return self;
+    if ([self indexOfObject:anObject] == NSNotFound)
+        return [self arrayByAddingObject:anObject];
+    else
+        return self;
 }
 
 
 - (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
-	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
-	[array removeObjectIdenticalTo:anObject];
+    [array removeObjectIdenticalTo:anObject];
 
-	return [NSArray arrayWithArray:array];
+    return [NSArray arrayWithArray:array];
 }
 
 
 - (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects
 {
-	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
     for (id obj in objects)
         [array removeObjectIdenticalTo:obj];
 
-	return [NSArray arrayWithArray:array];
+    return [NSArray arrayWithArray:array];
 }
 
 
 - (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet
 {
-	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
-	[array removeObjectsAtIndexes:indexSet];
+    [array removeObjectsAtIndexes:indexSet];
 
-	return [NSArray arrayWithArray:array];
+    return [NSArray arrayWithArray:array];
 }
 
 
 - (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index
 {
-	NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
-	[array removeObjectAtIndex:index];
+    [array removeObjectAtIndex:index];
 
-	return [NSArray arrayWithArray:array];
+    return [NSArray arrayWithArray:array];
 }
 
 
 - (NSArray *)arrayByReplacingObject:(id)anObject withObject:(id)newObject
 {
-	NSMutableArray *mut = self.mutableObject;
+    NSMutableArray *mut = self.mutableObject;
 
-	mut[[mut indexOfObject:anObject]] = newObject;
+    mut[[mut indexOfObject:anObject]] = newObject;
 
-	return mut.immutableObject;
+    return mut.immutableObject;
 }
 
 
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
-    if ([self count] > index)
+    if (self.count > index)
         return self[index];
     else
         return nil;
@@ -291,49 +291,49 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value
 {
-	for (NSDictionary *dict in self)
-		if ([[dict valueForKey:key] isEqual:value])
-			return TRUE;
+    for (NSDictionary *dict in self)
+        if ([[dict valueForKey:key] isEqual:value])
+            return TRUE;
 
-	return FALSE;
+    return FALSE;
 }
 
 
 - (NSArray *)sortedArrayByKey:(NSString *)key
 {
-	return [self sortedArrayByKey:key ascending:YES];
+    return [self sortedArrayByKey:key ascending:YES];
 }
 
 
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending
 {
-	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:key ascending:ascending];
+    NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:key ascending:ascending];
 
-	return [self sortedArrayUsingDescriptors:@[sd]];
+    return [self sortedArrayUsingDescriptors:@[sd]];
 }
 
 
 - (NSArray *)subarrayFromIndex:(NSUInteger)location
 {
-	return [self subarrayWithRange:NSMakeRange(location, self.count-location)];
+    return [self subarrayWithRange:NSMakeRange(location, self.count-location)];
 }
 
 
 - (NSArray *)subarrayToIndex:(NSUInteger)location
 {
-	return [self subarrayWithRange:NSMakeRange(0, self.count-location-1)];
+    return [self subarrayWithRange:NSMakeRange(0, self.count-location-1)];
 }
 
 
 - (NSMutableArray *)mutableObject
 {
-	return [NSMutableArray arrayWithArray:self];
+    return [NSMutableArray arrayWithArray:self];
 }
 
 
 - (BOOL)empty
 {
-	return [self count] == 0;
+    return self.count == 0;
 }
 
 
@@ -342,11 +342,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSMutableArray *resultArray = [NSMutableArray new];
 
     for (id object in self)
-	{
-		id result = block(object);
-		if (result)
-			[resultArray addObject:result];
-	}
+    {
+        id result = block(object);
+        if (result)
+            [resultArray addObject:result];
+    }
 
     return [NSArray arrayWithArray:resultArray];
 }
@@ -374,48 +374,48 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [NSArray arrayWithArray:resultArray];
 }
 
-- (void)apply:(ObjectInBlock)block								// enumerateObjectsUsingBlock:
+- (void)apply:(ObjectInBlock)block                                // enumerateObjectsUsingBlock:
 {
     for (id object in self)
-		block(object);
+        block(object);
 }
 
 // forwards for less typing
-- (NSString *)joined:(NSString *)sep							// componentsJoinedByString:
+- (NSString *)joined:(NSString *)sep                            // componentsJoinedByString:
 {
-	return [self componentsJoinedByString:sep];
+    return [self componentsJoinedByString:sep];
 }
 
 - (NSArray *)filteredUsingPredicateString:(NSString *)format, ...
 {
-	va_list args;
-	va_start(args, format);
-	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
-	va_end(args);
+    va_list args;
+    va_start(args, format);
+    NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+    va_end(args);
 
-	return [self filteredArrayUsingPredicate:pred];
+    return [self filteredArrayUsingPredicate:pred];
 }
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
-	return [self runAsTaskWithTerminationStatus:NULL];
+    return [self runAsTaskWithTerminationStatus:NULL];
 }
 
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus
 {
-	NSTask *task = [NSTask new];
-	NSPipe *taskPipe = [NSPipe pipe];
-	NSFileHandle *file = [taskPipe fileHandleForReading];
+    NSTask *task = [NSTask new];
+    NSPipe *taskPipe = [NSPipe pipe];
+    NSFileHandle *file = taskPipe.fileHandleForReading;
 
-	[task setLaunchPath:self[0]];
-	[task setStandardOutput:taskPipe];
-	[task setStandardError:taskPipe];
-	[task setArguments:[self subarrayWithRange:NSMakeRange(1, self.count-1)]];
+    task.launchPath = self[0];
+    task.standardOutput = taskPipe;
+    task.standardError = taskPipe;
+    task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
 
-	if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
-		cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
+    if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
+        cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
 
     @try
     {
@@ -426,17 +426,17 @@ CONST_KEY(CoreCodeAssociatedValue)
         return nil;
     }
 
-	NSData *data = [file readDataToEndOfFile];
+    NSData *data = [file readDataToEndOfFile];
 
-	[task waitUntilExit];
+    [task waitUntilExit];
 
-	NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
 
-	if (terminationStatus)
-		(*terminationStatus) = [task terminationStatus];
+    if (terminationStatus)
+        (*terminationStatus) = task.terminationStatus;
 
-	return string;
+    return string;
 }
 #endif
 @end
@@ -448,82 +448,82 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (void)moveObjectAtIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex
 {
-	id object = self[fromIndex];
-	[self removeObjectAtIndex:fromIndex];
+    id object = self[fromIndex];
+    [self removeObjectAtIndex:fromIndex];
 
-	if (toIndex < self.count)
-		[self insertObject:object atIndex:toIndex];
-	else
-		[self addObject:object];
+    if (toIndex < self.count)
+        [self insertObject:object atIndex:toIndex];
+    else
+        [self addObject:object];
 }
 
 - (void)removeObjectPassingTest:(ObjectInIntOutBlock)block
 {
-	NSUInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
-	{
-		int res = block(obj);
-		return (BOOL)res;
-	}];
+    NSUInteger idx = [self indexOfObjectPassingTest:^BOOL(id obj, NSUInteger i, BOOL *s)
+    {
+        int res = block(obj);
+        return (BOOL)res;
+    }];
 
-	if (idx != NSNotFound)
-		[self removeObjectAtIndex:idx];
+    if (idx != NSNotFound)
+        [self removeObjectAtIndex:idx];
 }
 
 - (NSArray *)immutableObject
 {
-	return [NSArray arrayWithArray:self];
+    return [NSArray arrayWithArray:self];
 }
 
 - (void)addNewObject:(id)anObject
 {
-	if (anObject && [self indexOfObject:anObject] == NSNotFound)
-		[self addObject:anObject];
+    if (anObject && [self indexOfObject:anObject] == NSNotFound)
+        [self addObject:anObject];
 }
 
 - (void)addObjectSafely:(id)anObject
 {
-	if (anObject)
-		[self addObject:anObject];
+    if (anObject)
+        [self addObject:anObject];
 }
 
 - (void)map:(ObjectInOutBlock)block
 {
-    for (NSUInteger i = 0; i < [self count]; i++)
-	{
-		id result = block(self[i]);
+    for (NSUInteger i = 0; i < self.count; i++)
+    {
+        id result = block(self[i]);
 
-		self[i] = result;
-	}
+        self[i] = result;
+    }
 }
 
 - (void)filter:(ObjectInIntOutBlock)block
 {
     NSMutableIndexSet *indices = [NSMutableIndexSet new];
 
-    for (NSUInteger i = 0; i < [self count]; i++)
-	{
-		int result = block(self[i]);
-		if (!result)
-			[indices addIndex:i];
-	}
+    for (NSUInteger i = 0; i < self.count; i++)
+    {
+        int result = block(self[i]);
+        if (!result)
+            [indices addIndex:i];
+    }
 
 
-	[self removeObjectsAtIndexes:indices];
+    [self removeObjectsAtIndexes:indices];
 }
 
 - (void)filterUsingPredicateString:(NSString *)format, ...
 {
-	va_list args;
-	va_start(args, format);
-	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
-	va_end(args);
+    va_list args;
+    va_start(args, format);
+    NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+    va_end(args);
 
-	[self filterUsingPredicate:pred];
+    [self filterUsingPredicate:pred];
 }
 
 - (void)removeFirstObject
 {
-	[self removeObjectAtIndex:0];
+    [self removeObjectAtIndex:0];
 }
 @end
 
@@ -565,7 +565,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     newcstring[x] = '\0';
     
-    NSString *rotString = [NSString stringWithCString:newcstring encoding:NSASCIIStringEncoding];
+    NSString *rotString = @(newcstring);
     free(newcstring);
     return rotString;
 }
@@ -575,8 +575,8 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     NSImage *image = [NSImage imageNamed:self];
 
-	if (!image)
-		cc_log_error(@"Error: there is no named image with name: %@", self);
+    if (!image)
+        cc_log_error(@"Error: there is no named image with name: %@", self);
 
     return image;
 }
@@ -585,10 +585,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     UIImage *image = [UIImage imageNamed:self];
 
-	if (!image)
-		cc_log_error(@"Error: there is no named image with name: %@", self);
+    if (!image)
+        cc_log_error(@"Error: there is no named image with name: %@", self);
 
-	return image;
+    return image;
 }
 #endif
 
@@ -596,9 +596,9 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)fileIsRestricted
 {
-	struct stat info;
-	lstat(self.UTF8String, &info);
-	return (info.st_flags & SF_RESTRICTED) > 0;
+    struct stat info;
+    lstat(self.UTF8String, &info);
+    return (info.st_flags & SF_RESTRICTED) > 0;
 }
 
 - (BOOL)fileIsAlias
@@ -614,7 +614,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)stringByResolvingSymlinksInPathFixed
 {
-    NSString *ret = [self stringByResolvingSymlinksInPath];
+    NSString *ret = self.stringByResolvingSymlinksInPath;
 
 
     for (NSString *exception in @[@"/etc/", @"/tmp/", @"/var/"])
@@ -643,7 +643,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     CFRelease(bookmark);
     CFRelease(url);
 
-    return [nurl path];
+    return nurl.path;
 
 }
 
@@ -655,7 +655,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     [layoutManager addTextContainer:textContainer];
     [textStorage addLayoutManager:layoutManager];
     [textStorage beginEditing];
-    [textStorage setAttributes:@{NSFontAttributeName: font} range:NSMakeRange(0, [self length])];
+    [textStorage setAttributes:@{NSFontAttributeName: font} range:NSMakeRange(0, self.length)];
     [textStorage endEditing];
 
     (void) [layoutManager glyphRangeForTextContainer:textContainer];
@@ -668,7 +668,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)literalString
 {
-	return makeString(@"@\"%@\"", self);
+    return makeString(@"@\"%@\"", self);
 }
 
 - (NSRange)fullRange
@@ -711,16 +711,16 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)isNumber
 {
-	if (!self.length)
-		return NO;
+    if (!self.length)
+        return NO;
 
-	if (self.isIntegerNumberOnly)
-		return YES;
+    if (self.isIntegerNumberOnly)
+        return YES;
 
-	if (self.isFloatNumber)
-		return YES;
+    if (self.isFloatNumber)
+        return YES;
 
-	return NO;
+    return NO;
 }
 
 
@@ -744,7 +744,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         cs = tmp.immutableObject;
     }
 
-    return	([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
+    return    ([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
 }
 
 - (BOOL)isWriteablePath
@@ -830,7 +830,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     assert(fileManager);
     if (![fileManager fileExistsAtPath:self])
-		return self;
+        return self;
     else
     {
         NSString *ext = self.pathExtension;
@@ -838,7 +838,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         int i = 0;
 
         while ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext]])
-			i++;
+            i++;
 
         return [NSString stringWithFormat:@"%@-%i.%@", namewithoutext, i,ext];
     }
@@ -865,7 +865,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSUInteger)countOccurencesOfString:(NSString *)str
 {
-    return [[self componentsSeparatedByString:str] count] - 1;
+    return [self componentsSeparatedByString:str].count - 1;
 }
 
 - (BOOL)contains:(NSString *)otherString
@@ -933,7 +933,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)expanded
 {
-    return [self stringByExpandingTildeInPath];
+    return self.stringByExpandingTildeInPath;
 }
 
 - (NSArray <NSString *> *)words
@@ -961,15 +961,15 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url
 {
     NSString *urlstring = url.absoluteString;
-	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
 
-	[attributedString beginEditing];
-	[attributedString addAttribute:NSLinkAttributeName value:urlstring range:self.fullRange];
-	[attributedString addAttribute:NSForegroundColorAttributeName value:makeColor(0, 0, 1, 1) range:self.fullRange];
-	[attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:self.fullRange];
-	[attributedString endEditing];
+    [attributedString beginEditing];
+    [attributedString addAttribute:NSLinkAttributeName value:urlstring range:self.fullRange];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:makeColor(0, 0, 1, 1) range:self.fullRange];
+    [attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:self.fullRange];
+    [attributedString endEditing];
 
-	return attributedString;
+    return attributedString;
 }
 
 - (NSString *)trimmedOfWhitespace
@@ -984,7 +984,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)clamp:(NSUInteger)maximumLength
 {
-    return (([self length] <= maximumLength) ? self : [self substringToIndex:maximumLength]);
+    return ((self.length <= maximumLength) ? self : [self substringToIndex:maximumLength]);
 }
 
 
@@ -1058,13 +1058,13 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     }
 
-    //	for (NSString *word in lowercaseWords)
-    //	{
-    //		res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\s)%@(\\Z)", word.capitalizedString)
-    //											 withString:makeString(@"$1%@", word.lowercaseString)
-    //												options:NSRegularExpressionSearch range: res.fullRange];
+    //    for (NSString *word in lowercaseWords)
+    //    {
+    //        res = [res stringByReplacingOccurrencesOfString:makeString(@"(\\s)%@(\\Z)", word.capitalizedString)
+    //                                             withString:makeString(@"$1%@", word.lowercaseString)
+    //                                                options:NSRegularExpressionSearch range: res.fullRange];
     //
-    //	}
+    //    }
 
     return res;
 }
@@ -1078,14 +1078,14 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)propercaseString
 {
-    if ([self length] == 0)
+    if (self.length == 0)
         return @"";
-    else if ([self length] == 1)
-        return [self uppercaseString];
+    else if (self.length == 1)
+        return self.uppercaseString;
 
     return makeString(@"%@%@",
-                      [[self substringToIndex:1] uppercaseString],
-                      [[self substringFromIndex:1] lowercaseString]);
+                      [self substringToIndex:1].uppercaseString,
+                      [self substringFromIndex:1].lowercaseString);
 }
 
 - (NSData *)download
@@ -1172,84 +1172,84 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
 }
 
-- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2	// stringByReplacingOccurencesOfString:withString:
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2    // stringByReplacingOccurencesOfString:withString:
 {
     return [self stringByReplacingOccurrencesOfString:str1 withString:str2];
 }
 
-- (NSArray <NSString *> *)split:(NSString *)sep								// componentsSeparatedByString:
+- (NSArray <NSString *> *)split:(NSString *)sep                                // componentsSeparatedByString:
 {
     return [self componentsSeparatedByString:sep];
 }
 
 - (NSArray *)defaultArray
 {
-    return [[NSUserDefaults standardUserDefaults] arrayForKey:self];
+    return [NSUserDefaults.standardUserDefaults arrayForKey:self];
 }
 
 - (void)setDefaultArray:(NSArray *)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
 }
 
 - (NSDictionary *)defaultDict
 {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:self];
+    return [NSUserDefaults.standardUserDefaults dictionaryForKey:self];
 }
 
 - (void)setDefaultDict:(NSDictionary *)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
 }
 
 - (id)defaultObject
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:self];
+    return [NSUserDefaults.standardUserDefaults objectForKey:self];
 }
 
 - (void)setDefaultObject:(id)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
 }
 
 - (NSString *)defaultString
 {
-    return [[NSUserDefaults standardUserDefaults] stringForKey:self];
+    return [NSUserDefaults.standardUserDefaults stringForKey:self];
 }
 
 - (void)setDefaultString:(NSString *)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setObject:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
 }
 
 - (NSURL *)defaultURL
 {
-    return [[NSUserDefaults standardUserDefaults] URLForKey:self];
+    return [NSUserDefaults.standardUserDefaults URLForKey:self];
 }
 
 - (void)setDefaultURL:(NSURL *)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setURL:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setURL:newDefault forKey:self];
 }
 
 - (NSInteger)defaultInt
 {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:self];
+    return [NSUserDefaults.standardUserDefaults integerForKey:self];
 }
 
 - (void)setDefaultInt:(NSInteger)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setInteger:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setInteger:newDefault forKey:self];
 }
 
 - (float)defaultFloat
 {
-    return [[NSUserDefaults standardUserDefaults] floatForKey:self];
+    return [NSUserDefaults.standardUserDefaults floatForKey:self];
 }
 
 - (void)setDefaultFloat:(float)newDefault
 {
-    [[NSUserDefaults standardUserDefaults] setFloat:newDefault forKey:self];
+    [NSUserDefaults.standardUserDefaults setFloat:newDefault forKey:self];
 }
 
 - (NSString *)stringValue
@@ -1263,22 +1263,22 @@ CONST_KEY(CoreCodeAssociatedValue)
 //}
 
 - (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter
-{	// credits to Drew McCormack
+{    // credits to Drew McCormack
     NSMutableArray *rows = [NSMutableArray array];
 
     NSMutableCharacterSet *whitespaceCharacterSet = [NSMutableCharacterSet whitespaceCharacterSet];
     NSMutableCharacterSet *newlineCharacterSetMutable = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-    [newlineCharacterSetMutable formIntersectionWithCharacterSet:[whitespaceCharacterSet invertedSet]];
-	[whitespaceCharacterSet removeCharactersInString:delimiter];
-	NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:[newlineCharacterSetMutable bitmapRepresentation]];
+    [newlineCharacterSetMutable formIntersectionWithCharacterSet:whitespaceCharacterSet.invertedSet];
+    [whitespaceCharacterSet removeCharactersInString:delimiter];
+    NSCharacterSet *newlineCharacterSet = [NSCharacterSet characterSetWithBitmapRepresentation:newlineCharacterSetMutable.bitmapRepresentation];
     NSMutableCharacterSet *importantCharactersSetMutable = [NSMutableCharacterSet characterSetWithCharactersInString:[delimiter stringByAppendingString:@"\""]];
     [importantCharactersSetMutable formUnionWithCharacterSet:newlineCharacterSet];
-    NSCharacterSet *importantCharactersSet = [NSCharacterSet characterSetWithBitmapRepresentation:[importantCharactersSetMutable bitmapRepresentation]];
+    NSCharacterSet *importantCharactersSet = [NSCharacterSet characterSetWithBitmapRepresentation:importantCharactersSetMutable.bitmapRepresentation];
 
     NSScanner *scanner = [NSScanner scannerWithString:self];
     [scanner setCharactersToBeSkipped:nil];
 
-    while (![scanner isAtEnd])
+    while (!scanner.atEnd)
     {
         BOOL insideQuotes = NO;
         BOOL finishedRow = NO;
@@ -1293,7 +1293,7 @@ CONST_KEY(CoreCodeAssociatedValue)
                 [currentColumn appendString:tempString];
             }
 
-            if ([scanner isAtEnd])
+            if (scanner.atEnd)
             {
                 if (![currentColumn isEqualToString:@""])
                     [columns addObject:currentColumn];
@@ -1338,7 +1338,7 @@ CONST_KEY(CoreCodeAssociatedValue)
                 }
             }
         }
-        if ([columns count] > 0)
+        if (columns.count > 0)
             [rows addObject:columns];
     }
 
@@ -1376,7 +1376,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)unescaped
 {
-    return [self stringByRemovingPercentEncoding];
+    return self.stringByRemovingPercentEncoding;
 }
 
 - (NSString *)escaped
@@ -1392,7 +1392,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet
 {
-    NSRange rangeOfFirstWantedCharacter = [self rangeOfCharacterFromSet:[characterSet invertedSet]];
+    NSRange rangeOfFirstWantedCharacter = [self rangeOfCharacterFromSet:characterSet.invertedSet];
     if (rangeOfFirstWantedCharacter.location == NSNotFound)
         return @"";
 
@@ -1401,7 +1401,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet
 {
-    NSRange rangeOfLastWantedCharacter = [self rangeOfCharacterFromSet:[characterSet invertedSet]
+    NSRange rangeOfLastWantedCharacter = [self rangeOfCharacterFromSet:characterSet.invertedSet
                                                                options:NSBackwardsSearch];
     if (rangeOfLastWantedCharacter.location == NSNotFound)
         return @"";
@@ -1412,7 +1412,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 void directoryObservingReleaseCallback(const void *info)
 {
-	CFBridgingRelease(info);
+    CFBridgingRelease(info);
 }
 
 void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
@@ -1429,7 +1429,7 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
     }
 
     void (^block)(id input) = (__bridge void (^)(id))(clientCallBackInfo);
-	block(tmp);
+    block(tmp);
 //
 //    void (^block)(void) = (__bridge void (^)(void))(clientCallBackInfo);
 //    block();
@@ -1438,43 +1438,43 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
 CONST_KEY(CCDirectoryObserving)
 - (NSValue *)startObserving:(ObjectInBlock)block withFileLevelEvents:(BOOL)fileLevelEvents
 {
-	void *ptr = (__bridge_retained void *)block;
-	FSEventStreamContext context = {0, ptr, NULL, directoryObservingReleaseCallback, NULL};
-	CFStringRef mypath = (__bridge CFStringRef)self.stringByExpandingTildeInPath;
-	CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
-	FSEventStreamRef stream;
-	CFAbsoluteTime latency = 2.0;
+    void *ptr = (__bridge_retained void *)block;
+    FSEventStreamContext context = {0, ptr, NULL, directoryObservingReleaseCallback, NULL};
+    CFStringRef mypath = (__bridge CFStringRef)self.stringByExpandingTildeInPath;
+    CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
+    FSEventStreamRef stream;
+    CFAbsoluteTime latency = 2.0;
 
 
     assert(self.fileURL.fileIsDirectory);
     stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, fileLevelEvents ? kFSEventStreamCreateFlagFileEvents : 0);
 
-	CFRelease(pathsToWatch);
-	FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    CFRelease(pathsToWatch);
+    FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 
-	FSEventStreamStart(stream);
+    FSEventStreamStart(stream);
 
     NSValue *token = [NSValue valueWithPointer:stream];
-	[self setAssociatedValue:token forKey:kCCDirectoryObservingKey];
+    [self setAssociatedValue:token forKey:kCCDirectoryObservingKey];
     return token;
 }
 
 - (void)stopObserving:(NSValue *)token
 {
-	NSValue *v = [self associatedValueForKey:kCCDirectoryObservingKey];
+    NSValue *v = [self associatedValueForKey:kCCDirectoryObservingKey];
     if (!v)
         v = token;
     
-	if (v)
-	{
-		FSEventStreamRef stream = v.pointerValue;
+    if (v)
+    {
+        FSEventStreamRef stream = v.pointerValue;
 
-		FSEventStreamStop(stream);
-		FSEventStreamInvalidate(stream);
-		FSEventStreamRelease(stream);
-	}
-	else
-		cc_log_debug(@"Warning: stopped observing on location which was never observed %@", self);
+        FSEventStreamStop(stream);
+        FSEventStreamInvalidate(stream);
+        FSEventStreamRelease(stream);
+    }
+    else
+        cc_log_debug(@"Warning: stopped observing on location which was never observed %@", self);
 }
 #endif
 @end
@@ -1500,9 +1500,9 @@ CONST_KEY(CCDirectoryObserving)
 
 - (BOOL)fileIsRestricted
 {
-	struct stat info;
-	lstat(self.path.UTF8String, &info);
-	return (info.st_flags & SF_RESTRICTED) > 0;
+    struct stat info;
+    lstat(self.path.UTF8String, &info);
+    return (info.st_flags & SF_RESTRICTED) > 0;
 }
 
 - (BOOL)fileIsAlias
@@ -1554,11 +1554,11 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSArray <NSURL *> *)directoryContents
 {
-    if (![self isFileURL]) return nil;
+    if (!self.fileURL) return nil;
 
     NSString *path = self.path;
-	NSError *err;
-	NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:&err];
+    NSError *err;
+    NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:&err];
 
     return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
 }
@@ -1576,20 +1576,20 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSURL *)uniqueFile
 {
-    if (![self isFileURL]) return nil;
-    return [self path].uniqueFile.fileURL;
+    if (!self.fileURL) return nil;
+    return self.path.uniqueFile.fileURL;
 }
 
 - (BOOL)fileExists
 {
     NSString *path = self.path;
-    return [self isFileURL] && [fileManager fileExistsAtPath:path];
+    return self.fileURL && [fileManager fileExistsAtPath:path];
 }
 
 
 - (unsigned long long)fileOrDirectorySize
 {
-	return (self.fileIsDirectory ? self.directorySize : self.fileSize);
+    return (self.fileIsDirectory ? self.directorySize : self.fileSize);
 }
 
 
@@ -1598,7 +1598,7 @@ CONST_KEY(CCDirectoryObserving)
     NSNumber *size;
     
     if ([self getResourceValue:&size forKey:NSURLFileSizeKey error:nil])
-        return [size unsignedLongLongValue];
+        return size.unsignedLongLongValue;
     else
         return 0;
 }
@@ -1630,15 +1630,15 @@ CONST_KEY(CCDirectoryObserving)
 - (void)open
 {
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-    [[NSWorkspace sharedWorkspace] openURL:self];
+    [NSWorkspace.sharedWorkspace openURL:self];
 #else
     if (@available(iOS 10.0, *))
-        [[UIApplication sharedApplication] openURL:self options:@{} completionHandler:NULL];
+        [UIApplication.sharedApplication openURL:self options:@{} completionHandler:NULL];
     else
     {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations" // we get a warning despite the @available, must be a compiler bug
-        [[UIApplication sharedApplication] openURL:self];
+        [UIApplication.sharedApplication openURL:self];
 #pragma clang diagnostic pop
     }
 #endif
@@ -1787,55 +1787,55 @@ CONST_KEY(CCDirectoryObserving)
 #ifdef USE_SECURITY
 - (NSString *)SHA1
 {
-	const char *cStr = [self bytes];
-	unsigned char result[CC_SHA1_DIGEST_LENGTH];
-	CC_SHA1(cStr, (CC_LONG)[self length], result);
-	NSString *s = [NSString  stringWithFormat:
-				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-				   result[0], result[1], result[2], result[3], result[4],
-				   result[5], result[6], result[7],
-				   result[8], result[9], result[10], result[11], result[12],
-				   result[13], result[14], result[15],
-				   result[16], result[17], result[18], result[19]
-				   ];
+    const char *cStr = self.bytes;
+    unsigned char result[CC_SHA1_DIGEST_LENGTH];
+    CC_SHA1(cStr, (CC_LONG)self.length, result);
+    NSString *s = [NSString  stringWithFormat:
+                   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                   result[0], result[1], result[2], result[3], result[4],
+                   result[5], result[6], result[7],
+                   result[8], result[9], result[10], result[11], result[12],
+                   result[13], result[14], result[15],
+                   result[16], result[17], result[18], result[19]
+                   ];
 
     return s;
 }
 
 - (NSString *)MD5
 {
-	const char *cStr = [self bytes];
-	unsigned char result[CC_MD5_DIGEST_LENGTH];
-	CC_MD5(cStr, (CC_LONG)[self length], result);
-	NSString *s = [NSString  stringWithFormat:
-				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-				   result[0], result[1], result[2], result[3], result[4],
-				   result[5], result[6], result[7],
-				   result[8], result[9], result[10], result[11], result[12],
-				   result[13], result[14], result[15]
-				   ];
+    const char *cStr = self.bytes;
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)self.length, result);
+    NSString *s = [NSString  stringWithFormat:
+                   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                   result[0], result[1], result[2], result[3], result[4],
+                   result[5], result[6], result[7],
+                   result[8], result[9], result[10], result[11], result[12],
+                   result[13], result[14], result[15]
+                   ];
 
-	return s;
+    return s;
 }
 
 - (NSString *)SHA256
 {
-	const char *cStr = [self bytes];
-	unsigned char result[CC_SHA256_DIGEST_LENGTH];
-	CC_SHA256(cStr, (CC_LONG)[self length], result);
-	NSString *s = [NSString  stringWithFormat:
-				   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-				   result[0], result[1], result[2], result[3], result[4],
-				   result[5], result[6], result[7],
-				   result[8], result[9], result[10], result[11], result[12],
-				   result[13], result[14], result[15],
-				   result[16], result[17], result[18], result[19],
-				   result[20], result[21], result[22], result[23],
-				   result[24], result[25], result[26], result[27],
-				   result[28], result[29], result[30], result[31]
-				   ];
+    const char *cStr = self.bytes;
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(cStr, (CC_LONG)self.length, result);
+    NSString *s = [NSString  stringWithFormat:
+                   @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                   result[0], result[1], result[2], result[3], result[4],
+                   result[5], result[6], result[7],
+                   result[8], result[9], result[10], result[11], result[12],
+                   result[13], result[14], result[15],
+                   result[16], result[17], result[18], result[19],
+                   result[20], result[21], result[22], result[23],
+                   result[24], result[25], result[26], result[27],
+                   result[28], result[29], result[30], result[31]
+                   ];
 
-	return s;
+    return s;
 }
 #endif
 
@@ -1847,9 +1847,9 @@ CONST_KEY(CCDirectoryObserving)
     size_t uncompressedSize = 0;
 
     if( snappy_uncompressed_length(self.bytes, self.length, &uncompressedSize) != SNAPPY_OK )
-	{
-		cc_log_error(@"Error: can't calculate the uncompressed length!\n");
-		return nil;
+    {
+        cc_log_error(@"Error: can't calculate the uncompressed length!\n");
+        return nil;
     }
 
     assert(uncompressedSize);
@@ -1858,71 +1858,71 @@ CONST_KEY(CCDirectoryObserving)
     assert(buf);
 
 
-	int res = snappy_uncompress(self.bytes, self.length, buf, &uncompressedSize);
+    int res = snappy_uncompress(self.bytes, self.length, buf, &uncompressedSize);
     if(res != SNAPPY_OK)
-	{
+    {
         cc_log_error(@"Error: can't uncompress the file!\n");
-		free(buf);
-		return nil;
+        free(buf);
+        return nil;
     }
 
 
-	NSData *d = [NSData dataWithBytesNoCopy:buf length:uncompressedSize];
+    NSData *d = [NSData dataWithBytesNoCopy:buf length:uncompressedSize];
 
-	return d;
+    return d;
 }
 
 - (NSData *)snappyCompressed
 {
-	size_t output_length = snappy_max_compressed_length(self.length);
-	char *buf = (char*)malloc(output_length);
+    size_t output_length = snappy_max_compressed_length(self.length);
+    char *buf = (char*)malloc(output_length);
     assert(buf);
 
-	int res = snappy_compress(self.bytes, self.length, buf, &output_length);
-	if (res != SNAPPY_OK )
-	{
-		cc_log_error(@"Error: problem compressing the file\n");
-		free(buf);
-		return nil;
-	}
+    int res = snappy_compress(self.bytes, self.length, buf, &output_length);
+    if (res != SNAPPY_OK )
+    {
+        cc_log_error(@"Error: problem compressing the file\n");
+        free(buf);
+        return nil;
+    }
 
-	NSData *d = [NSData dataWithBytesNoCopy:buf length:output_length];
+    NSData *d = [NSData dataWithBytesNoCopy:buf length:output_length];
 
-	return d;
+    return d;
 }
 #endif
 
 - (NSString *)string
 {
-	NSString *result;
+    NSString *result;
     
-	[NSString stringEncodingForData:self encodingOptions:nil convertedString:&result usedLossyConversion:nil];
+    [NSString stringEncodingForData:self encodingOptions:nil convertedString:&result usedLossyConversion:nil];
 
-	if (result)
-		return result;
+    if (result)
+        return result;
 
-	for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
-	{
-		NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
+    for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
+    {
+        NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
 
-		if (!s)
-			continue;
+        if (!s)
+            continue;
 
-		return s;
-	}
+        return s;
+    }
 
-	cc_log_error(@"Error: could not create string from data %@", self);
-	return nil;
+    cc_log_error(@"Error: could not create string from data %@", self);
+    return nil;
 }
 
 - (NSString *)hexString
 {
-    const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+    const unsigned char *dataBuffer = (const unsigned char *)self.bytes;
 
     if (!dataBuffer)
         return [NSString string];
 
-    NSUInteger          dataLength  = [self length];
+    NSUInteger          dataLength  = self.length;
     NSMutableString     *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
 
     for (NSUInteger i = 0; i < dataLength; ++i)
@@ -1933,7 +1933,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSMutableData *)mutableObject
 {
-	return [NSMutableData dataWithData:self];
+    return [NSMutableData dataWithData:self];
 }
 
 - (id)JSONObject
@@ -1954,26 +1954,26 @@ CONST_KEY(CCDirectoryObserving)
 {
     id res = [self JSONObject];
 
-	if (![res isKindOfClass:[NSArray class]])
-	{
+    if (![res isKindOfClass:[NSArray class]])
+    {
         cc_log_error(@"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
         return nil;
     }
 
-	return res;
+    return res;
 }
 
 - (NSDictionary *)JSONDictionary
 {
     id res = [self JSONObject];
 
-	if (![res isKindOfClass:[NSDictionary class]])
-	{
+    if (![res isKindOfClass:[NSDictionary class]])
+    {
         cc_log_error(@"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
         return nil;
     }
 
-	return res;
+    return res;
 }
 @end
 
@@ -1983,30 +1983,30 @@ CONST_KEY(CCDirectoryObserving)
 
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
-	NSDateFormatter *df = [NSDateFormatter new];
-	[df setDateFormat:dateFormat];
-	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier];
-	[df setLocale:l];
+    NSDateFormatter *df = [NSDateFormatter new];
+    df.dateFormat = dateFormat;
+    NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier];
+    df.locale = l;
 
-	return [df dateFromString:dateString];
+    return [df dateFromString:dateString];
 }
 
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat
 {
-	return [self dateWithString:dateString format:dateFormat localeIdentifier:@"en_US"];
+    return [self dateWithString:dateString format:dateFormat localeIdentifier:@"en_US"];
 }
 
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString
 {
-	return [self dateWithString:@(preprocessorDateString) format:@"MMM d yyyy"];
+    return [self dateWithString:@(preprocessorDateString) format:@"MMM d yyyy"];
 }
 
 - (NSString *)stringUsingFormat:(NSString *)dateFormat
 {
     NSDateFormatter *df = [NSDateFormatter new];
-	NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-	[df setLocale:l];
-    [df setDateFormat:dateFormat];
+    NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    df.locale = l;
+    df.dateFormat = dateFormat;
 
     return [df stringFromDate:self];
 }
@@ -2015,9 +2015,9 @@ CONST_KEY(CCDirectoryObserving)
 {
     NSDateFormatter *df = [NSDateFormatter new];
 
-	[df setLocale:[NSLocale currentLocale]];
-    [df setDateStyle:dateStyle];
-    [df setTimeStyle:timeStyle];
+    df.locale = [NSLocale currentLocale];
+    df.dateStyle = dateStyle;
+    df.timeStyle = timeStyle;
 
     return [df stringFromDate:self];
 }
@@ -2029,14 +2029,14 @@ CONST_KEY(CCDirectoryObserving)
 
 + (NSString *)formattedTimeFromTimeInterval:(NSTimeInterval)timeInterval
 {
-	int minutes = (int)(timeInterval / 60);
-	int seconds = (int)(timeInterval - (minutes * 60));
+    int minutes = (int)(timeInterval / 60);
+    int seconds = (int)(timeInterval - (minutes * 60));
 
 
-	if (minutes)
-		return makeString(@"%im %is", minutes, seconds);
-	else
-		return makeString(@"%is", (int)timeInterval);
+    if (minutes)
+        return makeString(@"%im %is", minutes, seconds);
+    else
+        return makeString(@"%is", (int)timeInterval);
 }
 
 @end
@@ -2049,15 +2049,15 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)literalString
 {
-	NSMutableString *tmp = [NSMutableString stringWithString:@"@{"];
+    NSMutableString *tmp = [NSMutableString stringWithString:@"@{"];
 
-	for (id key in self)
-		[tmp appendFormat:@"%@ : %@, ", [key literalString], [self[key] literalString]];
+    for (id key in self)
+        [tmp appendFormat:@"%@ : %@, ", [key literalString], [self[key] literalString]];
 
-	[tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)				// replace trailing ', '
-					   withString:@"}"];									// with terminating '}'
+    [tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)                // replace trailing ', '
+                       withString:@"}"];                                    // with terminating '}'
 
-	return tmp;
+    return tmp;
 }
 
 - (NSData *)JSONData
@@ -2077,10 +2077,10 @@ CONST_KEY(CCDirectoryObserving)
 - (NSData *)XMLData
 {
     NSError *err;
-	NSData *data =  [NSPropertyListSerialization dataWithPropertyList:self
-															   format:NSPropertyListXMLFormat_v1_0
-															  options:(NSPropertyListWriteOptions)0
-																error:&err];
+    NSData *data =  [NSPropertyListSerialization dataWithPropertyList:self
+                                                               format:NSPropertyListXMLFormat_v1_0
+                                                              options:(NSPropertyListWriteOptions)0
+                                                                error:&err];
 
     if (!data || err)
     {
@@ -2093,51 +2093,51 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSMutableDictionary *)mutableObject
 {
-	return [NSMutableDictionary dictionaryWithDictionary:self];
+    return [NSMutableDictionary dictionaryWithDictionary:self];
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wselector"
-	return [super methodSignatureForSelector:@selector(valueForKey:)];
+    return [super methodSignatureForSelector:@selector(valueForKey:)];
 #pragma clang diagnostic pop
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
     NSString *propertyName = NSStringFromSelector(invocation.selector);
-    [invocation setSelector:@selector(valueForKey:)];
+    invocation.selector = @selector(valueForKey:);
     [invocation setArgument:&propertyName atIndex:2];
     [invocation invokeWithTarget:self];
 }
 
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(id)key
 {
-	NSMutableDictionary *mutable = self.mutableObject;
+    NSMutableDictionary *mutable = self.mutableObject;
 
-	mutable[key] = value;
+    mutable[key] = value;
 
-	return mutable.immutableObject;
+    return mutable.immutableObject;
 }
 
 - (NSDictionary *)dictionaryByRemovingKey:(id)key
 {
-	NSMutableDictionary *mutable = self.mutableObject;
+    NSMutableDictionary *mutable = self.mutableObject;
 
-	[mutable removeObjectForKey:key];
+    [mutable removeObjectForKey:key];
 
-	return mutable.immutableObject;
+    return mutable.immutableObject;
 }
 
 - (NSDictionary *)dictionaryByRemovingKeys:(NSArray <NSString *>*)keys
 {
-	NSMutableDictionary *mutable = self.mutableObject;
+    NSMutableDictionary *mutable = self.mutableObject;
 
-	for (NSString *key in keys)
-		[mutable removeObjectForKey:key];
+    for (NSString *key in keys)
+        [mutable removeObjectForKey:key];
 
-	return mutable.immutableObject;
+    return mutable.immutableObject;
 }
 
 @end
@@ -2149,7 +2149,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSDictionary *)immutableObject
 {
-	return [NSDictionary dictionaryWithDictionary:self];
+    return [NSDictionary dictionaryWithDictionary:self];
 }
 @end
 
@@ -2178,13 +2178,13 @@ CONST_KEY(CCDirectoryObserving)
 
 + (NSArray *)preferredLanguages3Letter
 {
-	NSDictionary *iso2LetterTo3Letter = @{@"aa" : @"aar", @"ab" : @"abk", @"ae" : @"ave", @"af" : @"afr", @"ak" : @"aka", @"am" : @"amh", @"an" : @"arg", @"ar" : @"ara", @"as" : @"asm", @"av" : @"ava", @"ay" : @"aym", @"az" : @"aze", @"ba" : @"bak", @"be" : @"bel", @"bg" : @"bul", @"bh" : @"bih", @"bi" : @"bis", @"bm" : @"bam", @"bn" : @"ben", @"bo" : @"tib", @"bo" : @"tib", @"br" : @"bre", @"bs" : @"bos", @"ca" : @"cat", @"ce" : @"che", @"ch" : @"cha", @"co" : @"cos", @"cr" : @"cre", @"cs" : @"cze", @"cs" : @"cze", @"cu" : @"chu", @"cv" : @"chv", @"cy" : @"wel", @"cy" : @"wel", @"da" : @"dan", @"de" : @"ger", @"de" : @"ger", @"dv" : @"div", @"dz" : @"dzo", @"ee" : @"ewe", @"el" : @"gre", @"el" : @"gre", @"en" : @"eng", @"eo" : @"epo", @"es" : @"spa", @"et" : @"est", @"eu" : @"baq", @"eu" : @"baq", @"fa" : @"per", @"fa" : @"per", @"ff" : @"ful", @"fi" : @"fin", @"fj" : @"fij", @"fo" : @"fao", @"fr" : @"fre", @"fr" : @"fre", @"fy" : @"fry", @"ga" : @"gle", @"gd" : @"gla", @"gl" : @"glg", @"gn" : @"grn", @"gu" : @"guj", @"gv" : @"glv", @"ha" : @"hau", @"he" : @"heb", @"hi" : @"hin", @"ho" : @"hmo", @"hr" : @"hrv", @"ht" : @"hat", @"hu" : @"hun", @"hy" : @"arm", @"hy" : @"arm", @"hz" : @"her", @"ia" : @"ina", @"id" : @"ind", @"ie" : @"ile", @"ig" : @"ibo", @"ii" : @"iii", @"ik" : @"ipk", @"io" : @"ido", @"is" : @"ice", @"is" : @"ice", @"it" : @"ita", @"iu" : @"iku", @"ja" : @"jpn", @"jv" : @"jav", @"ka" : @"geo", @"ka" : @"geo", @"kg" : @"kon", @"ki" : @"kik", @"kj" : @"kua", @"kk" : @"kaz", @"kl" : @"kal", @"km" : @"khm", @"kn" : @"kan", @"ko" : @"kor", @"kr" : @"kau", @"ks" : @"kas", @"ku" : @"kur", @"kv" : @"kom", @"kw" : @"cor", @"ky" : @"kir", @"la" : @"lat", @"lb" : @"ltz", @"lg" : @"lug", @"li" : @"lim", @"ln" : @"lin", @"lo" : @"lao", @"lt" : @"lit", @"lu" : @"lub", @"lv" : @"lav", @"mg" : @"mlg", @"mh" : @"mah", @"mi" : @"mao", @"mi" : @"mao", @"mk" : @"mac", @"mk" : @"mac", @"ml" : @"mal", @"mn" : @"mon", @"mr" : @"mar", @"ms" : @"may", @"ms" : @"may", @"mt" : @"mlt", @"my" : @"bur", @"my" : @"bur", @"na" : @"nau", @"nb" : @"nob", @"nd" : @"nde", @"ne" : @"nep", @"ng" : @"ndo", @"nl" : @"dut", @"nl" : @"dut", @"nn" : @"nno", @"no" : @"nor", @"nr" : @"nbl", @"nv" : @"nav", @"ny" : @"nya", @"oc" : @"oci", @"oj" : @"oji", @"om" : @"orm", @"or" : @"ori", @"os" : @"oss", @"pa" : @"pan", @"pi" : @"pli", @"pl" : @"pol", @"ps" : @"pus", @"pt" : @"por", @"qu" : @"que", @"rm" : @"roh", @"rn" : @"run", @"ro" : @"rum", @"ro" : @"rum", @"ru" : @"rus", @"rw" : @"kin", @"sa" : @"san", @"sc" : @"srd", @"sd" : @"snd", @"se" : @"sme", @"sg" : @"sag", @"si" : @"sin", @"sk" : @"slo", @"sk" : @"slo", @"sl" : @"slv", @"sm" : @"smo", @"sn" : @"sna", @"so" : @"som", @"sq" : @"alb", @"sq" : @"alb", @"sr" : @"srp", @"ss" : @"ssw", @"st" : @"sot", @"su" : @"sun", @"sv" : @"swe", @"sw" : @"swa", @"ta" : @"tam", @"te" : @"tel", @"tg" : @"tgk", @"th" : @"tha", @"ti" : @"tir", @"tk" : @"tuk", @"tl" : @"tgl", @"tn" : @"tsn", @"to" : @"ton", @"tr" : @"tur", @"ts" : @"tso", @"tt" : @"tat", @"tw" : @"twi", @"ty" : @"tah", @"ug" : @"uig", @"uk" : @"ukr", @"ur" : @"urd", @"uz" : @"uzb", @"ve" : @"ven", @"vi" : @"vie", @"vo" : @"vol", @"wa" : @"wln", @"wo" : @"wol", @"xh" : @"xho", @"yi" : @"yid", @"yo" : @"yor", @"za" : @"zha", @"zh" : @"chi", @"zh" : @"chi", @"zu" : @"zul"};
+    NSDictionary *iso2LetterTo3Letter = @{@"aa" : @"aar", @"ab" : @"abk", @"ae" : @"ave", @"af" : @"afr", @"ak" : @"aka", @"am" : @"amh", @"an" : @"arg", @"ar" : @"ara", @"as" : @"asm", @"av" : @"ava", @"ay" : @"aym", @"az" : @"aze", @"ba" : @"bak", @"be" : @"bel", @"bg" : @"bul", @"bh" : @"bih", @"bi" : @"bis", @"bm" : @"bam", @"bn" : @"ben", @"bo" : @"tib", @"bo" : @"tib", @"br" : @"bre", @"bs" : @"bos", @"ca" : @"cat", @"ce" : @"che", @"ch" : @"cha", @"co" : @"cos", @"cr" : @"cre", @"cs" : @"cze", @"cs" : @"cze", @"cu" : @"chu", @"cv" : @"chv", @"cy" : @"wel", @"cy" : @"wel", @"da" : @"dan", @"de" : @"ger", @"de" : @"ger", @"dv" : @"div", @"dz" : @"dzo", @"ee" : @"ewe", @"el" : @"gre", @"el" : @"gre", @"en" : @"eng", @"eo" : @"epo", @"es" : @"spa", @"et" : @"est", @"eu" : @"baq", @"eu" : @"baq", @"fa" : @"per", @"fa" : @"per", @"ff" : @"ful", @"fi" : @"fin", @"fj" : @"fij", @"fo" : @"fao", @"fr" : @"fre", @"fr" : @"fre", @"fy" : @"fry", @"ga" : @"gle", @"gd" : @"gla", @"gl" : @"glg", @"gn" : @"grn", @"gu" : @"guj", @"gv" : @"glv", @"ha" : @"hau", @"he" : @"heb", @"hi" : @"hin", @"ho" : @"hmo", @"hr" : @"hrv", @"ht" : @"hat", @"hu" : @"hun", @"hy" : @"arm", @"hy" : @"arm", @"hz" : @"her", @"ia" : @"ina", @"id" : @"ind", @"ie" : @"ile", @"ig" : @"ibo", @"ii" : @"iii", @"ik" : @"ipk", @"io" : @"ido", @"is" : @"ice", @"is" : @"ice", @"it" : @"ita", @"iu" : @"iku", @"ja" : @"jpn", @"jv" : @"jav", @"ka" : @"geo", @"ka" : @"geo", @"kg" : @"kon", @"ki" : @"kik", @"kj" : @"kua", @"kk" : @"kaz", @"kl" : @"kal", @"km" : @"khm", @"kn" : @"kan", @"ko" : @"kor", @"kr" : @"kau", @"ks" : @"kas", @"ku" : @"kur", @"kv" : @"kom", @"kw" : @"cor", @"ky" : @"kir", @"la" : @"lat", @"lb" : @"ltz", @"lg" : @"lug", @"li" : @"lim", @"ln" : @"lin", @"lo" : @"lao", @"lt" : @"lit", @"lu" : @"lub", @"lv" : @"lav", @"mg" : @"mlg", @"mh" : @"mah", @"mi" : @"mao", @"mi" : @"mao", @"mk" : @"mac", @"mk" : @"mac", @"ml" : @"mal", @"mn" : @"mon", @"mr" : @"mar", @"ms" : @"may", @"ms" : @"may", @"mt" : @"mlt", @"my" : @"bur", @"my" : @"bur", @"na" : @"nau", @"nb" : @"nob", @"nd" : @"nde", @"ne" : @"nep", @"ng" : @"ndo", @"nl" : @"dut", @"nl" : @"dut", @"nn" : @"nno", @"no" : @"nor", @"nr" : @"nbl", @"nv" : @"nav", @"ny" : @"nya", @"oc" : @"oci", @"oj" : @"oji", @"om" : @"orm", @"or" : @"ori", @"os" : @"oss", @"pa" : @"pan", @"pi" : @"pli", @"pl" : @"pol", @"ps" : @"pus", @"pt" : @"por", @"qu" : @"que", @"rm" : @"roh", @"rn" : @"run", @"ro" : @"rum", @"ro" : @"rum", @"ru" : @"rus", @"rw" : @"kin", @"sa" : @"san", @"sc" : @"srd", @"sd" : @"snd", @"se" : @"sme", @"sg" : @"sag", @"si" : @"sin", @"sk" : @"slo", @"sk" : @"slo", @"sl" : @"slv", @"sm" : @"smo", @"sn" : @"sna", @"so" : @"som", @"sq" : @"alb", @"sq" : @"alb", @"sr" : @"srp", @"ss" : @"ssw", @"st" : @"sot", @"su" : @"sun", @"sv" : @"swe", @"sw" : @"swa", @"ta" : @"tam", @"te" : @"tel", @"tg" : @"tgk", @"th" : @"tha", @"ti" : @"tir", @"tk" : @"tuk", @"tl" : @"tgl", @"tn" : @"tsn", @"to" : @"ton", @"tr" : @"tur", @"ts" : @"tso", @"tt" : @"tat", @"tw" : @"twi", @"ty" : @"tah", @"ug" : @"uig", @"uk" : @"ukr", @"ur" : @"urd", @"uz" : @"uzb", @"ve" : @"ven", @"vi" : @"vie", @"vo" : @"vol", @"wa" : @"wln", @"wo" : @"wol", @"xh" : @"xho", @"yi" : @"yid", @"yo" : @"yor", @"za" : @"zha", @"zh" : @"chi", @"zh" : @"chi", @"zu" : @"zul"};
 
-	NSMutableArray *tmp = [NSMutableArray new];
-	
-	for (NSString *twoLetterCode in [NSLocale preferredLanguages])
-	{
-		NSString *threeLetterCode = iso2LetterTo3Letter[twoLetterCode];
+    NSMutableArray *tmp = [NSMutableArray new];
+    
+    for (NSString *twoLetterCode in [NSLocale preferredLanguages])
+    {
+        NSString *threeLetterCode = iso2LetterTo3Letter[twoLetterCode];
         
         if (threeLetterCode)
             [tmp addObject:threeLetterCode];
@@ -2196,9 +2196,9 @@ CONST_KEY(CCDirectoryObserving)
 
             [tmp addObject:(OBJECT_OR(backupThreeLetterCode, twoLetterCode))];
         }
-	}
+    }
 
-	return [NSArray arrayWithArray:tmp];
+    return [NSArray arrayWithArray:tmp];
 }
 
 @end
@@ -2212,12 +2212,12 @@ CONST_KEY(CCDirectoryObserving)
 
 - (void)setAssociatedValue:(id)value forKey:(const NSString *)key
 {
-#if	TARGET_OS_IPHONE
+#if    TARGET_OS_IPHONE
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-objc-pointer-introspection"
-	BOOL is64Bit = sizeof(void *) == 8;
-	BOOL isTagged = ((uintptr_t)self & 0x1);
-	assert(!(is64Bit && isTagged)); // associated values on tagged pointers broken on 64 bit iOS
+    BOOL is64Bit = sizeof(void *) == 8;
+    BOOL isTagged = ((uintptr_t)self & 0x1);
+    assert(!(is64Bit && isTagged)); // associated values on tagged pointers broken on 64 bit iOS
 #pragma clang diagnostic pop
 #endif
 
@@ -2228,7 +2228,7 @@ CONST_KEY(CCDirectoryObserving)
 {
     id value = objc_getAssociatedObject(self, (__bridge const void *)(key));
 
-	return value;
+    return value;
 }
 
 - (void)setAssociatedValue:(id)value
@@ -2243,13 +2243,13 @@ CONST_KEY(CCDirectoryObserving)
 
 + (instancetype)newWith:(NSDictionary *)dict
 {
-	NSObject *obj = [self new];
-	for (NSString *key in dict)
-	{
-		[obj setValue:dict[key] forKey:key];
-	}
+    NSObject *obj = [self new];
+    for (NSString *key in dict)
+    {
+        [obj setValue:dict[key] forKey:key];
+    }
 
-	return obj;
+    return obj;
 }
 
 - (id)id
@@ -2267,51 +2267,51 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)stringRepresentation
 {
-	NSString *tmp = @"";
-	unichar unicharBuffer[20];
-	NSUInteger index = 0;
+    NSString *tmp = @"";
+    unichar unicharBuffer[20];
+    NSUInteger index = 0;
 
-	for (unichar uc = 0; uc < (0xFFFF); uc ++)
-	{
-		if ([self characterIsMember:uc])
-		{
-			unicharBuffer[index] = uc;
+    for (unichar uc = 0; uc < (0xFFFF); uc ++)
+    {
+        if ([self characterIsMember:uc])
+        {
+            unicharBuffer[index] = uc;
 
-			index ++;
+            index ++;
 
-			if (index == 20)
-			{
-				tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
+            if (index == 20)
+            {
+                tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
 
-				index = 0;
-			}
-		}
-	}
+                index = 0;
+            }
+        }
+    }
 
-	if (index != 0)
-		tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
+    if (index != 0)
+        tmp = [tmp stringByAppendingString:[NSString stringWithCharacters:unicharBuffer length:index]];
 
-	return tmp;
+    return tmp;
 }
 
 - (NSString *)stringRepresentationLong
 {
-	NSString *tmp = @"";
+    NSString *tmp = @"";
 
-	for (unichar uc = 0; uc < (0xFFFF); uc++)
-	{
-		if (uc && [self characterIsMember:uc])
-		{
-			tmp = [tmp stringByAppendingString:makeString(@"unichar %i: %@\n", uc, [NSString stringWithCharacters:&uc length:1])];
-		}
-	}
+    for (unichar uc = 0; uc < (0xFFFF); uc++)
+    {
+        if (uc && [self characterIsMember:uc])
+        {
+            tmp = [tmp stringByAppendingString:makeString(@"unichar %i: %@\n", uc, [NSString stringWithCharacters:&uc length:1])];
+        }
+    }
 
-	return tmp;
+    return tmp;
 }
 
 - (NSMutableCharacterSet *)mutableObject
 {
-	return [NSMutableCharacterSet characterSetWithBitmapRepresentation:[self bitmapRepresentation]];
+    return [NSMutableCharacterSet characterSetWithBitmapRepresentation:self.bitmapRepresentation];
 }
 @end
 
@@ -2322,7 +2322,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSCharacterSet *)immutableObject
 {
-	return [NSCharacterSet characterSetWithBitmapRepresentation:[self bitmapRepresentation]];
+    return [NSCharacterSet characterSetWithBitmapRepresentation:self.bitmapRepresentation];
 }
 @end
 
@@ -2333,7 +2333,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)literalString
 {
-	return makeString(@"@(%@)", self.description);
+    return makeString(@"@(%@)", self.description);
 }
 @end
 
@@ -2345,7 +2345,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSOrderedSet *)immutableObject
 {
-	return [NSOrderedSet orderedSetWithOrderedSet:self];
+    return [NSOrderedSet orderedSetWithOrderedSet:self];
 }
 
 @end
@@ -2359,7 +2359,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSMutableOrderedSet *)mutableObject
 {
-	return [NSMutableOrderedSet orderedSetWithOrderedSet:self];
+    return [NSMutableOrderedSet orderedSetWithOrderedSet:self];
 }
 
 
@@ -2373,7 +2373,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSSet *)immutableObject
 {
-	return [NSSet setWithSet:self];
+    return [NSSet setWithSet:self];
 }
 
 @end
@@ -2400,7 +2400,7 @@ CONST_KEY(CCDirectoryObserving)
     NSDate *killDate = [NSDate dateWithTimeIntervalSinceNow:timeout];
     BOOL killed = NO;
     
-    while ([self isRunning])
+    while (self.running)
     {
         if ([[NSDate date] laterDate:killDate] != killDate)
         {

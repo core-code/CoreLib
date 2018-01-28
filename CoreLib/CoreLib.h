@@ -202,6 +202,7 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
 NSString *makeTempDirectory(void);
+NSString *makeTempFilepath(NSString *extension);
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

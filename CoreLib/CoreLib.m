@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 17.12.12.
-/*	Copyright © 2018 CoreCode Limited
+/*    Copyright © 2018 CoreCode Limited
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -51,7 +51,7 @@ NSProcessInfo *processInfo;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
-	alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
+    alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
 }
 #endif
 
@@ -66,28 +66,28 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 + (void)initialize
 {
-	
+    
 }
 
 - (instancetype)init
 {
-	assert(!cc);
+    assert(!cc);
 
-	if ((self = [super init]))
+    if ((self = [super init]))
     {
         cc = self;
 
 
-        userDefaults = [NSUserDefaults standardUserDefaults];
-        fileManager = [NSFileManager defaultManager];
-        notificationCenter = [NSNotificationCenter defaultCenter];
-        bundle = [NSBundle mainBundle];
+        userDefaults = NSUserDefaults.standardUserDefaults;
+        fileManager = NSFileManager.defaultManager;
+        notificationCenter = NSNotificationCenter.defaultCenter;
+        bundle = NSBundle.mainBundle;
     #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-        fontManager = [NSFontManager sharedFontManager];
-        distributedNotificationCenter = [NSDistributedNotificationCenter defaultCenter];
-        workspace = [NSWorkspace sharedWorkspace];
-        application = [NSApplication sharedApplication];
-        processInfo = [NSProcessInfo processInfo];
+        fontManager = NSFontManager.sharedFontManager;
+        distributedNotificationCenter = NSDistributedNotificationCenter.defaultCenter;
+        workspace = NSWorkspace.sharedWorkspace;
+        application = NSApplication.sharedApplication;
+        processInfo = NSProcessInfo.processInfo;
     #endif
 
         if (!self.suppURL.fileExists)
@@ -95,7 +95,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 
     #ifdef DEBUG
-		#ifndef XCTEST
+        #ifndef XCTEST
             BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
 
             #ifdef SANDBOX
@@ -103,7 +103,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             #else
                 assert(!isSandbox);
             #endif
-		#endif
+        #endif
 
         #ifdef NDEBUG
             LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
@@ -129,7 +129,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         if (![[[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
-        if (![(NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"] length])
+        if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
             LOG(@"Warning: LSApplicationCategoryType not properly set");
         
         
@@ -197,22 +197,22 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     assert(cc);
 
 
-	return self;
+    return self;
 }
 
 - (NSString *)prefsPath
 {
-	return makeString(@"~/Library/Preferences/%@.plist", self.appBundleIdentifier).expanded;
+    return makeString(@"~/Library/Preferences/%@.plist", self.appBundleIdentifier).expanded;
 }
 
 - (NSURL *)prefsURL
 {
-	return self.prefsPath.fileURL;
+    return self.prefsPath.fileURL;
 }
 
 - (NSArray *)appCrashLogFilenames // doesn't do anything in sandbox!
 {
-	NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.directoryContents;
+    NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.directoryContents;
     logs1 = [logs1 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
     logs1 = [logs1 mapped:^id(NSString *input) { return [@"~/Library/Logs/DiagnosticReports/".stringByExpandingTildeInPath stringByAppendingPathComponent:input]; }];
     NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.directoryContents;
@@ -226,7 +226,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSArray *)appCrashLogs // doesn't do anything in sandbox!
 {
-    NSArray <NSString *> *logFilenames = [self appCrashLogFilenames];
+    NSArray <NSString *> *logFilenames = self.appCrashLogFilenames;
     NSArray <NSString *> *logs = [logFilenames mapped:^id(NSString *input) { return [input.contents.string split:@"/System/Library/"][0]; }];
 
     return logs;
@@ -234,51 +234,51 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSString *)appBundleIdentifier
 {
-	return NSBundle.mainBundle.bundleIdentifier;
+    return NSBundle.mainBundle.bundleIdentifier;
 }
 
 - (NSString *)appVersionString
 {
-	return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 
 - (NSString *)appName
 {
 #if defined(XCTEST) && XCTEST
-	return @"TEST";
+    return @"TEST";
 #else
-	return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];
+    return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleName"];
 #endif
 }
 
 - (int)appBuildNumber
 {
-	return [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
+    return [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
 }
 
 - (NSString *)resDir
 {
-	return NSBundle.mainBundle.resourcePath;
+    return NSBundle.mainBundle.resourcePath;
 }
 
 - (NSURL *)resURL
 {
-	return NSBundle.mainBundle.resourceURL;
+    return NSBundle.mainBundle.resourceURL;
 }
 
 - (NSString *)docDir
 {
-	return NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    return NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 }
 
 - (NSString *)deskDir
 {
-	return NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES)[0];
+    return NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES)[0];
 }
 
 - (NSURL *)homeURLInsideSandbox
 {
-	return NSHomeDirectory().fileURL;
+    return NSHomeDirectory().fileURL;
 }
 
 - (NSURL *)homeURLOutsideSandbox
@@ -294,45 +294,45 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSURL *)docURL
 {
-	return [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
+    return [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
 }
 
 - (NSURL *)deskURL
 {
-	return [NSFileManager.defaultManager URLsForDirectory:NSDesktopDirectory inDomains:NSUserDomainMask][0];
+    return [NSFileManager.defaultManager URLsForDirectory:NSDesktopDirectory inDomains:NSUserDomainMask][0];
 }
 
 - (NSString *)suppDir
 {
-	return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
+    return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
 }
 
 - ( NSURL * __nonnull)suppURL
 {
-	NSURL *dir = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
+    NSURL *dir = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
-	assert(dir && self.appName);
+    assert(dir && self.appName);
 
-	return [dir add:self.appName];
+    return [dir add:self.appName];
 }
 
 - (NSString *)appChecksumSHA
 {
 #ifdef USE_SECURITY
-    NSURL *u = [[NSBundle mainBundle] executableURL];
-	NSData *d = [NSData dataWithContentsOfURL:u];
-	unsigned char result[CC_SHA1_DIGEST_LENGTH];
-	CC_SHA1([d bytes], (CC_LONG)[d length], result);
-	NSMutableString *ms = [NSMutableString string];
-	
-	for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-	{
-		[ms appendFormat: @"%02x", (int)(result [i])];
-	}
-	
-	return [ms copy];
+    NSURL *u = NSBundle.mainBundle.executableURL;
+    NSData *d = [NSData dataWithContentsOfURL:u];
+    unsigned char result[CC_SHA1_DIGEST_LENGTH];
+    CC_SHA1(d.bytes, (CC_LONG)d.length, result);
+    NSMutableString *ms = [NSMutableString string];
+    
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+    {
+        [ms appendFormat: @"%02x", (int)(result [i])];
+    }
+    
+    return [ms copy];
 #else
-	return @"Unvailable";
+    return @"Unvailable";
 #endif
 }
 
@@ -350,7 +350,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         encodedPrefs = makeString(@"Preferences (BASE64): %@", [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]);
     }
 #ifndef SANDBOX
-    if ([cc.appCrashLogFilenames count])
+    if ((cc.appCrashLogFilenames).count)
     {
         NSString *crashes = [cc.appCrashLogs joined:@"\n"];
         crashReports = makeString(@"Crash Reports: \n\n%@", crashes);
@@ -369,7 +369,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@\n%@\n%@",
                                     text,
                                     _machineType(),
-                                    [[NSProcessInfo processInfo] operatingSystemVersionString],
+                                    NSProcessInfo.processInfo.operatingSystemVersionString,
                                     encodedPrefs,
                                     crashReports);
     
@@ -381,32 +381,32 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (void)openURL:(openChoice)choice
 {
-	if (choice == openSupportRequestMail)
-	{
+    if (choice == openSupportRequestMail)
+    {
         [self sendSupportRequestMail:@"<Insert Support Request Here>"];
         return;
-	}
+    }
     
-	
+    
     NSString *urlString = @"";
 
     if (choice == openBetaSignupMail)
-		urlString = makeString(@"s%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
-							   [bundle objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
-	else if (choice == openHomepageWebsite)
-		urlString = OBJECT_OR([bundle objectForInfoDictionaryKey:@"VendorProductPage"],
-							  makeString(@"%@%@/", kVendorHomepage, [cc.appName.lowercaseString.words[0] split:@"-"][0]));
-	else if (choice == openAppStoreWebsite)
-		urlString = [bundle objectForInfoDictionaryKey:@"StoreProductPage"];
-	else if (choice == openAppStoreApp)
+        urlString = makeString(@"s%@?subject=%@ Beta Versions&body=Hello\nI would like to test upcoming beta versions of %@.\nBye\n",
+                               [bundle objectForInfoDictionaryKey:@"FeedbackEmail"], cc.appName, cc.appName);
+    else if (choice == openHomepageWebsite)
+        urlString = OBJECT_OR([bundle objectForInfoDictionaryKey:@"VendorProductPage"],
+                              makeString(@"%@%@/", kVendorHomepage, [cc.appName.lowercaseString.words[0] split:@"-"][0]));
+    else if (choice == openAppStoreWebsite)
+        urlString = [bundle objectForInfoDictionaryKey:@"StoreProductPage"];
+    else if (choice == openAppStoreApp)
     {
         urlString = [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
         urlString = [urlString stringByAppendingString:@"&at=1000lwks"];
     }
-	else if (choice == openMacupdateWebsite)
-    	urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
+    else if (choice == openMacupdateWebsite)
+        urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
 
-	[urlString.escaped.URL open];
+    [urlString.escaped.URL open];
 }
 
 @end
@@ -417,70 +417,80 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 // obj creation convenience
 NSPredicate *makePredicate(NSString *format, ...)
 {
-	assert([format rangeOfString:@"'%@'"].location == NSNotFound);
+    assert([format rangeOfString:@"'%@'"].location == NSNotFound);
 
     
-	va_list args;
-	va_start(args, format);
-	NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
-	va_end(args);
+    va_list args;
+    va_start(args, format);
+    NSPredicate *pred = [NSPredicate predicateWithFormat:format arguments:args];
+    va_end(args);
 
-	return pred;
+    return pred;
 }
 
 NSString *makeDescription(id sender, NSArray *args)
 {
-	NSMutableString *tmp = [NSMutableString new];
+    NSMutableString *tmp = [NSMutableString new];
 
-	for (NSString *arg in args)
-	{
-		NSString *d = [[sender valueForKey:arg] description];
+    for (NSString *arg in args)
+    {
+        NSString *d = [[sender valueForKey:arg] description];
 
-		[tmp appendFormat:@"\n%@: %@", arg, d];
-	}
+        [tmp appendFormat:@"\n%@: %@", arg, d];
+    }
 
-	return tmp.immutableObject;
+    return tmp.immutableObject;
 }
 
 NSString *makeString(NSString *format, ...)
 {
-	va_list args;
-	va_start(args, format);
-	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
-	va_end(args);
-	
-	return str;
+    va_list args;
+    va_start(args, format);
+    NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    
+    return str;
 }
 
 NSString *makeTempDirectory()
 {
     NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-	NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:bundleID] stringByAppendingString:@".XXXXXX"];
-	const char *tempDirectoryTemplateCString = tempDirectoryTemplate.fileSystemRepresentation;
-	if (!tempDirectoryTemplateCString) return nil;
+    NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:bundleID] stringByAppendingString:@".XXXXXX"];
+    const char *tempDirectoryTemplateCString = tempDirectoryTemplate.fileSystemRepresentation;
+    if (!tempDirectoryTemplateCString) return nil;
 
-	char *tempDirectoryNameCString = (char *)malloc(strlen(tempDirectoryTemplateCString) + 1);
-	strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
+    char *tempDirectoryNameCString = (char *)malloc(strlen(tempDirectoryTemplateCString) + 1);
+    strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
 
-	char *result = mkdtemp(tempDirectoryNameCString);
-	if (!result)
-	{
-		free(tempDirectoryNameCString);
-		return nil;
-	}
+    char *result = mkdtemp(tempDirectoryNameCString);
+    if (!result)
+    {
+        free(tempDirectoryNameCString);
+        return nil;
+    }
 
-	NSString *tempDirectoryPath = [fileManager stringWithFileSystemRepresentation:result length:strlen(result)];
-	free(tempDirectoryNameCString);
+    NSString *tempDirectoryPath = [fileManager stringWithFileSystemRepresentation:result length:strlen(result)];
+    free(tempDirectoryNameCString);
 
-	return tempDirectoryPath;
+    return tempDirectoryPath;
+}
+
+NSString *makeTempFilepath(NSString *extension)
+{
+    NSString *tempDir = makeTempDirectory();
+    NSString *fileName = [@"1." stringByAppendingString:extension];
+    NSString *filePath = @[tempDir, fileName].path;
+    NSString *finalPath = filePath.uniqueFile;
+
+    return finalPath;
 }
 
 NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
 {
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-	return [NSValue valueWithRect:CGRectMake(x, y, width, height)];
+    return [NSValue valueWithRect:CGRectMake(x, y, width, height)];
 #else
-	return [NSValue valueWithCGRect:CGRectMake(x, y, width, height)];
+    return [NSValue valueWithCGRect:CGRectMake(x, y, width, height)];
 #endif
 }
 
@@ -489,8 +499,8 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 {
     cc_log_error(@"alert_feedback %@ %@", usermsg, details);
 
-	dispatch_block_t block = ^
-	{
+    dispatch_block_t block = ^
+    {
         static const int maxLen = 400;
 
         NSString *encodedPrefs = @"";
@@ -498,7 +508,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
         encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
 #ifndef SANDBOX
-        if ([cc.appCrashLogFilenames count])
+        if ((cc.appCrashLogFilenames).count)
         {
             NSString *crashes = [cc.appCrashLogs joined:@"\n"];
             encodedPrefs = [encodedPrefs stringByAppendingString:@"\n\n"];
@@ -507,80 +517,80 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #endif
 #endif
 
-		NSString *visibleDetails = details;
-		if (visibleDetails.length > maxLen)
-			visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
-		NSString *message = makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails);
-		NSString *mailtoLink = @"";
-		@try
-		{
-			mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
-												kFeedbackEmail,
-												cc.appName,
-												cc.appVersionString,
-												cc.appBuildNumber,
-												cc.appChecksumSHA,
-												fatal ? @"fatal" : @"",
-												cc.appName,
-												usermsg,
-												details,
-												_machineType(),
-												[[NSProcessInfo processInfo] operatingSystemVersionString],
-												_isUserAdmin(),
-												encodedPrefs);
+        NSString *visibleDetails = details;
+        if (visibleDetails.length > maxLen)
+            visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
+        NSString *message = makeString(@"%@\n\n You can contact our support with detailed information so that we can fix this problem.\n\nInformation: %@", usermsg, visibleDetails);
+        NSString *mailtoLink = @"";
+        @try
+        {
+            mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
+                                                kFeedbackEmail,
+                                                cc.appName,
+                                                cc.appVersionString,
+                                                cc.appBuildNumber,
+                                                cc.appChecksumSHA,
+                                                fatal ? @"fatal" : @"",
+                                                cc.appName,
+                                                usermsg,
+                                                details,
+                                                _machineType(),
+                                                NSProcessInfo.processInfo.operatingSystemVersionString,
+                                                _isUserAdmin(),
+                                                encodedPrefs);
 
-		}
-		@catch (NSException *)
-		{
-		}
+        }
+        @catch (NSException *)
+        {
+        }
 
 
 #if defined(USE_CRASHHELPER) && USE_CRASHHELPER
-		if (fatal)
-		{
-			NSString *title = makeString(@"%@ Fatal Error", cc.appName);
-			mailtoLink  = [mailtoLink clamp:100000]; // will expand to twice the size and kern.argmax: 262144 causes NSTask with too long arguments to 'silently' fail with a posix spawn error 7
-			NSDictionary *dict = @{@"title" : title, @"message" : message, @"mailto" : mailtoLink};
-			NSData *dictjsondata = dict.JSONData;
-			NSString *dictjsondatahexstring = dictjsondata.hexString;
-			NSString *crashhelperpath = @[cc.resDir, @"CrashHelper.app/Contents/MacOS/CrashHelper"].path;
-			NSTask *taskApp = [[NSTask alloc] init];
+        if (fatal)
+        {
+            NSString *title = makeString(@"%@ Fatal Error", cc.appName);
+            mailtoLink  = [mailtoLink clamp:100000]; // will expand to twice the size and kern.argmax: 262144 causes NSTask with too long arguments to 'silently' fail with a posix spawn error 7
+            NSDictionary *dict = @{@"title" : title, @"message" : message, @"mailto" : mailtoLink};
+            NSData *dictjsondata = dict.JSONData;
+            NSString *dictjsondatahexstring = dictjsondata.hexString;
+            NSString *crashhelperpath = @[cc.resDir, @"CrashHelper.app/Contents/MacOS/CrashHelper"].path;
+            NSTask *taskApp = [[NSTask alloc] init];
 
 
-			
-			@try
-			{
-				taskApp.launchPath = crashhelperpath;
-				taskApp.arguments = @[dictjsondatahexstring];
+            
+            @try
+            {
+                taskApp.launchPath = crashhelperpath;
+                taskApp.arguments = @[dictjsondatahexstring];
 
-				[taskApp launch];
-				[taskApp waitUntilExit];
-			}
-			@catch (NSException *exception)
-			{
-				cc_log_error(@"could not spawn crash helper %@", exception.userInfo);
+                [taskApp launch];
+                [taskApp waitUntilExit];
+            }
+            @catch (NSException *exception)
+            {
+                cc_log_error(@"could not spawn crash helper %@", exception.userInfo);
 
-				if (alert(fatal ? @"Fatal Error" : @"Error",
-						  message,
-						  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
-				{
-					[mailtoLink.escaped.URL open];
-				}
-			}
-		}
-		else
+                if (alert(fatal ? @"Fatal Error" : @"Error",
+                          message,
+                          @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+                {
+                    [mailtoLink.escaped.URL open];
+                }
+            }
+        }
+        else
 #endif
-		{
-			if (alert(fatal ? @"Fatal Error" : @"Error",
-					  message,
-					  @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
-			{
-				[mailtoLink.escaped.URL open];
-			}
-		}
+        {
+            if (alert(fatal ? @"Fatal Error" : @"Error",
+                      message,
+                      @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+            {
+                [mailtoLink.escaped.URL open];
+            }
+        }
 
-		if (fatal)
-			exit(1);
+        if (fatal)
+            exit(1);
     };
 
 
@@ -589,18 +599,18 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 
 
 
-	dispatch_sync_main(block);
+    dispatch_sync_main(block);
 }
 
 void alert_feedback_fatal(NSString *usermsg, NSString *details)
 {
-	alert_feedback(usermsg, details, YES);
-	exit(1);
+    alert_feedback(usermsg, details, YES);
+    exit(1);
 }
 
 void alert_feedback_nonfatal(NSString *usermsg, NSString *details)
 {
-	alert_feedback(usermsg, details, NO);
+    alert_feedback(usermsg, details, NO);
 }
 
 
@@ -620,49 +630,49 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
     if (buttons.count > 2)
         [alert addButtonWithTitle:buttons[2]];
     
-	NSTextField *input;
-	if (useSecurePrompt)
-		input = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
-	else
-		input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+    NSTextField *input;
+    if (useSecurePrompt)
+        input = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+    else
+        input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
 
-	[alert setAccessoryView:input];
-	NSInteger selectedButton = [alert runModal];
+    alert.accessoryView = input;
+    NSInteger selectedButton = [alert runModal];
 
-	[input validateEditing];
-	*result = [input stringValue];
+    [input validateEditing];
+    *result = input.stringValue;
     
-	return selectedButton;
+    return selectedButton;
 }
 
 NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus)
 {
-	assert(buttons);
-	assert(checkboxStatus);
-	assert([NSThread currentThread] == [NSThread mainThread]);
+    assert(buttons);
+    assert(checkboxStatus);
+    assert([NSThread currentThread] == [NSThread mainThread]);
 
-	NSAlert *alert = [[NSAlert alloc] init];
-	alert.messageText = prompt;
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = prompt;
 
-	if (buttons.count > 0)
-		[alert addButtonWithTitle:buttons[0]];
-	if (buttons.count > 1)
-		[alert addButtonWithTitle:buttons[1]];
-	if (buttons.count > 2)
-		[alert addButtonWithTitle:buttons[2]];
+    if (buttons.count > 0)
+        [alert addButtonWithTitle:buttons[0]];
+    if (buttons.count > 1)
+        [alert addButtonWithTitle:buttons[1]];
+    if (buttons.count > 2)
+        [alert addButtonWithTitle:buttons[2]];
 
-	NSButton *input = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
-	[input setButtonType:NSSwitchButton];
-	[input setState:(NSInteger )*checkboxStatus];
-	[input setTitle:checkboxTitle];
+    NSButton *input = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+    [input setButtonType:NSSwitchButton];
+    input.state = (NSInteger )*checkboxStatus;
+    input.title = checkboxTitle;
 
-	[alert setAccessoryView:input];
-	NSInteger selectedButton = [alert runModal];
+    alert.accessoryView = input;
+    NSInteger selectedButton = [alert runModal];
 
-	*checkboxStatus = (NSUInteger)[input state];
+    *checkboxStatus = (NSUInteger)input.state;
 
 
-	return selectedButton;
+    return selectedButton;
 }
 
 NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor)
@@ -682,131 +692,131 @@ NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColo
         [alert addButtonWithTitle:buttons[2]];
 
     NSColorWell *input = [[NSColorWell alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
-    [input setColor:*selectedColor];
+    input.color = *selectedColor;
 
-    [alert setAccessoryView:input];
+    alert.accessoryView = input;
     NSInteger selectedButton = [alert runModal];
 
-    *selectedColor = [input color];
+    *selectedColor = input.color;
     
     return selectedButton;
 }
 
 NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 {
-	assert(buttons);
-	assert(result);
-	assert([NSThread currentThread] == [NSThread mainThread]);
+    assert(buttons);
+    assert(result);
+    assert([NSThread currentThread] == [NSThread mainThread]);
 
-	NSAlert *alert = [[NSAlert alloc] init];
-	alert.messageText = prompt;
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = prompt;
 
-	if (buttons.count > 0)
-		[alert addButtonWithTitle:buttons[0]];
-	if (buttons.count > 1)
-		[alert addButtonWithTitle:buttons[1]];
-	if (buttons.count > 2)
-		[alert addButtonWithTitle:buttons[2]];
+    if (buttons.count > 0)
+        [alert addButtonWithTitle:buttons[0]];
+    if (buttons.count > 1)
+        [alert addButtonWithTitle:buttons[1]];
+    if (buttons.count > 2)
+        [alert addButtonWithTitle:buttons[2]];
 
-	NSTextView *input = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
+    NSTextView *input = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
 
-	[alert setAccessoryView:input];
-	NSInteger selectedButton = [alert runModal];
+    alert.accessoryView = input;
+    NSInteger selectedButton = [alert runModal];
 
-	*result = [input string];
+    *result = input.string;
 
-	return selectedButton;
+    return selectedButton;
 }
 
 NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result)
 {
-	assert(buttons);
-	assert(choices);
-	assert(result);
-	assert([NSThread currentThread] == [NSThread mainThread]);
+    assert(buttons);
+    assert(choices);
+    assert(result);
+    assert([NSThread currentThread] == [NSThread mainThread]);
 
-	NSAlert *alert = [[NSAlert alloc] init];
-	alert.messageText = prompt;
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = prompt;
 
-	if (buttons.count > 0)
-		[alert addButtonWithTitle:buttons[0]];
-	if (buttons.count > 1)
-		[alert addButtonWithTitle:buttons[1]];
-	if (buttons.count > 2)
-		[alert addButtonWithTitle:buttons[2]];
+    if (buttons.count > 0)
+        [alert addButtonWithTitle:buttons[0]];
+    if (buttons.count > 1)
+        [alert addButtonWithTitle:buttons[1]];
+    if (buttons.count > 2)
+        [alert addButtonWithTitle:buttons[2]];
 
-	NSPopUpButton *input = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
-	for (NSString *str in choices)
-		[input addItemWithTitle:str];
+    NSPopUpButton *input = [[NSPopUpButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
+    for (NSString *str in choices)
+        [input addItemWithTitle:str];
 
-	[alert setAccessoryView:input];
-	NSInteger selectedButton = [alert runModal];
+    alert.accessoryView = input;
+    NSInteger selectedButton = [alert runModal];
 
-	[input validateEditing];
-	*result = (NSUInteger)[input indexOfSelectedItem];
+    [input validateEditing];
+    *result = (NSUInteger)input.indexOfSelectedItem;
 
-	return selectedButton;
+    return selectedButton;
 }
 
 NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result)
 {
-	assert(buttons);
-	assert(result);
-	assert([NSThread currentThread] == [NSThread mainThread]);
+    assert(buttons);
+    assert(result);
+    assert([NSThread currentThread] == [NSThread mainThread]);
 
-	NSAlert *alert = [[NSAlert alloc] init];
-	alert.messageText = prompt;
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = prompt;
 
-	if (buttons.count > 0)
-		[alert addButtonWithTitle:buttons[0]];
-	if (buttons.count > 1)
-		[alert addButtonWithTitle:buttons[1]];
-	if (buttons.count > 2)
-		[alert addButtonWithTitle:buttons[2]];
+    if (buttons.count > 0)
+        [alert addButtonWithTitle:buttons[0]];
+    if (buttons.count > 1)
+        [alert addButtonWithTitle:buttons[1]];
+    if (buttons.count > 2)
+        [alert addButtonWithTitle:buttons[2]];
 
-	NSButtonCell *thepushbutton = [[NSButtonCell alloc] init];
-	[thepushbutton setButtonType:NSRadioButton];
+    NSButtonCell *thepushbutton = [[NSButtonCell alloc] init];
+    [thepushbutton setButtonType:NSRadioButton];
 
-	NSMatrix *thepushbuttons = [[NSMatrix alloc] initWithFrame:NSMakeRect(0,0,269,17 * choices.count)
+    NSMatrix *thepushbuttons = [[NSMatrix alloc] initWithFrame:NSMakeRect(0,0,269,17 * choices.count)
                                                           mode:NSRadioModeMatrix
                                                      prototype:thepushbutton
                                                   numberOfRows:(int)choices.count
                                                numberOfColumns:1];
 
-	for (NSUInteger i = 0; i < choices.count; i++)
-	{
-		[thepushbuttons selectCellAtRow:(int)i column:0];
+    for (NSUInteger i = 0; i < choices.count; i++)
+    {
+        [thepushbuttons selectCellAtRow:(int)i column:0];
 
         NSString *title = choices[i];
         if (title.length > 150)
             title = makeString(@"%@ […] %@", [title substringToIndex:70], [title substringFromIndex:title.length-70]);
 
-		[[thepushbuttons selectedCell] setTitle:title];
-	}
-	[thepushbuttons selectCellAtRow:0 column:0];
+        [thepushbuttons.selectedCell setTitle:title];
+    }
+    [thepushbuttons selectCellAtRow:0 column:0];
 
-	[thepushbuttons sizeToFit];
+    [thepushbuttons sizeToFit];
 
-	[alert setAccessoryView:thepushbuttons];
-	//[[alert window] makeFirstResponder:thepushbuttons];
+    alert.accessoryView = thepushbuttons;
+    //[[alert window] makeFirstResponder:thepushbuttons];
 
-	NSInteger selectedButton = [alert runModal];
-//U	[[alert window] setInitialFirstResponder: thepushbuttons];
+    NSInteger selectedButton = [alert runModal];
+//U    [[alert window] setInitialFirstResponder: thepushbuttons];
 
-	*result = (NSUInteger)[thepushbuttons selectedRow];
+    *result = (NSUInteger)thepushbuttons.selectedRow;
 
 
-	return selectedButton;
+    return selectedButton;
 }
 
 NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result)
 {
-	return _alert_input(prompt, buttons, result, NO);
+    return _alert_input(prompt, buttons, result, NO);
 }
 
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result)
 {
-	return _alert_input(prompt, buttons, result, YES);
+    return _alert_input(prompt, buttons, result, YES);
 }
 
 __attribute__((annotate("returns_localized_nsstring"))) static inline NSString *LocalizationNotNeeded(NSString *s) { return s; }
@@ -841,18 +851,18 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
 
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton)
 {
-	return alert(cc.appName, message, defaultButton, alternateButton, otherButton);
+    return alert(cc.appName, message, defaultButton, alternateButton, otherButton);
 }
 
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)
 {
     assert(defaultButton && dontwarnButton);
     
-   	dispatch_block_t block = ^
-	{
-		NSString *defaultKey = makeString(@"_%@_%@_asked", identifier, cc.appVersionString);
-		if (!defaultKey.defaultInt)
-		{
+       dispatch_block_t block = ^
+    {
+        NSString *defaultKey = makeString(@"_%@_%@_asked", identifier, cc.appVersionString);
+        if (!defaultKey.defaultInt)
+        {
             NSAlert *alert = [[NSAlert alloc] init];
             
             alert.messageText = title;
@@ -862,12 +872,12 @@ void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString
             alert.suppressionButton.title = dontwarnButton;
             
             
-			[NSApp activateIgnoringOtherApps:YES];
+            [NSApp activateIgnoringOtherApps:YES];
             [alert runModal];
             
             defaultKey.defaultInt = alert.suppressionButton.state;
-		}
-	};
+        }
+    };
 
     if ([NSThread currentThread] == [NSThread mainThread])
         block();
@@ -877,8 +887,8 @@ void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString
 void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)
 {
     dispatch_block_t block = ^
-	{
-		NSString *defaultKey = makeString(@"_%@_asked", identifier);
+    {
+        NSString *defaultKey = makeString(@"_%@_asked", identifier);
         
         if (!defaultKey.defaultInt)
         {
@@ -896,46 +906,46 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
             
             defaultKey.defaultInt = alert.suppressionButton.state;
         }
-	};
+    };
 
-	if ([NSThread currentThread] == [NSThread mainThread])
-		block();
-	else
-		dispatch_async_main(block);
+    if ([NSThread currentThread] == [NSThread mainThread])
+        block();
+    else
+        dispatch_async_main(block);
 }
 #pragma clang diagnostic pop
 
 
 NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
-	return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];
+    return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];
 }
 NSColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
-	return [NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0];
+    return [NSColor colorWithCalibratedRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a) / 255.0];
 }
 #else
 UIColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
-	return [UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)];
+    return [UIColor colorWithRed:(r) green:(g) blue:(b) alpha:(a)];
 }
 UIColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
-	return [UIColor colorWithRed:(r) / (CGFloat)255.0 green:(g) / (CGFloat)255.0 blue:(b) / (CGFloat)255.0 alpha:(a) / (CGFloat)255.0];
+    return [UIColor colorWithRed:(r) / (CGFloat)255.0 green:(g) / (CGFloat)255.0 blue:(b) / (CGFloat)255.0 alpha:(a) / (CGFloat)255.0];
 }
 #endif
 
 __inline__ CGFloat generateRandomFloatBetween(CGFloat a, CGFloat b)
 {
-	return a + (b - a) * (random() / (CGFloat) RAND_MAX);
+    return a + (b - a) * (random() / (CGFloat) RAND_MAX);
 }
 
 __inline__ int generateRandomIntBetween(int a, int b)
 {
-	int range = b - a < 0 ? b - a - 1 : b - a + 1;
-	long rand = random();
-	int value = (int)(range * ((CGFloat)rand  / (CGFloat) RAND_MAX));
-	return value == range ? a : a + value;
+    int range = b - a < 0 ? b - a - 1 : b - a + 1;
+    long rand = random();
+    int value = (int)(range * ((CGFloat)rand  / (CGFloat) RAND_MAX));
+    return value == range ? a : a + value;
 }
 
 
@@ -965,7 +975,7 @@ void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit
     {
         NSString *path = fileURL.path;
 
-        unsigned long long filesize = [[[fileManager attributesOfItemAtPath:path error:NULL] objectForKey:@"NSFileSize"] unsignedLongLongValue];
+        unsigned long long filesize = [[fileManager attributesOfItemAtPath:path error:NULL][@"NSFileSize"] unsignedLongLongValue];
 
         if (filesize > filesizeLimit)
         {
@@ -1035,10 +1045,10 @@ void _cc_log_toprefs(int level, NSString *string)
 
 void cc_log_level(cc_log_type level, NSString *format, ...)
 {
-	va_list args;
-	va_start(args, format);
-	NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
-	va_end(args);
+    va_list args;
+    va_start(args, format);
+    NSString *str = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
 
     _cc_log_tologfile(level, str);
     _cc_log_toprefs(level, str);
@@ -1090,38 +1100,38 @@ void log_to_prefs(NSString *str)
 // gcd convenience
 void dispatch_after_main(float seconds, dispatch_block_t block)
 {
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
-	dispatch_after(popTime, dispatch_get_main_queue(), block);
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), block);
 }
 
 void dispatch_after_back(float seconds, dispatch_block_t block)
 {
-	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
-	dispatch_after(popTime, dispatch_get_global_queue(0, 0), block);
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_global_queue(0, 0), block);
 }
 
 void dispatch_async_main(dispatch_block_t block)
 {
-	dispatch_async(dispatch_get_main_queue(), block);
+    dispatch_async(dispatch_get_main_queue(), block);
 }
 
 void dispatch_async_back(dispatch_block_t block)
 {
-	dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
-	dispatch_async(queue, block);
+    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+    dispatch_async(queue, block);
 }
 
 void dispatch_sync_main(dispatch_block_t block)
 {
-	if ([NSThread currentThread] == [NSThread mainThread])
-		block();	// using with dispatch_sync would deadlock when on the main thread
-	else
-		dispatch_sync(dispatch_get_main_queue(), block);
+    if ([NSThread currentThread] == [NSThread mainThread])
+        block();    // using with dispatch_sync would deadlock when on the main thread
+    else
+        dispatch_sync(dispatch_get_main_queue(), block);
 }
 
 void dispatch_sync_back(dispatch_block_t block)
 {
-	dispatch_sync(dispatch_get_global_queue(0, 0), block);
+    dispatch_sync(dispatch_get_global_queue(0, 0), block);
 }
 
 BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds) // returns 0 on succ
@@ -1171,17 +1181,17 @@ id dispatch_async_to_sync(BasicBlock block)
 #endif
 NSString *_machineType()
 {
-	char modelBuffer[256];
-	size_t sz = sizeof(modelBuffer);
-	if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
-	{
-		modelBuffer[sizeof(modelBuffer) - 1] = 0;
-		return @(modelBuffer);
-	}
-	else
-	{
-		return @"";
-	}
+    char modelBuffer[256];
+    size_t sz = sizeof(modelBuffer);
+    if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
+    {
+        modelBuffer[sizeof(modelBuffer) - 1] = 0;
+        return @(modelBuffer);
+    }
+    else
+    {
+        return @"";
+    }
 }
 BOOL _isUserAdmin()
 {

@@ -52,9 +52,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 + (void)restartApp
 {
 	NSString *appPath = [[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app", [LoginItemManager appNameCleaned])];
-	int pid = [[NSProcessInfo processInfo] processIdentifier];
+	int pid = [NSProcessInfo.processInfo processIdentifier];
 
-	[[NSWorkspace sharedWorkspace] launchApplicationAtURL:appPath.fileURL
+	[NSWorkspace.sharedWorkspace launchApplicationAtURL:appPath.fileURL
 												  options:NSWorkspaceLaunchDefault
 											configuration:@{@"NSWorkspaceLaunchConfigurationArguments" : @[@(pid).stringValue]}
 													error:NULL];

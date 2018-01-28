@@ -3,7 +3,7 @@
 //  CoreLib
 //
 //  Created by CoreCode on 15.05.11.
-/*	Copyright © 2018 CoreCode Limited
+/*    Copyright © 2018 CoreCode Limited
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitationthe rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -36,8 +36,8 @@ CONST_KEY(CCCountedProgressIndicator)
 
 - (NSInteger)selectedTabViewIndex
 {
-	NSTabViewItem *selectedView = self.selectedTabViewItem;
-	return [self indexOfTabViewItem:selectedView];
+    NSTabViewItem *selectedView = self.selectedTabViewItem;
+    return [self indexOfTabViewItem:selectedView];
 }
 
 @end
@@ -78,80 +78,80 @@ CONST_KEY(CCCountedProgressIndicator)
 - (void)setProgressMessage:(NSString *)message
 {
     dispatch_async_main(^
-	{
-		NSTextField *progressDetailInfo = [self associatedValueForKey:kCCProgressDetailInfoKey];
+    {
+        NSTextField *progressDetailInfo = [self associatedValueForKey:kCCProgressDetailInfoKey];
 
-		[progressDetailInfo setStringValue:message];
-	});
+        progressDetailInfo.stringValue = message;
+    });
 }
 
 - (void)beginProgress:(NSString *)title
 {
     dispatch_async_main(^
-	{
-		NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 400.0, 120.0)
+    {
+        NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 400.0, 120.0)
                                                               styleMask:NSWindowStyleMaskTitled
-														 backing:NSBackingStoreBuffered
-														   defer:NO];
+                                                         backing:NSBackingStoreBuffered
+                                                           defer:NO];
 
 
-		NSTextField *progressInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 90.0, 364.0, 17.0)];
-		NSTextField *progressDetailInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 65.0, 364.0, 17.0)];
-		NSTextField *waitLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 14.0, 364.0, 17.0)];
-		NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(20.0, 41.0, 360.0, 20.0)];
+        NSTextField *progressInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 90.0, 364.0, 17.0)];
+        NSTextField *progressDetailInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 65.0, 364.0, 17.0)];
+        NSTextField *waitLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 14.0, 364.0, 17.0)];
+        NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(20.0, 41.0, 360.0, 20.0)];
 
 
 
-		[progressInfo setStringValue:title];
-		[progressDetailInfo setStringValue:@""];
-		[waitLabel setStringValue:@"Please wait until the operation finishes…".localized];
+        progressInfo.stringValue = title;
+        progressDetailInfo.stringValue = @"";
+        waitLabel.stringValue = @"Please wait until the operation finishes…".localized;
 
-		[progressInfo setFont:[NSFont boldSystemFontOfSize:13]];
+        progressInfo.font = [NSFont boldSystemFontOfSize:13];
 
-		for (NSTextField *textField in @[progressInfo, progressDetailInfo, waitLabel])
-		{
-            [textField setAlignment:NSTextAlignmentCenter];
-			[textField setBezeled:NO];
-			[textField setDrawsBackground:NO];
-			[textField setEditable:NO];
-			[textField setSelectable:NO];
-			[progressPanel.contentView addSubview:textField];
-		}
+        for (NSTextField *textField in @[progressInfo, progressDetailInfo, waitLabel])
+        {
+            textField.alignment = NSTextAlignmentCenter;
+            [textField setBezeled:NO];
+            [textField setDrawsBackground:NO];
+            [textField setEditable:NO];
+            [textField setSelectable:NO];
+            [progressPanel.contentView addSubview:textField];
+        }
 
-		[progressPanel.contentView addSubview:progressIndicator];
+        [progressPanel.contentView addSubview:progressIndicator];
 
-		[progressPanel setReleasedWhenClosed:YES];
+        [progressPanel setReleasedWhenClosed:YES];
 
-		[self setAssociatedValue:progressDetailInfo forKey:kCCProgressDetailInfoKey];
-		[self setAssociatedValue:progressPanel forKey:kCCProgressSheetKey];
-		[self setAssociatedValue:progressIndicator forKey:kCCProgressIndicatorKey];
+        [self setAssociatedValue:progressDetailInfo forKey:kCCProgressDetailInfoKey];
+        [self setAssociatedValue:progressPanel forKey:kCCProgressSheetKey];
+        [self setAssociatedValue:progressIndicator forKey:kCCProgressIndicatorKey];
 
-		[NSApp activateIgnoringOtherApps:YES];
+        [NSApp activateIgnoringOtherApps:YES];
 
         [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
 
-		[progressIndicator startAnimation:self];
-	});
+        [progressIndicator startAnimation:self];
+    });
 }
 
 - (void)endProgress
 {
     dispatch_async_main(^
-	{
-		NSWindow *progressPanel = [self associatedValueForKey:kCCProgressSheetKey];
-		NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCProgressIndicatorKey];
+    {
+        NSWindow *progressPanel = [self associatedValueForKey:kCCProgressSheetKey];
+        NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCProgressIndicatorKey];
 
-		[progressIndicator stopAnimation:self];
-		[NSApp activateIgnoringOtherApps:YES];
+        [progressIndicator stopAnimation:self];
+        [NSApp activateIgnoringOtherApps:YES];
 
         [self endSheet:progressPanel];
 
-		[progressPanel orderOut:self];
+        [progressPanel orderOut:self];
 
-		[self setAssociatedValue:nil forKey:kCCProgressDetailInfoKey];
-		[self setAssociatedValue:nil forKey:kCCProgressSheetKey];
-		[self setAssociatedValue:nil forKey:kCCProgressIndicatorKey];
-	});
+        [self setAssociatedValue:nil forKey:kCCProgressDetailInfoKey];
+        [self setAssociatedValue:nil forKey:kCCProgressSheetKey];
+        [self setAssociatedValue:nil forKey:kCCProgressIndicatorKey];
+    });
 }
 
 
@@ -163,12 +163,12 @@ CONST_KEY(CCCountedProgressIndicator)
     {
         NSTextField *progressDetailInfo = [self associatedValueForKey:kCCCountedProgressDetailInfoKey];
         
-        [progressDetailInfo setStringValue:message];
+        progressDetailInfo.stringValue = message;
         
         
         NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCCountedProgressIndicatorKey];
 
-        [progressIndicator setDoubleValue:progress];
+        progressIndicator.doubleValue = progress;
     });
 }
 
@@ -190,15 +190,15 @@ CONST_KEY(CCCountedProgressIndicator)
         
         progressIndicator.indeterminate = NO;
         
-        [progressInfo setStringValue:title];
-        [progressDetailInfo setStringValue:@""];
-        [waitLabel setStringValue:@"Please wait until the operation finishes…".localized];
+        progressInfo.stringValue = title;
+        progressDetailInfo.stringValue = @"";
+        waitLabel.stringValue = @"Please wait until the operation finishes…".localized;
         
-        [progressInfo setFont:[NSFont boldSystemFontOfSize:13]];
+        progressInfo.font = [NSFont boldSystemFontOfSize:13];
         
         for (NSTextField *textField in @[progressInfo, progressDetailInfo, waitLabel])
         {
-            [textField setAlignment:NSTextAlignmentCenter];
+            textField.alignment = NSTextAlignmentCenter;
             [textField setBezeled:NO];
             [textField setDrawsBackground:NO];
             [textField setEditable:NO];
@@ -245,12 +245,12 @@ CONST_KEY(CCCountedProgressIndicator)
 
 - (IBAction)performBorderlessClose:(id)sender
 {
-	if ([self.delegate respondsToSelector:@selector(windowShouldClose:)])
-	{
-		if (![self.delegate windowShouldClose:self])
-			return;
-	}
-	[self close];
+    if ([self.delegate respondsToSelector:@selector(windowShouldClose:)])
+    {
+        if (![self.delegate windowShouldClose:self])
+            return;
+    }
+    [self close];
 }
 @end
 
@@ -259,27 +259,27 @@ CONST_KEY(CCCountedProgressIndicator)
 
 - (NSView *)viewWithClass:(Class)classofview
 {
-	if ([self isKindOfClass:classofview])
-		return self;
+    if ([self isKindOfClass:classofview])
+        return self;
 
-	for (NSView *view in self.subviews)
-		if ([view viewWithClass:classofview])
-			return [view viewWithClass:classofview];
+    for (NSView *view in self.subviews)
+        if ([view viewWithClass:classofview])
+            return [view viewWithClass:classofview];
 
-	return nil;
+    return nil;
 }
 
 
 - (NSArray <NSView *> *)allSubviews
 {
-	NSMutableArray *allSubviews = [NSMutableArray arrayWithObject:self];
+    NSMutableArray *allSubviews = [NSMutableArray arrayWithObject:self];
 
-	NSArray *subviews = [self subviews];
+    NSArray *subviews = self.subviews;
 
-	for (NSView *view in subviews)
-		[allSubviews addObjectsFromArray:[view allSubviews]];
+    for (NSView *view in subviews)
+        [allSubviews addObjectsFromArray:[view allSubviews]];
 
-	return allSubviews.immutableObject;
+    return allSubviews.immutableObject;
 }
 
 - (nonnull __kindof NSView *)assertedViewWithTag:(NSInteger)tag
@@ -309,12 +309,12 @@ CONST_KEY(CCCountedProgressIndicator)
         NSDictionary *attrs = @{NSFontAttributeName : font};
         strSize = [self.stringValue sizeWithAttributes:attrs];
 
-		currentFontSize --;
+        currentFontSize --;
 
     } while (strSize.width > width);
 
 
-    [self setFont:[NSFont fontWithName:curr.fontName size:currentFontSize+1]];
+    self.font = [NSFont fontWithName:curr.fontName size:currentFontSize+1];
 }
 @end
 
@@ -337,20 +337,20 @@ static const char *actionBlockAssociatedObjectName = "CoreCode_NSControl_BlockAc
 
 - (void)setActionBlock:(ObjectInBlock)handler
 {
-	BlockWrapper *wrapper = [[BlockWrapper alloc] init];
-	wrapper.block = handler;
+    BlockWrapper *wrapper = [[BlockWrapper alloc] init];
+    wrapper.block = handler;
 
-	objc_setAssociatedObject(self, &actionBlockAssociatedObjectName, wrapper, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self, &actionBlockAssociatedObjectName, wrapper, OBJC_ASSOCIATION_RETAIN);
 
 
-	self.target = wrapper;
-	self.action = @selector(invoke:);
+    self.target = wrapper;
+    self.action = @selector(invoke:);
 }
 
 - (ObjectInBlock)actionBlock
 {
-	BlockWrapper *wrapper = objc_getAssociatedObject(self, &actionBlockAssociatedObjectName);
-	return wrapper.block;
+    BlockWrapper *wrapper = objc_getAssociatedObject(self, &actionBlockAssociatedObjectName);
+    return wrapper.block;
 }
 @end
 
@@ -360,8 +360,8 @@ static const char *actionBlockAssociatedObjectName = "CoreCode_NSControl_BlockAc
 
 - (void)removeAllSubviews
 {
-	for (UIView *v in self.subviews)
-		[v removeFromSuperview];
+    for (UIView *v in self.subviews)
+        [v removeFromSuperview];
 }
 @end
 

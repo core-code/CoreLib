@@ -22,7 +22,7 @@ static NSString *restartWithPID;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {	
-	NSString *appPath = [[[[[[NSBundle mainBundle] bundlePath] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+	NSString *appPath = [[[[[NSBundle.mainBundle bundlePath] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
 	
 	if (restartWithPID)
 	{
@@ -32,7 +32,7 @@ static NSString *restartWithPID;
 		}
 	}
 		
-	[[NSWorkspace sharedWorkspace] launchApplication:appPath];
+	[NSWorkspace.sharedWorkspace launchApplication:appPath];
 
 
 	[NSApp terminate:nil];
