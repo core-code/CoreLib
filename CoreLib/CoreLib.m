@@ -618,7 +618,7 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
 {
     assert(buttons);
     assert(result);
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
@@ -649,7 +649,7 @@ NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSStrin
 {
     assert(buttons);
     assert(checkboxStatus);
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
@@ -679,7 +679,7 @@ NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColo
 {
     assert(buttons);
     assert(selectedColor);
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
@@ -706,7 +706,7 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 {
     assert(buttons);
     assert(result);
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
@@ -733,7 +733,7 @@ NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, 
     assert(buttons);
     assert(choices);
     assert(result);
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
@@ -762,7 +762,7 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 {
     assert(buttons);
     assert(result);
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
@@ -827,7 +827,7 @@ NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSS
 
 NSInteger alert_customicon(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, NSImage *customIcon)
 {
-    assert([NSThread currentThread] == [NSThread mainThread]);
+    ASSERT_MAINTHREAD;
     
     [NSApp activateIgnoringOtherApps:YES];
     

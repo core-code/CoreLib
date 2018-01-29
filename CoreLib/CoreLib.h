@@ -283,7 +283,8 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define LOGFAIL					cc_log_debug(@"failure %@ %d", @(__FILE__), __LINE__)
 #define LOG(x)					cc_log_debug(@"%@", [(x) description]);
 
-
+#define ASSERT_MAINTHREAD       assert([NSThread currentThread] == [NSThread mainThread])
+#define ASSERT_BACKTHREAD       assert([NSThread currentThread] != [NSThread mainThread])
 
 // !!!: CONVENIENCE MACROS
 #define PROPERTY_STR(p)			NSStringFromSelector(@selector(p))
