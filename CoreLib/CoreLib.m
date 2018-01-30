@@ -29,7 +29,10 @@
 #include <assert.h>
 #endif
 
-
+@protocol CoreLibAppDelegate
+@optional
+- (NSString *)customSupportRequestAppName;
+@end
 
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
@@ -359,9 +362,13 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
+    NSString *appName = cc.appName;
     
+    if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
+        appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
+                   
     NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
-                                   cc.appName,
+                                   appName,
                                    cc.appVersionString,
                                    cc.appBuildNumber,
                                    cc.appChecksumSHA);
