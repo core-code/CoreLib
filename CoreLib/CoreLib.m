@@ -652,14 +652,15 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
     return selectedButton;
 }
 
-NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus)
+NSInteger alert_checkbox(NSString *title, NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus)
 {
     assert(buttons);
     assert(checkboxStatus);
     ASSERT_MAINTHREAD;
 
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = prompt;
+    alert.messageText = title;
+    alert.informativeText = prompt;
 
     if (buttons.count > 0)
         [alert addButtonWithTitle:buttons[0]];

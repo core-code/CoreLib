@@ -181,9 +181,9 @@ extern NSProcessInfo *processInfo;
 // !!!: ALERT FUNCTIONS
 NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result);	// alert with popup button for selection of choice
 NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices, NSArray<NSString *> *buttons, NSUInteger *result);  // alert with radiobutton matrix for selection of choice
-NSInteger alert_input(NSString *prompt, NSArray *buttons, NSString **result); // alert with text field prompting users
-NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result); // alert with large text view prompting users
-NSInteger alert_checkbox(NSString *prompt, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus); // alert with a single checkbox
+NSInteger alert_input(NSString *title, NSArray *buttons, NSString **result); // alert with text field prompting users
+NSInteger alert_inputtext(NSString *title, NSArray *buttons, NSString **result); // alert with large text view prompting users
+NSInteger alert_checkbox(NSString *title, NSString *message, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus); // alert with a single checkbox
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor); // alert with a colorwell for choosing colors
 #endif
