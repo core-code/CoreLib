@@ -48,6 +48,8 @@
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask;
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
+- (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock;
+- (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock terminationStatus:(NSInteger *)terminationStatus;
 #endif
 - (NSArray *)mapped:(id (^)(ObjectType input))block;
 - (NSArray <ObjectType>*)filtered:(BOOL (^)(ObjectType input))block;
@@ -314,7 +316,6 @@
 @property (readonly, nonatomic) NSString *literalString;
 
 @end
-
 
 
 @interface NSMutableDictionary <KeyType, ObjectType>(CoreCode)

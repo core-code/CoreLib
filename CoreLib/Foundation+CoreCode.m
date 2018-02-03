@@ -438,6 +438,56 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     return string;
 }
+
+- (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock
+{
+    return [self runAsTaskWithProgressBlock:progressBlock terminationStatus:NULL];
+}
+
+- (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock terminationStatus:(NSInteger *)terminationStatus
+{
+    __block dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    NSMutableString *jobOutput = makeMutableString();
+    
+    NSTask *task = [[NSTask alloc] init];
+    NSPipe *taskPipe = [NSPipe pipe];
+    task.launchPath = self[0];
+    task.standardOutput = taskPipe;
+    task.standardError = taskPipe;
+    task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
+
+    NSFileHandle *fileHandle = taskPipe.fileHandleForReading;
+    
+    [fileHandle setReadabilityHandler:^(NSFileHandle *file)
+    {
+        NSData *data = file.availableData;
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        [jobOutput appendString:string];
+        
+        progressBlock(string);
+    }];
+    
+    [task setTerminationHandler:^(NSTask *t)
+     {
+         fileHandle.readabilityHandler = nil;
+         
+         assert(sema);
+         dispatch_semaphore_signal(sema);
+     }];
+    
+    
+    [task launch];
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+    
+    sema = NULL;
+ 
+    if (terminationStatus)
+        (*terminationStatus) = task.terminationStatus;
+
+    
+    return jobOutput;
+}
 #endif
 @end
 

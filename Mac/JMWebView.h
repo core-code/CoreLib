@@ -20,7 +20,7 @@
 #import <WebKit/WebKit.h>
 #endif
 
-// TODO: port to WKWebView
+// XXX: port to WKWebView
 
 @interface JMWebView : WebView  <WebPolicyDelegate, WebResourceLoadDelegate>
 
