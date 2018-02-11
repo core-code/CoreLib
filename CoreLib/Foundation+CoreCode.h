@@ -198,6 +198,8 @@
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet;
 - (NSString *)stringByTrimmingTrailingCharactersInSet:(NSCharacterSet *)characterSet;
+- (NSString *)stringByDeletingCharactersInSet:(NSCharacterSet *)characterSet;
+
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(CGFloat)maxWidth;
@@ -290,6 +292,7 @@
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
++ (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
 - (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
 

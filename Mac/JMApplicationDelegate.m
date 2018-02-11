@@ -129,7 +129,7 @@
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
 	LOGFUNC;
 
-	cc_log_error(@"Warning: this version will expire");
+	cc_log(@"Warning: this version will expire");
 	
 	dispatch_after_main(60, ^
 	{

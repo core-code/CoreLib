@@ -1459,6 +1459,19 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self substringToIndex:rangeOfLastWantedCharacter.location+1];
 }
 
+- (NSString *)stringByDeletingCharactersInSet:(NSCharacterSet *)characterSet
+{
+    NSRange r = [self rangeOfCharacterFromSet:characterSet];
+    NSString *new = self.copy;
+    
+    while (r.location != NSNotFound)
+    {
+        new = [new stringByReplacingCharactersInRange:r withString:@""];
+        r = [new rangeOfCharacterFromSet:characterSet];
+    }
+    return new;
+}
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 void directoryObservingReleaseCallback(const void *info)
 {
@@ -2051,6 +2064,17 @@ CONST_KEY(CCDirectoryObserving)
     return [self dateWithString:@(preprocessorDateString) format:@"MMM d yyyy"];
 }
 
++ (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString
+{   // there is the NSISO8601DateFormatter but its 10.12+
+    NSDateFormatter *df = NSDateFormatter.new;
+    
+    df.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
+    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    
+    NSDate *result = [df dateFromString:iso8601DateString];
+    
+    return result;
+}
 - (NSString *)stringUsingFormat:(NSString *)dateFormat
 {
     NSDateFormatter *df = [NSDateFormatter new];
