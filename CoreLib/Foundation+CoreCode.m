@@ -430,7 +430,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     [task waitUntilExit];
 
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *string = data.string;
 
 
     if (terminationStatus)
@@ -461,9 +461,10 @@ CONST_KEY(CoreCodeAssociatedValue)
     [fileHandle setReadabilityHandler:^(NSFileHandle *file)
     {
         NSData *data = file.availableData;
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSString *string = data.string;
         
-        [jobOutput appendString:string];
+        if (string)
+            [jobOutput appendString:string];
         
         progressBlock(string);
     }];
