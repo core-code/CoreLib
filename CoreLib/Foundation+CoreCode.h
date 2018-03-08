@@ -149,6 +149,7 @@
 @property (readonly, nonatomic) unichar lastCharacter;
 
 @property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
+@property (readonly, nonatomic) NSString *strippedOfWhitespace;     // deletes from interior of string too, in contrast to TRIMMING which deletes only from front and back ... shortcut for stringByDeletingCharactersInSet:whitespaceCharSet
 @property (readonly, nonatomic) NSString *trimmedOfWhitespace;
 @property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;
 @property (readonly, nonatomic) NSString *unescaped;
