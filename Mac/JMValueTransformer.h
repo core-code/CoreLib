@@ -16,6 +16,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 @interface InvalidEmailValueTransformer: NSValueTransformer @end
 @interface ValidEmailValueTransformer: NSValueTransformer @end
 
+@interface EmptyArrayValueTransformer: NSValueTransformer @end
+@interface NonemptyArrayValueTransformer: NSValueTransformer @end
 
 
 @interface BaseValueTransformer : NSValueTransformer @end

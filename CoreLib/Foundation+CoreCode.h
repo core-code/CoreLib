@@ -421,3 +421,12 @@
 - (BOOL)waitUntilExitWithTimeout:(NSTimeInterval)timeout;
 
 @end
+
+
+#ifndef SANDBOX
+@interface NSUserDefaults (CoreCode)
+
+- (NSString *)stringForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID;
+
+@end
+#endif

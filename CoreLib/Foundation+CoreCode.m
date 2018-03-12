@@ -2494,3 +2494,28 @@ CONST_KEY(CCDirectoryObserving)
 }
 
 @end
+
+
+
+#ifndef SANDBOX
+
+@implementation NSUserDefaults (CoreCode)
+
+- (NSString *)stringForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID
+{
+    NSString *result;
+    CFPropertyListRef value = CFPreferencesCopyAppValue((CFStringRef)defaultName, (CFStringRef)bundleID);
+    
+    if (value && CFGetTypeID(value) == CFStringGetTypeID())
+    {
+        result = [(__bridge NSString *)value copy];
+        CFRelease(value);
+    }
+    else if (value)
+        CFRelease(value);
+
+    
+    return result;
+}
+@end
+#endif

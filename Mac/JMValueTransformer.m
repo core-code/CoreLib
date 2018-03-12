@@ -40,7 +40,31 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 @end
 
+@implementation EmptyArrayValueTransformer
++ (BOOL)allowsReverseTransformation { return NO; }
++ (Class)transformedValueClass { return [NSNumber class]; }
 
+- (id)transformedValue:(id)value
+{
+    if (!value || ![value respondsToSelector:@selector(count)] || (((NSArray *) value).count))
+        return @FALSE;
+ 
+    return @TRUE;
+}
+@end
+
+@implementation NonemptyArrayValueTransformer
++ (BOOL)allowsReverseTransformation { return NO; }
++ (Class)transformedValueClass { return [NSNumber class]; }
+
+- (id)transformedValue:(id)value
+{
+    if (!value || ![value respondsToSelector:@selector(count)] || (!((NSArray *) value).count))
+        return @FALSE;
+    
+    return @TRUE;
+}
+@end
 
 @implementation BaseValueTransformer
 + (BOOL)allowsReverseTransformation { return NO; }
