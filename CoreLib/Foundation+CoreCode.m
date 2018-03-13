@@ -2081,13 +2081,21 @@ CONST_KEY(CCDirectoryObserving)
     
     return result;
 }
+
 - (NSString *)stringUsingFormat:(NSString *)dateFormat
+{
+    return [self stringUsingFormat:dateFormat timeZone:nil];
+}
+
+- (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone
 {
     NSDateFormatter *df = [NSDateFormatter new];
     NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
     df.locale = l;
     df.dateFormat = dateFormat;
-
+    if (timeZone)
+        df.timeZone = timeZone;
+    
     return [df stringFromDate:self];
 }
 
