@@ -47,7 +47,7 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask;
-- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)usePollingToAvoidRunloop;
 - (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock;
 - (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock terminationStatus:(NSInteger *)terminationStatus;
 #endif

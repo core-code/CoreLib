@@ -400,10 +400,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
-    return [self runAsTaskWithTerminationStatus:NULL];
+    return [self runAsTaskWithTerminationStatus:NULL usePolling:NO];
 }
 
-- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)usePollingToAvoidRunloop
 {
     NSTask *task = [NSTask new];
     NSPipe *taskPipe = [NSPipe pipe];
@@ -428,7 +428,16 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     NSData *data = [file readDataToEndOfFile];
 
-    [task waitUntilExit];
+    
+    if (!usePollingToAvoidRunloop)
+        [task waitUntilExit];
+    else
+    {
+        while (task.isRunning)
+        {
+            [NSThread sleepForTimeInterval:0.05];
+        }
+    }
 
     NSString *string = data.string;
 
@@ -2495,7 +2504,7 @@ CONST_KEY(CCDirectoryObserving)
             [self terminate];
             killed = YES;
         }
-        [NSThread sleepForTimeInterval:0.1];
+        [NSThread sleepForTimeInterval:0.05];
     }
     
     return killed;

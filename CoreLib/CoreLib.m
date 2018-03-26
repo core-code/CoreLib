@@ -571,7 +571,10 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
                 taskApp.arguments = @[dictjsondatahexstring];
 
                 [taskApp launch];
-                [taskApp waitUntilExit];
+                while (taskApp.isRunning)
+                {
+                    [NSThread sleepForTimeInterval:0.05];
+                }
             }
             @catch (NSException *exception)
             {
