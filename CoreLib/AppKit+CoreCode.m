@@ -62,7 +62,11 @@ CONST_KEY(CCCountedProgressIndicator)
     
     [sourceImage drawAtPoint:NSZeroPoint
                     fromRect:CGRectMake(0, 0, newSize.width, newSize.height)
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
                    operation:NSCompositeCopy
+#else
+                   operation:NSCompositingOperationCopy
+#endif
                     fraction:1.0];
     [smallImage unlockFocus];
     
