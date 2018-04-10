@@ -339,6 +339,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 }
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)sendSupportRequestMail:(NSString *)text
 {
     NSString *urlString = @"";
@@ -385,15 +386,17 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     
     [urlString.escaped.URL open];
 }
+#endif
 
 - (void)openURL:(openChoice)choice
 {
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     if (choice == openSupportRequestMail)
     {
         [self sendSupportRequestMail:@"<Insert Support Request Here>"];
         return;
     }
-    
+#endif
     
     NSString *urlString = @"";
 

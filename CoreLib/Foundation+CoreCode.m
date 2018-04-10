@@ -318,10 +318,20 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self subarrayWithRange:NSMakeRange(location, self.count-location)];
 }
 
-
 - (NSArray *)subarrayToIndex:(NSUInteger)location
 {
-    return [self subarrayWithRange:NSMakeRange(0, self.count-location-1)];
+    return [self subarrayWithRange:NSMakeRange(0, location)];
+}
+
+- (NSArray *)slicingSubarrayToIndex:(NSInteger)location
+{
+    if (location < 0)
+    {
+        NSInteger max = (NSInteger)self.count + location;
+        return [self subarrayWithRange:NSMakeRange(0, (NSUInteger)max)];
+    }
+    else
+        return [self subarrayToIndex:(NSUInteger)location];
 }
 
 
@@ -1007,6 +1017,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
@@ -1017,6 +1028,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     return attributedString;
 }
+#endif
 
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url
 {
@@ -2490,6 +2502,8 @@ CONST_KEY(CCDirectoryObserving)
 
 
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
 @implementation NSTask (CoreCode)
 
 - (BOOL)waitUntilExitWithTimeout:(NSTimeInterval)timeout
@@ -2535,4 +2549,5 @@ CONST_KEY(CCDirectoryObserving)
     return result;
 }
 @end
+#endif
 #endif

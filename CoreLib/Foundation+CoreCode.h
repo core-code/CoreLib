@@ -41,8 +41,9 @@
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
 - (CCIntRange1D)calculateExtentsOfValues:(int (^)(ObjectType input))block;
 
-- (NSArray <ObjectType>*)subarrayFromIndex:(NSUInteger)index;
-- (NSArray <ObjectType>*)subarrayToIndex:(NSUInteger)index;
+- (NSArray <ObjectType>*)subarrayFromIndex:(NSUInteger)index;       //  containing the characters of the receiver from the one at anIndex to the end (DOES include index)  similar to -[NSString subarrayFromIndex:]
+- (NSArray <ObjectType>*)subarrayToIndex:(NSUInteger)index;         //  containing the characters of the receiver up to, but not including, the one at anIndex. (does NOT include index) similar to -[NSString substringToIndex:]
+- (NSArray <ObjectType>*)slicingSubarrayToIndex:(NSInteger)index;
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -191,7 +192,9 @@
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
+#endif
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url;
 
 - (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
@@ -417,12 +420,12 @@
 @end
 
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @interface NSTask (CoreCode)
 
 - (BOOL)waitUntilExitWithTimeout:(NSTimeInterval)timeout;
 
 @end
-
 
 #ifndef SANDBOX
 @interface NSUserDefaults (CoreCode)
@@ -430,4 +433,5 @@
 - (NSString *)stringForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID;
 
 @end
+#endif
 #endif

@@ -157,7 +157,9 @@ MAKE_MAKER(MutableSet)
 @property (readonly, nonatomic) NSArray <NSString *>*appCrashLogs;
 @property (readonly, nonatomic) NSString *appChecksumSHA;
 - (void)openURL:(openChoice)choice;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)sendSupportRequestMail:(NSString *)text;
+#endif
 @end
 
 
@@ -186,11 +188,11 @@ NSInteger alert_inputtext(NSString *title, NSArray *buttons, NSString **result);
 NSInteger alert_checkbox(NSString *title, NSString *message, NSArray <NSString *>*buttons, NSString *checkboxTitle, NSUInteger *checkboxStatus); // alert with a single checkbox
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColor **selectedColor); // alert with a colorwell for choosing colors
+NSInteger alert_customicon(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, NSImage *customIcon);
 #endif
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
-NSInteger alert_customicon(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, NSImage *customIcon);
-NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);    
+NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));
 void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
 void alert_feedback_fatal(NSString *usermsg, NSString *details) __attribute__((noreturn));

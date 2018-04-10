@@ -206,4 +206,29 @@ NSString *randomString(int maxLength)
 }
 
 
+- (void)testArray
+{
+   
+     NSString *s_a = @"01234";
+     NSString *s_b = @"0123456789";
+     NSString *s_a1 = [s_a substringToIndex:2];  //  containing the characters of the receiver up to, but not including, the one at anIndex. (does NOT include index)
+     NSString *s_a2 = [s_a substringFromIndex:2]; //  containing the characters of the receiver from the one at anIndex to the end (DOES include index)
+     NSString *s_b1 = [s_b substringToIndex:2];
+     NSString *s_b2 = [s_b substringFromIndex:2];
+
+    NSArray *a = @[@0, @1, @2, @3, @4];
+    NSArray *b = @[@0, @1, @2, @3, @4, @5, @6, @7, @8, @9];
+    NSArray *a1 = [a subarrayToIndex:2];
+    NSArray *a2 = [a subarrayFromIndex:2];
+    NSArray *b1 = [b subarrayToIndex:2];
+    NSArray *b2 = [b subarrayFromIndex:2];
+
+        
+        XCTAssert([[a1 joined:@""] isEqualToString:s_a1]);
+        XCTAssert([[a2 joined:@""] isEqualToString:s_a2]);
+        XCTAssert([[b1 joined:@""] isEqualToString:s_b1]);
+        XCTAssert([[b2 joined:@""] isEqualToString:s_b2]);
+}
+
+
 @end
