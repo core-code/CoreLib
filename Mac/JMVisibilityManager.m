@@ -38,7 +38,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 @implementation VisibilityManager
 
-@dynamic visibilitySetting, dockIcon, menubarIcon, menuTooltip;
+@dynamic visibilitySetting, dockIcon, menubarIcon, menuTooltip, visibleInDock, visibleInMenubar;
 
 + (void)initialize
 {
@@ -104,6 +104,16 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 - (visibilitySettingEnum)visibilitySetting
 {
     return _visibilitySetting;
+}
+
+- (BOOL)visibleInDock
+{
+    return ((_visibilitySetting == kVisibleDock) || (_visibilitySetting == kVisibleDockAndMenubar));
+}
+
+- (BOOL)visibleInMenubar
+{
+    return ((_visibilitySetting == kVisibleMenubar) || (_visibilitySetting == kVisibleDockAndMenubar));
 }
 
 - (void)setDockIcon:(NSImage *)newDockIcon
