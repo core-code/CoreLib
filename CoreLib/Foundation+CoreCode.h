@@ -322,6 +322,8 @@
 - (NSDictionary *)dictionaryByRemovingKey:(KeyType)key;
 - (NSDictionary *)dictionaryByRemovingKeys:(NSArray <KeyType> *)keys;
 @property (readonly, nonatomic) NSString *literalString;
+- (BOOL)containsAny:(NSArray <NSString *>*)keys;
+- (BOOL)containsAll:(NSArray <NSString *>*)keys;
 
 @end
 

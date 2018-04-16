@@ -2249,6 +2249,25 @@ CONST_KEY(CCDirectoryObserving)
     return mutable.immutableObject;
 }
 
+- (BOOL)containsAny:(NSArray <NSString *>*)keys
+{
+    for (NSString *key in keys)
+        if (self[key] != nil)
+             return YES;
+    
+    return NO;
+}
+
+
+- (BOOL)containsAll:(NSArray <NSString *>*)keys
+{
+    for (NSString *key in keys)
+        if (self[key] == nil)
+            return NO;
+    
+    return YES;
+}
+
 @end
 
 
