@@ -328,7 +328,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (location < 0)
     {
         NSInteger max = (NSInteger)self.count + location;
-        return [self subarrayWithRange:NSMakeRange(0, (NSUInteger)max)];
+        return [self subarrayToIndex:(NSUInteger)max];
     }
     else
         return [self subarrayToIndex:(NSUInteger)location];
@@ -1460,6 +1460,18 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 }
+
+- (NSString *)slicingSubstringToIndex:(NSInteger)location
+{
+    if (location < 0)
+    {
+        NSInteger max = (NSInteger)self.length + location;
+        return [self substringToIndex:(NSUInteger)max];
+    }
+    else
+        return [self substringToIndex:(NSUInteger)location];
+}
+
 
 //- (NSString *)encoded
 //{

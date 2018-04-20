@@ -214,6 +214,9 @@
 
 - (NSString *)removed:(NSString *)stringToRemove;
 
+- (NSString *)slicingSubstringToIndex:(NSInteger)index;
+
+
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
 - (NSArray <NSString *> *)split:(NSString *)sep;								// = componentsSeparatedByString:
