@@ -10,16 +10,21 @@
  */
 
 #import "CoreLib.h"
+
 #ifdef USE_SPARKLE
 #if __has_feature(modules)
-@import Sparkle.SUUpdater;
+@import Sparkle;
 #else
-#import <Sparkle/SUUpdater.h>
+#import <Sparkle/Sparkle.h>
 #endif
 #endif
-
 
 @interface JMApplicationDelegate : NSObject
+#ifdef USE_SPARKLE
+#if USE_SPARKLE == 2
+    <SPUStandardUserDriverDelegate, SPUUpdaterDelegate>
+#endif
+#endif
 
 
 - (IBAction)openWindow:(__strong NSWindow **)window nibName:(NSString *)nibName;

@@ -203,8 +203,14 @@
 }
 
 #ifdef USE_SPARKLE
+#if USE_SPARKLE == 2
+static SPUUpdater *updater;
+static SPUStandardUserDriver *userDriver;
+CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
+#else
 static SUUpdater *updater;
 CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
+#endif
 #endif
 
 - (IBAction)checkForUpdatesAction:(id)sender
@@ -212,7 +218,11 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 #ifdef USE_SPARKLE
 	LOGFUNC;
 	if (updater)
+#if USE_SPARKLE == 2
+        [updater checkForUpdates];
+#else
 		[updater checkForUpdates:self];
+#endif
 	else
 		cc_log(@"Warning: the sparkle updater is not available!");
 #endif
@@ -221,9 +231,14 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 - (IBAction)initUpdateCheck
 {
 #ifdef USE_SPARKLE
-	updater = [[SUUpdater alloc] init];
-	assert(kUpdatecheckMenuindexKey.defaultObject);
-	[self setUpdateCheck:@{@"tag" : kUpdatecheckMenuindexKey.defaultObject}];
+#if USE_SPARKLE == 2
+    userDriver = [[SPUStandardUserDriver alloc] initWithHostBundle:bundle delegate:self];
+    updater = [[SPUUpdater alloc] initWithHostBundle:bundle applicationBundle:bundle userDriver:userDriver delegate:self];
+#else
+    updater = [SUUpdater new];
+#endif
+    assert(kUpdatecheckMenuindexKey.defaultObject);
+    [self setUpdateCheck:@{@"tag" : kUpdatecheckMenuindexKey.defaultObject}];
 #endif
 }
 
