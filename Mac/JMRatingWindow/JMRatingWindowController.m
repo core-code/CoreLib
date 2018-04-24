@@ -64,10 +64,17 @@
     self.angryView.hidden = YES;
     self.happyView.hidden = NO;
     
-    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)
-        self.ratemacupdateButton.enabled = NO;
+;
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"StoreProductPage"]).length)
         self.rateappstoreButton.enabled = NO;
+    
+    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)
+    {
+        if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
+            self.ratemacupdateButton.enabled = NO;
+        else
+            self.ratemacupdateButton.stringValue = [self.ratemacupdateButton.stringValue stringByReplacingOccurrencesOfString:@"MacUpdate" withString:@"AlternativeTo"];
+    }
 }
 
 - (IBAction)notsureClicked:(id)sender
@@ -107,7 +114,8 @@
 - (IBAction)ratemacupdateClicked:(id)sender
 {
     [cc openURL:openMacupdateWebsite];
-    [self.window close];
+
+   [self.window close];
 }
 
 - (IBAction)rateappstoreClicked:(id)sender

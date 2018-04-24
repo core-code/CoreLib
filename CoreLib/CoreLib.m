@@ -414,7 +414,11 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         urlString = [urlString stringByAppendingString:@"&at=1000lwks"];
     }
     else if (choice == openMacupdateWebsite)
+    {
         urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
+        if (!urlString)
+            urlString = [bundle objectForInfoDictionaryKey:@"AlternativetoProductPage"];
+    }
 
     [urlString.escaped.URL open];
 }
@@ -852,9 +856,17 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
     alert.icon = customIcon;
     
     if (defaultButton)
-        [alert addButtonWithTitle:LocalizationNotNeeded(defaultButton)];
+    {
+        NSButton *b = [alert addButtonWithTitle:LocalizationNotNeeded(defaultButton)];
+        if (defaultButton.associatedValue)
+            [b setKeyEquivalent:defaultButton.associatedValue];
+    }
     if (alternateButton)
-        [alert addButtonWithTitle:alternateButton];
+    {
+        NSButton *b = [alert addButtonWithTitle:alternateButton];
+        if (alternateButton.associatedValue)
+            [b setKeyEquivalent:alternateButton.associatedValue];
+    }
     if (otherButton)
         [alert addButtonWithTitle:otherButton];
     
