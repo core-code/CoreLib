@@ -412,12 +412,16 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     {
         urlString = [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
         urlString = [urlString stringByAppendingString:@"&at=1000lwks"];
+        
+        if (!urlString)
+            urlString = [bundle objectForInfoDictionaryKey:@"AlternativetoProductPage"];
     }
     else if (choice == openMacupdateWebsite)
     {
         urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
+        
         if (!urlString)
-            urlString = [bundle objectForInfoDictionaryKey:@"AlternativetoProductPage"];
+            urlString = [bundle objectForInfoDictionaryKey:@"MacinformerProductPage"];
     }
 
     [urlString.escaped.URL open];
@@ -441,6 +445,24 @@ NSPredicate *makePredicate(NSString *format, ...)
 
     return pred;
 }
+
+//NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparatedKeysString, id firstValue, ...)
+//{
+//    NSUInteger i = 0;
+//    NSArray <NSString *> *argumentNames = [commaSeparatedKeysString split:@","];
+//    NSMutableDictionary *dict = makeMutableDictionary();
+//    va_list args;
+//    va_start(args, firstValue);
+//    for (NSString *name in argumentNames)
+//    {
+//        id arg = va_arg(args, id);
+//
+//        dict[name.trimmedOfWhitespaceAndNewlines] = OBJECT_OR(arg, @"(null)");
+//        i++;
+//    }
+//    va_end(args);
+//    return dict;
+//}
 
 NSString *makeDescription(id sender, NSArray *args)
 {

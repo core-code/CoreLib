@@ -321,7 +321,7 @@
 @property (readonly, nonatomic) NSData *JSONData;
 @property (readonly, nonatomic) NSData *XMLData;
 @property (readonly, nonatomic) NSMutableDictionary <KeyType, ObjectType> *mutableObject;
-- (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key;
+- (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key; // does replace too
 - (NSDictionary *)dictionaryByRemovingKey:(KeyType)key;
 - (NSDictionary *)dictionaryByRemovingKeys:(NSArray <KeyType> *)keys;
 @property (readonly, nonatomic) NSString *literalString;

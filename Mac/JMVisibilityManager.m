@@ -113,7 +113,9 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 - (BOOL)visibleInMenubar
 {
-    return ((_visibilitySetting == kVisibleMenubar) || (_visibilitySetting == kVisibleDockAndMenubar));
+    BOOL visible = ((_visibilitySetting == kVisibleMenubar) || (_visibilitySetting == kVisibleDockAndMenubar));
+    
+    return visible;
 }
 
 - (void)setDockIcon:(NSImage *)newDockIcon

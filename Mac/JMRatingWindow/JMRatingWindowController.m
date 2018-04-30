@@ -64,16 +64,20 @@
     self.angryView.hidden = YES;
     self.happyView.hidden = NO;
     
-;
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"StoreProductPage"]).length)
-        self.rateappstoreButton.enabled = NO;
+    {
+        if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacinformerProductPage"]).length)
+            self.rateappstoreButton.enabled = NO;
+        else
+            self.rateappstoreButton.title = [self.rateappstoreButton.title stringByReplacingOccurrencesOfString:@"App Store" withString:@"AlternativeTo"];
+    }
     
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)
     {
         if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
             self.ratemacupdateButton.enabled = NO;
         else
-            self.ratemacupdateButton.stringValue = [self.ratemacupdateButton.stringValue stringByReplacingOccurrencesOfString:@"MacUpdate" withString:@"AlternativeTo"];
+            self.ratemacupdateButton.title = [self.ratemacupdateButton.title stringByReplacingOccurrencesOfString:@"MacUpdate" withString:@"MacInformer"];
     }
 }
 
