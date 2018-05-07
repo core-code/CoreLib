@@ -530,6 +530,10 @@ NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
 #endif
 }
 
+#ifdef USE_LAM
+#import "NSData+LAMCompression.h"
+#endif
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 {
@@ -542,7 +546,14 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         NSString *encodedPrefs = @"";
         
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-        encodedPrefs = [cc.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+        NSData *prefsData = cc.prefsURL.contents;
+        
+#ifdef USE_LAM
+        prefsData = [prefsData lam_compressedDataUsingCompression:LAMCompressionZLIB];
+#endif
+        
+        encodedPrefs = [prefsData base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
+
 #ifndef SANDBOX
         if ((cc.appCrashLogFilenames).count)
         {
