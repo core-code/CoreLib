@@ -28,6 +28,13 @@
 - (void)beginCountedProgress:(NSString * _Nonnull)title;
 - (void)endCountedProgress;
 
+// progress with second detail text field
+- (void)setExtendedProgressMessage:(NSString * _Nonnull)message;
+- (void)setExtendedProgressDetail:(NSString * _Nonnull)detail;
+- (void)beginExtendedProgress:(NSString * _Nonnull)title;
+- (void)endExtendedProgress;
+
+
 // borderless windows cant be closed normally
 - (IBAction)performBorderlessClose:(id _Nullable)sender;
 

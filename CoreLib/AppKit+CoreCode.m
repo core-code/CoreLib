@@ -28,7 +28,10 @@ CONST_KEY(CCProgressIndicator)
 CONST_KEY(CCCountedProgressDetailInfo)
 CONST_KEY(CCCountedProgressSheet)
 CONST_KEY(CCCountedProgressIndicator)
-
+CONST_KEY(CCExtendedProgressDetailInfo1)
+CONST_KEY(CCExtendedProgressDetailInfo2)
+CONST_KEY(CCExtendedProgressSheet)
+CONST_KEY(CCExtendedProgressIndicator)
 
 @implementation NSTabView (CoreCode)
 
@@ -88,7 +91,6 @@ CONST_KEY(CCCountedProgressIndicator)
         progressDetailInfo.stringValue = message;
     });
 }
-
 - (void)beginProgress:(NSString *)title
 {
     dispatch_async_main(^
@@ -159,6 +161,7 @@ CONST_KEY(CCCountedProgressIndicator)
 }
 
 
+// counted progress
 
 
 - (void)setCountedProgress:(double)progress message:(NSString *)message
@@ -246,6 +249,112 @@ CONST_KEY(CCCountedProgressIndicator)
         [self setAssociatedValue:nil forKey:kCCCountedProgressIndicatorKey];
     });
 }
+
+
+
+// extended progress
+
+
+- (void)setExtendedProgressDetail:(NSString *)detail
+{
+    dispatch_async_main(^
+    {
+        NSTextField *progressDetailInfo = [self associatedValueForKey:kCCExtendedProgressDetailInfo2Key];
+        
+        progressDetailInfo.stringValue = detail;
+    });
+}
+
+- (void)setExtendedProgressMessage:(NSString *)message
+{
+    dispatch_async_main(^
+    {
+        NSTextField *progressDetailInfo = [self associatedValueForKey:kCCExtendedProgressDetailInfo1Key];
+        
+        progressDetailInfo.stringValue = message;
+    });
+}
+
+
+- (void)beginExtendedProgress:(NSString *)title
+{
+    dispatch_async_main(^
+     {
+         NSWindow *progressPanel = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 500.0, 150.0)
+                                                               styleMask:NSWindowStyleMaskTitled
+                                                                 backing:NSBackingStoreBuffered
+                                                                   defer:NO];
+         
+         
+         NSTextField *progressInfo = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 120.0, 464.0, 17.0)];
+         NSTextField *progressDetailInfo1 = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 95.0, 464.0, 17.0)];
+         NSTextField *progressDetailInfo2 = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 65.0, 464.0, 17.0)];
+         NSTextField *waitLabel = [[NSTextField alloc] initWithFrame:NSMakeRect(18.0, 14.0, 464.0, 17.0)];
+         NSProgressIndicator *progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(20.0, 41.0, 460.0, 20.0)];
+         
+         
+         
+         progressInfo.stringValue = title;
+         progressDetailInfo1.stringValue = @"";
+         progressDetailInfo2.stringValue = @"";
+         waitLabel.stringValue = @"Please wait until the operation finishes…".localized;
+         
+         progressInfo.font = [NSFont boldSystemFontOfSize:13];
+         
+         for (NSTextField *textField in @[progressInfo, progressDetailInfo1, progressDetailInfo2, waitLabel])
+         {
+             textField.alignment = NSTextAlignmentCenter;
+             [textField setBezeled:NO];
+             [textField setDrawsBackground:NO];
+             [textField setEditable:NO];
+             [textField setSelectable:NO];
+             [progressPanel.contentView addSubview:textField];
+         }
+         
+         progressDetailInfo2.font = [NSFont systemFontOfSize:7];
+
+         [progressPanel.contentView addSubview:progressIndicator];
+         
+         [progressPanel setReleasedWhenClosed:YES];
+         
+         [self setAssociatedValue:progressDetailInfo1 forKey:kCCExtendedProgressDetailInfo1Key];
+         [self setAssociatedValue:progressDetailInfo2 forKey:kCCExtendedProgressDetailInfo2Key];
+         [self setAssociatedValue:progressPanel forKey:kCCExtendedProgressSheetKey];
+         [self setAssociatedValue:progressIndicator forKey:kCCExtendedProgressIndicatorKey];
+         
+         [NSApp activateIgnoringOtherApps:YES];
+         
+         [self beginSheet:progressPanel completionHandler:^(NSModalResponse resp){}];
+         
+         [progressIndicator startAnimation:self];
+     });
+}
+
+
+- (void)endExtendedProgress
+{
+    dispatch_async_main(^
+    {
+        NSWindow *progressPanel = [self associatedValueForKey:kCCExtendedProgressSheetKey];
+        NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCExtendedProgressIndicatorKey];
+        
+        [progressIndicator stopAnimation:self];
+        [NSApp activateIgnoringOtherApps:YES];
+        
+        [self endSheet:progressPanel];
+        
+        [progressPanel orderOut:self];
+        
+        [self setAssociatedValue:nil forKey:kCCExtendedProgressDetailInfo1Key];
+        [self setAssociatedValue:nil forKey:kCCExtendedProgressDetailInfo2Key];
+        [self setAssociatedValue:nil forKey:kCCExtendedProgressSheetKey];
+        [self setAssociatedValue:nil forKey:kCCExtendedProgressIndicatorKey];
+    });
+}
+
+
+
+// close
 
 - (IBAction)performBorderlessClose:(id)sender
 {
