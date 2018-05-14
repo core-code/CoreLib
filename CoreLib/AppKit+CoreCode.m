@@ -311,8 +311,9 @@ CONST_KEY(CCExtendedProgressIndicator)
              [progressPanel.contentView addSubview:textField];
          }
          
-         progressDetailInfo2.font = [NSFont systemFontOfSize:7];
-
+         progressDetailInfo2.font = [NSFont systemFontOfSize:8];
+         progressDetailInfo2.lineBreakMode = NSLineBreakByTruncatingMiddle;
+         
          [progressPanel.contentView addSubview:progressIndicator];
          
          [progressPanel setReleasedWhenClosed:YES];

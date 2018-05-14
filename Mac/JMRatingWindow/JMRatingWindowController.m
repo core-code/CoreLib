@@ -109,7 +109,7 @@
 
     
     NSInteger res = alert(@"Confirmation", makeString(@"%@ asks for your feedback only rarely and at maximum only once per app-version. Are you sure you want to turn this off completely?", cc.appName),
-                          @"Cancel", @"Turn off feedback dialoge", nil);
+                          @"Cancel", @"Turn off feedback dialog", nil);
     
     if (res == NSAlertSecondButtonReturn)
         @"corelib_dontaskagain".defaultInt = 1;

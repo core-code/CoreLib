@@ -156,6 +156,8 @@ MAKE_MAKER(MutableSet)
 @property (readonly, nonatomic) NSArray <NSString *>*appCrashLogFilenames;
 @property (readonly, nonatomic) NSArray <NSString *>*appCrashLogs;
 @property (readonly, nonatomic) NSString *appChecksumSHA;
+@property (readonly, nonatomic) NSString *sparkleChecksumSHA;
+
 - (void)openURL:(openChoice)choice;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)sendSupportRequestMail:(NSString *)text;

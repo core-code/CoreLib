@@ -338,6 +338,30 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     return @"Unvailable";
 #endif
 }
+- (NSString *)sparkleChecksumSHA
+{
+#ifdef USE_SECURITY
+   NSURL *u = @[NSBundle.mainBundle.bundlePath, @"/Contents/Frameworks/Sparkle.framework/Versions/A/Sparkle"].path.fileURL;
+   if (u.fileExists)
+   {
+       NSData *d = [NSData dataWithContentsOfURL:u];
+       unsigned char result[CC_SHA1_DIGEST_LENGTH];
+       CC_SHA1(d.bytes, (CC_LONG)d.length, result);
+       NSMutableString *ms = [NSMutableString string];
+       
+       for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+       {
+           [ms appendFormat: @"%02x", (int)(result [i])];
+       }
+       
+       return [ms copy];
+   }
+   else
+       return @"";
+#else
+    return @"Unvailable";
+#endif
+}
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)sendSupportRequestMail:(NSString *)text
@@ -362,6 +386,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 #endif
 
+    NSString *licenseCode = makeString(@"%@|%@", cc.appChecksumSHA, cc.sparkleChecksumSHA);
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
     NSString *appName = cc.appName;
     
@@ -372,7 +397,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                                    appName,
                                    cc.appVersionString,
                                    cc.appBuildNumber,
-                                   cc.appChecksumSHA);
+                                   licenseCode);
     
     NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@\n%@\n%@",
                                     text,
@@ -563,7 +588,8 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         }
 #endif
 #endif
-
+        
+        NSString *licenseCode = makeString(@"%@|%@", cc.appChecksumSHA, cc.sparkleChecksumSHA);
         NSString *visibleDetails = details;
         if (visibleDetails.length > maxLen)
             visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
@@ -576,7 +602,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
                                                 cc.appName,
                                                 cc.appVersionString,
                                                 cc.appBuildNumber,
-                                                cc.appChecksumSHA,
+                                                licenseCode,
                                                 fatal ? @"fatal" : @"",
                                                 cc.appName,
                                                 usermsg,

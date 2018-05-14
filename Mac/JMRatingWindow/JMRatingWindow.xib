@@ -101,7 +101,7 @@
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="260" translatesAutoresizingMaskIntoConstraints="NO" id="c1a-Vc-qaD">
                                             <rect key="frame" x="16" y="9" width="264" height="11"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" alignment="center" title="Don't show this dialoge again." id="gUX-7Y-0hh">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" alignment="center" title="Don't show this dialog again." id="gUX-7Y-0hh">
                                                 <font key="font" metaFont="miniSystem"/>
                                                 <color key="textColor" red="0.53374666941629201" green="0.57009843080463973" blue="0.77111754441624369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -217,7 +217,7 @@
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="260" translatesAutoresizingMaskIntoConstraints="NO" id="N48-zG-Ctd">
                                             <rect key="frame" x="16" y="9" width="264" height="11"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" alignment="center" title="Don't show this dialoge again." id="oXj-r2-0zQ">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" alignment="center" title="Don't show this dialog again." id="oXj-r2-0zQ">
                                                 <font key="font" metaFont="miniSystem"/>
                                                 <color key="textColor" red="0.53374666940000004" green="0.5700984308" blue="0.77111754440000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

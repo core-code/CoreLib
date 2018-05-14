@@ -86,7 +86,7 @@
 	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + usageIncrease;
 	usagesThisVersionKey.defaultInt = usagesThisVersionKey.defaultInt + usageIncrease;
 
-    BOOL showDialoge = forceAppearance;
+    BOOL showDialog = forceAppearance;
 
     // XXX: this should not require linking the rating window if you don't want the feature
 
@@ -99,13 +99,13 @@
          !askedThisVersionKey.defaultInt &&
          usagesThisVersionKey.defaultInt >= requestReviewLimit)
 	{
-        showDialoge = YES;
+        showDialog = YES;
 
 		askedThisVersionKey.defaultInt = 1;
 	}
 #endif
     
-    if (showDialoge)
+    if (showDialog)
     {
         feedbackText = [feedbackText replaced:@"[USAGES_ASKREVIEW]" with:@(requestReviewLimit).stringValue];
         feedbackText = [feedbackText replaced:@"[APPNAME]" with:cc.appName];
