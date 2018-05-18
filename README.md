@@ -112,3 +112,4 @@ CoreLib saves the last 10 messages logged with cc_log() to the user defaults unl
 CoreLib has changed its return values of the alert*() functions away from deprecated NSAlertDefaultReturn/NSOKButton values and undefines those to make sure you update. define IMADESURENOTTOCOMPAREALERTRETURNVALUESAGAINSTOLDRETURNVALUES to make sure you can still use the old return values for old appkit functions
 
 defining FORCE_LOG forces output to the system log even for release builds
+
