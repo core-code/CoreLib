@@ -193,6 +193,7 @@ NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColo
 NSInteger alert_customicon(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton, NSImage *customIcon);
 #endif
 NSInteger alert_inputsecure(NSString *prompt, NSArray *buttons, NSString **result);
+NSInteger alert_outputtext(NSString *message, NSArray *buttons, NSString *text);
 NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 NSInteger alert(NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *otherButton);
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)  __attribute__((nonnull (4, 5)));

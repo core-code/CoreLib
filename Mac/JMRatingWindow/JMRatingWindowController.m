@@ -66,7 +66,7 @@
     
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"StoreProductPage"]).length)
     {
-        if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacinformerProductPage"]).length)
+        if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
             self.rateappstoreButton.enabled = NO;
         else
             self.rateappstoreButton.title = [self.rateappstoreButton.title stringByReplacingOccurrencesOfString:@"App Store" withString:@"AlternativeTo"];
@@ -74,10 +74,10 @@
     
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)
     {
-        if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
+        if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
             self.ratemacupdateButton.enabled = NO;
         else
-            self.ratemacupdateButton.title = [self.ratemacupdateButton.title stringByReplacingOccurrencesOfString:@"MacUpdate" withString:@"MacInformer"];
+            self.ratemacupdateButton.title = [self.ratemacupdateButton.title stringByReplacingOccurrencesOfString:@"MacUpdate" withString:@"FileHorse"];
     }
 }
 

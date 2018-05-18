@@ -446,7 +446,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
         
         if (!urlString)
-            urlString = [bundle objectForInfoDictionaryKey:@"MacinformerProductPage"];
+            urlString = [bundle objectForInfoDictionaryKey:@"FilehorseProductPage"];
     }
 
     [urlString.escaped.URL open];
@@ -811,6 +811,53 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 
     *result = input.string;
 
+    return selectedButton;
+}
+
+NSInteger alert_outputtext(NSString *message, NSArray *buttons, NSString *text)
+{
+    assert(buttons);
+    ASSERT_MAINTHREAD;
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = message;
+    
+    if (buttons.count > 0)
+        [alert addButtonWithTitle:buttons[0]];
+    if (buttons.count > 1)
+        [alert addButtonWithTitle:buttons[1]];
+    if (buttons.count > 2)
+        [alert addButtonWithTitle:buttons[2]];
+    
+    NSScrollView *scrollview = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
+    NSSize contentSize = [scrollview contentSize];
+    
+    [scrollview setBorderType:NSNoBorder];
+    [scrollview setHasVerticalScroller:YES];
+    [scrollview setHasHorizontalScroller:NO];
+    [scrollview setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    
+    NSTextView *theTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, contentSize.width, contentSize.height)];
+    [theTextView setMinSize:NSMakeSize(0.0, contentSize.height)];
+    [theTextView setMaxSize:NSMakeSize((CGFloat)FLT_MAX, (CGFloat)FLT_MAX)];
+    [theTextView setVerticallyResizable:YES];
+    [theTextView setHorizontallyResizable:NO];
+    [theTextView setAutoresizingMask:NSViewWidthSizable];
+
+    
+    [[theTextView textContainer] setContainerSize:NSMakeSize(contentSize.width, (CGFloat)FLT_MAX)];
+    [[theTextView textContainer] setWidthTracksTextView:YES];
+    
+    [scrollview setDocumentView:theTextView];
+
+    
+    theTextView.editable = NO;
+    theTextView.string = text;
+    
+    alert.accessoryView = scrollview;
+    NSInteger selectedButton = [alert runModal];
+    
+    
     return selectedButton;
 }
 
