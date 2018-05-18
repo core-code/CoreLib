@@ -209,8 +209,8 @@ NSString *makeTempDirectory(void);
 NSString *makeTempFilepath(NSString *extension);
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(id sender, NSArray *args);
-//#define makeDictionaryOfVariables(...) _makeDictionaryOfVariables(@"" # __VA_ARGS__, __VA_ARGS__, nil)
-//NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString * commaSeparatedKeysString, id firstValue, ...); // not for direct use
+#define makeDictionaryOfVariables(...) _makeDictionaryOfVariables(@"" # __VA_ARGS__, __VA_ARGS__, nil) // like NSDictionaryOfVariableBindings() but safe in case of nil values
+NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString * commaSeparatedKeysString, id firstValue, ...); // not for direct use
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a);		// params from 0..1
 NSColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);	// params from 0..255

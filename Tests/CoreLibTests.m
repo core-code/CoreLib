@@ -231,4 +231,52 @@ NSString *randomString(int maxLength)
 }
 
 
+- (void)testVariableBindings
+{
+    NSString *v1 = @"v1";
+    NSString *v2 = @"v2";
+    NSString *v3 = @"v3";
+    NSString *v4 = @"v4";
+    
+    {
+        NSDictionary *bla = makeDictionaryOfVariables(v1, v2, v3, v4);
+        XCTAssert([bla[@"v1"] isEqualToString:@"v1"]);
+        XCTAssert([bla[@"v2"] isEqualToString:@"v2"]);
+        XCTAssert([bla[@"v3"] isEqualToString:@"v3"]);
+        XCTAssert([bla[@"v4"] isEqualToString:@"v4"]);
+    }
+    v1 = nil;
+    
+    {
+        NSDictionary *bla = makeDictionaryOfVariables(v1, v2, v3, v4);
+        XCTAssert([bla[@"v1"] isEqualToString:@"(null)"]);
+        XCTAssert([bla[@"v2"] isEqualToString:@"v2"]);
+        XCTAssert([bla[@"v3"] isEqualToString:@"v3"]);
+        XCTAssert([bla[@"v4"] isEqualToString:@"v4"]);
+    }
+    
+    
+    v1 = @"v1";
+    v2 = nil;
+    
+    {
+        NSDictionary *bla = makeDictionaryOfVariables(v1, v2, v3, v4);
+        XCTAssert([bla[@"v1"] isEqualToString:@"v1"]);
+        XCTAssert([bla[@"v2"] isEqualToString:@"(null)"]);
+        XCTAssert([bla[@"v3"] isEqualToString:@"v3"]);
+        XCTAssert([bla[@"v4"] isEqualToString:@"v4"]);
+    }
+    
+    v2 = @"v2";
+    v4 = nil;
+    
+    {
+        NSDictionary *bla = makeDictionaryOfVariables(v1, v2, v3, v4);
+        XCTAssert([bla[@"v1"] isEqualToString:@"v1"]);
+        XCTAssert([bla[@"v2"] isEqualToString:@"v2"]);
+        XCTAssert([bla[@"v3"] isEqualToString:@"v3"]);
+        XCTAssert([bla[@"v4"] isEqualToString:@"(null)"]);
+    }
+}
+
 @end

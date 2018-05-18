@@ -471,23 +471,32 @@ NSPredicate *makePredicate(NSString *format, ...)
     return pred;
 }
 
-//NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparatedKeysString, id firstValue, ...)
-//{
-//    NSUInteger i = 0;
-//    NSArray <NSString *> *argumentNames = [commaSeparatedKeysString split:@","];
-//    NSMutableDictionary *dict = makeMutableDictionary();
-//    va_list args;
-//    va_start(args, firstValue);
-//    for (NSString *name in argumentNames)
-//    {
-//        id arg = va_arg(args, id);
-//
-//        dict[name.trimmedOfWhitespaceAndNewlines] = OBJECT_OR(arg, @"(null)");
-//        i++;
-//    }
-//    va_end(args);
-//    return dict;
-//}
+NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparatedKeysString, id firstValue, ...)
+{
+    NSUInteger i = 0;
+    NSArray <NSString *> *argumentNames = [commaSeparatedKeysString split:@","];
+    
+    if (!argumentNames.count) return nil;
+    
+    NSMutableDictionary *dict = makeMutableDictionary();
+    va_list args;
+    va_start(args, firstValue);
+    
+    NSString *firstArgumentName = argumentNames.firstObject.trimmedOfWhitespaceAndNewlines;
+    dict[firstArgumentName] = OBJECT_OR(firstValue, @"(null)");
+
+    for (NSString *name in argumentNames)
+    {
+        if (i!=0)
+        {
+            id arg = va_arg(args, id);
+            dict[name.trimmedOfWhitespaceAndNewlines] = OBJECT_OR(arg, @"(null)");
+        }
+        i++;
+    }
+    va_end(args);
+    return dict;
+}
 
 NSString *makeDescription(id sender, NSArray *args)
 {
