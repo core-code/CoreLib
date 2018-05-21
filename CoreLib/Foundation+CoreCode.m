@@ -2565,6 +2565,11 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)stringForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID
 {
+    if (!bundleID)
+    {
+        cc_log_error(@"Error: stringForKey:ofForeignApp: called with nil bundleID");
+        return nil;
+    }
     NSString *result;
     CFPropertyListRef value = CFPreferencesCopyAppValue((CFStringRef)defaultName, (CFStringRef)bundleID);
     
