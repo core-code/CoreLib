@@ -133,7 +133,7 @@
 	
 	dispatch_after_main(60, ^
 	{
-		if ([[NSDate date] timeIntervalSinceDate:[NSDate dateWithPreprocessorDate:preprocessorDateString]] > 60 * 60 * 24 * expiryDays)
+		if ([[NSDate date] timeIntervalSinceDate:[NSDate dateWithPreprocessorDate:preprocessorDateString]] > SECONDS_PER_DAYS(expiryDays))
 		{
 			alert_apptitled(@"Sorry this test-version has expired".localized,
 							@"OK".localized, nil, nil);

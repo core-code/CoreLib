@@ -380,7 +380,18 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #ifndef SANDBOX
     if ((cc.appCrashLogFilenames).count)
     {
-        NSString *crashes = [cc.appCrashLogs joined:@"\n"];
+        NSArray <NSString *> *logFilenames = cc.appCrashLogFilenames;
+        NSString *crashes = @"";
+        for (NSString *path in logFilenames)
+        {
+            NSString *token = makeString(@"DSC_%@", path);
+            if (!token.defaultInt)
+            {
+                NSString *additionalCrash = [path.contents.string split:@"/System/Library/"][0];
+                crashes = [crashes stringByAppendingString:additionalCrash];
+                token.defaultInt = 1; // we don't wanna send crashes twice, but erasing them is probably not OK
+            }
+        }
         crashReports = makeString(@"Crash Reports: \n\n%@", crashes);
     }
 #endif
