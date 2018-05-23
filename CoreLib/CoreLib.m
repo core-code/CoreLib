@@ -617,9 +617,14 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         NSString *mailtoLink = @"";
         @try
         {
+            NSString *appName = cc.appName;
+            
+            if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
+                appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
+            
             mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
                                                 kFeedbackEmail,
-                                                cc.appName,
+                                                appName,
                                                 cc.appVersionString,
                                                 cc.appBuildNumber,
                                                 licenseCode,
