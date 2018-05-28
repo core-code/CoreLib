@@ -100,6 +100,7 @@
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @property (readonly, nonatomic) BOOL fileIsRestricted;
 @property (readonly, nonatomic) BOOL fileIsAlias;
+@property (readonly, nonatomic) BOOL fileIsSymlink;
 @property (readonly, nonatomic) NSString *fileAliasTarget;
 #endif
 @property (readonly, nonatomic) unsigned long long fileSize;
@@ -254,6 +255,7 @@
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @property (readonly, nonatomic) BOOL fileIsRestricted;
 @property (readonly, nonatomic) BOOL fileIsAlias;
+@property (readonly, nonatomic) BOOL fileIsSymlink;
 @property (readonly, nonatomic) NSURL *fileAliasTarget;
 #endif
 @property (readonly, nonatomic) unsigned long long fileSize;

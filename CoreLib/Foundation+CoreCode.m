@@ -604,7 +604,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 @dynamic words, lines, strippedOfWhitespace, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
+@dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted;
 #endif
 
 #ifdef USE_SECURITY
@@ -679,6 +679,17 @@ CONST_KEY(CoreCodeAssociatedValue)
     Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
     Boolean alias = CFBooleanGetValue(aliasBool);
 
+    return alias && success;
+}
+
+- (BOOL)fileIsSymlink
+{
+    NSURL *url = [NSURL fileURLWithPath:self];
+    CFURLRef cfurl = (__bridge CFURLRef) url;
+    CFBooleanRef aliasBool = kCFBooleanFalse;
+    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsSymbolicLinkKey, &aliasBool, NULL);
+    Boolean alias = CFBooleanGetValue(aliasBool);
+    
     return alias && success;
 }
 
@@ -1598,7 +1609,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted;
+@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsSymlink;
 
 - (BOOL)fileIsRestricted
 {
@@ -1614,6 +1625,16 @@ CONST_KEY(CCDirectoryObserving)
     Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsAliasFileKey, &aliasBool, NULL);
     Boolean alias = CFBooleanGetValue(aliasBool);
 
+    return alias && success;
+}
+
+- (BOOL)fileIsSymlink
+{
+    CFURLRef cfurl = (__bridge CFURLRef) self;
+    CFBooleanRef aliasBool = kCFBooleanFalse;
+    Boolean success = CFURLCopyResourcePropertyForKey(cfurl, kCFURLIsSymbolicLinkKey, &aliasBool, NULL);
+    Boolean alias = CFBooleanGetValue(aliasBool);
+    
     return alias && success;
 }
 
