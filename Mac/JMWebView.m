@@ -44,9 +44,10 @@
 
         if (self.remoteHTMLURL && self.remoteHTMLURL.length)
         {
+            NSString *remoteURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
             dispatch_async_main(^
             {
-                [self.mainFrame loadRequest:self.remoteHTMLURL.URL.request];
+                [self.mainFrame loadRequest:remoteURL.URL.request];
             });
         }
     });
@@ -58,9 +59,10 @@
           frame:(WebFrame *)frame decisionListener:(id < WebPolicyDecisionListener >)listener
 {
     NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
+    NSString *remoteHTMLURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
 
     if ([request.URL.absoluteString isEqualToString:localHTMLPath] ||
-        [request.URL.absoluteString isEqualToString:self.remoteHTMLURL])
+        [request.URL.absoluteString isEqualToString:remoteHTMLURL])
         [listener use];
     else
     {
