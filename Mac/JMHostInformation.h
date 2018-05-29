@@ -30,6 +30,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
 + (NSString *)machineType;
++ (NSString *)appStoreCountryCode;
 
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
 + (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber;

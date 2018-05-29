@@ -93,6 +93,25 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 @implementation JMHostInformation
 
 
++ (NSString *)appStoreCountryCode
+{
+    NSURL *updateJournalURL = @"~/Library/Application Support/App Store/updatejournal.plist".expanded.fileURL;
+    NSDictionary *updateJournal = [NSDictionary dictionaryWithContentsOfURL:updateJournalURL];
+    NSArray *updates = updateJournal[@"autoInstalledUpdates"];
+    NSDictionary *lastUpdate = updates.lastObject;
+    NSString *url = lastUpdate[@"url"];
+    NSString *countyCode;
+    
+    if ([url contains:@"itunes.apple.com/"])
+    {
+        NSString *laterPart = [url split:@"itunes.apple.com/"][1];
+        
+        countyCode = [laterPart split:@"/"][0];
+    }
+    
+    return countyCode;
+}
+
 #ifdef USE_DISKARBITRATION
 + (NSNumber *)bsdNumberForVolume:(NSString *)volume
 {
@@ -1780,7 +1799,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                         
                         attributes[@(900)] = @{@"currentValue" : @(cw), @"isOnline" : @(1)};
                         attributes[@(901)] = @{@"currentValue" : @(t), @"isOnline" : @(1)};
-                        attributes[@(902)] = @{@"currentValue" : @(as), @"isOnline" : @(1)};
+                        attributes[@(902)] = @{@"currentValue" : @(as), @"threshold": @(ast),  @"isOnline" : @(1)};
                         attributes[@(903)] = @{@"currentValue" : @(ast), @"isOnline" : @(1)};
                         attributes[@(904)] = @{@"currentValue" : @(pu), @"isOnline" : @(1)};
                         attributes[@(905)] = @{@"currentValue" : @(dur), @"isOnline" : @(1)};
