@@ -13,6 +13,10 @@
 #import "JMCrashReporter.h"
 #import "JMHostInformation.h"
 
+@protocol CoreLibAppDelegate
+@optional
+- (NSString *)customSupportRequestAppName;
+@end
 
 #define kLastCrashDateKey        @"CoreLib_lastcrashdate"
 #define kNeverCheckCrashesKey    @"CoreLib_nevercheckcrashes"
@@ -123,8 +127,14 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                                 [inputManagers appendFormat:@" %@ ", inputManager];
                     }
 
-                    NSString *subject = [NSString stringWithFormat:@"%@ Crashreport", cc.appName];
-                    NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", cc.appName, NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuildNumber, crashlog, [NSUserDefaults.standardUserDefaults persistentDomainForName:cc.appBundleIdentifier].description];
+                    NSString *appName = cc.appName;
+                    if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
+                        appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
+                    NSString *licenseCode = makeString(@"%@|%@", cc.appChecksumSHA, cc.sparkleChecksumSHA);
+                    
+                    NSString *subject = [NSString stringWithFormat:@"%@ v%@ (%i) Crash Report (License code: %@)", appName, cc.appVersionString, cc.appBuildNumber, licenseCode];
+                    NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", appName,
+                                       NSLocalizedString(@"Please fill in additional details here", nil), machinetype, inputManagers, cc.appBuildNumber, crashlog, [NSUserDefaults.standardUserDefaults persistentDomainForName:cc.appBundleIdentifier].description];
 
 
                     NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", email, subject, body];
