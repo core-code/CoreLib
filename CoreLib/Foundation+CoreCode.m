@@ -1536,9 +1536,12 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
     {
         char *eventPath = paths[i];
 
-        [tmp addObject:@{@"path" : @(eventPath),
-                         @"flags" : @(eventFlags[i])}];
-
+        if (eventPath)
+        {
+            NSString *eventPathString = @(eventPath);
+            if (eventPathString)
+                [tmp addObject:@{@"path" : eventPathString, @"flags" : @(eventFlags[i])}];
+        }
     }
 
     void (^block)(id input) = (__bridge void (^)(id))(clientCallBackInfo);
@@ -1659,6 +1662,29 @@ CONST_KEY(CCDirectoryObserving)
     return nurl;
 }
 #endif
+
+- (NSData *)readFileHeader:(NSUInteger)maximumByteCount
+{
+    int fd = open(self.path.UTF8String, O_RDONLY);
+    if (fd == -1)
+        return nil;
+    
+    NSUInteger length = maximumByteCount;
+    NSMutableData *data = [[NSMutableData alloc] initWithLength:length];
+    
+    if (data)
+    {
+        void *buffer = [data mutableBytes];
+        
+        NSUInteger actualBytes = read(fd, buffer, length);
+        if (actualBytes < length)
+            [data setLength:actualBytes];
+    }
+    close(fd);
+    
+    return data;
+}
+
 
 - (NSURLRequest *)request
 {

@@ -243,6 +243,8 @@
 - (void)performGET:(void (^)(NSData *data))completion;
 - (void)performPOST:(void (^)(NSData *data))completion;
 
+- (NSData *)readFileHeader:(NSUInteger)maximumByteCount;
+
 - (NSURL *)add:(NSString *)component;
 - (void)open;
 

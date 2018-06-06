@@ -285,7 +285,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define LOGFUNCA				cc_log_debug(@"%@ %@ (%p)", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self)
 #define LOGFUNC					cc_log_debug(@"%@ (%p)", @(__PRETTY_FUNCTION__), (__bridge void *)self)
 #define LOGFUNCPARAMA(x)		cc_log_debug(@"%@ %@ (%p) [%@]", self.undoManager.isUndoing ? @"UNDOACTION" : (self.undoManager.isRedoing ? @"REDOACTION" : @"ACTION"), @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
-#define LOGFUNCPARAM(x)			cc_log_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), (__bridge void *)self, [(x) description])
+#define LOGFUNCPARAM(x)			cc_log_debug(@"%@ (%p) [%@]", @(__PRETTY_FUNCTION__), (__bridge void *)self, [(NSObject *)(x) description])
 #define LOGSUCC					cc_log_debug(@"success %@ %d", @(__FILE__), __LINE__)
 #define LOGFAIL					cc_log_debug(@"failure %@ %d", @(__FILE__), __LINE__)
 #define LOG(x)					cc_log_debug(@"%@", [(x) description]);
