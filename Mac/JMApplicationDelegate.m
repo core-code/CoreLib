@@ -68,8 +68,8 @@
 	{
 		alert(cc.appName, welcomeText, @"OK", nil, nil);
 	}
-    // XXX: this needs a facility so we can call it at "operation" time to, not just start
-    // XXX: we also want to support the model where we restrict features but don't expire
+    // TODO: this needs a facility so we can call it at "operation" time to, not just start
+    // TODO: we also want to support the model where we restrict features but don't expire
 #endif
 }
 
@@ -88,7 +88,7 @@
 
     BOOL showDialog = forceAppearance;
 
-    // XXX: this should not require linking the rating window if you don't want the feature
+    // TODO: this should not require linking the rating window if you don't want the feature
 
     if (!allowNow) return;
     

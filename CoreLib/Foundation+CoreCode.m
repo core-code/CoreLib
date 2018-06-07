@@ -1676,9 +1676,12 @@ CONST_KEY(CCDirectoryObserving)
     {
         void *buffer = [data mutableBytes];
         
-        NSUInteger actualBytes = read(fd, buffer, length);
-        if (actualBytes < length)
-            [data setLength:actualBytes];
+        long actualBytes = read(fd, buffer, length);
+        
+        if (actualBytes <= 0)
+            data = nil;
+        else  if ((NSUInteger)actualBytes < length)
+            [data setLength:(NSUInteger)actualBytes];
     }
     close(fd);
     
