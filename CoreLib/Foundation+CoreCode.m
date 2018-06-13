@@ -1484,11 +1484,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-//- (NSString *)encoded
-//{
-//    NSString *encodedString = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
-//    return [encodedString autorelease];
-//}
+- (NSString *)encoded
+{
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
+}
 
 - (NSString *)stringByTrimmingLeadingCharactersInSet:(NSCharacterSet *)characterSet
 {
