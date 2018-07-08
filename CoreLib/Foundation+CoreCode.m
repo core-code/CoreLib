@@ -949,6 +949,25 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self componentsSeparatedByString:str].count - 1;
 }
 
+- (BOOL)hasAnyPrefix:(NSArray <NSString *>*)possiblePrefixes
+{
+    for (NSString *possiblePrefix in possiblePrefixes)
+        if ([self hasPrefix:possiblePrefix])
+            return YES;
+    
+    return NO;
+}
+
+
+- (BOOL)hasAnySuffix:(NSArray <NSString *>*)possibleSuffixes
+{
+    for (NSString *possibleSuffix in possibleSuffixes)
+        if ([self hasSuffix:possibleSuffix])
+            return YES;
+    
+    return NO;
+}
+
 - (BOOL)contains:(NSString *)otherString
 {
     return ([self rangeOfString:otherString].location != NSNotFound);
