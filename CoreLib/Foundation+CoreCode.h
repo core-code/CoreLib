@@ -41,6 +41,8 @@
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
 - (CCIntRange1D)calculateExtentsOfValues:(int (^)(ObjectType input))block;
 
+
+
 - (NSArray <ObjectType>*)subarrayFromIndex:(NSUInteger)index;       //  containing the characters of the receiver from the one at anIndex to the end (DOES include index)  similar to -[NSString subarrayFromIndex:]
 - (NSArray <ObjectType>*)subarrayToIndex:(NSUInteger)index;         //  containing the characters of the receiver up to, but not including, the one at anIndex. (does NOT include index) similar to -[NSString substringToIndex:]
 - (NSArray <ObjectType>*)slicingSubarrayToIndex:(NSInteger)index;
@@ -66,6 +68,7 @@
 @property (readonly, nonatomic) NSSet <ObjectType> *set;
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
 
+@property (readonly, nonatomic) ObjectType mostFrequentObject;
 
 @end
 

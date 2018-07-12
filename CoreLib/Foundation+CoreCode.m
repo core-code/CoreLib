@@ -43,7 +43,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 @implementation NSArray (CoreCode)
 
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject;
 
 
 - (NSString *)literalString
@@ -59,6 +59,25 @@ CONST_KEY(CoreCodeAssociatedValue)
     return tmp;
 }
 
+- (id)mostFrequentObject
+{
+    NSCountedSet *set = [[NSCountedSet alloc] initWithArray:self];
+    id mostFrequentObject = nil;
+    NSUInteger highestCount = 0;
+    
+    for (id obj in set)
+    {
+        NSUInteger count = [set countForObject:obj];
+        
+        if (count > highestCount)
+        {
+            highestCount = count;
+            mostFrequentObject = obj;
+        }
+    }
+    
+    return mostFrequentObject;
+}
 
 - (NSArray *)sorted
 {
