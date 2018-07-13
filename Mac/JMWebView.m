@@ -57,12 +57,13 @@
 
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request
           frame:(WebFrame *)frame decisionListener:(id < WebPolicyDecisionListener >)listener
-{
+{    
     NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
     NSString *remoteHTMLURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
 
     if ([request.URL.absoluteString isEqualToString:localHTMLPath] ||
-        [request.URL.absoluteString isEqualToString:remoteHTMLURL])
+        [request.URL.absoluteString isEqualToString:remoteHTMLURL] ||
+        [request.URL.absoluteString isEqualToString:@"about:blank"])
         [listener use];
     else
     {

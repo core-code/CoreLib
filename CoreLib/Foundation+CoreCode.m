@@ -2320,6 +2320,22 @@ CONST_KEY(CCDirectoryObserving)
     [invocation invokeWithTarget:self];
 }
 
+- (NSDictionary *)dictionaryByReplacingNSNullWithEmptyStrings
+{
+    NSMutableDictionary *mutableCopy = self.mutableCopy;
+    NSArray *keys = mutableCopy.allKeys;
+    
+    for (NSUInteger idx = 0, count = keys.count; idx < count; ++idx)
+    {
+        id const key = keys[idx];
+        id const obj = mutableCopy[key];
+        if (obj == NSNull.null)
+            mutableCopy[key] = @"";
+    }
+    
+    return mutableCopy.copy;
+}
+
 - (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(id)key
 {
     NSMutableDictionary *mutable = self.mutableObject;

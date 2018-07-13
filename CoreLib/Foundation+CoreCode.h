@@ -333,6 +333,7 @@
 - (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key; // does replace too
 - (NSDictionary *)dictionaryByRemovingKey:(KeyType)key;
 - (NSDictionary *)dictionaryByRemovingKeys:(NSArray <KeyType> *)keys;
+- (NSDictionary *)dictionaryByReplacingNSNullWithEmptyStrings;
 @property (readonly, nonatomic) NSString *literalString;
 - (BOOL)containsAny:(NSArray <NSString *>*)keys;
 - (BOOL)containsAll:(NSArray <NSString *>*)keys;

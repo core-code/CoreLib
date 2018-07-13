@@ -29,4 +29,5 @@
 @property (strong, nonatomic) IBInspectable NSNumber *zoomFactor;	
 @property (assign, nonatomic) IBInspectable BOOL disableScrolling;
 
+
 @end
