@@ -248,7 +248,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arraybyDeletingObjectIdenticalTo:(id)anObject
+- (NSArray *)arrayByDeletingObjectIdenticalTo:(id)anObject
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -258,7 +258,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arraybyDeletingObjectsIdenticalTo:(NSArray *)objects
+- (NSArray *)arrayByDeletingObjectsIdenticalTo:(NSArray *)objects
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -269,7 +269,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arraybyDeletingObjectsAtIndexes:(NSIndexSet *)indexSet
+- (NSArray *)arrayByDeletingObjectsAtIndexes:(NSIndexSet *)indexSet
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -279,7 +279,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arraybyDeletingObjectAtIndex:(NSUInteger)index
+- (NSArray *)arrayByDeletingObjectAtIndex:(NSUInteger)index
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -2345,7 +2345,7 @@ CONST_KEY(CCDirectoryObserving)
     return mutable.immutableObject;
 }
 
-- (NSDictionary *)dictionarybyDeletingKey:(id)key
+- (NSDictionary *)dictionaryByDeletingKey:(id)key
 {
     NSMutableDictionary *mutable = self.mutableObject;
 
@@ -2354,7 +2354,7 @@ CONST_KEY(CCDirectoryObserving)
     return mutable.immutableObject;
 }
 
-- (NSDictionary *)dictionarybyDeletingKeys:(NSArray <NSString *>*)keys
+- (NSDictionary *)dictionaryByDeletingKeys:(NSArray <NSString *>*)keys
 {
     NSMutableDictionary *mutable = self.mutableObject;
 
