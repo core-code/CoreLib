@@ -28,10 +28,10 @@
 @property (readonly, nonatomic) NSString *literalString;
 
 - (NSArray <ObjectType>*)arrayByAddingNewObject:(ObjectType)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
-- (NSArray <ObjectType>*)arrayByRemovingObjectIdenticalTo:(ObjectType)anObject;
-- (NSArray <ObjectType>*)arrayByRemovingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;
-- (NSArray <ObjectType>*)arrayByRemovingObjectAtIndex:(NSUInteger)index;
-- (NSArray <ObjectType>*)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray <ObjectType>*)arraybyDeletingObjectIdenticalTo:(ObjectType)anObject;
+- (NSArray <ObjectType>*)arraybyDeletingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;
+- (NSArray <ObjectType>*)arraybyDeletingObjectAtIndex:(NSUInteger)index;
+- (NSArray <ObjectType>*)arraybyDeletingObjectsAtIndexes:(NSIndexSet *)indexSet;
 - (NSArray <ObjectType>*)arrayByReplacingObject:(ObjectType)anObject withObject:(ObjectType)newObject;
 - (ObjectType)safeObjectAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
@@ -331,8 +331,8 @@
 @property (readonly, nonatomic) NSData *XMLData;
 @property (readonly, nonatomic) NSMutableDictionary <KeyType, ObjectType> *mutableObject;
 - (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key; // does replace too
-- (NSDictionary *)dictionaryByRemovingKey:(KeyType)key;
-- (NSDictionary *)dictionaryByRemovingKeys:(NSArray <KeyType> *)keys;
+- (NSDictionary *)dictionarybyDeletingKey:(KeyType)key;
+- (NSDictionary *)dictionarybyDeletingKeys:(NSArray <KeyType> *)keys;
 - (NSDictionary *)dictionaryByReplacingNSNullWithEmptyStrings;
 @property (readonly, nonatomic) NSString *literalString;
 - (BOOL)containsAny:(NSArray <NSString *>*)keys;
