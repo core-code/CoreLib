@@ -1647,9 +1647,34 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize; // , path
+@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsSymlink;
+
+
+- (NSString *)fileChecksumSHA
+{
+#ifdef USE_SECURITY
+    if (self.fileExists)
+    {
+        NSData *d = [NSData dataWithContentsOfURL:self];
+        unsigned char result[CC_SHA1_DIGEST_LENGTH];
+        CC_SHA1(d.bytes, (CC_LONG)d.length, result);
+        NSMutableString *ms = [NSMutableString string];
+        
+        for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+        {
+            [ms appendFormat: @"%02x", (int)(result [i])];
+        }
+        
+        return [ms copy];
+    }
+    else
+        return @"NoFile";
+#else
+    return @"Unvailable";
+#endif
+}
 
 - (BOOL)fileIsRestricted
 {

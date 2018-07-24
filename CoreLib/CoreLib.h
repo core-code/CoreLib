@@ -122,6 +122,11 @@ CC_ENUM(uint8_t, openChoice)
 	openMacupdateWebsite		// MacupdateProductPage info.plist key
 };
 
+@protocol CoreLibAppDelegate
+@optional
+- (NSString *)customSupportRequestAppName;
+- (NSString *)customSupportRequestLicense;
+@end
 
 #define MAKE_MAKER(classname) \
 static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
@@ -156,7 +161,6 @@ MAKE_MAKER(MutableSet)
 @property (readonly, nonatomic) NSArray <NSString *>*appCrashLogFilenames;
 @property (readonly, nonatomic) NSArray <NSString *>*appCrashLogs;
 @property (readonly, nonatomic) NSString *appChecksumSHA;
-@property (readonly, nonatomic) NSString *sparkleChecksumSHA;
 
 - (void)openURL:(openChoice)choice;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

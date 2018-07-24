@@ -29,10 +29,7 @@
 #include <assert.h>
 #endif
 
-@protocol CoreLibAppDelegate
-@optional
-- (NSString *)customSupportRequestAppName;
-@end
+
 
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
@@ -321,46 +318,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSString *)appChecksumSHA
 {
-#ifdef USE_SECURITY
     NSURL *u = NSBundle.mainBundle.executableURL;
-    NSData *d = [NSData dataWithContentsOfURL:u];
-    unsigned char result[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(d.bytes, (CC_LONG)d.length, result);
-    NSMutableString *ms = [NSMutableString string];
     
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-    {
-        [ms appendFormat: @"%02x", (int)(result [i])];
-    }
-    
-    return [ms copy];
-#else
-    return @"Unvailable";
-#endif
-}
-- (NSString *)sparkleChecksumSHA
-{
-#ifdef USE_SECURITY
-   NSURL *u = @[NSBundle.mainBundle.bundlePath, @"/Contents/Frameworks/Sparkle.framework/Versions/A/Sparkle"].path.fileURL;
-   if (u.fileExists)
-   {
-       NSData *d = [NSData dataWithContentsOfURL:u];
-       unsigned char result[CC_SHA1_DIGEST_LENGTH];
-       CC_SHA1(d.bytes, (CC_LONG)d.length, result);
-       NSMutableString *ms = [NSMutableString string];
-       
-       for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-       {
-           [ms appendFormat: @"%02x", (int)(result [i])];
-       }
-       
-       return [ms copy];
-   }
-   else
-       return @"";
-#else
-    return @"Unvailable";
-#endif
+    return u.fileChecksumSHA;
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -397,13 +357,16 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 #endif
 
-    NSString *licenseCode = makeString(@"%@|%@", cc.appChecksumSHA, cc.sparkleChecksumSHA);
-    NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
     NSString *appName = cc.appName;
+    NSString *licenseCode = cc.appChecksumSHA;
+    NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
+
     
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
         appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
-                   
+    if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
+        licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
+    
     NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
                                    appName,
                                    cc.appVersionString,
@@ -609,7 +572,6 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 #endif
 #endif
         
-        NSString *licenseCode = makeString(@"%@|%@", cc.appChecksumSHA, cc.sparkleChecksumSHA);
         NSString *visibleDetails = details;
         if (visibleDetails.length > maxLen)
             visibleDetails = makeString(@"%@  …\n(Remaining message omitted)", [visibleDetails clamp:maxLen]);
@@ -618,9 +580,12 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         @try
         {
             NSString *appName = cc.appName;
-            
+            NSString *licenseCode = cc.appChecksumSHA;
+
             if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
                 appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
+            if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
+                licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
             
             mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
                                                 kFeedbackEmail,

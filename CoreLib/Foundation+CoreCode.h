@@ -269,6 +269,9 @@
 @property (readonly, nonatomic) unsigned long long fileOrDirectorySize;
 @property (readonly, nonatomic) unsigned long long directorySize;
 
+@property (readonly, nonatomic) NSString *fileChecksumSHA;
+
+
 @property (readonly, nonatomic) NSURLRequest *request;
 @property (readonly, nonatomic) NSMutableURLRequest *mutableRequest;
 @property (readonly, nonatomic) BOOL isWriteablePath;

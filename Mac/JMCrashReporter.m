@@ -13,10 +13,7 @@
 #import "JMCrashReporter.h"
 #import "JMHostInformation.h"
 
-@protocol CoreLibAppDelegate
-@optional
-- (NSString *)customSupportRequestAppName;
-@end
+
 
 #define kLastCrashDateKey        @"CoreLib_lastcrashdate"
 #define kNeverCheckCrashesKey    @"CoreLib_nevercheckcrashes"
@@ -132,7 +129,10 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                     NSString *appName = cc.appName;
                     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
                         appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
-                    NSString *licenseCode = makeString(@"%@|%@", cc.appChecksumSHA, cc.sparkleChecksumSHA);
+                    NSString *licenseCode = cc.appChecksumSHA;
+                    if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
+                        licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
+                    
                     
                     NSString *subject = [NSString stringWithFormat:@"%@ v%@ (%i) Crash Report (License code: %@)", appName, cc.appVersionString, cc.appBuildNumber, licenseCode];
                     NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nMachine Type: %@\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", appName,
