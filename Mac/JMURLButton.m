@@ -48,4 +48,31 @@
         cc_log(@"JMURLButton clicked but no data!");
 }
 
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Show URL in Tooltip" action:@selector(showClicked:) keyEquivalent:@""]];
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Open URL in Browser" action:@selector(buttonClicked:) keyEquivalent:@""]];
+    [menu addItem:[[NSMenuItem alloc] initWithTitle:@"Copy URL to Clipboard" action:@selector(copyClicked:) keyEquivalent:@""]];
+    
+    [NSMenu popUpContextMenu:menu withEvent:theEvent forView:self];
+    
+}
+
+- (void)showClicked:(id)sender
+{
+    [NSHelpManager.sharedHelpManager setContextHelp:[[NSAttributedString alloc] initWithString:NON_NIL_STR(self.targetURL)] forObject:self];
+    [NSHelpManager.sharedHelpManager showContextHelpForObject:self locationHint:NSEvent.mouseLocation];
+    [NSHelpManager.sharedHelpManager removeContextHelpForObject:self];
+}
+
+- (void)copyClicked:(id)sender
+{
+    NSPasteboard *pasteBoard = [NSPasteboard generalPasteboard];
+    [pasteBoard declareTypes:@[NSStringPboardType] owner:nil];
+    [pasteBoard setString:self.targetURL
+                  forType:NSStringPboardType];
+    
+}
 @end

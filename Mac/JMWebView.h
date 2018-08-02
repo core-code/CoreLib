@@ -28,6 +28,7 @@
 @property (strong, nonatomic) IBInspectable NSString *remoteHTMLURL;	// if this is set and internet is online the contents are replaced with the live version
 @property (strong, nonatomic) IBInspectable NSNumber *zoomFactor;	
 @property (assign, nonatomic) IBInspectable BOOL disableScrolling;
+@property (assign, nonatomic) BOOL openOnlyClicksInBrowser;
 
 
 @end

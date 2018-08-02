@@ -63,7 +63,8 @@
 
     if ([request.URL.absoluteString isEqualToString:localHTMLPath] ||
         [request.URL.absoluteString isEqualToString:remoteHTMLURL] ||
-        [request.URL.absoluteString isEqualToString:@"about:blank"])
+        [request.URL.absoluteString isEqualToString:@"about:blank"] ||
+        (self.openOnlyClicksInBrowser && ([actionInformation[WebActionNavigationTypeKey] intValue] != WebNavigationTypeLinkClicked)))
         [listener use];
     else
     {
