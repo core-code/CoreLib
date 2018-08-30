@@ -29,7 +29,7 @@
 #include <assert.h>
 #endif
 
-
+#import "JMHostInformation.h"
 
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
@@ -360,7 +360,11 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     NSString *appName = cc.appName;
     NSString *licenseCode = cc.appChecksumSHA;
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
-
+    NSString *udid = @"N/A";
+    
+#if defined(USE_SECURITY) && defined(USE_IOKIT)
+    udid = [JMHostInformation macAddress].SHA1;
+#endif
     
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
         appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
@@ -373,10 +377,11 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                                    cc.appBuildNumber,
                                    licenseCode);
     
-    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@\n%@\n%@",
+    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@ UDID: %@\n%@\n%@",
                                     text,
                                     _machineType(),
                                     NSProcessInfo.processInfo.operatingSystemVersionString,
+                                    udid,
                                     encodedPrefs,
                                     crashReports);
     
