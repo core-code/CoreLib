@@ -256,7 +256,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 #ifdef USE_IOKIT
             NSString *path = resultDict[@"DADevicePath"];
-            io_registry_entry_t entry =    IORegistryEntryFromPath(kIOMasterPortDefault, path.UTF8String);
+            io_registry_entry_t entry = IORegistryEntryFromPath(kIOMasterPortDefault, path.UTF8String);
 
             if (entry != MACH_PORT_NULL)
             {
@@ -278,7 +278,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                 IOObjectRelease(entry);
             }
             else
-                cc_log_error(@"Error:    could not IORegistryEntryFromPath() for DADevicePath");
+                cc_log_error(@"Error:    could not IORegistryEntryFromPath(%@) for DADevicePath - dict %@", path, resultDict.description);
 #endif
         }
         else
