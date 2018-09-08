@@ -1216,7 +1216,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)download
 {
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(SKIP_MAINTHREADDOWNLOAD_WARNING)
     if ([NSThread currentThread] == [NSThread mainThread])
         LOG(@"Warning: performing blocking download on main thread");
 #endif
