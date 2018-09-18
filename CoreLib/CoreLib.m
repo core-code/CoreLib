@@ -29,10 +29,6 @@
 #include <assert.h>
 #endif
 
-#import "JMHostInformation.h"
-
-NSString *_machineType(void);
-BOOL _isUserAdmin(void);
 
 CoreLib *cc;
 NSUserDefaults *userDefaults;
@@ -49,6 +45,11 @@ NSProcessInfo *processInfo;
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+
+#import "JMHostInformation.h"
+NSString *_machineType(void);
+BOOL _isUserAdmin(void);
+
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
     alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
@@ -137,8 +138,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         if (NSClassFromString(@"JMRatingWindowController") &&
             NSProcessInfo.processInfo.environment[@"XCInjectBundleInto"] != nil)
         {
-            assert(@"icon-appstore.png".resourceURL);
-            assert(@"icon-macupdate.png".resourceURL);
+            assert(@"icon-appstore".namedImage);
+            assert(@"icon-macupdate".namedImage);
             assert(@"JMRatingWindow.nib".resourceURL);
         }
         #ifdef USE_SPARKLE

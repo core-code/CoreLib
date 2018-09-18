@@ -37,6 +37,8 @@
 		B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */; };
 		B90E8E0C1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */; };
 		B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF21B1787B1007C0FB4 /* JMWebView.m */; };
+		B91E230B2151683700046AF2 /* JMRatingWindow.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */; };
+		B91E230C2151683700046AF2 /* JMRatingWindow.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */; };
 		B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
 		B933AB2D18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
 		B933AB3218BBDFA1006E42B9 /* CoreLib.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2418BBDFA1006E42B9 /* CoreLib.m */; };
@@ -109,6 +111,7 @@
 		B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMVisibilityManager.m; sourceTree = "<group>"; };
 		B90E8DF11B1787B1007C0FB4 /* JMWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebView.h; sourceTree = "<group>"; };
 		B90E8DF21B1787B1007C0FB4 /* JMWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWebView.m; sourceTree = "<group>"; };
+		B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = JMRatingWindow.xcassets; sourceTree = "<group>"; };
 		B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CoreLibTests.xcconfig; sourceTree = "<group>"; };
 		B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
 		B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppKit+CoreCode.m"; sourceTree = "<group>"; };
@@ -139,11 +142,9 @@
 		B9EF05D91865F4A000CF7A38 /* CoreLibTests Mac ARC.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreLibTests Mac ARC.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9F3268E1EE6C0590020E401 /* JMRatingWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMRatingWindowController.h; sourceTree = "<group>"; };
 		B9F3268F1EE6C0590020E401 /* JMEditableBorderlessWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JMEditableBorderlessWindow.m; sourceTree = "<group>"; };
-		B9F326901EE6C0590020E401 /* icon-macupdate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-macupdate.png"; sourceTree = "<group>"; };
 		B9F326911EE6C0590020E401 /* JMEditableBorderlessWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMEditableBorderlessWindow.h; sourceTree = "<group>"; };
 		B9F326921EE6C0590020E401 /* JMRatingWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JMRatingWindowController.m; sourceTree = "<group>"; };
 		B9F326931EE6C0590020E401 /* JMRatingWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JMRatingWindow.xib; sourceTree = "<group>"; };
-		B9F326941EE6C0590020E401 /* icon-appstore.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-appstore.png"; sourceTree = "<group>"; };
 		B9F326991EE6CD7E0020E401 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -282,9 +283,8 @@
 			children = (
 				B9F3268E1EE6C0590020E401 /* JMRatingWindowController.h */,
 				B9F326921EE6C0590020E401 /* JMRatingWindowController.m */,
+				B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */,
 				B9F326931EE6C0590020E401 /* JMRatingWindow.xib */,
-				B9F326901EE6C0590020E401 /* icon-macupdate.png */,
-				B9F326941EE6C0590020E401 /* icon-appstore.png */,
 				B9F326911EE6C0590020E401 /* JMEditableBorderlessWindow.h */,
 				B9F3268F1EE6C0590020E401 /* JMEditableBorderlessWindow.m */,
 			);
@@ -370,6 +370,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B91E230B2151683700046AF2 /* JMRatingWindow.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +378,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B91E230C2151683700046AF2 /* JMRatingWindow.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
