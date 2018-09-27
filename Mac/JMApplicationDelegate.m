@@ -194,7 +194,16 @@
 
 	[NSApp activateIgnoringOtherApps:YES];
 	[*window makeKeyAndOrderFront:self];
+    
+    if (!*window)
+    {
+        NSString *nibPath = @[cc.resDir, @"Base.lproj", makeString(@"%@.nib", nibName)].path;
+        
+        cc_log_error(@"Error: openWindow:nibName:(%@) failed %i", nibName, nibPath.fileExists);
+    }
+    
 	assert((*window).delegate == (id <NSWindowDelegate>)self);
+    assert(*window);
 }
 
 - (IBAction)terminate:(id)sender
