@@ -363,6 +363,7 @@
 
 @interface NSLocale (CoreCode)
 
++ (NSArray <NSString *> *)preferredLanguages2Letter;
 + (NSArray <NSString *> *)preferredLanguages3Letter;
 
 @end
