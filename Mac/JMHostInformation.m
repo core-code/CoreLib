@@ -268,7 +268,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                     NSString *mediumType = ((__bridge NSDictionary *)property)[@(kIOPropertyMediumTypeKey)];
 
                     if ([mediumType isEqualToString:@(kIOPropertyMediumTypeSolidStateKey)])
-                        resultDict = [resultDict dictionaryByAddingValue:@(YES) forKey:@"isSSD"];
+                        resultDict = [resultDict dictionaryBySettingValue:@(YES) forKey:@"isSSD"];
 
                     CFRelease(property);
                 }
@@ -296,7 +296,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     CFRelease(session);
     
     if ([resultDict[@"DABusName"] contains:@"NVMe"] || [resultDict[@"DABusPath"] contains:@"NVMe"] || [resultDict[@"DADevicePath"] contains:@"NVMe"] || [resultDict[@"DAMediaPath"] contains:@"NVMe"])
-        resultDict = [resultDict dictionaryByAddingValue:@(YES) forKey:@"isNVME"];
+        resultDict = [resultDict dictionaryBySettingValue:@(YES) forKey:@"isNVME"];
 
     return resultDict;
 }

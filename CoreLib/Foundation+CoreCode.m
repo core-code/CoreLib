@@ -2367,7 +2367,7 @@ CONST_KEY(CCDirectoryObserving)
     return mutableCopy.copy;
 }
 
-- (NSDictionary *)dictionaryByAddingValue:(id)value forKey:(id)key
+- (NSDictionary *)dictionaryBySettingValue:(id)value forKey:(id)key
 {
     NSMutableDictionary *mutable = self.mutableObject;
 
@@ -2425,6 +2425,17 @@ CONST_KEY(CCDirectoryObserving)
 {
     return [NSDictionary dictionaryWithDictionary:self];
 }
+
+- (void)addObject:(id)object toMutableArrayAtKey:(id)key
+{
+    NSMutableArray *existingEntry = self[key];
+    
+    if (existingEntry)
+        [existingEntry addObject:object];
+    else
+        self[key] = [NSMutableArray arrayWithObject:object];
+}
+
 @end
 
 

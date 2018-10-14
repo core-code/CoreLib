@@ -330,14 +330,14 @@
 
 @interface NSDictionary <KeyType, ObjectType>(CoreCode)
 
+@property (readonly, nonatomic) NSString *literalString;
 @property (readonly, nonatomic) NSData *JSONData;
 @property (readonly, nonatomic) NSData *XMLData;
 @property (readonly, nonatomic) NSMutableDictionary <KeyType, ObjectType> *mutableObject;
-- (NSDictionary *)dictionaryByAddingValue:(ObjectType)value forKey:(KeyType)key; // does replace too
+- (NSDictionary *)dictionaryBySettingValue:(ObjectType)value forKey:(KeyType)key; // does replace too
 - (NSDictionary *)dictionaryByDeletingKey:(KeyType)key;
 - (NSDictionary *)dictionaryByDeletingKeys:(NSArray <KeyType> *)keys;
 - (NSDictionary *)dictionaryByReplacingNSNullWithEmptyStrings;
-@property (readonly, nonatomic) NSString *literalString;
 - (BOOL)containsAny:(NSArray <NSString *>*)keys;
 - (BOOL)containsAll:(NSArray <NSString *>*)keys;
 
@@ -347,6 +347,9 @@
 @interface NSMutableDictionary <KeyType, ObjectType>(CoreCode)
 
 @property (readonly, nonatomic) NSDictionary <KeyType, ObjectType> *immutableObject;
+
+// 'defaultdict'
+- (void)addObject:(ObjectType)object toMutableArrayAtKey:(KeyType)key; // the point here is that it will add a mutablearray with the single object if the key doesn't exist - a poor mans 'defaultdict'
 
 @end
 
