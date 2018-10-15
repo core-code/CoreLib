@@ -43,8 +43,19 @@ CONST_KEY(CoreCodeAssociatedValue)
 @implementation NSArray (CoreCode)
 
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary;
 
+
+- (NSDictionary *)dictionary
+{
+    NSNumber *oneObject = @(1);
+    NSMutableDictionary *result = makeMutableDictionary();
+ 
+    for (id object in self)
+        result[object] = oneObject;
+    
+    return result.immutableObject;
+}
 
 - (NSString *)literalString
 {

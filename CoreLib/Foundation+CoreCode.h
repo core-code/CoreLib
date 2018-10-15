@@ -26,6 +26,7 @@
 @property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSArray <ObjectType> *sorted;
 @property (readonly, nonatomic) NSString *literalString;
+@property (readonly, nonatomic) NSDictionary *dictionary; // will yield a dictionary that has the array contents as keys and @(1) as objects
 
 - (NSArray <ObjectType>*)arrayByAddingNewObject:(ObjectType)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray <ObjectType>*)arrayByDeletingObjectIdenticalTo:(ObjectType)anObject;
