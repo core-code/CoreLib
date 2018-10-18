@@ -264,10 +264,13 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
                 if (property)
                 {
+                    NSString *mediumTypeKey = @(kIOPropertyMediumTypeKey);
+                    NSString *mediumTypeSSDKey = @(kIOPropertyMediumTypeSolidStateKey);
 
-                    NSString *mediumType = ((__bridge NSDictionary *)property)[@(kIOPropertyMediumTypeKey)];
+                    NSDictionary *propertyDict = (__bridge NSDictionary *)property;
+                    NSString *mediumType = propertyDict[mediumTypeKey];
 
-                    if ([mediumType isEqualToString:@(kIOPropertyMediumTypeSolidStateKey)])
+                    if ([mediumType isEqualToString:mediumTypeSSDKey])
                         resultDict = [resultDict dictionaryBySettingValue:@(YES) forKey:@"isSSD"];
 
                     CFRelease(property);
@@ -1004,7 +1007,8 @@ NSString *_machineType(void);
                                     {
                                         [self _findZFSBacking:&foundBacking volumeName:volumeName nonRemovableVolumes:nonRemovableVolumes bsdNum:bsdNum];
                                     }
-                                    else if (props[@"DAMediaLeaf"] && [props[@"DAMediaLeaf"] intValue])
+                                    else if ((props[@"DAMediaLeaf"] && [props[@"DAMediaLeaf"] intValue]) ||
+                                             ([[props objectForKey:@"DAMediaName"] isEqualToString:@"AppleAPFSMedia"]))
                                     {
                                         foundBacking = [self _findRAIDBacking:bsdName props:props volumeName:volumeName nonRemovableVolumes:nonRemovableVolumes];
                                     }

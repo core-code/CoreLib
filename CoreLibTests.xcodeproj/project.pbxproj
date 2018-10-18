@@ -512,6 +512,7 @@
 					"-Wno-reserved-id-macro",
 					"-Wno-cast-qual",
 					"-Rno-module-build",
+					"-Wno-objc-messaging-id",
 				);
 			};
 			name = Debug;
@@ -575,6 +576,7 @@
 					"-Wno-reserved-id-macro",
 					"-Wno-cast-qual",
 					"-Rno-module-build",
+					"-Wno-objc-messaging-id",
 				);
 			};
 			name = Release;
