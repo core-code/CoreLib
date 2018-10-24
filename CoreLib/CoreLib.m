@@ -91,7 +91,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         processInfo = NSProcessInfo.processInfo;
     #endif
 
-        if (!self.suppURL.fileExists)
+        if (!self.suppURL.fileExists && self.appName)
             [fileManager createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
 
 
@@ -112,15 +112,19 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         #if !defined(XCTEST) || !XCTEST
             NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-            if (![[self appBundleIdentifier] isEqualToString:bundleID])
+            if (![[self appBundleIdentifier] isEqualToString:bundleID] && self.appName)
+            {
+                cc_log_error(@"Error: bundle identifier doesn't match");
+
                 exit(666);
+            }
         #endif
 
         if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
             ![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
             cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
-
+#ifndef CLI
         if (![[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
 
@@ -132,6 +136,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
             LOG(@"Warning: LSApplicationCategoryType not properly set");
+#endif
         
         
         
@@ -312,9 +317,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
     NSURL *dir = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
-    assert(dir && self.appName);
-
-    return [dir add:self.appName];
+    return self.appName ? [dir add:self.appName] : nil;
 }
 
 - (NSString *)appChecksumSHA
@@ -1181,7 +1184,10 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
     _cc_log_tologfile(level, str);
     _cc_log_toprefs(level, str);
 
-
+#ifdef CLI
+#undef NSLog
+    NSLog(@"%@", str);
+#else
     if (@available(macOS 10.12, iOS 10.0, *))
     {
         const char *utf = str.UTF8String;
@@ -1202,6 +1208,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
         asl_log(NULL, NULL, level, "%s", str.UTF8String);
 #pragma clang diagnostic pop
     }
+#endif
     
 #ifdef DEBUG
     if (level <= CC_LOG_LEVEL_ERROR)
