@@ -1185,8 +1185,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
     _cc_log_toprefs(level, str);
 
 #ifdef CLI
-#undef NSLog
-    NSLog(@"%@", str);
+    fprintf(stderr, "%s\n", str.UTF8String);
 #else
     if (@available(macOS 10.12, iOS 10.0, *))
     {
