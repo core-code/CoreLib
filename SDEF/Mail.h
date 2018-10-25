@@ -366,7 +366,7 @@ typedef enum MailTypeOfAccount MailTypeOfAccount;
 @property double messageFontSize;  // Font size for messages (proportional font)
 @property (copy) NSString *messageListFont;  // Font for message list
 @property double messageListFontSize;  // Font size for message list
-@property (copy) NSString *newMailSound;  // Name of new mail sound or 'None' if no sound is selected
+@property (copy) NSString *newMailSound NS_RETURNS_NOT_RETAINED;  // Name of new mail sound or 'None' if no sound is selected
 @property (copy, readonly) MailMailbox *outbox;  // The top level Out mailbox
 @property BOOL shouldPlayOtherMailSounds;  // Indicates whether sounds will be played for various things such as when a messages is sent or if no mail is found when manually checking for new mail or if there is a fetch error
 @property BOOL sameReplyFormat;  // Indicates whether replies will be in the same text format as the message to which you are replying
@@ -564,7 +564,7 @@ typedef enum MailTypeOfAccount MailTypeOfAccount;
 @property (copy) NSString *replyText;  // If rule matches, reply to message and prepend with this text. Set to empty string to disable this action
 @property (copy) id runScript;  // If rule matches, run this compiled AppleScript file. Set to empty string to disable this action
 @property BOOL allConditionsMustBeMet;  // Indicates whether all conditions must be met for rule to execute
-@property (copy) MailMailbox *copyMessage;  // If rule matches, copy to this mailbox
+@property (copy) MailMailbox *copyMessage NS_RETURNS_NOT_RETAINED;  // If rule matches, copy to this mailbox
 @property (copy) MailMailbox *moveMessage;  // If rule matches, move to this mailbox
 @property BOOL highlightTextUsingColor;  // Indicates whether the color will be used to highlight the text or background of a message in the message list
 @property BOOL enabled;  // Indicates whether the rule is enabled
