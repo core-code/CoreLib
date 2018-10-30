@@ -473,8 +473,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     {
         [task waitUntilExit];
 #ifdef DEBUG
+#ifndef CLI
         if ([NSThread currentThread] == [NSThread mainThread])
             cc_log(@"Warning: -[NSTask waitUntilExit] on main thread considered harmful");
+        
+#endif
 #endif
     }
     else
