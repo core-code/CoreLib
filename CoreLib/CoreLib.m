@@ -259,7 +259,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (int)appBuildNumber
 {
-    return [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"] intValue];
+    NSString *bundleVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+    return bundleVersion.intValue;
 }
 
 - (NSString *)resDir
@@ -418,7 +419,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         urlString = [bundle objectForInfoDictionaryKey:@"StoreProductPage"];
     else if (choice == openAppStoreApp)
     {
-        urlString = [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] replaced:@"https" with:@"macappstore"];
+        NSString *spp = [bundle objectForInfoDictionaryKey:@"StoreProductPage"];
+        urlString = [spp replaced:@"https" with:@"macappstore"];
         urlString = [urlString stringByAppendingString:@"&at=1000lwks"];
         
         if (!urlString)
@@ -1106,7 +1108,9 @@ void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit
     {
         NSString *path = fileURL.path;
 
-        unsigned long long filesize = [[fileManager attributesOfItemAtPath:path error:NULL][@"NSFileSize"] unsignedLongLongValue];
+        NSDictionary *attr = [fileManager attributesOfItemAtPath:path error:NULL];
+        NSNumber *fs = attr[NSFileSize];
+        unsigned long long filesize = fs.unsignedLongLongValue;
 
         if (filesize > filesizeLimit)
         {

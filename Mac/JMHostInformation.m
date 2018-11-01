@@ -553,7 +553,8 @@ NSString *_machineType(void);
     
     for (NSMutableDictionary *disk in array)  
     {
-        if ([disk[kDiskNumberKey] isEqualToNumber:num])
+        NSNumber *diskNum = disk[kDiskNumberKey];
+        if ([diskNum isEqualToNumber:num])
         {
             NSString *currentName = disk[kDiskNameKey];
             disk[kDiskNameKey] = [name stringByAppendingFormat:@", %@", currentName];

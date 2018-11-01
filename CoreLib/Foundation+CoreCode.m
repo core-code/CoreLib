@@ -816,7 +816,8 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
     if (!attr) return 0;
-    return [attr[NSFileSize] unsignedLongLongValue];
+    NSNumber *fs = attr[NSFileSize];
+    return fs.unsignedLongLongValue;
 }
 
 - (unsigned long long)directorySize

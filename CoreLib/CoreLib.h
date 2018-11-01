@@ -311,7 +311,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define IS_IN_RANGE(v,l,h)		(((v) >= (l)) && ((v) <= (h)))
 #define CLAMP(x, low, high)		(((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 #define ONCE_PER_FUNCTION(b)	{ static dispatch_once_t onceToken; dispatch_once(&onceToken, b); }
-#define ONCE_PER_OBJECT(o,b)	@synchronized(o){ static dispatch_once_t onceToken; onceToken = [[o associatedValueForKey:o.id] longValue]; dispatch_once(&onceToken, b); [o setAssociatedValue:@(onceToken) forKey:o.id]; }
+#define ONCE_PER_OBJECT(o,b)	@synchronized(o){ static dispatch_once_t onceToken; NSNumber *tokenNumber = [o associatedValueForKey:o.id]; onceToken = tokenNumber.longValue; dispatch_once(&onceToken, b); [o setAssociatedValue:@(onceToken) forKey:o.id]; }
 #define ONCE_EVERY_MINUTES(b,m)	{ static NSDate *time = nil; if (!time || [[NSDate date] timeIntervalSinceDate:time] > (m * 60)) { b(); time = [NSDate date]; }}
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
@@ -331,7 +331,6 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define SECONDS_PER_HOURS(x)    (SECONDS_PER_MINUTES(x) * 60)
 #define SECONDS_PER_DAYS(x)     (SECONDS_PER_HOURS(x) * 24)
 #define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS(x) * 7)
-
 
 #define var __auto_type
 #define let const __auto_type
