@@ -381,6 +381,7 @@
 - (id)associatedValueForKey:(const NSString *)key;
 - (void)setAssociatedValue:(id)value forKey:(const NSString *)key;
 + (instancetype)newWith:(NSDictionary *)dict;
+@property (readonly, nonatomic) NSString *literalString;
 
 @end
 

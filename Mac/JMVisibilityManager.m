@@ -54,7 +54,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     if ((self = [super init]))
     {
 #ifdef DEBUG
-        assert([[NSBundle.mainBundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue]);
+        assert([(NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue]);
 #endif
         visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
         

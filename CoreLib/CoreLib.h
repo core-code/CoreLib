@@ -9,12 +9,7 @@
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-
 #ifdef __OBJC__
-
-
-
 
 
 #ifndef CORELIB
@@ -213,7 +208,7 @@ NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
 NSString *makeTempDirectory(void);
 NSString *makeTempFilepath(NSString *extension);
 NSPredicate *makePredicate(NSString *format, ...);
-NSString *makeDescription(id sender, NSArray *args);
+NSString *makeDescription(NSObject *sender, NSArray *args);
 #define makeDictionaryOfVariables(...) _makeDictionaryOfVariables(@"" # __VA_ARGS__, __VA_ARGS__, nil) // like NSDictionaryOfVariableBindings() but safe in case of nil values
 NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString * commaSeparatedKeysString, id firstValue, ...); // not for direct use
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
@@ -267,12 +262,12 @@ void log_to_prefs(NSString *string);
 void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit);
 
 typedef NS_ENUM(uint8_t, cc_log_type)
-    {
-        CC_LOG_LEVEL_DEBUG   = 7,
-        CC_LOG_LEVEL_DEFAULT = 5,
-        CC_LOG_LEVEL_ERROR   = 3,
-        CC_LOG_LEVEL_FAULT   = 0,
-    };
+{
+    CC_LOG_LEVEL_DEBUG   = 7,
+    CC_LOG_LEVEL_DEFAULT = 5,
+    CC_LOG_LEVEL_ERROR   = 3,
+    CC_LOG_LEVEL_FAULT   = 0,
+};
 
 void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG
@@ -347,8 +342,6 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #else
 #define kFeedbackEmail @"feedback@corecode.io"
 #endif
-
-
 
 
 

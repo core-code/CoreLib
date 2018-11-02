@@ -157,11 +157,12 @@
 #endif
 }
 
-- (IBAction)openURL:(id)sender
+- (IBAction)openURL:(NSObject *)sender
 {
 	LOGFUNC;
 
-	int tag = [[sender valueForKey:@"tag"] intValue];
+    NSNumber *tagNum = [sender valueForKey:@"tag"];
+	int tag = tagNum.intValue;
 
 	[cc openURL:(openChoice)tag];
 }
@@ -251,10 +252,11 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 #endif
 }
 
-- (IBAction)setUpdateCheck:(id)sender
+- (IBAction)setUpdateCheck:(NSObject *)sender
 {
 #ifdef USE_SPARKLE
-	NSUInteger intervalIndex = [[sender valueForKey:@"tag"] unsignedIntegerValue];
+    NSNumber *tagNum = [sender valueForKey:@"tag"] ;
+	NSUInteger intervalIndex = tagNum.unsignedIntegerValue;
     NSArray <NSNumber *> *itemToDays = @[@0, @1, @2, @7, @14, @28];
 
     int newIntervalInDays = itemToDays[intervalIndex].intValue;

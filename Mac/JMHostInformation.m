@@ -12,8 +12,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #import "JMHostInformation.h"
 
+
 #if __has_feature(modules)
 @import Darwin.sys.sysctl;
+@import Darwin.POSIX.pwd;
+@import Darwin.POSIX.grp;
 @import Darwin.POSIX.sys.socket;
 @import Darwin.POSIX.netinet.in;
 @import Darwin.POSIX.arpa.inet;
@@ -53,6 +56,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <strings.h>
 #include <sys/param.h>
 #include <sys/mount.h>
+#include <pwd.h>
+#include <grp.h>
 #ifdef USE_IOKIT
 #include <IOKit/ps/IOPSKeys.h>
 #include <IOKit/ps/IOPowerSources.h>
@@ -305,10 +310,22 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 }
 #endif
 
-BOOL _isUserAdmin(void);
+
 + (BOOL)isUserAdmin
 {
-    return _isUserAdmin();
+    uid_t current_user_id = getuid();
+    struct passwd *pwentry = getpwuid(current_user_id);
+    struct group *admin_group = getgrnam("admin");
+    while(*admin_group->gr_mem != NULL)
+    {
+        if (strcmp(pwentry->pw_name, *admin_group->gr_mem) == 0)
+        {
+            return YES;
+        }
+        admin_group->gr_mem++;
+    }
+    
+    return NO;
 }
 
 + (NSURL *)growlInstallURL
@@ -523,10 +540,19 @@ BOOL _isUserAdmin(void);
 }
 #endif
 
-NSString *_machineType(void);
 + (NSString *)machineType
 {
-    return _machineType();
+    char modelBuffer[256];
+    size_t sz = sizeof(modelBuffer);
+    if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
+    {
+        modelBuffer[sizeof(modelBuffer) - 1] = 0;
+        return @(modelBuffer);
+    }
+    else
+    {
+        return @"";
+    }
 }
 
 + (NSInteger)bootDiskBSDNum

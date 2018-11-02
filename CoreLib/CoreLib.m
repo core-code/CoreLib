@@ -14,7 +14,11 @@
 #error you need to include CoreLib.h in your PCH file
 #endif
 #ifdef USE_SECURITY
+#if __has_feature(modules)
+@import CommonCrypto.CommonDigest;
+#else
 #include <CommonCrypto/CommonDigest.h>
+#endif
 #endif
 
 #if __has_feature(modules)
@@ -45,11 +49,8 @@ NSProcessInfo *processInfo;
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-
-#import "JMHostInformation.h"
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
-
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
     alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
@@ -77,7 +78,6 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     if ((self = [super init]))
     {
         cc = self;
-
 
         userDefaults = NSUserDefaults.standardUserDefaults;
         fileManager = NSFileManager.defaultManager;
@@ -120,19 +120,19 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             }
         #endif
 
-        if ([[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
-            ![[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
+        if ([(NSNumber *)[bundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue] &&
+            ![(NSString *)[bundle objectForInfoDictionaryKey:@"NSPrincipalClass"] isEqualToString:@"JMDocklessApplication"])
             cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 #ifndef CLI
-        if (![[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
 
-        if ([[[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
+        if ([[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
             cc_log_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
 
-        if (![[[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-            cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+            cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
         if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
             LOG(@"Warning: LSApplicationCategoryType not properly set");
@@ -368,7 +368,15 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     NSString *udid = @"N/A";
     
 #if defined(USE_SECURITY) && defined(USE_IOKIT)
-    udid = [JMHostInformation macAddress].SHA1;
+    Class hostInfoClass = NSClassFromString(@"JMHostInformation");
+    if (hostInfoClass)
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        NSString *macAddress = [hostInfoClass performSelector:@selector(macAddress)];
+#pragma clang diagnostic pop
+        udid = macAddress.SHA1;
+    }
 #endif
     
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
@@ -483,13 +491,14 @@ NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparat
     return dict;
 }
 
-NSString *makeDescription(id sender, NSArray *args)
+NSString *makeDescription(NSObject *sender, NSArray *args)
 {
     NSMutableString *tmp = [NSMutableString new];
 
     for (NSString *arg in args)
     {
-        NSString *d = [[sender valueForKey:arg] description];
+        NSObject *value = [sender valueForKey:arg];
+        NSString *d = [value description];
 
         [tmp appendFormat:@"\n%@: %@", arg, d];
     }
@@ -1306,45 +1315,37 @@ id dispatch_async_to_sync(BasicBlock block)
 }
 
 // private
-#if __has_feature(modules)
-@import Darwin.POSIX.sys.types;
-@import Darwin.sys.sysctl;
-@import Darwin.POSIX.pwd;
-@import Darwin.POSIX.grp;
-#else
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <pwd.h>
-#include <grp.h>
-#endif
 NSString *_machineType()
 {
-    char modelBuffer[256];
-    size_t sz = sizeof(modelBuffer);
-    if (0 == sysctlbyname("hw.model", modelBuffer, &sz, NULL, 0))
+    Class hostInfoClass = NSClassFromString(@"JMHostInformation");
+    
+    if (hostInfoClass)
     {
-        modelBuffer[sizeof(modelBuffer) - 1] = 0;
-        return @(modelBuffer);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        NSString *machineType = [hostInfoClass performSelector:@selector(machineType)];
+#pragma clang diagnostic pop
+        return machineType;
     }
-    else
-    {
-        return @"";
-    }
+    return @"";
 }
 BOOL _isUserAdmin()
 {
-    uid_t current_user_id = getuid();
-    struct passwd *pwentry = getpwuid(current_user_id);
-    struct group *admin_group = getgrnam("admin");
-    while(*admin_group->gr_mem != NULL)
-    {
-        if (strcmp(pwentry->pw_name, *admin_group->gr_mem) == 0)
-        {
-            return YES;
-        }
-        admin_group->gr_mem++;
-    }
+    Class hostInfoClass = NSClassFromString(@"JMHostInformation");
     
-    return NO;
+    if (hostInfoClass)
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        NSMethodSignature *sig = [hostInfoClass methodSignatureForSelector:@selector(isUserAdmin)];
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+        [invocation setSelector:@selector(isUserAdmin)];
+#pragma clang diagnostic pop
+        [invocation setTarget:hostInfoClass];
+        [invocation invoke];
+        BOOL returnValue;
+        [invocation getReturnValue:&returnValue];
+        return returnValue;
+    }
+    return YES;
 }
-

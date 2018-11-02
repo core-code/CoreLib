@@ -28,7 +28,7 @@
 
 
 - (IBAction)openWindow:(__strong NSWindow **)window nibName:(NSString *)nibName;
-- (IBAction)openURL:(id)sender;
+- (IBAction)openURL:(NSObject *)sender;
 
 @property (readonly, nonatomic) BOOL isRateable;
 
@@ -51,7 +51,7 @@
 
 #ifdef USE_SPARKLE
 - (IBAction)initUpdateCheck;
-- (IBAction)setUpdateCheck:(id)sender;
+- (IBAction)setUpdateCheck:(NSObject *)sender;
 - (IBAction)checkForUpdatesAction:(id)sender;
 - (void)selectCurrentUpdateIntervalMenuItem:(NSMenu *)menu;
 CONST_KEY_DECLARATION(UpdatecheckMenuindex)

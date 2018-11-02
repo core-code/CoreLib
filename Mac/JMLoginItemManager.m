@@ -91,7 +91,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
             if ([helperBundleIdentifier isEqualToString:label])
             {
-                onDemand = [[job objectForKey:@"OnDemand"] boolValue];
+                NSNumber *od = [job objectForKey:@"OnDemand"];
+
+                onDemand = od.boolValue;
                 break;
             }
         }
@@ -111,7 +113,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	//[self willChangeValueForKey:@"launchesAtLogin"];
 
     NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
-	assert([[NSDictionary dictionaryWithContentsOfFile:[[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])]][@"CFBundleIdentifier"] isEqualToString:helperBundleIdentifier]);
+#ifdef DEBUG
+    NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:[[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])]];
+    NSString *bid = d[@"CFBundleIdentifier"];
+	assert([bid isEqualToString:helperBundleIdentifier]);
+#endif
 
 
 	if (launchesAtLogin && ![self launchesAtLogin]) // add it

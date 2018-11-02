@@ -60,11 +60,12 @@
 {    
     NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
     NSString *remoteHTMLURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
-
+    NSNumber *actionType = actionInformation[WebActionNavigationTypeKey];
+    
     if ([request.URL.absoluteString isEqualToString:localHTMLPath] ||
         [request.URL.absoluteString isEqualToString:remoteHTMLURL] ||
         [request.URL.absoluteString isEqualToString:@"about:blank"] ||
-        (self.openOnlyClicksInBrowser && ([actionInformation[WebActionNavigationTypeKey] intValue] != WebNavigationTypeLinkClicked)))
+        (self.openOnlyClicksInBrowser && (actionType.intValue != WebNavigationTypeLinkClicked)))
         [listener use];
     else
     {
@@ -86,8 +87,9 @@
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource
 {
+    NSString *url = error.userInfo[NSURLErrorFailingURLStringErrorKey];
     if (error.code == -1009 &&
-        [error.userInfo[NSURLErrorFailingURLStringErrorKey] isEqualToString:self.remoteHTMLURL] &&
+        [url isEqualToString:self.remoteHTMLURL] &&
         self.localHTMLName.length)
     {
         [self.mainFrame loadRequest:self.localHTMLName.resourceURL.request];  // online version failed, fall back to offline

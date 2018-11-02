@@ -14,7 +14,7 @@
 
 #if __has_feature(modules)
 #ifdef USE_SECURITY
-#include <CommonCrypto/CommonDigest.h>
+@import CommonCrypto.CommonDigest;
 #endif
 @import ObjectiveC.runtime;
 #else
@@ -61,8 +61,8 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     NSMutableString *tmp = [NSMutableString stringWithString:@"@["];
 
-    for (id obj in self)
-        [tmp appendFormat:@"%@, ", [obj literalString]];
+    for (NSObject *obj in self)
+        [tmp appendFormat:@"%@, ", obj.literalString];
 
     [tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)                // replace trailing ', '
                        withString:@"]"];                        // with terminating ']'
@@ -184,10 +184,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 + (void)_addArrayContents:(NSArray *)array toArray:(NSMutableArray *)newArray
 {
-    for (id object in array)
+    for (NSObject *object in array)
     {
         if ([object isKindOfClass:[NSArray class]])
-            [NSArray _addArrayContents:object toArray:newArray];
+            [NSArray _addArrayContents:object.id toArray:newArray];
         else
             [newArray addObject:object];
     }
@@ -322,8 +322,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value
 {
     for (NSDictionary *dict in self)
-        if ([[dict valueForKey:key] isEqual:value])
+    {
+        NSObject *object = [dict valueForKey:key];
+        if ([object isEqual:value])
             return TRUE;
+    }
 
     return FALSE;
 }
@@ -1851,12 +1854,16 @@ CONST_KEY(CCDirectoryObserving)
     for (NSURL *url in enumerator)
     {
         NSDictionary *values = [url resourceValuesForKeys:@[NSURLIsDirectoryKey, NSURLFileSizeKey] error:NULL];
-        
-        if (values && ![values[NSURLIsDirectoryKey] boolValue])
+        if (values)
         {
-            NSNumber *fileSize = values[NSURLFileSizeKey];
+            NSNumber *isDir = values[NSURLIsDirectoryKey];
+            
+            if (!isDir.boolValue)
+            {
+                NSNumber *fileSize = values[NSURLFileSizeKey];
                 
-            directorySize += fileSize.unsignedLongLongValue;
+                directorySize += fileSize.unsignedLongLongValue;
+            }
         }
     }
     return directorySize;
@@ -2187,7 +2194,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSArray *)JSONArray
 {
-    id res = [self JSONObject];
+    NSObject *res = [self JSONObject];
 
     if (![res isKindOfClass:[NSArray class]])
     {
@@ -2195,12 +2202,12 @@ CONST_KEY(CCDirectoryObserving)
         return nil;
     }
 
-    return res;
+    return res.id;
 }
 
 - (NSDictionary *)JSONDictionary
 {
-    id res = [self JSONObject];
+    NSObject *res = [self JSONObject];
 
     if (![res isKindOfClass:[NSDictionary class]])
     {
@@ -2208,7 +2215,7 @@ CONST_KEY(CCDirectoryObserving)
         return nil;
     }
 
-    return res;
+    return res.id;
 }
 @end
 
@@ -2305,8 +2312,11 @@ CONST_KEY(CCDirectoryObserving)
 {
     NSMutableString *tmp = [NSMutableString stringWithString:@"@{"];
 
-    for (id key in self)
-        [tmp appendFormat:@"%@ : %@, ", [key literalString], [self[key] literalString]];
+    for (NSObject *key in self)
+    {
+        NSObject *value = self[key];
+        [tmp appendFormat:@"%@ : %@, ", key.literalString, value.literalString];
+    }
 
     [tmp replaceCharactersInRange:NSMakeRange(tmp.length-2, 2)                // replace trailing ', '
                        withString:@"}"];                                    // with terminating '}'
@@ -2526,7 +2536,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSObject (CoreCode)
 
-@dynamic associatedValue, id;
+@dynamic associatedValue, id, literalString;
 
 
 - (void)setAssociatedValue:(id)value forKey:(const NSString *)key
@@ -2574,6 +2584,11 @@ CONST_KEY(CCDirectoryObserving)
 - (id)id
 {
     return (id)self;
+}
+
+- (NSString *)literalString
+{
+    return makeString(@"-unsupportedLiteralObject: %@-", self.description);
 }
 @end
 
