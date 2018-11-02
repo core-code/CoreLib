@@ -740,7 +740,7 @@ NSInteger alert_checkbox(NSString *title, NSString *prompt, NSArray <NSString *>
         [alert addButtonWithTitle:buttons[2]];
 
     NSButton *input = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
-    [input setButtonType:NSSwitchButton];
+    [input setButtonType:NSButtonTypeSwitch];
     input.state = (NSInteger )*checkboxStatus;
     input.title = checkboxTitle;
 
@@ -900,7 +900,7 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
         [alert addButtonWithTitle:buttons[2]];
 
     NSButtonCell *thepushbutton = [[NSButtonCell alloc] init];
-    [thepushbutton setButtonType:NSRadioButton];
+    [thepushbutton setButtonType:NSButtonTypeRadio];
 
     NSMatrix *thepushbuttons = [[NSMatrix alloc] initWithFrame:NSMakeRect(0,0,269,17 * choices.count)
                                                           mode:NSRadioModeMatrix

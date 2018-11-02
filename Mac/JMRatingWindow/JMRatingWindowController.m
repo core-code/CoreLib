@@ -10,7 +10,9 @@
  */
 
 #import "JMRatingWindowController.h"
-
+#ifdef APPSTORE_VALIDATERECEIPT
+#import <StoreKit/StoreKit.h>
+#endif
 @interface JMRatingWindowController ()
 
 @property (weak, nonatomic) IBOutlet NSView *initialView;
@@ -124,7 +126,16 @@
 
 - (IBAction)rateappstoreClicked:(id)sender
 {
-    [cc openURL:openAppStoreApp];
+#ifdef APPSTORE_VALIDATERECEIPT
+    if (@available(macOS 10.14, *))
+    {
+        [SKStoreReviewController requestReview];
+    }
+    else
+#endif
+    {
+        [cc openURL:openAppStoreApp];
+    }
     [self.window close];
 }
 
