@@ -32,7 +32,7 @@
 - (void)setExtendedProgressMessage:(NSString * _Nonnull)message;
 - (void)setExtendedProgressDetail:(NSString * _Nonnull)detail;
 - (void)beginExtendedProgress:(NSString * _Nonnull)title;
-- (void)endExtendedProgress;
+- (void)endExtendedProgress:(BOOL)forceForeground;
 
 
 // borderless windows cant be closed normally

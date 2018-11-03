@@ -332,7 +332,7 @@ CONST_KEY(CCExtendedProgressIndicator)
 }
 
 
-- (void)endExtendedProgress
+- (void)endExtendedProgress:(BOOL)forceForeground
 {
     dispatch_async_main(^
     {
@@ -340,7 +340,9 @@ CONST_KEY(CCExtendedProgressIndicator)
         NSProgressIndicator *progressIndicator = [self associatedValueForKey:kCCExtendedProgressIndicatorKey];
         
         [progressIndicator stopAnimation:self];
-        [NSApp activateIgnoringOtherApps:YES];
+        
+        if (forceForeground)
+            [NSApp activateIgnoringOtherApps:YES];
         
         [self endSheet:progressPanel];
         
