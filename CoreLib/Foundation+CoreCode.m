@@ -2138,6 +2138,7 @@ CONST_KEY(CCDirectoryObserving)
 {
     NSString *result;
     
+    // warning, stringEncodingForData can crash, rdar://45371868
     [NSString stringEncodingForData:self encodingOptions:nil convertedString:&result usedLossyConversion:nil];
 
     if (result)
