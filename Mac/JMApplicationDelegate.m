@@ -130,7 +130,8 @@
 	LOGFUNC;
 
 	cc_log(@"Warning: this version will expire");
-	
+    #warning this version will expire
+    
 	dispatch_after_main(60, ^
 	{
 		if ([[NSDate date] timeIntervalSinceDate:[NSDate dateWithPreprocessorDate:preprocessorDateString]] > SECONDS_PER_DAYS(expiryDays))
