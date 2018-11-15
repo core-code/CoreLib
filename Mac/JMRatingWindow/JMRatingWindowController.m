@@ -145,7 +145,7 @@
     [self.window close];
 }
 
-- (void) windowWillClose:(NSNotification *)notification
+- (void)windowWillClose:(NSNotification *)notification
 {
     if (self.closeBlock)
         self.closeBlock();
