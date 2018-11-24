@@ -1198,7 +1198,12 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
     _cc_log_toprefs(level, str);
 
 #ifdef CLI
-    fprintf(stderr, "%s\n", str.UTF8String);
+    if (level <= CC_LOG_LEVEL_ERROR)
+        fprintf(stderr, "\033[91m%s\033[0m\n", str.UTF8String);
+    else if ([str.lowercaseString hasPrefix:@"warning"])
+        fprintf(stderr, "\033[93m%s\033[0m\n", str.UTF8String);
+    else
+        fprintf(stderr, "%s\n", str.UTF8String);
 #else
     if (@available(macOS 10.12, iOS 10.0, *))
     {
