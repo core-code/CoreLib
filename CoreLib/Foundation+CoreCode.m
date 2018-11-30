@@ -464,8 +464,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     {
         [task launch];
     }
-    @catch (NSException *)
+    @catch (NSException *e)
     {
+        cc_log_error(@"Error: got exception %@ while trying to perform task %@", e.description, [self joined:@" "]);
         return nil;
     }
 
