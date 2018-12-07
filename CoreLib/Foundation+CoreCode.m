@@ -1241,7 +1241,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)download
 {
-#if defined(DEBUG) && !defined(SKIP_MAINTHREADDOWNLOAD_WARNING)
+#if defined(DEBUG) && !defined(SKIP_MAINTHREADDOWNLOAD_WARNING) && !defined(CLI)
     if ([NSThread currentThread] == [NSThread mainThread])
         LOG(@"Warning: performing blocking download on main thread");
 #endif
@@ -1903,7 +1903,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSData *)download
 {
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(SKIP_MAINTHREADDOWNLOAD_WARNING) && !defined(CLI)
     if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
         LOG(@"Warning: performing blocking download on main thread");
 #endif
