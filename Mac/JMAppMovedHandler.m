@@ -40,7 +40,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 
 
-            alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", nil), cc.appName], [NSString stringWithFormat:NSLocalizedString(@"Restart %@", nil), cc.appName], nil, nil);
+            alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
 
 
         //    printf("new path: %s\n", newPath);
@@ -58,7 +58,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
                 [NSApp terminate:nil];
             else
             {
-                alert_apptitled([NSString stringWithFormat:NSLocalizedString(@"%@ could not restart itself. Please do so yourself.", nil), cc.appName], NSLocalizedString(@"Quit", nil), nil, nil);
+                alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
 
                 [NSApp terminate:nil];
             }

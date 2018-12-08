@@ -107,8 +107,8 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
                 
                 NSInteger code = alert([cc.appName stringByAppendingString:@" Crash Report"],
-                                                 [NSString stringWithFormat:NSLocalizedString(@"It seems like %@ has crashed recently. Please consider sending the crash-log to help fix this problem. Also make sure you are using the latest version by using the built-in update mechanism since most reported crashes are already fixed in the latest version.", nil), cc.appName],
-                                                 NSLocalizedString(@"Send", nil), NSLocalizedString(@"Never", nil), NSLocalizedString(@"Cancel", nil));
+                                       makeLocalizedString(@"It seems like %@ has crashed recently. Please consider sending the crash-log to help fix this problem. Also make sure you are using the latest version by using the built-in update mechanism since most reported crashes are already fixed in the latest version.", cc.appName),
+                                       @"Send".localized, @"Never".localized, @"Cancel".localized);
 
                 [NSUserDefaults.standardUserDefaults setObject:[NSDate dateWithTimeIntervalSinceNow:60 * 60 * 24 * 3] forKey:kLastCrashDateKey]; // bug the user every 3 days at most
 
@@ -134,7 +134,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                     
                     NSString *subject = [NSString stringWithFormat:@"%@ v%@ (%i) Crash Report (License code: %@)", appName, cc.appVersionString, cc.appBuildNumber, licenseCode];
                     NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", appName,
-                                       NSLocalizedString(@"Please fill in additional details here", nil), inputManagers, cc.appBuildNumber, crashlog, [NSUserDefaults.standardUserDefaults persistentDomainForName:cc.appBundleIdentifier].description];
+                                       @"Please fill in additional details here".localized, inputManagers, cc.appBuildNumber, crashlog, [NSUserDefaults.standardUserDefaults persistentDomainForName:cc.appBundleIdentifier].description];
 
 
                     NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", email, subject, body];

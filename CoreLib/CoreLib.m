@@ -506,6 +506,16 @@ NSString *makeDescription(NSObject *sender, NSArray *args)
     return tmp.immutableObject;
 }
 
+NSString *makeLocalizedString(NSString *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    NSString *str = [[NSString alloc] initWithFormat:format.localized arguments:args];
+    va_end(args);
+    
+    return str;
+}
+
 NSString *makeString(NSString *format, ...)
 {
     va_list args;

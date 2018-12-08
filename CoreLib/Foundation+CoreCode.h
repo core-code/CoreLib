@@ -137,6 +137,7 @@
 @property (assign, nonatomic) NSInteger defaultInt;
 @property (assign, nonatomic) float defaultFloat;
 
+
 @property (readonly, nonatomic) NSString *localized;
 
 //  bundle contents to path

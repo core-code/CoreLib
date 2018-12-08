@@ -110,7 +110,7 @@
     [self.window close];
 
     
-    NSInteger res = alert(@"Confirmation", makeString(@"%@ asks for your feedback only rarely and at maximum only once per app-version. Are you sure you want to turn this off completely?", cc.appName),
+    NSInteger res = alert(@"Confirmation".localized, makeLocalizedString(@"%@ asks for your feedback only rarely and at maximum only once per app-version. Are you sure you want to turn this off completely?", cc.appName),
                           @"Cancel", @"Turn off feedback dialog", nil);
     
     if (res == NSAlertSecondButtonReturn)
