@@ -2496,7 +2496,7 @@ CONST_KEY(CCDirectoryObserving)
     {
         languageCodes = makeMutableArray();
     
-        for (NSString *l in [NSLocale preferredLanguages])
+        for (NSString *l in NSLocale.preferredLanguages)
         {
             NSDictionary *d = [NSLocale componentsFromLocaleIdentifier:l];
             NSString *twoLetterCode = d[NSLocaleLanguageCode];
