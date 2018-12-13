@@ -39,7 +39,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                 if ([fname hasPrefix:cc.appName])
                 {
                     NSString *fullPath = [dpath stringByAppendingPathComponent:fname];
-                    NSDate *date = [NSFileManager.defaultManager attributesOfItemAtPath:fullPath error:NULL][@"NSFileModificationDate"];
+                    NSDate *date = [NSFileManager.defaultManager attributesOfItemAtPath:fullPath error:NULL][NSFileModificationDate];
 
                     if ([date compare:newestcrashdate] == NSOrderedDescending)
                     {
@@ -60,7 +60,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                 if ([fname hasPrefix:cc.appName])
                 {
                     NSString *fullPath = [dpath stringByAppendingPathComponent:fname];
-                    NSDate *date = [NSFileManager.defaultManager attributesOfItemAtPath:fullPath error:NULL][@"NSFileModificationDate"];
+                    NSDate *date = [NSFileManager.defaultManager attributesOfItemAtPath:fullPath error:NULL][NSFileModificationDate];
 
                     if ([date compare:newestcrashdate] == NSOrderedDescending)
                     {
@@ -77,7 +77,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
             if (!lastCrashDate)
                 lastCrashDate = [NSDate distantPast];
 
-            if ([(NSDate *)[NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL][@"NSFileModificationDate"] compare:lastCrashDate] == NSOrderedDescending)
+            if ([(NSDate *)[NSFileManager.defaultManager attributesOfItemAtPath:path error:NULL][NSFileModificationDate] compare:lastCrashDate] == NSOrderedDescending)
             {
                 NSData *data = [NSData dataWithContentsOfFile:path];
                 NSString *crashlogsource = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
