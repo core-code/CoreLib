@@ -204,7 +204,7 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 
 // !!!: OBJECT CREATION FUNCTIONS
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
-NSString *makeLocalizedString(NSString *format, ...);
+NSString *makeLocalizedString(NSString *format, ...)  NS_FORMAT_FUNCTION(1,2);
     
 NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
 NSString *makeTempDirectory(void);
