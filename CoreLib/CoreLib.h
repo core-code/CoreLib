@@ -201,6 +201,7 @@ void alert_feedback_fatal(NSString *usermsg, NSString *details) __attribute__((n
 void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 void alert_nonmodal(NSString *title, NSString *message, NSString *button);
 void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon);
+void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *button, NSString *checkboxTitle, NSInteger checkboxStatusIn, IntInBlock resultBlock);
 
 // !!!: OBJECT CREATION FUNCTIONS
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);

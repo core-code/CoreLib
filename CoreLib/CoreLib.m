@@ -1161,6 +1161,77 @@ void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *but
     [fakeAlertWindow makeKeyAndOrderFront:@""];
 }
 
+void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *button, NSString *checkboxTitle, NSInteger checkboxStatusIn, IntInBlock resultBlock)
+{
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
+    CGFloat messageHeight = (CGFloat)MAX(50.0, _attributedStringHeightForWidth(attributedString, 300));
+    CGFloat height = 120 + messageHeight;
+    NSWindow *fakeAlertWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
+                                                            styleMask:NSWindowStyleMaskTitled
+                                                              backing:NSBackingStoreBuffered
+                                                                defer:NO];
+    
+    
+    NSTextField *alertTitle = [[NSTextField alloc] initWithFrame:NSMakeRect(100.0, height-30, 300.0, 17.0)];
+    NSTextView *alertMessage = [[NSTextView alloc] initWithFrame:NSMakeRect(100.0-3, 70, 300.0, height-70-40)];
+    NSImageView *alertImage = [[NSImageView alloc] initWithFrame:NSMakeRect(20.0, height-80, 64, 64)];
+    NSButton *firstButton = [[NSButton alloc] initWithFrame:NSMakeRect(315.0, 12, 90, 30)];
+    
+    
+    alertTitle.stringValue = title;
+    alertMessage.string = message;
+    
+    
+    alertTitle.font = [NSFont boldSystemFontOfSize:14];
+    alertTitle.alignment = NSTextAlignmentLeft;
+    alertTitle.bezeled = NO;
+    [alertTitle setDrawsBackground:NO];
+    [alertTitle setLineBreakMode:NSLineBreakByWordWrapping];
+    [alertTitle setEditable:NO];
+    [alertTitle setSelectable:NO];
+    [fakeAlertWindow.contentView addSubview:alertTitle];
+    
+    alertMessage.font = [NSFont systemFontOfSize:11];
+    alertMessage.alignment = NSTextAlignmentLeft;
+    [alertMessage setDrawsBackground:NO];
+    [alertMessage setEditable:NO];
+    [alertMessage setSelectable:NO];
+    [fakeAlertWindow.contentView addSubview:alertMessage];
+    
+    
+    alertImage.image = @"AppIcon".namedImage;
+    [fakeAlertWindow.contentView addSubview:alertImage];
+    
+    firstButton.bezelStyle = NSBezelStyleRounded;
+    firstButton.title = button;
+    firstButton.keyEquivalent = @"\r";
+    [fakeAlertWindow.contentView addSubview:firstButton];
+    
+    
+    NSButton *input = [[NSButton alloc] initWithFrame:NSMakeRect(105, 55, 310, 24)];
+    [input setButtonType:NSButtonTypeSwitch];
+    input.state = checkboxStatusIn;
+    input.title = checkboxTitle;
+    [fakeAlertWindow.contentView addSubview:input];
+
+
+    
+    __weak  NSWindow *weakWindow = fakeAlertWindow;
+    __weak  NSButton *weakCheckbox = input;
+    firstButton.actionBlock = ^(id sender)
+    {
+        resultBlock((int)weakCheckbox.state);
+        [weakWindow close];
+    };
+    
+    fakeAlertWindow.releasedWhenClosed = NO;
+    [fakeAlertWindow center];
+    
+    [NSApp activateIgnoringOtherApps:YES];
+    [fakeAlertWindow makeKeyAndOrderFront:@""];
+}
+
+
 // colors
 
 NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
