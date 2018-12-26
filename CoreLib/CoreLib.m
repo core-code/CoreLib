@@ -709,7 +709,6 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details)
     alert_feedback(usermsg, details, NO);
 }
 
-
 NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BOOL useSecurePrompt)
 {
     assert(buttons);
@@ -1068,6 +1067,102 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 #pragma clang diagnostic pop
 
 
+CGFloat _attributedStringHeightForWidth(NSAttributedString *string, CGFloat width)
+{
+    NSSize answer = NSZeroSize ;
+    if ([string length] > 0) {
+        // Checking for empty string is necessary since Layout Manager will give the nominal
+        // height of one line if length is 0.  Our API specifies 0.0 for an empty string.
+        NSSize size = NSMakeSize(width, (CGFloat)FLT_MAX) ;
+        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:size] ;
+        NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:string] ;
+        NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init] ;
+        [layoutManager addTextContainer:textContainer] ;
+        [textStorage addLayoutManager:layoutManager] ;
+        [layoutManager setHyphenationFactor:0.0] ;
+        
+        // NSLayoutManager is lazy, so we need the following kludge to force layout:
+        [layoutManager glyphRangeForTextContainer:textContainer] ;
+        
+        answer = [layoutManager usedRectForTextContainer:textContainer].size ;
+        
+        // Adjust if there is extra height for the cursor
+        NSSize extraLineSize = [layoutManager extraLineFragmentRect].size ;
+        if (extraLineSize.height > 0) {
+            answer.height -= extraLineSize.height ;
+        }
+    }
+    
+    return answer.height;
+}
+
+
+void alert_nonmodal(NSString *title, NSString *message, NSString *button)
+{
+    alert_nonmodal_customicon(title, message, button, nil);
+}
+
+void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon)
+{
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
+    CGFloat messageHeight = (CGFloat)MAX(30.0, _attributedStringHeightForWidth(attributedString, 300));
+    CGFloat height = 100 + messageHeight;
+    NSWindow *fakeAlertWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
+                                                            styleMask:NSWindowStyleMaskTitled
+                                                              backing:NSBackingStoreBuffered
+                                                                defer:NO];
+    
+    
+    NSTextField *alertTitle = [[NSTextField alloc] initWithFrame:NSMakeRect(100.0, height-30, 300.0, 17.0)];
+    NSTextView *alertMessage = [[NSTextView alloc] initWithFrame:NSMakeRect(100.0-3, 50, 300.0, height-50-40)];
+    NSImageView *alertImage = [[NSImageView alloc] initWithFrame:NSMakeRect(20.0, height-80, 64, 64)];
+    NSButton *firstButton = [[NSButton alloc] initWithFrame:NSMakeRect(315.0, 12, 90, 30)];
+    
+    
+    alertTitle.stringValue = title;
+    alertMessage.string = message;
+    
+    
+    alertTitle.font = [NSFont boldSystemFontOfSize:14];
+    alertTitle.alignment = NSTextAlignmentLeft;
+    alertTitle.bezeled = NO;
+    [alertTitle setDrawsBackground:NO];
+    [alertTitle setLineBreakMode:NSLineBreakByWordWrapping];
+    [alertTitle setEditable:NO];
+    [alertTitle setSelectable:NO];
+    [fakeAlertWindow.contentView addSubview:alertTitle];
+    
+    alertMessage.font = [NSFont systemFontOfSize:11];
+    alertMessage.alignment = NSTextAlignmentLeft;
+    [alertMessage setDrawsBackground:NO];
+    [alertMessage setEditable:NO];
+    [alertMessage setSelectable:NO];
+    [fakeAlertWindow.contentView addSubview:alertMessage];
+    
+    
+    alertImage.image = OBJECT_OR(customIcon, @"AppIcon".namedImage);
+    [fakeAlertWindow.contentView addSubview:alertImage];
+    
+    firstButton.bezelStyle = NSBezelStyleRounded;
+    firstButton.title = button;
+    firstButton.keyEquivalent = @"\r";
+    [fakeAlertWindow.contentView addSubview:firstButton];
+    
+   __weak  NSWindow *weakWindow = fakeAlertWindow;
+   firstButton.actionBlock = ^(id sender)
+   {
+        [weakWindow close];
+   };
+    
+    fakeAlertWindow.releasedWhenClosed = NO;
+    [fakeAlertWindow center];
+    
+    [NSApp activateIgnoringOtherApps:YES];
+    [fakeAlertWindow makeKeyAndOrderFront:@""];
+}
+
+// colors
+
 NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
     return [NSColor colorWithCalibratedRed:(r) green:(g) blue:(b) alpha:(a)];
@@ -1086,6 +1181,8 @@ UIColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
     return [UIColor colorWithRed:(r) / (CGFloat)255.0 green:(g) / (CGFloat)255.0 blue:(b) / (CGFloat)255.0 alpha:(a) / (CGFloat)255.0];
 }
 #endif
+
+// randoms
 
 __inline__ CGFloat generateRandomFloatBetween(CGFloat a, CGFloat b)
 {

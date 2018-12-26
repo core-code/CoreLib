@@ -199,8 +199,8 @@ void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString
 void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton) __attribute__((nonnull (4, 5)));
 void alert_feedback_fatal(NSString *usermsg, NSString *details) __attribute__((noreturn));
 void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
-
-
+void alert_nonmodal(NSString *title, NSString *message, NSString *button);
+void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon);
 
 // !!!: OBJECT CREATION FUNCTIONS
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
