@@ -2020,7 +2020,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSData (CoreCode)
 
-@dynamic string, hexString, mutableObject, JSONArray, JSONDictionary;
+@dynamic string, stringUTF8, hexString, mutableObject, JSONArray, JSONDictionary;
 
 #ifdef USE_SECURITY
 @dynamic SHA1, MD5, SHA256;
@@ -2157,6 +2157,16 @@ CONST_KEY(CCDirectoryObserving)
 
     cc_log_error(@"Error: could not create string from data %@", self);
     return nil;
+}
+
+- (NSString *)stringUTF8
+{
+    NSString *s = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
+    
+    if (!s)
+        cc_log_error(@"Error: could not create string from data %@", self);
+    
+    return s;
 }
 
 - (NSString *)hexString

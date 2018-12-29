@@ -290,6 +290,7 @@
 
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
+@property (readonly, nonatomic) NSString *stringUTF8;
 @property (readonly, nonatomic) NSString *hexString;
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;
