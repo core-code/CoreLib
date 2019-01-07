@@ -1007,7 +1007,9 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
                         for (NSMutableDictionary *foundDisk in nonRemovableVolumes)  // check if we already added the disk because of another partition
                         {
-                            if ([foundDisk[kDiskNumberKey] integerValue] == bsdNum)
+                            NSNumber *diskNum = foundDisk[kDiskNumberKey];
+                            
+                            if (diskNum.integerValue == bsdNum)
                             {
                                 NSString *currentName = foundDisk[kDiskNameKey];
                                 foundDisk[kDiskNameKey] = [currentName stringByAppendingFormat:@", %@", volumeName];
