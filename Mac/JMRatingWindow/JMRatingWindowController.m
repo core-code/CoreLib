@@ -11,7 +11,11 @@
 
 #import "JMRatingWindowController.h"
 #ifdef APPSTORE_VALIDATERECEIPT
+#if __has_feature(modules)
+@import StoreKit;
+#else
 #import <StoreKit/StoreKit.h>
+#endif
 #endif
 @interface JMRatingWindowController ()
 
