@@ -1354,6 +1354,7 @@ void _cc_log_tologfile(int level, NSString *string)
 
 void _cc_log_toprefs(int level, NSString *string)
 {
+#ifndef CLI
 #ifndef DONTLOGTOUSERDEFAULTS
     static int lastPosition[8] = {0,0,0,0,0,0,0,0};
     assert(level < 8);
@@ -1362,6 +1363,7 @@ void _cc_log_toprefs(int level, NSString *string)
     lastPosition[level]++;
     if (lastPosition[level] > 9)
         lastPosition[level] = 0;
+#endif
 #endif
 }
 
