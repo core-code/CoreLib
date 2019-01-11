@@ -91,9 +91,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         processInfo = NSProcessInfo.processInfo;
     #endif
 
+#ifndef SKIP_CREATE_APPSUPPORT_DIRECTORY
         if (!self.suppURL.fileExists && self.appName)
             [fileManager createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
-
+#endif
 
     #ifdef DEBUG
         #ifndef XCTEST
