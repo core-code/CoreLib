@@ -618,7 +618,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
             if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
                 licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
             
-            mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occured (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
+            mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occurred (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
                                                 kFeedbackEmail,
                                                 appName,
                                                 cc.appVersionString,

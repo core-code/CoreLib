@@ -35,7 +35,7 @@
 - (void)endExtendedProgress:(BOOL)forceForeground;
 
 
-// borderless windows cant be closed normally
+// borderless windows can't be closed normally
 - (IBAction)performBorderlessClose:(id _Nullable)sender;
 
 @end

@@ -107,7 +107,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
 
                 
                 NSInteger code = alert([cc.appName stringByAppendingString:@" Crash Report"],
-                                       makeLocalizedString(@"It seems like %@ has crashed recently. Please consider sending the crash-log to help fix this problem. Also make sure you are using the latest version by using the built-in update mechanism since most reported crashes are already fixed in the latest version.", cc.appName),
+                                       makeLocalizedString(@"It seems like %@ has crashed recently. Please consider sending the crash-log to help fix this problem. Also, make sure you are using the latest version by using the built-in update mechanism since most reported crashes are already fixed in the latest version.", cc.appName),
                                        @"Send".localized, @"Never".localized, @"Cancel".localized);
 
                 [NSUserDefaults.standardUserDefaults setObject:[NSDate dateWithTimeIntervalSinceNow:60 * 60 * 24 * 3] forKey:kLastCrashDateKey]; // bug the user every 3 days at most

@@ -1177,7 +1177,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     if ((status == kSMARTStatusOK) && (err != 0)) // downgrade status
     {
         status = kSMARTStatusUnknown;
-        cc_log_error(@"Error: S.M.A.R.T. check downgraded result for disk%i from VERIFIED to UNKNOWN because some error(%i) occured.", disk, err);
+        cc_log_error(@"Error: S.M.A.R.T. check downgraded result for disk%i from VERIFIED to UNKNOWN because some error(%i) occurred.", disk, err);
     }
     else if (err == kIOReturnNoResources)
         status = kSMARTStatusNotSMARTCompatible;
