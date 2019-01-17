@@ -1,0 +1,87 @@
+
+/* Class = "NSTextFieldCell"; placeholderString = "Please enter a detailed description of the problems  you experienced or how we could improve the app for you…"; ObjectID = "4NR-iU-Euc"; */
+"4NR-iU-Euc.placeholderString" = "Please enter a detailed description of the problems  you experienced or how we could improve the app for you…";
+
+/* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "7p1-Pb-zoa"; */
+"7p1-Pb-zoa.title" = "🙂";
+
+/* Class = "NSTextFieldCell"; title = "Let us fix this!"; ObjectID = "AAC-0U-1fM"; */
+"AAC-0U-1fM.title" = "Let us fix this!";
+
+/* Class = "NSButtonCell"; title = "  I'm not sure yet"; ObjectID = "Emi-GI-rS2"; */
+"Emi-GI-rS2.title" = "  I'm not sure yet";
+
+/* Class = "NSWindow"; title = "Window"; ObjectID = "F0z-JX-Cv5"; */
+"F0z-JX-Cv5.title" = "Window";
+
+/* Class = "NSTextFieldCell"; title = "Do you like this app?"; ObjectID = "GKj-yG-Bf3"; */
+"GKj-yG-Bf3.title" = "Do you like this app?";
+
+/* Class = "NSBox"; title = "Box"; ObjectID = "H2q-Pl-96o"; */
+"H2q-Pl-96o.title" = "Box";
+
+/* Class = "NSTextFieldCell"; title = "😴"; ObjectID = "ITz-kj-aUG"; */
+"ITz-kj-aUG.title" = "😴";
+
+/* Class = "NSTextFieldCell"; title = "☹️"; ObjectID = "Jr5-4h-Wy3"; */
+"Jr5-4h-Wy3.title" = "☹️";
+
+/* Class = "NSButtonCell"; title = "    Rate on MacUpdate"; ObjectID = "LwV-Hv-qZb"; */
+"LwV-Hv-qZb.title" = "    Rate on MacUpdate";
+
+/* Class = "NSTextFieldCell"; title = "Awesome! Please consider taking \n5 seconds to rate this app to help ensure continued development."; ObjectID = "O6M-er-LTG"; */
+"O6M-er-LTG.title" = "Awesome! Please consider taking \n5 seconds to rate this app to help ensure continued development.";
+
+/* Class = "NSButtonCell"; title = "  I am quite happy"; ObjectID = "P54-oP-5jj"; */
+"P54-oP-5jj.title" = "  I am quite happy";
+
+/* Class = "NSButtonCell"; title = "    Not now"; ObjectID = "PTB-nS-Po4"; */
+"PTB-nS-Po4.title" = "    Not now";
+
+/* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "Rcz-Na-aCo"; */
+"Rcz-Na-aCo.title" = "🙂";
+
+/* Class = "NSTextFieldCell"; title = "😐"; ObjectID = "Y7c-m8-Wrk"; */
+"Y7c-m8-Wrk.title" = "😐";
+
+/* Class = "NSTextFieldCell"; title = "You've used [APPNAME] to successfully perform 20 operations on your data without a single crash."; ObjectID = "YDE-L1-1IO"; */
+"YDE-L1-1IO.title" = "You've used [APPNAME] to successfully perform 20 operations on your data without a single crash.";
+
+/* Class = "NSButtonCell"; title = "x"; ObjectID = "buM-bg-HHr"; */
+"buM-bg-HHr.title" = "x";
+
+/* Class = "NSTextFieldCell"; title = "☹️"; ObjectID = "dnY-py-Y11"; */
+"dnY-py-Y11.title" = "☹️";
+
+/* Class = "NSTextFieldCell"; title = "Thank you!"; ObjectID = "e1K-uB-2F2"; */
+"e1K-uB-2F2.title" = "Thank you!";
+
+/* Class = "NSBox"; title = "Box"; ObjectID = "eks-ok-YiO"; */
+"eks-ok-YiO.title" = "Box";
+
+/* Class = "NSButtonCell"; title = "Send feedback"; ObjectID = "fTv-hr-fms"; */
+"fTv-hr-fms.title" = "Send feedback";
+
+/* Class = "NSTextFieldCell"; title = "Don't show this dialog again."; ObjectID = "gUX-7Y-0hh"; */
+"gUX-7Y-0hh.title" = "Don't show this dialog again.";
+
+/* Class = "NSButtonCell"; title = "  I have problems"; ObjectID = "it8-NT-MCb"; */
+"it8-NT-MCb.title" = "  I have problems";
+
+/* Class = "NSButtonCell"; title = "    Rate on App Store"; ObjectID = "kUt-Ng-7sO"; */
+"kUt-Ng-7sO.title" = "    Rate on App Store";
+
+/* Class = "NSTextFieldCell"; title = "Don't show this dialog again."; ObjectID = "oXj-r2-0zQ"; */
+"oXj-r2-0zQ.title" = "Don't show this dialog again.";
+
+/* Class = "NSTextFieldCell"; title = "★"; ObjectID = "vtz-ES-u1W"; */
+"vtz-ES-u1W.title" = "★";
+
+/* Class = "NSTextFieldCell"; title = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away."; ObjectID = "w0X-fV-N7L"; */
+"w0X-fV-N7L.title" = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away.";
+
+/* Class = "NSTextFieldCell"; title = "Info: this will open an email to <feedback@corecode.io>"; ObjectID = "xFv-za-LX7"; */
+"xFv-za-LX7.title" = "Info: this will open an email to <feedback@corecode.io>";
+
+/* Class = "NSBox"; title = "Box"; ObjectID = "xZx-Vt-eum"; */
+"xZx-Vt-eum.title" = "Box";
