@@ -1,21 +1,21 @@
 
 /* Class = "NSTextFieldCell"; placeholderString = "Please enter a detailed description of the problems  you experienced or how we could improve the app for you…"; ObjectID = "4NR-iU-Euc"; */
-"4NR-iU-Euc.placeholderString" = "Please enter a detailed description of the problems  you experienced or how we could improve the app for you…";
+"4NR-iU-Euc.placeholderString" = "Forneça uma descrição detalhada do problema ocorrido ou diga-nos como melhorar o app para você…";
 
 /* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "7p1-Pb-zoa"; */
 "7p1-Pb-zoa.title" = "🙂";
 
 /* Class = "NSTextFieldCell"; title = "Let us fix this!"; ObjectID = "AAC-0U-1fM"; */
-"AAC-0U-1fM.title" = "Let us fix this!";
+"AAC-0U-1fM.title" = "Mudemos isso!";
 
 /* Class = "NSButtonCell"; title = "  I'm not sure yet"; ObjectID = "Emi-GI-rS2"; */
-"Emi-GI-rS2.title" = "  I'm not sure yet";
+"Emi-GI-rS2.title" = "Ainda não sei";
 
 /* Class = "NSWindow"; title = "Window"; ObjectID = "F0z-JX-Cv5"; */
 "F0z-JX-Cv5.title" = "Window";
 
 /* Class = "NSTextFieldCell"; title = "Do you like this app?"; ObjectID = "GKj-yG-Bf3"; */
-"GKj-yG-Bf3.title" = "Do you like this app?";
+"GKj-yG-Bf3.title" = "Curtindo o app?";
 
 /* Class = "NSBox"; title = "Box"; ObjectID = "H2q-Pl-96o"; */
 "H2q-Pl-96o.title" = "Box";
@@ -27,16 +27,16 @@
 "Jr5-4h-Wy3.title" = "☹️";
 
 /* Class = "NSButtonCell"; title = "    Rate on MacUpdate"; ObjectID = "LwV-Hv-qZb"; */
-"LwV-Hv-qZb.title" = "    Rate on MacUpdate";
+"LwV-Hv-qZb.title" = "       Avaliar no MacUpdate";
 
 /* Class = "NSTextFieldCell"; title = "Awesome! Please consider taking \n5 seconds to rate this app to help ensure continued development."; ObjectID = "O6M-er-LTG"; */
-"O6M-er-LTG.title" = "Awesome! Please consider taking \n5 seconds to rate this app to help ensure continued development.";
+"O6M-er-LTG.title" = "Que bom! Considere avaliar rapidamente o app para assegurar o desenvolvimento contínuo.";
 
 /* Class = "NSButtonCell"; title = "  I am quite happy"; ObjectID = "P54-oP-5jj"; */
-"P54-oP-5jj.title" = "  I am quite happy";
+"P54-oP-5jj.title" = "  Estou contente";
 
 /* Class = "NSButtonCell"; title = "    Not now"; ObjectID = "PTB-nS-Po4"; */
-"PTB-nS-Po4.title" = "    Not now";
+"PTB-nS-Po4.title" = "    Agora Não";
 
 /* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "Rcz-Na-aCo"; */
 "Rcz-Na-aCo.title" = "🙂";
@@ -45,7 +45,7 @@
 "Y7c-m8-Wrk.title" = "😐";
 
 /* Class = "NSTextFieldCell"; title = "You've used [APPNAME] to successfully perform 20 operations on your data without a single crash."; ObjectID = "YDE-L1-1IO"; */
-"YDE-L1-1IO.title" = "You've used [APPNAME] to successfully perform 20 operations on your data without a single crash.";
+"YDE-L1-1IO.title" = "Você já usou o [APPNAME] para realizar 20 operações em seus dados sem uma única falha.";
 
 /* Class = "NSButtonCell"; title = "x"; ObjectID = "buM-bg-HHr"; */
 "buM-bg-HHr.title" = "x";
@@ -54,34 +54,34 @@
 "dnY-py-Y11.title" = "☹️";
 
 /* Class = "NSTextFieldCell"; title = "Thank you!"; ObjectID = "e1K-uB-2F2"; */
-"e1K-uB-2F2.title" = "Thank you!";
+"e1K-uB-2F2.title" = "Obrigado!";
 
 /* Class = "NSBox"; title = "Box"; ObjectID = "eks-ok-YiO"; */
 "eks-ok-YiO.title" = "Box";
 
 /* Class = "NSButtonCell"; title = "Send feedback"; ObjectID = "fTv-hr-fms"; */
-"fTv-hr-fms.title" = "Send feedback";
+"fTv-hr-fms.title" = "Enviar Feedback";
 
 /* Class = "NSTextFieldCell"; title = "Don't show this dialog again."; ObjectID = "gUX-7Y-0hh"; */
-"gUX-7Y-0hh.title" = "Don't show this dialog again.";
+"gUX-7Y-0hh.title" = "Não mostrar novamente.";
 
 /* Class = "NSButtonCell"; title = "  I have problems"; ObjectID = "it8-NT-MCb"; */
-"it8-NT-MCb.title" = "  I have problems";
+"it8-NT-MCb.title" = "  Tive problemas";
 
 /* Class = "NSButtonCell"; title = "    Rate on App Store"; ObjectID = "kUt-Ng-7sO"; */
-"kUt-Ng-7sO.title" = "    Rate on App Store";
+"kUt-Ng-7sO.title" = "     Avaliar na App Store";
 
 /* Class = "NSTextFieldCell"; title = "Don't show this dialog again."; ObjectID = "oXj-r2-0zQ"; */
-"oXj-r2-0zQ.title" = "Don't show this dialog again.";
+"oXj-r2-0zQ.title" = "Não mostrar novamente.";
 
 /* Class = "NSTextFieldCell"; title = "★"; ObjectID = "vtz-ES-u1W"; */
 "vtz-ES-u1W.title" = "★";
 
 /* Class = "NSTextFieldCell"; title = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away."; ObjectID = "w0X-fV-N7L"; */
-"w0X-fV-N7L.title" = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away.";
+"w0X-fV-N7L.title" = "Sentimos muito! Diga-nos como melhorar o app para você. Trabalharemos em suas sugestões imediatamente.";
 
 /* Class = "NSTextFieldCell"; title = "Info: this will open an email to <feedback@corecode.io>"; ObjectID = "xFv-za-LX7"; */
-"xFv-za-LX7.title" = "Info: this will open an email to <feedback@corecode.io>";
+"xFv-za-LX7.title" = "Isto abrirá um e‑mail endereçado a: feedback@corecode.io";
 
 /* Class = "NSBox"; title = "Box"; ObjectID = "xZx-Vt-eum"; */
 "xZx-Vt-eum.title" = "Box";
