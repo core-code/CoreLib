@@ -78,7 +78,7 @@
 "vtz-ES-u1W.title" = "★";
 
 /* Class = "NSTextFieldCell"; title = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away."; ObjectID = "w0X-fV-N7L"; */
-"w0X-fV-N7L.title" = "Sentimos muito! Diga-nos como melhorar o app para você. Trabalharemos em suas sugestões imediatamente.";
+"w0X-fV-N7L.title" = "Sentimos muito! Diga-nos como melhorar o app. Trabalharemos em suas sugestões imediatamente.";
 
 /* Class = "NSTextFieldCell"; title = "Info: this will open an email to <feedback@corecode.io>"; ObjectID = "xFv-za-LX7"; */
 "xFv-za-LX7.title" = "Isto abrirá um e‑mail endereçado a: feedback@corecode.io";

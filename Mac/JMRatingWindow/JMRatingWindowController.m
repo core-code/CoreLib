@@ -75,15 +75,15 @@
         if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
             self.rateappstoreButton.enabled = NO;
         else
-            self.rateappstoreButton.title = [self.rateappstoreButton.title stringByReplacingOccurrencesOfString:@"App Store" withString:@"AlternativeTo"];
+            self.rateappstoreButton.title = @"    Rate on App Store".localized;
     }
-    
+
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)
     {
         if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
             self.ratemacupdateButton.enabled = NO;
         else
-            self.ratemacupdateButton.title = [self.ratemacupdateButton.title stringByReplacingOccurrencesOfString:@"MacUpdate" withString:@"FileHorse"];
+            self.ratemacupdateButton.title = @"    Rate on FileHorse".localized;
     }
 }
 
