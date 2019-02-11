@@ -1103,7 +1103,7 @@ void alert_nonmodal(NSString *title, NSString *message, NSString *button)
     alert_nonmodal_customicon(title, message, button, nil);
 }
 
-void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon)
+void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSString *button, NSImage *customIcon, BasicBlock block)
 {
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
     CGFloat messageHeight = (CGFloat)MAX(30.0, _attributedStringHeightForWidth(attributedString, 300));
@@ -1149,17 +1149,24 @@ void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *but
     firstButton.keyEquivalent = @"\r";
     [fakeAlertWindow.contentView addSubview:firstButton];
     
-   __weak  NSWindow *weakWindow = fakeAlertWindow;
-   firstButton.actionBlock = ^(id sender)
-   {
+    __weak  NSWindow *weakWindow = fakeAlertWindow;
+    firstButton.actionBlock = ^(id sender)
+    {
         [weakWindow close];
-   };
+        if (block)
+            block();
+    };
     
     fakeAlertWindow.releasedWhenClosed = NO;
     [fakeAlertWindow center];
     
     [NSApp activateIgnoringOtherApps:YES];
     [fakeAlertWindow makeKeyAndOrderFront:@""];
+}
+
+void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon)
+{
+    alert_nonmodal_customicon_block(title, message, button, customIcon, nil);
 }
 
 void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *button, NSString *checkboxTitle, NSInteger checkboxStatusIn, IntInBlock resultBlock)

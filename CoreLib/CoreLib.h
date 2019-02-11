@@ -202,6 +202,7 @@ void alert_feedback_nonfatal(NSString *usermsg, NSString *details);
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 void alert_nonmodal(NSString *title, NSString *message, NSString *button);
 void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon);
+void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSString *button, NSImage *customIcon, BasicBlock block);
 void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *button, NSString *checkboxTitle, NSInteger checkboxStatusIn, IntInBlock resultBlock);
 #endif
 
