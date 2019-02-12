@@ -184,6 +184,8 @@
 @property (readonly, nonatomic) NSData *data;	// data of string contents
 @property (readonly, nonatomic) NSData *dataFromHexString;
 
+@property (readonly, nonatomic) NSCharacterSet *characterSet;
+
 
 - (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter;
 
