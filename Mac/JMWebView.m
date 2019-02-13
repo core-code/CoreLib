@@ -61,10 +61,11 @@
     NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
     NSString *remoteHTMLURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
     NSNumber *actionType = actionInformation[WebActionNavigationTypeKey];
+    NSString *requestURLString = request.URL.absoluteString;
     
-    if ([request.URL.absoluteString isEqualToString:localHTMLPath] ||
-        [request.URL.absoluteString isEqualToString:remoteHTMLURL] ||
-        [request.URL.absoluteString isEqualToString:@"about:blank"] ||
+    if ((localHTMLPath && [requestURLString hasPrefix:localHTMLPath]) ||
+        (remoteHTMLURL && [requestURLString hasPrefix:remoteHTMLURL]) ||
+        [requestURLString isEqualToString:@"about:blank"] ||
         (self.openOnlyClicksInBrowser && (actionType.intValue != WebNavigationTypeLinkClicked)))
         [listener use];
     else
