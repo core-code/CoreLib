@@ -293,9 +293,9 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
         int itemIntervalInSeconds = itemIntervalInDays * SECONDS_PER_DAYS(1);
         
         if (IS_FLOAT_EQUAL((float)currentIntervalInSeconds, itemIntervalInSeconds))
-            [item setState:NSOnState];
+            [item setState:NSControlStateValueOn];
         else
-            [item setState:NSOffState];
+            [item setState:NSControlStateValueOff];
     }
 #endif
 }
