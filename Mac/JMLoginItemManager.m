@@ -45,6 +45,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	if ([appName hasSuffix:@"-DEMO"]) appName = [appName removed:@"-DEMO"];
 	if ([appName hasSuffix:@"-TRYOUT"]) appName = [appName removed:@"-TRYOUT"];
 
+    appName = [appName replaced:@" " with:@""];
+    
 	return appName;
 }
 
