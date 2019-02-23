@@ -19,7 +19,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (id)transformedValue:(id)value
 {
-    if (!value || ![value respondsToSelector:@selector(isValidEmail)] || (!((NSString *) value).isValidEmails))
+    NSString *stringValue = value;
+    if (!stringValue || ![stringValue respondsToSelector:@selector(isValidEmail)] || !stringValue.isValidEmails)
         return @TRUE;
     
     return @FALSE;
@@ -33,7 +34,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (id)transformedValue:(id)value
 {
-    if (!value || ![value respondsToSelector:@selector(isValidEmail)] || (!((NSString *) value).isValidEmails))
+    NSString *stringValue = value;
+    if (!stringValue || ![stringValue respondsToSelector:@selector(isValidEmail)] || !stringValue.isValidEmails)
         return @FALSE;
 
     return @TRUE;
