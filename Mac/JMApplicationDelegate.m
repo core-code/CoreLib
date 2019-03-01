@@ -73,7 +73,6 @@
 #endif
 }
 
-#ifndef SKIP_RATINGWINDOW
 - (void)increaseUsagesBy:(int)usageIncrease
         allowRatingsWith:(int)allowReviewLimit
      requestFeedbackWith:(int)requestReviewLimit
@@ -81,6 +80,7 @@
         allowFeedbackNow:(BOOL)allowNow
         forceFeedbackNow:(BOOL)forceAppearance
 {
+#ifndef SKIP_RATINGWINDOW
 	self.minimumUsagesForRating = allowReviewLimit;
 
 	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + usageIncrease;
@@ -121,9 +121,9 @@
         [self.ratingWindowController showWindow:nil];
         self.ratingWindowController.introTextField.stringValue = feedbackText;
     }
-}
 #endif
-    
+}
+
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
