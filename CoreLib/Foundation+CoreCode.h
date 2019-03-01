@@ -229,7 +229,8 @@
 
 // forwards for less typing
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
-- (NSArray <NSString *> *)split:(NSString *)sep;								// = componentsSeparatedByString:
+- (NSArray <NSString *> *)split:(NSString *)sep;						// = componentsSeparatedByString:
+- (NSString *)appended:(NSString *)str;                                 // = stringByAppendingString
 
 @end
 

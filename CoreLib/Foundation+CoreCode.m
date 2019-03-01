@@ -1328,6 +1328,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
 }
 
+- (NSString *)appended:(NSString *)str                                 // = stringByAppendingString
+{
+    return [self stringByAppendingString:str];
+}
+
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2    // stringByReplacingOccurencesOfString:withString:
 {
     assert(str2);
