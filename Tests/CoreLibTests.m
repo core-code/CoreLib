@@ -119,16 +119,16 @@ NSString *randomString(int maxLength)
 - (void)testHostInformation
 {
     NSString *ipv4 = [JMHostInformation ipAddress:NO];
-    XCTAssert([ipv4 countOccurencesOfString:@"."] == 3);
+    XCTAssert([ipv4 count:@"."] == 3);
     XCTAssert([ipv4 replaced:@"." with:@""].integerValue != 0);
     NSString *ipv6 = [JMHostInformation ipAddress:YES];
-    XCTAssert([ipv6 countOccurencesOfString:@":"] >= 5);
+    XCTAssert([ipv6 count:@":"] >= 5);
     NSString *ipn = [JMHostInformation ipName];
     XCTAssert([ipn hasSuffix:@".local"]);
     NSString *mt = [JMHostInformation machineType];
-    XCTAssert([mt countOccurencesOfString:@","] == 1);
+    XCTAssert([mt count:@","] == 1);
     NSString *mac = [JMHostInformation macAddress];
-    XCTAssert([mac countOccurencesOfString:@":"] == 5);
+    XCTAssert([mac count:@":"] == 5);
     BOOL online = [JMHostInformation isOnline];
     BOOL battery = [JMHostInformation runsOnBattery];
     cc_log(@"%i %i", online, battery);
