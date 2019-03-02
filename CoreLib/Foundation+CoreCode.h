@@ -191,7 +191,7 @@
 
 - (NSString *)stringValue;
 
-- (NSUInteger)countOccurencesOfString:(NSString *)str;
+- (NSUInteger)count:(NSString *)str; // peviously called countOccurencesOfString
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
 - (BOOL)contains:(NSString *)otherString;
 - (BOOL)hasAnyPrefix:(NSArray <NSString *>*)possiblePrefixes;

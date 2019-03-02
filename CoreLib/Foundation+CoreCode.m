@@ -993,7 +993,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [fileManager fileExistsAtPath:self];
 }
 
-- (NSUInteger)countOccurencesOfString:(NSString *)str
+- (NSUInteger)count:(NSString *)str
 {
     return [self componentsSeparatedByString:str].count - 1;
 }
