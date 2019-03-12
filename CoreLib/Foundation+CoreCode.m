@@ -2166,7 +2166,9 @@ CONST_KEY(CCDirectoryObserving)
         return s;
     }
 
-    cc_log_error(@"Error: could not create string from data %@", self);
+    if (self.length < 200)  cc_log_error(@"Error: could not create string from data %@", self);
+    else                    cc_log_error(@"Error: could not create string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
+
     return nil;
 }
 
@@ -2175,7 +2177,10 @@ CONST_KEY(CCDirectoryObserving)
     NSString *s = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
     
     if (!s)
-        cc_log_error(@"Error: could not create string from data %@", self);
+    {
+        if (self.length < 200)  cc_log_error(@"Error: could not create UTF8 string from data %@", self);
+        else                    cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
+    }
     
     return s;
 }
