@@ -553,6 +553,8 @@ NSString *makeTempDirectory()
 NSString *makeTempFilepath(NSString *extension)
 {
     NSString *tempDir = makeTempDirectory();
+    if (!tempDir)
+        return nil;
     NSString *fileName = [@"1." stringByAppendingString:extension];
     NSString *filePath = @[tempDir, fileName].path;
     NSString *finalPath = filePath.uniqueFile;
