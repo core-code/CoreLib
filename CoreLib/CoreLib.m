@@ -586,6 +586,8 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
 
         NSString *encodedPrefs = @"";
         
+        [NSUserDefaults.standardUserDefaults synchronize];
+        
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
         NSData *prefsData = cc.prefsURL.contents;
         

@@ -19,6 +19,13 @@ typedef NS_ENUM(uint8_t, visibilitySettingEnum)
 	kVisibleDockAndMenubar
 };
 
+typedef NS_ENUM(uint8_t, visibilityOptionEnum)
+{
+    kStaticVisibility = 0,
+    kDynamicVisibilityAddDockIconWhenWindowOpen,
+};
+
+
 typedef NS_ENUM(uint8_t, templateSettingEnum)
 {
 	kTemplateNever = 0,
@@ -34,6 +41,7 @@ CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
 
 @property (assign, nonatomic) templateSettingEnum templateSetting;
 @property (assign, nonatomic) visibilitySettingEnum visibilitySetting;
+@property (assign, nonatomic) visibilityOptionEnum visibilityOption;
 @property (strong, nonatomic) NSImage *dockIcon;
 @property (strong, nonatomic) NSImage *menubarIcon;
 @property (strong, nonatomic) NSMenu *statusItemMenu;
@@ -42,5 +50,7 @@ CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
 @property (readonly, nonatomic) BOOL visibleInMenubar;
 
 - (void)handleAppReopen;
+- (void)handleWindowOpened;
+- (void)handleWindowClosed;
 
 @end

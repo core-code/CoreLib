@@ -19,6 +19,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 CONST_KEY(JMVisibilityManagerValue)
+CONST_KEY(JMVisibilityManagerOptionValue)
 CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 
@@ -26,8 +27,11 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 @interface VisibilityManager ()
 {
     visibilitySettingEnum _visibilitySetting;
+    visibilityOptionEnum _visibilityOption;
     NSImage *_dockIcon;
     NSImage *_menubarIcon;
+    BOOL _windowIsOpen;
+    BOOL _currentlyVisibleInDock;
 }
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
@@ -38,8 +42,9 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 @implementation VisibilityManager
 
-@dynamic visibilitySetting, dockIcon, menubarIcon, menuTooltip, visibleInDock, visibleInMenubar;
+@dynamic visibilitySetting, visibilityOption, dockIcon, menubarIcon, menuTooltip, visibleInDock, visibleInMenubar;
 
+    
 + (void)initialize
 {
     NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
@@ -56,19 +61,19 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 #ifdef DEBUG
         assert([(NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"LSUIElement"] boolValue]);
 #endif
-        visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
         
         _visibilitySetting = kVisibleNowhere;
-
         _templateSetting = kTemplateNever;
-
+        _visibilityOption = (visibilityOptionEnum) kJMVisibilityManagerOptionValueKey.defaultInt;
 
         BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+        visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
 
         if (storedSetting == kVisibleNowhere && optionDown)
             self.visibilitySetting = kVisibleDock;
         else
             self.visibilitySetting = storedSetting;
+        
     }
 
     return self;
@@ -77,23 +82,45 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdirect-ivar-access"
 
+- (void)_redisplay
+{
+    [self _showOrHideDockIcon];
+    
+    self.menubarIcon = _menubarIcon;
+    self.dockIcon = _dockIcon;
+}
+    
+- (void)_showOrHideDockIcon
+{
+    if (_currentlyVisibleInDock && ![self visibleInDock])
+        [self _transform:NO];
+    else if (!_currentlyVisibleInDock && [self visibleInDock])
+        [self _transform:YES];
+}
+    
+- (void)setVisibilityOption:(visibilityOptionEnum)newOption
+{
+    _visibilityOption = newOption;
+
+    [self _redisplay];
+    
+
+    kJMVisibilityManagerOptionValueKey.defaultInt = newOption;
+    [NSUserDefaults.standardUserDefaults synchronize];
+}
+    
+- (visibilityOptionEnum)visibilityOption
+{
+    return _visibilityOption;
+}
+    
 - (void)setVisibilitySetting:(visibilitySettingEnum)newSetting
 {
-    if (_visibilitySetting % 2 == 1 && newSetting % 2 == 0)
-    {
-        [self _transform:NO];
-    }
-    else if (_visibilitySetting % 2 == 0 && newSetting % 2 == 1)
-    {
-        [self _transform:YES];
-    }
-
     //[self willChangeValueForKey:@"visibilitySetting"];
     _visibilitySetting = newSetting;
     //[self didChangeValueForKey:@"visibilitySetting"];
 
-    self.menubarIcon = _menubarIcon;
-    self.dockIcon = _dockIcon;
+    [self _redisplay];
 
     kJMVisibilityManagerValueKey.defaultInt = newSetting;
     [NSUserDefaults.standardUserDefaults synchronize];
@@ -108,7 +135,9 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 - (BOOL)visibleInDock
 {
-    return ((_visibilitySetting == kVisibleDock) || (_visibilitySetting == kVisibleDockAndMenubar));
+    return ((_visibilitySetting == kVisibleDock) ||
+            (_visibilitySetting == kVisibleDockAndMenubar) ||
+            ((_visibilitySetting == kVisibleMenubar) &&  (_visibilityOption == kDynamicVisibilityAddDockIconWhenWindowOpen) && _windowIsOpen));
 }
 
 - (BOOL)visibleInMenubar
@@ -117,16 +146,15 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     
     return visible;
 }
+    
+    
 
 - (void)setDockIcon:(NSImage *)newDockIcon
 {
     _dockIcon = newDockIcon;
 
-    if (_visibilitySetting % 2 == 1)
-    {
-        if (_dockIcon)
-            NSApp.applicationIconImage = _dockIcon;
-    }
+    if ([self visibleInDock] && _dockIcon)
+        NSApp.applicationIconImage = _dockIcon;
 }
 
 - (NSImage *)dockIcon
@@ -144,7 +172,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
     _menubarIcon = newMenubarIcon;
     
-    if (_visibilitySetting > 1)
+    if ([self visibleInMenubar])
     {
         if (self.statusItem == nil)
         {
@@ -190,11 +218,26 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     if (self.visibilitySetting == kVisibleNowhere && optionDown)
         self.visibilitySetting = kVisibleDock;
 }
-
+    
+- (void)handleWindowOpened
+{
+    _windowIsOpen = YES;
+    [self _redisplay];
+}
+    
+- (void)handleWindowClosed
+{
+    _windowIsOpen = NO;
+    [self _redisplay];
+}
+    
+    
+    
 - (void)_transform:(BOOL)foreground
 {
     ProcessSerialNumber psn = {0, kCurrentProcess};
     TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
     [NSApplication.sharedApplication activateIgnoringOtherApps:YES];
+    _currentlyVisibleInDock = foreground;
 }
 @end
