@@ -130,7 +130,6 @@
 	LOGFUNC;
 
 	cc_log(@"Warning: this version will expire");
-    #warning this version will expire
     
 	dispatch_after_main(60, ^
 	{
