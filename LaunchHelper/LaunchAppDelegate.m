@@ -28,7 +28,7 @@ static NSString *restartWithPID;
 	{
 		while ([NSRunningApplication runningApplicationWithProcessIdentifier:[restartWithPID intValue]])
 		{		
-			[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+			[NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 		}
 	}
 		

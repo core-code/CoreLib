@@ -66,7 +66,7 @@
                                           selector:@selector(timer:)
                                           userInfo:NULL repeats:NO];
 
-    [[NSRunLoop currentRunLoop] addTimer:t forMode:NSDefaultRunLoopMode];
+    [NSRunLoop.currentRunLoop addTimer:t forMode:NSDefaultRunLoopMode];
 
     t.tolerance = 0.1;
 
