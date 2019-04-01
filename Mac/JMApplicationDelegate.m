@@ -29,11 +29,6 @@
 @end
 
 
-#if (!defined(SKIP_RATINGWINDOW) || !SKIP_RATINGWINDOW)
-#define usagesThisVersionKey makeString(@"corelib_%@_usages", cc.appVersionString)
-#endif
-#define usagesAllVersionKey @"corelib_usages"
-
 @implementation JMApplicationDelegate
 
 
@@ -50,15 +45,15 @@
 - (void)welcomeOrExpireDemo:(int)demoLimit welcomeText:(NSString *)welcomeText expiryText:(NSString *)expiryText
 {
 #ifdef TRYOUT // check for demo limitation
-    expiryText = [expiryText replaced:@"[USAGES_LEFT]" with:@(demoLimit - usagesThisVersionKey.defaultInt).stringValue];
+    expiryText = [expiryText replaced:@"[USAGES_LEFT]" with:@(demoLimit - kUsagesThisVersionKey.defaultInt).stringValue];
     expiryText = [expiryText replaced:@"[USAGES_MAX]" with:@(demoLimit).stringValue];
     expiryText = [expiryText replaced:@"[APPNAME]" with:cc.appName];
     
-    welcomeText = [welcomeText replaced:@"[USAGES_LEFT]" with:@(demoLimit - usagesThisVersionKey.defaultInt).stringValue];
+    welcomeText = [welcomeText replaced:@"[USAGES_LEFT]" with:@(demoLimit - kUsagesThisVersionKey.defaultInt).stringValue];
     welcomeText = [welcomeText replaced:@"[USAGES_MAX]" with:@(demoLimit).stringValue];
     welcomeText = [welcomeText replaced:@"[APPNAME]" with:cc.appName];
     
-	if (usagesThisVersionKey.defaultInt >= demoLimit)
+	if (kUsagesThisVersionKey.defaultInt >= demoLimit)
 	{
 		alert(cc.appName, expiryText, @"OK", nil, nil);
 		[cc openURL:openAppStoreWebsite];
@@ -83,8 +78,8 @@
 #ifndef SKIP_RATINGWINDOW
 	self.minimumUsagesForRating = allowReviewLimit;
 
-	usagesAllVersionKey.defaultInt = usagesAllVersionKey.defaultInt + usageIncrease;
-	usagesThisVersionKey.defaultInt = usagesThisVersionKey.defaultInt + usageIncrease;
+	kUsagesAllVersionKey.defaultInt = kUsagesAllVersionKey.defaultInt + usageIncrease;
+	kUsagesThisVersionKey.defaultInt = kUsagesThisVersionKey.defaultInt + usageIncrease;
 
     BOOL showDialog = forceAppearance;
 
@@ -97,7 +92,7 @@
 
 	if 	(!@"corelib_dontaskagain".defaultInt &&
          !askedThisVersionKey.defaultInt &&
-         usagesThisVersionKey.defaultInt >= requestReviewLimit)
+         kUsagesThisVersionKey.defaultInt >= requestReviewLimit)
 	{
         showDialog = YES;
 
@@ -169,7 +164,7 @@
 
 - (BOOL)isRateable
 {
-   return (self.minimumUsagesForRating > 0 && usagesAllVersionKey.defaultInt > self.minimumUsagesForRating);
+   return (self.minimumUsagesForRating > 0 && kUsagesAllVersionKey.defaultInt > self.minimumUsagesForRating);
 }
 
 + (NSSet *)keyPathsForValuesAffectingIsRateable

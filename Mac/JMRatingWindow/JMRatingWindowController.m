@@ -39,9 +39,13 @@
 
 @implementation JMRatingWindowController
 
-
 - (instancetype)init
 {
+    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"StoreProductPage"]).length && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
+        @"icon-alternativeto".namedImage.name = @"icon-appstore";
+    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
+        @"icon-filehorse".namedImage.name = @"icon-macupdate";
+    
     return [super initWithWindowNibName: @"JMRatingWindow"];
 }
 
@@ -75,7 +79,9 @@
         if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
             self.rateappstoreButton.enabled = NO;
         else
-            self.rateappstoreButton.title = @"    Rate on App Store".localized;
+        {
+            self.rateappstoreButton.title = @"    Rate on AlternativeTo".localized;
+        }
     }
 
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)

@@ -65,3 +65,7 @@ CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 
 
 @end
+
+
+#define kUsagesThisVersionKey makeString(@"corelib_%@_usages", cc.appVersionString)
+#define kUsagesAllVersionKey @"corelib_usages"
