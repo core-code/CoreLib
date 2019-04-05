@@ -99,7 +99,7 @@
 
 
     cell.textLabel.font = self.font;
-    cell.textLabel.text = [self.choices objectAtIndex:indexPath.row];
+    cell.textLabel.text = self.choices[indexPath.row];
     if (self.detail)
         cell.detailTextLabel.text = (self.detail)[indexPath.row];
 

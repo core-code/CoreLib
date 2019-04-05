@@ -847,10 +847,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (self.isIntegerNumberOnly)
         return YES;
 
-    if (self.isFloatNumber)
-        return YES;
-
-    return NO;
+    return self.isFloatNumber;
 }
 
 

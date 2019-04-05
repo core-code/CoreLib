@@ -1037,7 +1037,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                         [self _findZFSBacking:&foundBacking volumeName:volumeName nonRemovableVolumes:nonRemovableVolumes bsdNum:bsdNum];
                                     }
                                     else if ((props[@"DAMediaLeaf"] && [props[@"DAMediaLeaf"] intValue]) ||
-                                             ([[props objectForKey:@"DAMediaName"] isEqualToString:@"AppleAPFSMedia"]))
+                                             ([props[@"DAMediaName"] isEqualToString:@"AppleAPFSMedia"]))
                                     {
                                         foundBacking = [self _findRAIDBacking:bsdName props:props volumeName:volumeName nonRemovableVolumes:nonRemovableVolumes];
                                     }
