@@ -2276,6 +2276,18 @@ CONST_KEY(CCDirectoryObserving)
     return [self dateWithString:@(preprocessorDateString) format:@"MMM d yyyy"];
 }
 
++ (NSDate *)dateWithRFC822Date:(NSString *)rfcDateString
+{
+    NSDateFormatter *df = NSDateFormatter.new;
+    
+    df.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss ZZZ";
+    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    
+    NSDate *result = [df dateFromString:rfcDateString];
+    
+    return result;
+}
+
 + (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString
 {   // there is the NSISO8601DateFormatter but its 10.12+
     NSDateFormatter *df = NSDateFormatter.new;

@@ -318,6 +318,7 @@
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
++ (NSDate *)dateWithRFC822Date:(NSString *)rfcDateString;
 + (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone;
