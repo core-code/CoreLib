@@ -43,7 +43,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 @implementation NSArray (CoreCode)
 
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary, randomObject;
 
 
 - (NSDictionary *)dictionary
@@ -68,6 +68,13 @@ CONST_KEY(CoreCodeAssociatedValue)
                        withString:@"]"];                        // with terminating ']'
 
     return tmp;
+}
+
+- (id)randomObject
+{
+    if (!self.count) return nil;
+    else
+        return self[generateRandomIntBetween(0,(int)self.count-1)];
 }
 
 - (id)mostFrequentObject
@@ -242,7 +249,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     return [NSOrderedSet orderedSetWithArray:self];
 }
-
 
 - (NSSet *)set
 {

@@ -199,6 +199,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
         }
     #endif
+        
+        RANDOM_INIT;
     }
 
     assert(cc);

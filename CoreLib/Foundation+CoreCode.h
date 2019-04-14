@@ -70,6 +70,7 @@
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
 
 @property (readonly, nonatomic) ObjectType mostFrequentObject;
+@property (readonly, nonatomic) ObjectType randomObject;
 
 @end
 
