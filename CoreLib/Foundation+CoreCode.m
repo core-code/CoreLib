@@ -74,7 +74,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     if (!self.count) return nil;
     else
-        return self[generateRandomIntBetween(0,(int)self.count-1)];
+        return self[(NSUInteger)generateRandomIntBetween(0,(int)self.count-1)];
 }
 
 - (id)mostFrequentObject
