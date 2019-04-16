@@ -242,7 +242,7 @@ id dispatch_async_to_sync(BasicBlock block);
 
 
 
-#define RANDOM_INIT			{srandom((int)time(0));}
+#define RANDOM_INIT			{srandom((unsigned)time(0));}
 #define RANDOM_FLOAT(a,b)	((a) + ((b) - (a)) * (random() / (CGFloat) RAND_MAX))
 #define RANDOM_INT(a,b)		((int)((a) + ((b) - (a) + 1) * (random() / (CGFloat) RAND_MAX)))		// this is INCLUSIVE; a and b will be part of the results
 
