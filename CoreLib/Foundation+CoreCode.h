@@ -358,7 +358,7 @@
 @property (readonly, nonatomic) NSDictionary <KeyType, ObjectType> *immutableObject;
 
 // 'defaultdict'
-- (void)addObject:(ObjectType)object toMutableArrayAtKey:(KeyType)key; // the point here is that it will add a mutablearray with the single object if the key doesn't exist - a poor mans 'defaultdict'
+- (void)addObject:(id)object toMutableArrayAtKey:(KeyType)key; // the point here is that it will add a mutablearray with the single object if the key doesn't exist - a poor mans 'defaultdict'
 
 @end
 
