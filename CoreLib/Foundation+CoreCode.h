@@ -271,6 +271,7 @@
 @property (readonly, nonatomic) BOOL fileIsSymlink;
 @property (readonly, nonatomic) NSURL *fileAliasTarget;
 #endif
+@property (readonly, nonatomic) NSDate *fileCreationDate;
 @property (readonly, nonatomic) unsigned long long fileSize;
 @property (readonly, nonatomic) unsigned long long fileOrDirectorySize;
 @property (readonly, nonatomic) unsigned long long directorySize;
