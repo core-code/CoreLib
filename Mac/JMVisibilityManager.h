@@ -46,7 +46,9 @@ CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
 @property (strong, nonatomic) NSImage *menubarIcon;
 @property (strong, nonatomic) NSMenu *statusItemMenu;
 @property (strong, nonatomic) NSString *menuTooltip;
-@property (readonly, nonatomic) BOOL visibleInDock;
+
+@property (readonly, nonatomic) BOOL permanentlyVisibleInDock;  // true if displaying in dock or displaying in dock and menubar
+@property (readonly, nonatomic) BOOL currentlyVisibleInDock; // true if permanetly visible in dock or currently visible because the window is open
 @property (readonly, nonatomic) BOOL visibleInMenubar;
 
 - (void)handleAppReopen;

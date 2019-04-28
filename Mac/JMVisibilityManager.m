@@ -31,7 +31,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     NSImage *_dockIcon;
     NSImage *_menubarIcon;
     BOOL _windowIsOpen;
-    BOOL _currentlyVisibleInDock;
+    BOOL _dockIconIsCurrentlyVisible;
 }
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
@@ -42,7 +42,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 @implementation VisibilityManager
 
-@dynamic visibilitySetting, visibilityOption, dockIcon, menubarIcon, menuTooltip, visibleInDock, visibleInMenubar;
+@dynamic visibilitySetting, visibilityOption, dockIcon, menubarIcon, menuTooltip, currentlyVisibleInDock, permanentlyVisibleInDock, visibleInMenubar;
 
     
 + (void)initialize
@@ -92,9 +92,9 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     
 - (void)_showOrHideDockIcon
 {
-    if (_currentlyVisibleInDock && ![self visibleInDock])
+    if (_dockIconIsCurrentlyVisible && ![self currentlyVisibleInDock])
         [self _transform:NO];
-    else if (!_currentlyVisibleInDock && [self visibleInDock])
+    else if (!_dockIconIsCurrentlyVisible && [self currentlyVisibleInDock])
         [self _transform:YES];
 }
     
@@ -133,7 +133,12 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     return _visibilitySetting;
 }
 
-- (BOOL)visibleInDock
+- (BOOL)permanentlyVisibleInDock
+{
+    return ((_visibilitySetting == kVisibleDock) || (_visibilitySetting == kVisibleDockAndMenubar));
+}
+
+- (BOOL)currentlyVisibleInDock
 {
     return ((_visibilitySetting == kVisibleDock) ||
             (_visibilitySetting == kVisibleDockAndMenubar) ||
@@ -153,7 +158,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 {
     _dockIcon = newDockIcon;
 
-    if ([self visibleInDock] && _dockIcon)
+    if ([self currentlyVisibleInDock] && _dockIcon)
         NSApp.applicationIconImage = _dockIcon;
 }
 
@@ -238,6 +243,6 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     ProcessSerialNumber psn = {0, kCurrentProcess};
     TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
     [NSApplication.sharedApplication activateIgnoringOtherApps:YES];
-    _currentlyVisibleInDock = foreground;
+    _dockIconIsCurrentlyVisible = foreground;
 }
 @end
