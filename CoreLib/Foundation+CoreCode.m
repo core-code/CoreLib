@@ -1060,8 +1060,19 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)localized
 {
-    return NSLocalizedString(self, nil);
+    NSString *localizedString = NSLocalizedString(self, nil);
+#ifdef CUSTOM_LOCALIZED_STRING_REPLACEMENT
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define LITERAL1 @ STRINGIZE2(CUSTOM_LOCALIZED_STRING_REPLACEMENT_FROM)
+#define LITERAL2 @ STRINGIZE2(CUSTOM_LOCALIZED_STRING_REPLACEMENT_TO)
+
+    localizedString = [localizedString replaced:LITERAL1
+                                           with:LITERAL2];
+#endif
+    return localizedString;
 }
+
 
 - (NSString *)resourcePath
 {

@@ -69,14 +69,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	LOGFUNC;
 
 	NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
-#ifdef DEBUG
-	NSString *infoPath = [[bundle bundlePath] stringByAppendingPathComponent:
-						  makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])];
-	NSDictionary *infoDictionary = [NSDictionary dictionaryWithContentsOfFile:infoPath];
-	NSString *bundleIdentifierInHelperOnDisk = infoDictionary[@"CFBundleIdentifier"];
-	assert([bundleIdentifierInHelperOnDisk isEqualToString:helperBundleIdentifier]);
+#if defined(DEBUG) && !defined(SKIP_LAUNCHHELPERCHECK)
+    NSString *infoPath = [[bundle bundlePath] stringByAppendingPathComponent:
+                          makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])];
+    NSDictionary *infoDictionary = [NSDictionary dictionaryWithContentsOfFile:infoPath];
+    NSString *bundleIdentifierInHelperOnDisk = infoDictionary[@"CFBundleIdentifier"];
+    assert([bundleIdentifierInHelperOnDisk isEqualToString:helperBundleIdentifier]);
 #endif
-	
+
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -115,10 +115,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	//[self willChangeValueForKey:@"launchesAtLogin"];
 
     NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(SKIP_LAUNCHHELPERCHECK)
     NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:[[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])]];
     NSString *bid = d[@"CFBundleIdentifier"];
-	assert([bid isEqualToString:helperBundleIdentifier]);
+    assert([bid isEqualToString:helperBundleIdentifier]);
 #endif
 
 
