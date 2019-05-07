@@ -39,15 +39,10 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 
 
+            //    printf("new path: %s\n", newPath);
 
             alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
-
-
-        //    printf("new path: %s\n", newPath);
-
-            NSURL * url = @(newPath).fileURL;
-
-
+            NSURL *url = @(newPath).fileURL;
             NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:url
                                                                                             options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
                                                                                       configuration:@{} error:NULL];
@@ -65,6 +60,40 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
         }
     }
 }
+
+@interface JMAppVolumeRenamedObserver : NSObject
+@property (nonatomic, strong) NSString *path;
+@end
+
+@implementation JMAppVolumeRenamedObserver
+- (void)watch:(NSNotification *)not
+{
+    NSURL *oldVolumeURL = not.userInfo[NSWorkspaceVolumeOldURLKey];
+    NSString *oldVolume = oldVolumeURL.path;
+    if ([self.path hasPrefix:oldVolume])
+    {
+        NSURL *newVolumeURL = not.userInfo[NSWorkspaceVolumeURLKey];
+        NSString *newVolume = newVolumeURL.path;
+        
+        alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
+        NSString *newAppPath = [self.path replaced:oldVolume with:newVolume];
+        NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:newAppPath.fileURL
+                                                                                        options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
+                                                                                  configuration:@{} error:NULL];
+        
+        
+        if (newInstance)
+            [NSApp terminate:nil];
+        else
+        {
+            alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
+            
+            [NSApp terminate:nil];
+        }
+    }
+}
+@end
+
 
 @implementation JMAppMovedHandler
 
@@ -90,5 +119,18 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
     FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 
     FSEventStreamStart(stream);
+    
+    
+    static JMAppVolumeRenamedObserver *observer = nil;
+    if (!observer)
+    {
+        observer = [[JMAppVolumeRenamedObserver alloc] init];
+        observer.path = NSBundle.mainBundle.bundlePath;
+        observer.path = @"/Volumes/Mimidsyxsad/MacUpdater.app";
+        [NSWorkspace.sharedWorkspace.notificationCenter addObserver:observer
+                                                           selector:@selector(watch:)
+                                                               name:NSWorkspaceDidRenameVolumeNotification object:NULL];
+    }
 }
 @end
+
