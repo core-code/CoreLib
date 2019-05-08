@@ -1039,6 +1039,14 @@ CONST_KEY(CoreCodeAssociatedValue)
     return NO;
 }
 
+- (BOOL)containsAny:(NSArray <NSString *>*)otherStrings insensitive:(BOOL)insensitive
+{
+    for (NSString *otherString in otherStrings)
+        if ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound)
+            return YES;
+    
+    return NO;
+}
 
 - (BOOL)containsAll:(NSArray <NSString *>*)otherStrings
 {

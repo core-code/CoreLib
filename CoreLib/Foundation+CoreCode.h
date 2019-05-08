@@ -198,6 +198,7 @@
 - (BOOL)hasAnyPrefix:(NSArray <NSString *>*)possiblePrefixes;
 - (BOOL)hasAnySuffix:(NSArray <NSString *>*)possibleSuffixes;
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings;
+- (BOOL)containsAny:(NSArray <NSString *>*)otherStrings insensitive:(BOOL)insensitive;
 - (BOOL)containsAll:(NSArray <NSString *>*)otherStrings;
 - (BOOL)equalsAny:(NSArray <NSString *>*)otherStrings;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
