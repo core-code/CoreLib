@@ -38,7 +38,7 @@
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
-- (BOOL)contains:(ObjectType)object;
+- (BOOL)contains:(ObjectType)object;                                // shortcut = containsObject
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
 - (CCIntRange1D)calculateExtentsOfValues:(int (^)(ObjectType input))block;
 
@@ -61,10 +61,10 @@
 - (NSInteger)reduce:(int (^)(ObjectType input))block;
 
 // versions similar to cocoa methods
-- (void)apply:(void (^)(ObjectType input))block;								// enumerateObjectsUsingBlock:
+- (void)apply:(void (^)(ObjectType input))block;				// similar = enumerateObjectsUsingBlock:
 
 // forwards for less typing
-- (NSString *)joined:(NSString *)sep;							// = componentsJoinedByString:
+- (NSString *)joined:(NSString *)sep;							// shortcut = componentsJoinedByString:
 
 @property (readonly, nonatomic) NSSet <ObjectType> *set;
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
@@ -156,7 +156,7 @@
 @property (readonly, nonatomic) unichar firstCharacter;
 @property (readonly, nonatomic) unichar lastCharacter;
 
-@property (readonly, nonatomic) NSString *expanded;						// = stringByExpandingTildeInPath
+@property (readonly, nonatomic) NSString *expanded;						// shortcut = stringByExpandingTildeInPath
 @property (readonly, nonatomic) NSString *strippedOfWhitespace;     // deletes from interior of string too, in contrast to TRIMMING which deletes only from front and back ... shortcut for stringByDeletingCharactersInSet:whitespaceCharSet
 @property (readonly, nonatomic) NSString *trimmedOfWhitespace;
 @property (readonly, nonatomic) NSString *trimmedOfWhitespaceAndNewlines;
@@ -230,9 +230,9 @@
 
 
 // forwards for less typing
-- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// = stringByReplacingOccurencesOfString:withString:
-- (NSArray <NSString *> *)split:(NSString *)sep;						// = componentsSeparatedByString:
-- (NSString *)appended:(NSString *)str;                                 // = stringByAppendingString
+- (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// shortcut = stringByReplacingOccurencesOfString:withString:
+- (NSArray <NSString *> *)split:(NSString *)sep;						// shortcut = componentsSeparatedByString:
+- (NSString *)appended:(NSString *)str;                                 // shortcut = stringByAppendingString
 
 @end
 

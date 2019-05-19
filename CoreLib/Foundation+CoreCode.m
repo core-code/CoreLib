@@ -235,7 +235,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)contains:(id)object
 {
-    return [self indexOfObject:object] != NSNotFound;
+    return [self containsObject:object];
 }
 
 
@@ -423,14 +423,13 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [NSArray arrayWithArray:resultArray];
 }
 
-- (void)apply:(ObjectInBlock)block                                // enumerateObjectsUsingBlock:
+- (void)apply:(ObjectInBlock)block                                // similar = enumerateObjectsUsingBlock:
 {
     for (id object in self)
         block(object);
 }
 
-// forwards for less typing
-- (NSString *)joined:(NSString *)sep                            // componentsJoinedByString:
+- (NSString *)joined:(NSString *)sep                            // shortcut = componentsJoinedByString:
 {
     return [self componentsJoinedByString:sep];
 }
