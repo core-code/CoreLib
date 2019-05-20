@@ -226,7 +226,7 @@
 
 - (NSString *)removed:(NSString *)stringToRemove;
 
-- (NSString *)slicingSubstringToIndex:(NSInteger)index;
+- (NSString *)slicingSubstringToIndex:(NSInteger)index;  // index should be negative and tell how many chars to remove -1 removes one char from the end
 
 
 // forwards for less typing
