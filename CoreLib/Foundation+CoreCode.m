@@ -1530,7 +1530,21 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSData *)data
 {
-    return [self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
+    let encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
+    NSData *d;
+    
+    for (int i = 0; i < encodingCount; i++)
+    {
+        d = [self dataUsingEncoding:encodingsToTry[i] allowLossyConversion:YES];
+        if (d)
+            break;
+    }
+    
+    if (!d)
+        cc_log_error(@"Error: can not convert string to data!");
+    
+    return d;
 }
 
 - (NSData *)dataFromHexString
@@ -1958,8 +1972,10 @@ CONST_KEY(CCDirectoryObserving)
 {
     NSError *err;
     
-    if (![data writeToURL:self options:NSDataWritingAtomic error:&err])
-        LOG(err);
+    if (!data)
+        cc_log(@"Error: can not write null data to file %@", self.path);
+    else if (![data writeToURL:self options:NSDataWritingAtomic error:&err])
+        cc_log(@"Error: writing data to file has failed (file: %@ data: %lu error: %@)", self.path, (unsigned long)data.length, err.description);
 }
 
 - (NSData *)contents
@@ -2185,10 +2201,13 @@ CONST_KEY(CCDirectoryObserving)
 
     if (result)
         return result;
-
-    for (NSNumber *num in @[@(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUTF16StringEncoding)])
+    
+    static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
+    let encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
+    
+    for (int i = 0; i < encodingCount; i++)
     {
-        NSString *s = [[NSString alloc] initWithData:self encoding:num.unsignedIntegerValue];
+        NSString *s = [[NSString alloc] initWithData:self encoding:encodingsToTry[i]];
 
         if (!s)
             continue;
