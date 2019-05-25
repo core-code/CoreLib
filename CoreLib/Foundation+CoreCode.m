@@ -1536,7 +1536,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     let encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
     NSData *d;
     
-    for (int i = 0; i < encodingCount; i++)
+    for (unsigned char i = 0; i < encodingCount; i++)
     {
         d = [self dataUsingEncoding:encodingsToTry[i] allowLossyConversion:YES];
         if (d)
@@ -2207,7 +2207,7 @@ CONST_KEY(CCDirectoryObserving)
     static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
     let encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
     
-    for (int i = 0; i < encodingCount; i++)
+    for (unsigned char i = 0; i < encodingCount; i++)
     {
         NSString *s = [[NSString alloc] initWithData:self encoding:encodingsToTry[i]];
 
