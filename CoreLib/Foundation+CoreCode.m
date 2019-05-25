@@ -979,9 +979,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (void)setContents:(NSData *)data
 {
     NSError *err;
-
-    if (![data writeToFile:self options:NSDataWritingAtomic error:&err])
-        LOG(err);
+    
+    if (!data)
+        cc_log(@"Error: can not write null data to file %@", self);
+    else if (![data writeToFile:self options:NSDataWritingAtomic error:&err])
+        cc_log(@"Error: writing data to file has failed (file: %@ data: %lu error: %@)", self, (unsigned long)data.length, err.description);
 }
 
 - (NSData *)contents
