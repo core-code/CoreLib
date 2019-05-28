@@ -39,6 +39,8 @@
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
 - (BOOL)contains:(ObjectType)object;                                // shortcut = containsObject
+- (BOOL)containsObjectIdenticalTo:(ObjectType)object;               // similar: indexOfObjectIdenticalTo != NSNotFound
+
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
 - (CCIntRange1D)calculateExtentsOfValues:(int (^)(ObjectType input))block;
 
@@ -184,6 +186,7 @@
 
 @property (readonly, nonatomic) NSData *data;	// data of string contents
 @property (readonly, nonatomic) NSData *dataFromHexString;
+@property (readonly, nonatomic) NSData *dataFromBase64String;
 
 @property (readonly, nonatomic) NSCharacterSet *characterSet;
 
@@ -193,8 +196,8 @@
 - (NSString *)stringValue;
 
 - (NSUInteger)count:(NSString *)str; // peviously called countOccurencesOfString
-- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;
-- (BOOL)contains:(NSString *)otherString;
+- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;         // similar: rangeOfString options != NSNotFound
+- (BOOL)contains:(NSString *)otherString;                                       // similar: rangeOfString != NSNotFound
 - (BOOL)hasAnyPrefix:(NSArray <NSString *>*)possiblePrefixes;
 - (BOOL)hasAnySuffix:(NSArray <NSString *>*)possibleSuffixes;
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings;

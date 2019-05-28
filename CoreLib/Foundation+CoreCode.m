@@ -238,6 +238,10 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self containsObject:object];
 }
 
+- (BOOL)containsObjectIdenticalTo:(id)object
+{
+    return [self indexOfObjectIdenticalTo:object] != NSNotFound;
+}
 
 - (NSArray *)reverseArray
 {
@@ -649,7 +653,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, strippedOfWhitespace, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet;
+@dynamic words, lines, strippedOfWhitespace, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted;
@@ -1547,6 +1551,11 @@ CONST_KEY(CoreCodeAssociatedValue)
         cc_log_error(@"Error: can not convert string to data!");
     
     return d;
+}
+
+- (NSData *)dataFromBase64String
+{
+    return [[NSData alloc] initWithBase64EncodedString:self options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 - (NSData *)dataFromHexString
