@@ -11,6 +11,13 @@
 
 #import "JMCorrectTimer.h"
 
+// allows clients to get more info about failures
+#ifdef TIMER_ASSERT_FUNCTION
+void TIMER_ASSERT_FUNCTION(NSString * text);
+#define assert_timer(e) (__builtin_expect(!(e), 0) ? TIMER_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@", @(__func__), @(__FILE__), __LINE__, @(#e))) : (void)0)
+#else
+#define assert_timer(e)
+#endif
 
 
 @interface JMCorrectTimer ()
@@ -110,7 +117,10 @@
         self.timer = nil;
     }
     else
+    {
         cc_log_error(@"JMCorrectTimer: receiveSleepNote but no timer");
+        assert_timer(0);
+    }
 }
 
 - (void)receiveWakeNote:(id)sender
@@ -118,6 +128,7 @@
     if (self.timer)
     {
         cc_log_error(@"JMCorrectTimer: receiveWakeNote but timer");
+        assert_timer(0);
         [self.timer invalidate];
         self.timer = nil;
     }
@@ -140,7 +151,10 @@
             strongSelf = nil;
         }
         else
+        {
             cc_log_error(@"JMCorrectTimer: error dropBlock was nil");
+            assert_timer(0);
+        }
     }
     else
     {
@@ -157,6 +171,7 @@
     if (_timer)
     {
         cc_log_error(@"JMCorrectTimer: error dealloced while still in use");
+        assert_timer(0);
     }
 
     
