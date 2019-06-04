@@ -69,7 +69,7 @@
 
 - (void)copyClicked:(id)sender
 {
-    [NSPasteboard.generalPasteboard declareTypes:@[NSStringPboardType] owner:nil];
-    [NSPasteboard.generalPasteboard setString:self.targetURL forType:NSStringPboardType];
+    [NSPasteboard.generalPasteboard declareTypes:@[NSPasteboardTypeString] owner:nil];
+    [NSPasteboard.generalPasteboard setString:self.targetURL forType:NSPasteboardTypeString];
 }
 @end

@@ -127,7 +127,7 @@
 // url string download
 @property (readonly, nonatomic) NSData *download;
 // path string filedata
-@property (assign, nonatomic) NSData *contents;
+@property (unsafe_unretained, nonatomic) NSData *contents;
 
 
 
@@ -289,7 +289,7 @@
 // url string download
 @property (readonly, nonatomic) NSData *download;
 // path string filedata
-@property (assign, nonatomic) NSData *contents;
+@property (unsafe_unretained, nonatomic) NSData *contents;
 
 @end
 
