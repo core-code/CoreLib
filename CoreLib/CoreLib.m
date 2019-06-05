@@ -673,9 +673,9 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
             {
                 cc_log_error(@"could not spawn crash helper %@", exception.userInfo);
 
-                if (alert(fatal ? @"Fatal Error" : @"Error",
+                if (alert(fatal ? @"Fatal Error".localized : @"Error".localized,
                           message,
-                          @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+                          @"Send to support".localized, fatal ? @"Quit".localized : @"Continue".localized, nil) == NSAlertFirstButtonReturn)
                 {
                     [mailtoLink.escaped.URL open];
                 }
@@ -684,9 +684,9 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         else
 #endif
         {
-            if (alert(fatal ? @"Fatal Error" : @"Error",
+            if (alert(fatal ? @"Fatal Error".localized : @"Error".localized,
                       message,
-                      @"Send to support", fatal ? @"Quit" : @"Continue", nil) == NSAlertFirstButtonReturn)
+                      @"Send to support".localized, fatal ? @"Quit".localized : @"Continue".localized, nil) == NSAlertFirstButtonReturn)
             {
                 [mailtoLink.escaped.URL open];
             }
