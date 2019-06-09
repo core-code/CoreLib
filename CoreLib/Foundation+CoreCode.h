@@ -324,8 +324,8 @@
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
-+ (NSDate *)dateWithRFC822Date:(NSString *)rfcDateString;
-+ (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString;
++ (NSDate *)dateWithRFC822Date:(NSString *)rfcDateString;       // e.g. Wed, 02 Oct 2002 15:00:00 +0200
++ (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString;  // e.g. 2019-03-15T05:18:44Z
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone;
 - (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
