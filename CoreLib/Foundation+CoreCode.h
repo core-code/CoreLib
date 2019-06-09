@@ -157,6 +157,7 @@
 @property (readonly, nonatomic) NSArray <NSString *> *words;
 @property (readonly, nonatomic) unichar firstCharacter;
 @property (readonly, nonatomic) unichar lastCharacter;
+@property (readonly, nonatomic) NSUInteger lengthFixed;     // string length that doesn't fuck up for emoji
 
 @property (readonly, nonatomic) NSString *expanded;						// shortcut = stringByExpandingTildeInPath
 @property (readonly, nonatomic) NSString *strippedOfWhitespace;     // deletes from interior of string too, in contrast to TRIMMING which deletes only from front and back ... shortcut for stringByDeletingCharactersInSet:whitespaceCharSet
