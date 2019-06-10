@@ -2232,8 +2232,10 @@ CONST_KEY(CCDirectoryObserving)
         return s;
     }
 
-    if (self.length < 200)  cc_log_error(@"Error: could not create string from data %@", self);
-    else                    cc_log_error(@"Error: could not create string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
+    if (self.length < 200)
+        cc_log_error(@"Error: could not create string from data %@", self);
+    else
+        cc_log_error(@"Error: could not create string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
 
     return nil;
 }
@@ -2244,8 +2246,10 @@ CONST_KEY(CCDirectoryObserving)
     
     if (!s)
     {
-        if (self.length < 200)  cc_log_error(@"Error: could not create UTF8 string from data %@", self);
-        else                    cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
+        if (self.length < 200)
+            cc_log_error(@"Error: could not create UTF8 string from data %@", self);
+        else
+            cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
     }
     
     return s;
