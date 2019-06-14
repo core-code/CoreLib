@@ -25,7 +25,17 @@
     <SPUStandardUserDriverDelegate, SPUUpdaterDelegate>
 #endif
 #endif
-
+{
+    
+#ifdef USE_SPARKLE
+#if USE_SPARKLE == 2
+    SPUUpdater *updater;
+    SPUStandardUserDriver *userDriver;
+#else
+    SUUpdater *updater;
+#endif
+#endif
+}
 
 - (IBAction)openWindow:(__strong NSWindow **)window nibName:(NSString *)nibName;
 - (IBAction)openURL:(NSObject *)sender;

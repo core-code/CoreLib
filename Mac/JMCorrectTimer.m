@@ -27,6 +27,7 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
 @property (strong, nonatomic) NSDate *date;
 @property (copy, nonatomic) void (^timerBlock)(void);
 @property (copy, nonatomic) void (^dropBlock)(void);
+@property (assign, nonatomic) BOOL didInvalidate;
 
 @end
 
@@ -79,16 +80,27 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
 
 
     self.timer = t;
+    
+    if (!self.timer)
+    {
+        cc_log_error(@"JMCorrectTimer: could not create timer");
+        assert_timer(0);
+    }
 }
 
 - (void)invalidate
 {
     LOGFUNC;
 
+    self.didInvalidate = YES;
+    
     if (self.timer)
         [self.timer invalidate];
     self.timer = nil;
-    [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self];
+
+    
+    [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self name:NSWorkspaceWillSleepNotification object:NULL];
+    [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self name:NSWorkspaceDidWakeNotification object:NULL];
 }
 
 - (void)timer:(id)sender
@@ -120,6 +132,8 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
     {
         cc_log_error(@"JMCorrectTimer: receiveSleepNote but no timer");
         assert_timer(0);
+        assert_timer(self.dropBlock);
+        assert_timer(self.didInvalidate);
     }
 }
 
@@ -173,8 +187,5 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
         cc_log_error(@"JMCorrectTimer: error dealloced while still in use");
         assert_timer(0);
     }
-
-    
-    [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self];
 }
 @end

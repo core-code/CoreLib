@@ -207,16 +207,8 @@
 	[application terminate:self];
 }
 
-#ifdef USE_SPARKLE
-#if USE_SPARKLE == 2
-static SPUUpdater *updater;
-static SPUStandardUserDriver *userDriver;
+
 CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
-#else
-static SUUpdater *updater;
-CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
-#endif
-#endif
 
 - (IBAction)checkForUpdatesAction:(id)sender
 {
