@@ -168,6 +168,7 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
         {
             cc_log_error(@"JMCorrectTimer: error dropBlock was nil");
             assert_timer(0);
+            assert_timer(self.didInvalidate);
         }
     }
     else
@@ -186,6 +187,8 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
     {
         cc_log_error(@"JMCorrectTimer: error dealloced while still in use");
         assert_timer(0);
+        assert_timer(self.dropBlock);
+        assert_timer(self.didInvalidate);
     }
 }
 @end
