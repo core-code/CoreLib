@@ -208,7 +208,9 @@
 }
 
 
+#ifdef USE_SPARKLE
 CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
+#endif
 
 - (IBAction)checkForUpdatesAction:(id)sender
 {
