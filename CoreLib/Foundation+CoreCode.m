@@ -1543,7 +1543,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSData *)data
 {
     static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
-    let encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
+    int encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
     NSData *d;
     
     for (unsigned char i = 0; i < encodingCount; i++)
@@ -2220,7 +2220,7 @@ CONST_KEY(CCDirectoryObserving)
         return result;
     
     static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
-    let encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
+    int encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
     
     for (unsigned char i = 0; i < encodingCount; i++)
     {
