@@ -60,35 +60,11 @@ extern "C"
 
 // !!!: BASIC TYPES
 typedef CGPoint CCFloatPoint;
-typedef struct
-{
-    NSInteger x;
-    NSInteger y;
-} CCIntPoint;
-typedef struct
-{
-    CGFloat min;
-    CGFloat max;
-    CGFloat length;
-} CCFloatRange1D;
-typedef struct
-{
-    CCFloatPoint min;
-    CCFloatPoint max;
-    CCFloatPoint length;
-} CCFloatRange2D;
-typedef struct
-{
-    NSInteger min;
-    NSInteger max;
-    NSInteger length;
-} CCIntRange1D;
-typedef struct
-{
-    CCIntPoint min;
-    CCIntPoint max;
-    CCIntPoint length;
-} CCIntRange2D;
+typedef struct { NSInteger x; NSInteger y; } CCIntPoint;
+typedef struct { CGFloat min; CGFloat max; CGFloat length; } CCFloatRange1D;
+typedef struct { CCFloatPoint min; CCFloatPoint max; CCFloatPoint length; } CCFloatRange2D;
+typedef struct { NSInteger min; NSInteger max; NSInteger length; } CCIntRange1D;
+typedef struct { CCIntPoint min; CCIntPoint max; CCIntPoint length; } CCIntRange2D;
 #ifdef __BLOCKS__
 typedef void (^BasicBlock)(void);
 typedef void (^DoubleInBlock)(double input);
@@ -242,12 +218,6 @@ id dispatch_async_to_sync(BasicBlock block);
 
 
 
-#define RANDOM_INIT			{srandom((unsigned)time(0));}
-#define RANDOM_FLOAT(a,b)	((a) + ((b) - (a)) * (random() / (CGFloat) RAND_MAX))
-#define RANDOM_INT(a,b)		((int)((a) + ((b) - (a) + 1) * (random() / (CGFloat) RAND_MAX)))		// this is INCLUSIVE; a and b will be part of the results
-
-
-
 // !!!: CONSTANT KEYS
 #define CONST_KEY(name) \
 static NSString *const k ## name ## Key = @ #name;
@@ -264,6 +234,7 @@ name ## Key *const k ## name ## Key = ( name ## Key *) @ #name;
 @interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
 extern name ## Key *const k ## name ## Key;
 
+    
 // !!!: LOGGING
 void log_to_prefs(NSString *string);
 void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit);
@@ -296,8 +267,17 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define LOGFAIL					cc_log_debug(@"failure %@ %d", @(__FILE__), __LINE__)
 #define LOG(x)					cc_log_debug(@"%@", [(x) description]);
 
+    
+// !!!: ASSERTION MACROS
 #define ASSERT_MAINTHREAD       assert([NSThread currentThread] == [NSThread mainThread])
 #define ASSERT_BACKTHREAD       assert([NSThread currentThread] != [NSThread mainThread])
+#ifdef CUSTOM_ASSERT_FUNCTION   // allows clients to get more info about failures, just def CUSTOM_ASSERT_FUNCTION to a function that sends the string home
+    void CUSTOM_ASSERT_FUNCTION(NSString * text);
+#define assert_custom(e) (__builtin_expect(!(e), 0) ? CUSTOM_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@", @(__func__), @(__FILE__), __LINE__, @(#e))) : (void)0)
+#else
+#define assert_custom(e) assert(e)
+#endif
+    
 
 // !!!: CONVENIENCE MACROS
 #define PROPERTY_STR(p)			NSStringFromSelector(@selector(p))
@@ -315,6 +295,9 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define ONCE_PER_FUNCTION(b)	{ static dispatch_once_t onceToken; dispatch_once(&onceToken, b); }
 #define ONCE_PER_OBJECT(o,b)	@synchronized(o){ static dispatch_once_t onceToken; NSNumber *tokenNumber = [o associatedValueForKey:o.id]; onceToken = tokenNumber.longValue; dispatch_once(&onceToken, b); [o setAssociatedValue:@(onceToken) forKey:o.id]; }
 #define ONCE_EVERY_MINUTES(b,m)	{ static NSDate *time = nil; if (!time || [[NSDate date] timeIntervalSinceDate:time] > (m * 60)) { b(); time = [NSDate date]; }}
+#define RANDOM_INIT             {srandom((unsigned)time(0));}
+#define RANDOM_FLOAT(a,b)       ((a) + ((b) - (a)) * (random() / (CGFloat) RAND_MAX))
+#define RANDOM_INT(a,b)         ((int)((a) + ((b) - (a) + 1) * (random() / (CGFloat) RAND_MAX)))        // this is INCLUSIVE; a and b will be part of the results
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
@@ -334,6 +317,8 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define SECONDS_PER_DAYS(x)     (SECONDS_PER_HOURS(x) * 24)
 #define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS(x) * 7)
 
+    
+// !!!: SWIFTY VAR & LET SUPPORT
 #define var __auto_type
 #define let const __auto_type
 
@@ -349,8 +334,6 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #else
 #define kFeedbackEmail @"feedback@corecode.io"
 #endif
-
-
 
 
 // !!!: UNDEFS
@@ -383,8 +366,6 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #endif
 
 
-
 // !!!: INCLUDES
 #import "AppKit+CoreCode.h"
 #import "Foundation+CoreCode.h"
-

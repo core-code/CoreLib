@@ -11,13 +11,6 @@
 
 #import "JMCorrectTimer.h"
 
-// allows clients to get more info about failures
-#ifdef TIMER_ASSERT_FUNCTION
-void TIMER_ASSERT_FUNCTION(NSString * text);
-#define assert_timer(e) (__builtin_expect(!(e), 0) ? TIMER_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@", @(__func__), @(__FILE__), __LINE__, @(#e))) : (void)0)
-#else
-#define assert_timer(e)
-#endif
 
 
 @interface JMCorrectTimer ()
@@ -84,7 +77,7 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
     if (!self.timer)
     {
         cc_log_error(@"JMCorrectTimer: could not create timer");
-        assert_timer(0);
+        assert_custom(0);
     }
 }
 
@@ -131,9 +124,9 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
     else
     {
         cc_log_error(@"JMCorrectTimer: receiveSleepNote but no timer");
-        assert_timer(0);
-        assert_timer(self.dropBlock);
-        assert_timer(self.didInvalidate);
+        assert_custom(0);
+        assert_custom(self.dropBlock);
+        assert_custom(self.didInvalidate);
     }
 }
 
@@ -142,7 +135,7 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
     if (self.timer)
     {
         cc_log_error(@"JMCorrectTimer: receiveWakeNote but timer");
-        assert_timer(0);
+        assert_custom(0);
         [self.timer invalidate];
         self.timer = nil;
     }
@@ -167,8 +160,8 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
         else
         {
             cc_log_error(@"JMCorrectTimer: error dropBlock was nil");
-            assert_timer(0);
-            assert_timer(self.didInvalidate);
+            assert_custom(0);
+            assert_custom(self.didInvalidate);
         }
     }
     else
@@ -186,9 +179,9 @@ void TIMER_ASSERT_FUNCTION(NSString * text);
     if (_timer)
     {
         cc_log_error(@"JMCorrectTimer: error dealloced while still in use");
-        assert_timer(0);
-        assert_timer(self.dropBlock);
-        assert_timer(self.didInvalidate);
+        assert_custom(0);
+        assert_custom(self.dropBlock);
+        assert_custom(self.didInvalidate);
     }
 }
 @end

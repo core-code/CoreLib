@@ -117,6 +117,18 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     return countyCode;
 }
 
++ (BOOL)isRunningTranslocated
+{
+    struct statfs statfs_info;
+    statfs(bundle.bundlePath.fileSystemRepresentation, &statfs_info);
+    BOOL isTranslocated1 = (statfs_info.f_flags & MNT_RDONLY) != 0;
+    BOOL isTranslocated2 = [bundle.bundlePath contains:@"AppTranslocation"];
+    
+    assert_custom(isTranslocated1 == isTranslocated2);
+    
+    return isTranslocated1 || isTranslocated2;
+}
+
 #ifdef USE_DISKARBITRATION
 + (NSNumber *)bsdNumberForVolume:(NSString *)volume
 {

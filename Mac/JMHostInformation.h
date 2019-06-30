@@ -26,6 +26,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 
 @interface JMHostInformation : NSObject
 
++ (BOOL)isRunningTranslocated;
 + (BOOL)isUserAdmin;
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
