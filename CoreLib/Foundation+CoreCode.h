@@ -208,6 +208,12 @@
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
 - (NSString *)clamp:(NSUInteger)maximumLength;
 
+// split a string at a splitter - return part before or after splitter - two variants, return either full string or null in case the seperator doesn't occur
+- (NSString *)splitBeforeFull:(NSString *)sep;
+- (NSString *)splitAfterFull:(NSString *)sep;
+- (NSString *)splitBeforeNull:(NSString *)sep;
+- (NSString *)splitAfterNull:(NSString *)sep;
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
 #endif

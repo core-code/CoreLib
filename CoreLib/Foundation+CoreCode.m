@@ -1377,6 +1377,46 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self componentsSeparatedByString:sep];
 }
 
+- (NSString *)splitBeforeFull:(NSString *)sep
+{
+    let r = [self rangeOfString:sep];
+    
+    if (r.location == NSNotFound)
+        return self;
+    else
+        return [self substringToIndex:r.location];
+}
+
+- (NSString *)splitAfterFull:(NSString *)sep
+{
+    let r = [self rangeOfString:sep];
+    
+    if (r.location == NSNotFound)
+        return self;
+    else
+        return [self substringFromIndex:r.location + r.length];
+}
+
+- (NSString *)splitBeforeNull:(NSString *)sep
+{
+    let r = [self rangeOfString:sep];
+    
+    if (r.location == NSNotFound)
+        return nil;
+    else
+        return [self substringToIndex:r.location];
+}
+
+- (NSString *)splitAfterNull:(NSString *)sep
+{
+    let r = [self rangeOfString:sep];
+    
+    if (r.location == NSNotFound)
+        return nil;
+    else
+        return [self substringFromIndex:r.location + r.length];
+}
+
 - (NSArray *)defaultArray
 {
     return [NSUserDefaults.standardUserDefaults arrayForKey:self];
