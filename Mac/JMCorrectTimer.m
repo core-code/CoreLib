@@ -15,12 +15,19 @@
 
 @interface JMCorrectTimer ()
 
-@property (strong, nonatomic) NSTimer *timer;
-@property (strong, nonatomic) id target;
-@property (strong, nonatomic) NSDate *date;
-@property (copy, nonatomic) void (^timerBlock)(void);
-@property (copy, nonatomic) void (^dropBlock)(void);
-@property (assign, nonatomic) BOOL didInvalidate;
+@property (strong, atomic) NSTimer *timer;
+@property (strong, atomic) id target;
+@property (strong, atomic) NSDate *date;
+@property (copy, atomic) void (^timerBlock)(void);
+@property (copy, atomic) void (^dropBlock)(void);
+
+@property (assign, atomic) int i1;
+@property (assign, atomic) int i2;
+@property (assign, atomic) int i3;
+@property (assign, atomic) int i4;
+@property (assign, atomic) int i5;
+@property (assign, atomic) int i6;
+@property (assign, atomic) int i7;
 
 @end
 
@@ -41,6 +48,8 @@
     LOGFUNC;
     if ((self = [super init]))
     {
+        self.i1++;
+        
         self.timerBlock = timerBlock;
         self.dropBlock = dropBlock;
         self.date = d;
@@ -53,6 +62,7 @@
         [NSWorkspace.sharedWorkspace.notificationCenter addObserver:self
                                                                selector:@selector(receiveWakeNote:)
                                                                    name:NSWorkspaceDidWakeNotification object:NULL];
+        
     }
     return self;
 }
@@ -60,7 +70,8 @@
 - (void)scheduleTimer
 {
     LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.date, NSDate.date.description));
-
+    self.i2++;
+    
     NSTimer *t = [[NSTimer alloc] initWithFireDate:self.date
                                           interval:0
                                             target:self
@@ -68,29 +79,23 @@
                                           userInfo:NULL repeats:NO];
 
     [NSRunLoop.currentRunLoop addTimer:t forMode:NSDefaultRunLoopMode];
-
     t.tolerance = 0.1;
-
-
     self.timer = t;
     
-    if (!self.timer)
-    {
-        cc_log_error(@"JMCorrectTimer: could not create timer");
-        assert_custom(0);
-    }
+    assert_custom_info(self.timer && self.dropBlock && self.timerBlock, self.info);
 }
 
 - (void)invalidate
 {
     LOGFUNC;
-
-    self.didInvalidate = YES;
+    self.i3++;
+    
     
     if (self.timer)
         [self.timer invalidate];
     self.timer = nil;
-
+    self.timerBlock = nil;
+    self.dropBlock = nil;
     
     [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self name:NSWorkspaceWillSleepNotification object:NULL];
     [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self name:NSWorkspaceDidWakeNotification object:NULL];
@@ -99,15 +104,13 @@
 - (void)timer:(id)sender
 {
     LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.timer.fireDate.description, NSDate.date.description));
-
+    self.i4++;
+    
     __strong JMCorrectTimer *strongSelf = self;
 
     self.timerBlock();
 
-
     [self invalidate];
-    self.timerBlock = nil;
-    self.dropBlock = nil;
 
     strongSelf = nil;
 }
@@ -115,36 +118,36 @@
 - (void)receiveSleepNote:(id)sender
 {
     LOGFUNC;
+    self.i5++;
+    
+    assert_custom_info(self.timer && self.dropBlock && self.timerBlock, self.info);
 
     if (self.timer)
     {
         [self.timer invalidate];
         self.timer = nil;
-    }
-    else
-    {
-        cc_log_error(@"JMCorrectTimer: receiveSleepNote but no timer");
-        assert_custom(0);
-        assert_custom(self.dropBlock);
-        assert_custom(self.didInvalidate);
     }
 }
 
 - (void)receiveWakeNote:(id)sender
 {
+    self.i6++;
+    
     if (self.timer)
     {
         cc_log_error(@"JMCorrectTimer: receiveWakeNote but timer");
-        assert_custom(0);
+        assert_custom_info(0, self.info);
         [self.timer invalidate];
         self.timer = nil;
     }
+    assert_custom_info(self.dropBlock, self.info);
 
 
     if ([[NSDate date] timeIntervalSinceDate:self.date] > 0.01)
     {
         LOGFUNCPARAM(makeString(@"dropping Timer as we have been sleeping, missed target by: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
 
+        
         if (self.dropBlock)
         {
             __strong JMCorrectTimer *strongSelf = self;
@@ -156,12 +159,6 @@
 
 
             strongSelf = nil;
-        }
-        else
-        {
-            cc_log_error(@"JMCorrectTimer: error dropBlock was nil");
-            assert_custom(0);
-            assert_custom(self.didInvalidate);
         }
     }
     else
@@ -175,13 +172,13 @@
 - (void)dealloc
 {
     LOGFUNC;
+    self.i7++;
+    
+    assert_custom_info(!_timer, self.info);
+}
 
-    if (_timer)
-    {
-        cc_log_error(@"JMCorrectTimer: error dealloced while still in use");
-        assert_custom(0);
-        assert_custom(self.dropBlock);
-        assert_custom(self.didInvalidate);
-    }
+- (NSString *)info
+{
+    return makeString(@"%i %i %i %i %i %i %i - %p %p %p", self.i1, self.i2, self.i3, self.i4, self.i5, self.i6, self.i7, self.timer, self.timerBlock, self.dropBlock);
 }
 @end
