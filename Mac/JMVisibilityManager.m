@@ -214,7 +214,6 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 {
     return _statusItem.toolTip;
 }
-#pragma GCC diagnostic pop
 
 - (void)handleAppReopen
 {
@@ -245,4 +244,5 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     [NSApplication.sharedApplication activateIgnoringOtherApps:YES];
     _dockIconIsCurrentlyVisible = foreground;
 }
+#pragma GCC diagnostic pop
 @end
