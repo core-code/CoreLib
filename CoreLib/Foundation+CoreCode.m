@@ -43,7 +43,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 @implementation NSArray (CoreCode)
 
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary, randomObject;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary, randomObject, joinedWithSpaces, joinedWithNewlines, joinedWithDots, joinedWithCommas;
 
 
 - (NSDictionary *)dictionary
@@ -436,6 +436,26 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)joined:(NSString *)sep                            // shortcut = componentsJoinedByString:
 {
     return [self componentsJoinedByString:sep];
+}
+
+- (NSString *)joinedWithSpaces
+{
+    return [self componentsJoinedByString:@" "];
+}
+
+- (NSString *)joinedWithNewlines
+{
+    return [self componentsJoinedByString:@"\n"];
+}
+
+- (NSString *)joinedWithDots
+{
+    return [self componentsJoinedByString:@"."];
+}
+
+- (NSString *)joinedWithCommas
+{
+    return [self componentsJoinedByString:@","];
 }
 
 - (NSArray *)filteredUsingPredicateString:(NSString *)format, ...

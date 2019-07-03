@@ -68,6 +68,12 @@
 // forwards for less typing
 - (NSString *)joined:(NSString *)sep;							// shortcut = componentsJoinedByString:
 
+@property (readonly, nonatomic) NSString *joinedWithSpaces;
+@property (readonly, nonatomic) NSString *joinedWithNewlines;
+@property (readonly, nonatomic) NSString *joinedWithDots;
+@property (readonly, nonatomic) NSString *joinedWithCommas;
+
+
 @property (readonly, nonatomic) NSSet <ObjectType> *set;
 @property (readonly, nonatomic) NSOrderedSet <ObjectType> *orderedSet;
 
