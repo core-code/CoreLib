@@ -11,7 +11,9 @@
 
 #import "JMWKWebView.h"
 
-
+@interface JMWKWebView ()
+@property (atomic, assign) BOOL didFinishInitialNavigation;
+@end
 
 @implementation JMWKWebView
 
@@ -40,111 +42,54 @@
 {
     ONCE_PER_OBJECT(self, ^
     {
+        
+        
         if (self.localHTMLName && self.localHTMLName.length)
         {
             [self loadRequest:self.localHTMLName.resourceURL.request];
         }
+        else
+            self.didFinishInitialNavigation = YES; // no need to wait until local file has loaded
 
         if (self.remoteHTMLURL && self.remoteHTMLURL.length)
         {
-            NSString *remoteURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
-            dispatch_async_main(^
+            dispatch_after_back(0.05f, ^
             {
-                [self loadRequest:remoteURL.URL.request];
+                while (!self.didFinishInitialNavigation)
+                    [NSThread sleepForTimeInterval:0.05];
+
+                dispatch_async_main(^
+                {
+                    NSString *remoteURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
+
+                    [self loadRequest:remoteURL.URL.request];
+                });
             });
         }
-    })
+   })
 }
 
 #pragma mark WebViewPolicyDelegate
 
-//- (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request
-//          frame:(WebFrame *)frame decisionListener:(id < WebPolicyDecisionListener >)listener
-//{    
-//    NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
-//    NSString *remoteHTMLURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
-//    NSNumber *actionType = actionInformation[WebActionNavigationTypeKey];
-//    NSString *requestURLString = request.URL.absoluteString;
-//    
-//    if ((localHTMLPath && [requestURLString hasPrefix:localHTMLPath]) ||
-//        (remoteHTMLURL && [requestURLString hasPrefix:remoteHTMLURL]) ||
-//        [requestURLString isEqualToString:@"about:blank"] ||
-//        (self.openOnlyClicksInBrowser && (actionType.intValue != WebNavigationTypeLinkClicked)))
-//        [listener use];
-//    else
-//    {
-//        [request.URL open];
-//        [listener ignore];
-//    }
-//}
-//
-//#pragma mark WebResourceLoadDelegate
-//
-//- (void)webView:(WebView *)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource
-//{
-//    if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
-//    {
-//        [sender stringByEvaluatingJavaScriptFromString:makeString(@"document.documentElement.style.zoom = \"%.4f\"", self.zoomFactor.doubleValue)];
-//        self.zoomFactor = nil;
-//    }
-//}
-//
-//- (void)webView:(WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource
-//{
-//    NSString *url = error.userInfo[NSURLErrorFailingURLStringErrorKey];
-//    if (error.code == -1009 &&
-//        [url isEqualToString:self.remoteHTMLURL] &&
-//        self.localHTMLName.length)
-//    {
-//        [self loadRequest:self.localHTMLName.resourceURL.request];  // online version failed, fall back to offline
-//    }
-//}
+// TODO: the fallbacl from JMWebView in didFailLoadingWithError is not implemented but preliminary results say it aint needed
 
-
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
-decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
-    
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
+    NSString *localHTMLPath = self.localHTMLName.resourceURL.absoluteString;
+    NSString *remoteHTMLURL = [self.remoteHTMLURL replaced:@"$(CFBundleIdentifier)" with:cc.appBundleIdentifier];
+    NSString *requestURLString = navigationAction.request.URL.absoluteString;
+    LOGFUNCPARAM(requestURLString);
     
-    LOGFUNC;
-    decisionHandler(WKNavigationActionPolicyAllow);
-
-}
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
-{
-    
-    LOGFUNC;
-    decisionHandler(WKNavigationResponsePolicyAllow);
-
-
-}
-
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
-{
-    LOGFUNC;
-
-    
-}
-
-- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
-{
-    
-    LOGFUNC;
-
-}
-
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
-{
-    LOGFUNC;
-
-}
-
-- (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation
-{
-    LOGFUNC;
-    
+    if ((localHTMLPath && [requestURLString hasPrefix:localHTMLPath]) ||
+        (remoteHTMLURL && [requestURLString hasPrefix:remoteHTMLURL]) ||
+        [requestURLString isEqualToString:@"about:blank"] ||
+        (self.openOnlyClicksInBrowser && (navigationAction.navigationType != WKNavigationTypeLinkActivated)))
+        decisionHandler(WKNavigationActionPolicyAllow);
+    else
+    {
+        [navigationAction.request.URL open];
+        decisionHandler(WKNavigationActionPolicyCancel);
+    }
 }
 
 
@@ -158,12 +103,39 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
                completionHandler:^(id m, NSError * error) { }];
         self.zoomFactor = nil;
     }
+    
+    self.didFinishInitialNavigation = YES;
 }
 
-- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
-{
-    LOGFUNC;
-    
-}
+//- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+//{
+//    LOGFUNC;
+//    decisionHandler(WKNavigationResponsePolicyAllow);
+//}
+
+//- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
+//{
+//    LOGFUNC;
+//}
+//
+//- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
+//{
+//    LOGFUNC;
+//}
+//
+//- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+//{
+//    LOGFUNC;
+//}
+//
+//- (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation
+//{
+//    LOGFUNC;
+//}
+
+//- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
+//{
+//    LOGFUNC;
+//}
 
 @end
