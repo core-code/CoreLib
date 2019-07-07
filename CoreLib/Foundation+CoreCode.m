@@ -1399,7 +1399,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)splitBeforeFull:(NSString *)sep
 {
-    let r = [self rangeOfString:sep];
+    NSRange r = [self rangeOfString:sep];
     
     if (r.location == NSNotFound)
         return self;
@@ -1409,7 +1409,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)splitAfterFull:(NSString *)sep
 {
-    let r = [self rangeOfString:sep];
+    NSRange r = [self rangeOfString:sep];
     
     if (r.location == NSNotFound)
         return self;
@@ -1419,7 +1419,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)splitBeforeNull:(NSString *)sep
 {
-    let r = [self rangeOfString:sep];
+    NSRange r = [self rangeOfString:sep];
     
     if (r.location == NSNotFound)
         return nil;
@@ -1429,7 +1429,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)splitAfterNull:(NSString *)sep
 {
-    let r = [self rangeOfString:sep];
+    NSRange r = [self rangeOfString:sep];
     
     if (r.location == NSNotFound)
         return nil;
