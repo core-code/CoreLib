@@ -118,7 +118,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 }
 
 + (BOOL)isRunningTranslocated
-{
+{ // could also use kCFURLQuarantinePropertiesKey?
     struct statfs statfs_info;
     statfs(bundle.bundlePath.fileSystemRepresentation, &statfs_info);
     BOOL isTranslocated1 = (statfs_info.f_flags & MNT_RDONLY) != 0;
