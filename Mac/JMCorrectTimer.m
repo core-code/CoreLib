@@ -28,6 +28,9 @@
 @property (assign, atomic) int i5;
 @property (assign, atomic) int i6;
 @property (assign, atomic) int i7;
+@property (assign, atomic) int i8;
+@property (assign, atomic) int i9;
+@property (assign, atomic) int i10;
 
 @end
 
@@ -147,7 +150,8 @@
     {
         LOGFUNCPARAM(makeString(@"dropping Timer as we have been sleeping, missed target by: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
 
-        
+        self.i8++;
+
         if (self.dropBlock)
         {
             __strong JMCorrectTimer *strongSelf = self;
@@ -159,6 +163,7 @@
 
 
             strongSelf = nil;
+            self.i9++;
         }
     }
     else
@@ -166,6 +171,7 @@
         LOGFUNCPARAM(makeString(@"rescheduling timer, still time left to reschedule: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
 
         [self scheduleTimer];
+        self.i10++;
     }
 }
 
@@ -179,6 +185,6 @@
 
 - (NSString *)info
 {
-    return makeString(@"%i %i %i %i %i %i %i - %p %p %p", self.i1, self.i2, self.i3, self.i4, self.i5, self.i6, self.i7, self.timer, self.timerBlock, self.dropBlock);
+    return makeString(@"%i %i %i %i %i %i %i %i %i %i - %p %p %p", self.i1, self.i2, self.i3, self.i4, self.i5, self.i6, self.i7, self.i8, self.i9, self.i10, self.timer, self.timerBlock, self.dropBlock);
 }
 @end
