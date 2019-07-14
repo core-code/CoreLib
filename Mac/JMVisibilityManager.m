@@ -107,6 +107,8 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
     kJMVisibilityManagerOptionValueKey.defaultInt = newOption;
     [NSUserDefaults.standardUserDefaults synchronize];
+
+    [notificationCenter postNotificationName:kVisibilitySettingDidChangeNotificationKey object:self];
 }
     
 - (visibilityOptionEnum)visibilityOption
