@@ -111,6 +111,7 @@
     
     __strong JMCorrectTimer *strongSelf = self;
 
+    assert_custom_info(self.timer && self.dropBlock && self.timerBlock, self.info);
     self.timerBlock();
 
     [self invalidate];
@@ -152,6 +153,8 @@
 
         self.i8++;
 
+        assert_custom_info(self.dropBlock, self.info);
+
         if (self.dropBlock)
         {
             __strong JMCorrectTimer *strongSelf = self;
@@ -162,8 +165,12 @@
             self.dropBlock = nil;
 
 
-            strongSelf = nil;
+            [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self name:NSWorkspaceWillSleepNotification object:NULL];
+            [NSWorkspace.sharedWorkspace.notificationCenter removeObserver:self name:NSWorkspaceDidWakeNotification object:NULL];
+            
             self.i9++;
+
+            strongSelf = nil;
         }
     }
     else
