@@ -94,6 +94,11 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #ifndef SKIP_CREATE_APPSUPPORT_DIRECTORY
         if (!self.suppURL.fileExists && self.appName)
             [fileManager createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:NULL];
+        else if (!self.suppURL.fileIsDirectory)
+        {
+            alert_apptitled(makeString(@"This application can not be launched because its 'Application Support' folder is not a folder but a file. Please remove the file '%@' and re-launch this app.", self.suppURL.path), @"OK", nil, nil);
+            exit(0);
+        }
 #endif
 
     #ifdef DEBUG
