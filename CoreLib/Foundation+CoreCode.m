@@ -1797,7 +1797,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA, fileCreationDate; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsSymlink;
+@dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsRegularFile, fileIsSymlink;
 
 
 - (NSString *)fileChecksumSHA
@@ -1840,6 +1840,14 @@ CONST_KEY(CCDirectoryObserving)
 
     return alias && success;
 }
+
+- (BOOL)fileIsRegularFile
+{
+    NSNumber *value;
+    [self getResourceValue:&value forKey:NSURLIsRegularFileKey error:NULL];
+    return value.boolValue;
+}
+
 
 - (BOOL)fileIsSymlink
 {
