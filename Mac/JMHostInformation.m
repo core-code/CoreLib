@@ -98,6 +98,21 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 @implementation JMHostInformation
 
 
++ (NSArray <NSString *> *)otherLoggedInUsers
+{
+    NSString *currentUser = [@[@"/usr/bin/whoami"] runAsTask].trimmedOfWhitespaceAndNewlines;
+    NSString *loggedUsersString = [@[@"/usr/bin/who"] runAsTask];
+    NSArray *loggedUsersArray = loggedUsersString.lines;
+    NSArray *loggedUsersGuiArray = [loggedUsersArray filtered:^BOOL(NSString *input) { return [input contains:@"console"];}];
+    NSArray *loggedUsersGuiExceptUsArray = [loggedUsersGuiArray filtered:^BOOL(NSString *input) { return ![input contains:currentUser];}];
+    NSArray *loggedUsersGuiExceptUsCleanArray = [loggedUsersGuiExceptUsArray mapped:^NSString *(NSString *input) { return [input split:@" "].firstObject;}];
+
+    
+    return loggedUsersGuiExceptUsCleanArray;
+}
+
+
+
 + (NSString *)appStoreCountryCode
 {
     NSURL *updateJournalURL = @"~/Library/Application Support/App Store/updatejournal.plist".expanded.fileURL;
