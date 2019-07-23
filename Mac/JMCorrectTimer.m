@@ -192,6 +192,6 @@
 
 - (NSString *)info
 {
-    return makeString(@"%i %i %i %i %i %i %i %i %i %i - %p %p %p", self.i1, self.i2, self.i3, self.i4, self.i5, self.i6, self.i7, self.i8, self.i9, self.i10, self.timer, self.timerBlock, self.dropBlock);
+    return makeString(@"%i %i %i %i %i %i %i %i %i %i - %p %p %p", self.i1, self.i2, self.i3, self.i4, self.i5, self.i6, self.i7, self.i8, self.i9, self.i10, (__bridge void *)self.timer, (__bridge void *)self.timerBlock, (__bridge void *)self.dropBlock);
 }
 @end

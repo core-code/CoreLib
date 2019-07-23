@@ -96,18 +96,26 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         {
             BOOL exists = self.suppURL.fileExists;
             
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
             if ((!exists && self.suppURL.fileIsSymlink) ||  // broken symlink
                 (exists && !self.suppURL.fileIsDirectory))  // not a folder
             {
                 alert_apptitled(makeString(@"This application can not be launched because its 'Application Support' folder is not a folder but a file. Please remove the file '%@' and re-launch this app.", self.suppURL.path), @"OK", nil, nil);
             }
-            else if (!exists) // non-existant
+            else
+#endif
+                if (!exists) // non-existant
             {
                 NSError *error;
                 BOOL succ = [fileManager createDirectoryAtURL:self.suppURL withIntermediateDirectories:YES attributes:nil error:&error];
                 if (!succ)
                 {
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
                     alert_apptitled(makeString(@"This application can not be launched because the 'Application Support' can not be created at the path '%@'.\nError: %@", self.suppURL.path, error.localizedDescription), @"OK", nil, nil);
+#else
+                    cc_log(@"This application can not be launched because the 'Application Support' can not be created at the path '%@'.\nError: %@", self.suppURL.path, error.localizedDescription);
+
+#endif
                     exit(0);
                 }
             }
@@ -154,7 +162,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
         if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
-            LOG(@"Warning: LSApplicationCategoryType not properly set");
+            LOG(@"Warning: LSApplicationCategoryType not properly set")
 #endif
         
         
@@ -218,7 +226,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         }
     #endif
         
-        RANDOM_INIT;
+        RANDOM_INIT
     }
 
     assert(cc);
