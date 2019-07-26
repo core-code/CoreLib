@@ -378,12 +378,17 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         NSString *crashes = @"";
         for (NSString *path in logFilenames)
         {
+            if (![path hasSuffix:@"crash"]) continue;
+            
             NSString *token = makeString(@"DSC_%@", path);
             if (!token.defaultInt)
             {
                 NSString *additionalCrash = [path.contents.string split:@"/System/Library/"][0];
-                crashes = [crashes stringByAppendingString:additionalCrash];
-                token.defaultInt = 1; // we don't wanna send crashes twice, but erasing them is probably not OK
+                if (crashes.length + additionalCrash.length < 100000)
+                {
+                    crashes = [crashes stringByAppendingString:additionalCrash];
+                    token.defaultInt = 1; // we don't wanna send crashes twice, but erasing them is probably not OK
+                }
             }
         }
         crashReports = makeString(@"Crash Reports: \n\n%@", crashes);
