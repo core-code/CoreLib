@@ -220,6 +220,9 @@
 - (NSString *)splitBeforeNull:(NSString *)sep;
 - (NSString *)splitAfterNull:(NSString *)sep;
 
+- (NSString *)between:(NSString *)sep1 and:(NSString *)sep2; // returns string part between 1 and 2, nil if not possible
+
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
 #endif

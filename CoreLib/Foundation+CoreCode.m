@@ -1397,6 +1397,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self componentsSeparatedByString:sep];
 }
 
+- (NSString *)between:(NSString *)sep1 and:(NSString *)sep2
+{
+    return [[self splitAfterNull:sep1] splitBeforeNull:sep2]; // iif the first call yields nil, we still return nil
+}
+
 - (NSString *)splitBeforeFull:(NSString *)sep
 {
     NSRange r = [self rangeOfString:sep];
