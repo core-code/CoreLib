@@ -337,6 +337,7 @@
 
 @interface NSDate (CoreCode)
 
++ (NSDate *)tomorrow;
 // date format strings:   dd.MM.yyyy HH:mm:ss
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier;
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat;

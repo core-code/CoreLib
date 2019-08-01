@@ -2399,6 +2399,18 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSDate (CoreCode)
 
++ (NSDate *)tomorrow
+{
+    NSDateComponents *components = NSDateComponents.new;
+    components.day = 1;
+    
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *tomorrow = [gregorian dateByAddingComponents:components toDate:NSDate.date options:0];
+    
+    return tomorrow;
+}
+
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
     NSDateFormatter *df = [NSDateFormatter new];
