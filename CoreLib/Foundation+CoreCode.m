@@ -2410,6 +2410,18 @@ CONST_KEY(CCDirectoryObserving)
     
     return tomorrow;
 }
+    
++ (NSDate *)yesterday
+{
+    NSDateComponents *components = NSDateComponents.new;
+    components.day = -1;
+    
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *yesterday = [gregorian dateByAddingComponents:components toDate:NSDate.date options:0];
+    
+    return yesterday;
+}
 
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
