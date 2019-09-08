@@ -1800,7 +1800,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA, fileCreationDate; // , path
+@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsRegularFile, fileIsSymlink;
 
@@ -1972,6 +1972,16 @@ CONST_KEY(CCDirectoryObserving)
     NSDate *date;
     
     if ([self getResourceValue:&date forKey:NSURLCreationDateKey error:nil])
+        return date;
+    else
+        return nil;
+}
+
+- (NSDate *)fileModificationDate
+{
+    NSDate *date;
+    
+    if ([self getResourceValue:&date forKey:NSURLContentModificationDateKey error:nil])
         return date;
     else
         return nil;
