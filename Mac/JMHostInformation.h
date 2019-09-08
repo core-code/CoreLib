@@ -33,6 +33,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (NSString *)machineType;
 + (NSString *)appStoreCountryCode;
 + (NSArray <NSString *> *)otherLoggedInUsers;
++ (NSArray <NSString *> *)runningProcesses;
 
 #ifdef USE_DISKARBITRATION // requires linking DiskArbitration.framework
 + (NSString *)volumeNamesForDevice:(NSInteger)deviceNumber;

@@ -15,6 +15,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #if __has_feature(modules)
 @import Darwin.sys.sysctl;
+#import <libproc.h>
 @import Darwin.POSIX.pwd;
 @import Darwin.POSIX.grp;
 @import Darwin.POSIX.sys.socket;
@@ -58,6 +59,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <sys/mount.h>
 #include <pwd.h>
 #include <grp.h>
+#import <libproc.h>
 #ifdef USE_IOKIT
 #include <IOKit/ps/IOPSKeys.h>
 #include <IOKit/ps/IOPowerSources.h>
@@ -112,6 +114,28 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 }
 
 
++ (NSArray <NSString *> *)runningProcesses
+{
+    NSMutableArray *procs = makeMutableArray();
+    int pidCount = proc_listpids(PROC_ALL_PIDS, 0, NULL, 0);
+    unsigned long pidsBufSize = sizeof(pid_t) * (unsigned long)pidCount;
+    pid_t * pids = malloc(pidsBufSize);
+    bzero(pids, pidsBufSize);
+    proc_listpids(PROC_ALL_PIDS, 0, pids, (int)pidsBufSize);
+    char pathBuffer[PROC_PIDPATHINFO_MAXSIZE];
+    for (int i=0; i < pidCount; i++) {
+        
+        pid_t currentPid = pids[i];
+        if (currentPid)
+        {
+            bzero(pathBuffer, PROC_PIDPATHINFO_MAXSIZE);
+            proc_pidpath(currentPid, pathBuffer, sizeof(pathBuffer));
+            NSString *pathObject = @(pathBuffer);
+            [procs addObject:pathObject];
+        }
+    }
+    return procs;
+}
 
 + (NSString *)appStoreCountryCode
 {
