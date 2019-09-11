@@ -349,6 +349,8 @@
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone;
 - (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
+- (NSDate *)nextDay;
+- (NSDate *)previousDay;
 
 @end
 
