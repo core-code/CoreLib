@@ -2445,7 +2445,7 @@ CONST_KEY(CCDirectoryObserving)
     return tomorrow;
 }
 
-+ (NSDate *)previousDay
+- (NSDate *)previousDay
 {
     NSDateComponents *components = NSDateComponents.new;
     components.day = -1;
