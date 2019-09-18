@@ -89,14 +89,17 @@
     
 #ifndef TRYOUT
 	NSString *askedThisVersionKey = makeString(@"corelib_%@_asked", cc.appVersionString);
+    NSDate *lastAskDate = @"corelib_askdate".defaultObject;
 
 	if 	(!@"corelib_dontaskagain".defaultInt &&
          !askedThisVersionKey.defaultInt &&
-         kUsagesThisVersionKey.defaultInt >= requestReviewLimit)
+         kUsagesThisVersionKey.defaultInt >= requestReviewLimit &&
+         (([NSDate.date timeIntervalSinceDate:lastAskDate] > SECONDS_PER_WEEKS(14)) || (!lastAskDate)))
 	{
         showDialog = YES;
 
 		askedThisVersionKey.defaultInt = 1;
+        @"corelib_askdate".defaultObject = NSDate.date;
 	}
 #endif
     
