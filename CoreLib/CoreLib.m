@@ -178,7 +178,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             assert(@"dsa_pub.pem".resourceURL);
         #endif
     #else
-        #ifndef NDEBUG
+        #if !defined(NDEBUG) && !defined(CLI)
             cc_log_error(@"Warning: you are not running in DEBUG mode but have not disabled assertions (NDEBUG)");
         #endif
     #endif
