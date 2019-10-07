@@ -48,7 +48,7 @@
 
 - (instancetype)initWithFireDate:(NSDate *)d timerBlock:(void (^)(void))timerBlock dropBlock:(void (^)(void))dropBlock
 {
-    LOGFUNC;
+    LOGFUNC
     if ((self = [super init]))
     {
         self.i1++;
@@ -90,7 +90,7 @@
 
 - (void)invalidate
 {
-    LOGFUNC;
+    LOGFUNC
     self.i3++;
     
     
@@ -121,7 +121,7 @@
 
 - (void)receiveSleepNote:(id)sender
 {
-    LOGFUNC;
+    LOGFUNC
     self.i5++;
     
     assert_custom_info(self.timer && self.dropBlock && self.timerBlock, self.info);
@@ -184,7 +184,7 @@
 
 - (void)dealloc
 {
-    LOGFUNC;
+    LOGFUNC
     self.i7++;
     
     assert_custom_info(!_timer, self.info);
