@@ -66,7 +66,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (BOOL)launchesAtLogin
 {
-	LOGFUNC;
+	LOGFUNC
 
 	NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
 #if defined(DEBUG) && !defined(SKIP_LAUNCHHELPERCHECK)
@@ -110,7 +110,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (void)setLaunchesAtLogin:(BOOL)launchesAtLogin
 {
-	LOGFUNC;
+	LOGFUNC
 
 	//[self willChangeValueForKey:@"launchesAtLogin"];
 
