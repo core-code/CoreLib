@@ -125,7 +125,7 @@
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
 #if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
-	LOGFUNC;
+	LOGFUNC
 
 	cc_log(@"Warning: this version will expire");
     
@@ -157,7 +157,7 @@
 
 - (IBAction)openURL:(NSObject *)sender
 {
-	LOGFUNC;
+	LOGFUNC
 
     NSNumber *tagNum = [sender valueForKey:@"tag"];
 	int tag = tagNum.intValue;
@@ -218,7 +218,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 - (IBAction)checkForUpdatesAction:(id)sender
 {
 #ifdef USE_SPARKLE
-	LOGFUNC;
+	LOGFUNC
 	if (updater)
 #if USE_SPARKLE == 2
         [updater checkForUpdates];
