@@ -2180,7 +2180,10 @@ CONST_KEY(CCDirectoryObserving)
 @dynamic string, stringUTF8, hexString, base64String, mutableObject, JSONArray, JSONDictionary;
 
 #ifdef USE_SECURITY
-@dynamic SHA1, MD5, SHA256;
+@dynamic SHA1, SHA256;
+#ifdef PROVIDE_DEPRECATED_MD5
+@dynamic MD5;
+#endif
 #endif
 
 
