@@ -328,7 +328,9 @@
 #endif
 #ifdef USE_SECURITY
 @property (readonly, nonatomic) NSString *SHA1;
+#ifdef PROVIDE_DEPRECATED_MD5
 @property (readonly, nonatomic) NSString *MD5;
+#endif
 @property (readonly, nonatomic) NSString *SHA256;
 #endif
 

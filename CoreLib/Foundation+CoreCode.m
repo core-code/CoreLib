@@ -2202,6 +2202,7 @@ CONST_KEY(CCDirectoryObserving)
     return s;
 }
 
+#ifdef PROVIDE_DEPRECATED_MD5
 - (NSString *)MD5
 {
     const char *cStr = self.bytes;
@@ -2217,6 +2218,7 @@ CONST_KEY(CCDirectoryObserving)
 
     return s;
 }
+#endif
 
 - (NSString *)SHA256
 {
