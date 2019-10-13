@@ -37,7 +37,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
             fcntl(bundleFileDescriptor, F_GETPATH, newPath);
 
-
+            cc_log(@"Info: move detection triggered, offering to restart app");
 
             //    printf("new path: %s\n", newPath);
 
@@ -75,6 +75,9 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
         NSURL *newVolumeURL = not.userInfo[NSWorkspaceVolumeURLKey];
         NSString *newVolume = newVolumeURL.path;
         
+        cc_log(@"Info: volume rename detection triggered, offering to restart app");
+
+        
         alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
         NSString *newAppPath = [self.path replaced:oldVolume with:newVolume];
         NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:newAppPath.fileURL
@@ -99,6 +102,9 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 + (void)startMoveObservation
 {
+    if ([JMHostInformation isRunningTranslocated])
+        return;
+
     CFStringRef mypath = (__bridge CFStringRef)NSBundle.mainBundle.bundlePath;
     CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
     void *callbackInfo = NULL;
@@ -126,7 +132,6 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
     {
         observer = [[JMAppVolumeRenamedObserver alloc] init];
         observer.path = NSBundle.mainBundle.bundlePath;
-        observer.path = @"/Volumes/Mimidsyxsad/MacUpdater.app";
         [NSWorkspace.sharedWorkspace.notificationCenter addObserver:observer
                                                            selector:@selector(watch:)
                                                                name:NSWorkspaceDidRenameVolumeNotification object:NULL];
