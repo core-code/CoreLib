@@ -10,7 +10,7 @@
  */
 
 #import "JMAppMovedHandler.h"
-
+#import "JMHostInformation.h"
 
 
 static int bundleFileDescriptor;
