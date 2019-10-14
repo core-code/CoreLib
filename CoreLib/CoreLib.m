@@ -116,7 +116,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                     cc_log(@"This application can not be launched because the 'Application Support' can not be created at the path '%@'.\nError: %@", self.suppURL.path, error.localizedDescription);
 
 #endif
-                    exit(0);
+                    exit(1);
                 }
             }
         }
@@ -201,7 +201,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                 if ([framework hasPrefix:@"libclang"]) continue;
 #endif
                 alert_apptitled(makeString(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.\n\nOffending Path: %@", smylinkToBinaryPath), @"OK", nil, nil);
-                exit(0);
+                exit(1);
             }
 #ifdef DEBUG
             NSString *versionsPath = makeString(@"%@/%@/Versions", frameworkPath, framework);
@@ -210,7 +210,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                 if ((![versionsEntry isEqualToString:@"A"]) && (![versionsEntry isEqualToString:@"Current"]))
                 {
                     cc_log_error(@"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
-                    exit(0);
+                    exit(1);
                 }
             }
             NSString *versionAPath = makeString(@"%@/%@/Versions/A", frameworkPath, framework);
@@ -219,7 +219,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                 if (([entry isEqualToString:@"headers"]) && (![entry isEqualToString:@"resources"]))
                 {
                     cc_log_error(@"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
-                    exit(0);
+                    exit(1);
                 }
             }
 #endif
