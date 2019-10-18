@@ -102,8 +102,18 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
 + (void)startMoveObservation
 {
-    if ([JMHostInformation isRunningTranslocated])
-        return;
+    
+        Class hostInfoClass = NSClassFromString(@"JMHostInformation");
+        if (hostInfoClass)
+        {
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wundeclared-selector"
+            BOOL itl = [hostInfoClass performSelector:@selector(isRunningTranslocated)];
+    #pragma clang diagnostic pop
+            if (itl)
+                return;
+        }
+    
 
     CFStringRef mypath = (__bridge CFStringRef)NSBundle.mainBundle.bundlePath;
     CFArrayRef pathsToWatch = CFArrayCreate(NULL, (const void **)&mypath, 1, NULL);
