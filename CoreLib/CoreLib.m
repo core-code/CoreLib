@@ -189,7 +189,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         NSSetUncaughtExceptionHandler(&exceptionHandler);
     #endif
 
-        
+
+        #if !defined(XCTEST) || !XCTEST
+
         NSString *frameworkPath = bundle.privateFrameworksPath;
         for (NSString *framework in frameworkPath.directoryContents)
         {
@@ -225,6 +227,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
         }
     #endif
+#endif
         
         RANDOM_INIT
     }
