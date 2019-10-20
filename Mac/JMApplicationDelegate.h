@@ -69,6 +69,8 @@ CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 // PADDLE
 - (IBAction)paddleDeactivateClicked:(id)sender;
 - (IBAction)paddleDetailsClicked:(id)sender;
+- (IBAction)paddleActivateClicked:(id)sender;
+- (IBAction)paddleRecoverClicked:(id)sender;
 @property (assign, nonatomic) BOOL paddleEnabled;
 @property (assign, nonatomic) BOOL paddleActivated;
 
