@@ -81,7 +81,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
             {
                 NSData *data = [NSData dataWithContentsOfFile:path];
                 NSString *crashlogsource = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSString *crashlog = [[crashlogsource componentsSeparatedByString:@"**********"].lastObject componentsSeparatedByString:@"Binary Images:"][0];
+                NSString *crashlog = [crashlogsource componentsSeparatedByString:@"**********"].lastObject;
                 crashlog = [crashlog stringByReplacingOccurrencesOfString:@"&" withString:@"ß"];
                 crashlog = [crashlog stringByReplacingOccurrencesOfString:@"?" withString:@"¿"];
 
