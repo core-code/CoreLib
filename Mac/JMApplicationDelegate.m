@@ -309,7 +309,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (IBAction)paddleRecoverClicked:(id)sender;
+- (IBAction)paddleRecoverClicked:(id)sender
 {
     [self doesNotRecognizeSelector:_cmd];
 }
