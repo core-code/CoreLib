@@ -48,6 +48,7 @@
 		B93EC98C22C008BD00B98F3A /* JMWKWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B93EC98B22C008BD00B98F3A /* JMWKWebView.m */; };
 		B97A5E951CC1536C00201C2C /* JMBlockFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */; };
 		B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
+		B9BE71FA2366069600F75801 /* JMPersistentCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BE71F92366069600F75801 /* JMPersistentCache.m */; };
 		B9EF05171865D42C00CF7A38 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05161865D42C00CF7A38 /* XCTest.framework */; };
 		B9EF05181865D42C00CF7A38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF04FD1865D42C00CF7A38 /* Foundation.framework */; };
 		B9EF05191865D42C00CF7A38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9EF05011865D42C00CF7A38 /* UIKit.framework */; };
@@ -126,6 +127,8 @@
 		B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMBlockFormatter.m; sourceTree = "<group>"; };
 		B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSlideshowController.h; sourceTree = "<group>"; };
 		B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMSlideshowController.m; sourceTree = "<group>"; };
+		B9BE71F82366069600F75801 /* JMPersistentCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JMPersistentCache.h; sourceTree = "<group>"; };
+		B9BE71F92366069600F75801 /* JMPersistentCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JMPersistentCache.m; sourceTree = "<group>"; };
 		B9EF04FD1865D42C00CF7A38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9EF04FF1865D42C00CF7A38 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9EF05011865D42C00CF7A38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -246,6 +249,8 @@
 			children = (
 				B90E8DD71B1787B1007C0FB4 /* JMApplicationDelegate.h */,
 				B90E8DD81B1787B1007C0FB4 /* JMApplicationDelegate.m */,
+				B9BE71F82366069600F75801 /* JMPersistentCache.h */,
+				B9BE71F92366069600F75801 /* JMPersistentCache.m */,
 				B90E8DD91B1787B1007C0FB4 /* JMAppMovedHandler.h */,
 				B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */,
 				B97A5E921CC1536C00201C2C /* JMBlockFormatter.h */,
@@ -413,6 +418,7 @@
 			files = (
 				B933AB3518BBDFA1006E42B9 /* CoreLib.m in Sources */,
 				B90E8DF41B1787B1007C0FB4 /* JMApplicationDelegate.m in Sources */,
+				B9BE71FA2366069600F75801 /* JMPersistentCache.m in Sources */,
 				B933AB2D18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */,
 				B9F326971EE6CAEF0020E401 /* JMRatingWindowController.m in Sources */,
 				B90E8DFE1B1787B1007C0FB4 /* JMDocklessApplication.m in Sources */,
@@ -505,8 +511,8 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -570,8 +576,8 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

@@ -1433,26 +1433,16 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
     else
         fprintf(stderr, "%s\n", str.UTF8String);
 #else
-    if (@available(macOS 10.12, iOS 10.0, *))
-    {
-        const char *utf = str.UTF8String;
+    const char *utf = str.UTF8String;
 
-        if (level == ASL_LEVEL_DEBUG || level == ASL_LEVEL_INFO)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEBUG, "%{public}s", utf);
-        else if (level == ASL_LEVEL_NOTICE || level == ASL_LEVEL_WARNING)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEFAULT, "%{public}s", utf);
-        else if (level == ASL_LEVEL_ERR)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_ERROR, "%{public}s", utf);
-        else if (level == ASL_LEVEL_CRIT || level == ASL_LEVEL_ALERT || level == ASL_LEVEL_EMERG)
-            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%{public}s", utf);
-    }
-    else
-    {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations" // we get a warning despite the @available, must be a compiler bug
-        asl_log(NULL, NULL, level, "%s", str.UTF8String);
-#pragma clang diagnostic pop
-    }
+    if (level == ASL_LEVEL_DEBUG || level == ASL_LEVEL_INFO)
+        os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEBUG, "%{public}s", utf);
+    else if (level == ASL_LEVEL_NOTICE || level == ASL_LEVEL_WARNING)
+        os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_DEFAULT, "%{public}s", utf);
+    else if (level == ASL_LEVEL_ERR)
+        os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_ERROR, "%{public}s", utf);
+    else if (level == ASL_LEVEL_CRIT || level == ASL_LEVEL_ALERT || level == ASL_LEVEL_EMERG)
+        os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%{public}s", utf);
 #endif
     
 #ifdef DEBUG

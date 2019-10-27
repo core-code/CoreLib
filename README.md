@@ -1,17 +1,15 @@
 CoreLib
 =======
 
-CoreLib is a collection of reusable Objective-C source code to make various aspects of developing Mac and iOS applications easier, faster & safer.
+CoreLib is a collection of reusable Objective-C source code to make various aspects of developing Mac apps easier, faster & safer.
 
 CoreLib is designed so you can just use the parts you want/need and are not forced to adopt all of it. 
 
-Just #import CoreLib.h in your .pch (or in files that use it). Additional Classes in the Mac/ and iOS/ folders can be included as needed.
+Just #import CoreLib.h in your .pch (or in files that use it). Additional Classes in the Mac/ folder can be included as needed.
 
 CoreLib has these components:
 
 * categories on base Cocoa like NSArray, NSData, NSObject, NSString, etc for new functionality or syntactic sugar (AppKit+CoreCode, Foundation+CoreCode)
-
-* for iOS) subclasses for UIActionSheet, UIAlertView, etc to provide a more convenient block based interface or new view controllers (iOS/JM*)
 
 * for Mac) convenience classes for e-mail sending, getting host information, managing login items, showing styled font lists, etc  (Mac/JM*)
 
@@ -26,6 +24,7 @@ CoreLib version 1.9 requires Xcode 7 and deploys back to Mac OS X 10.6 / iOS 7
 CoreLib version 1.10 and above requires Xcode 8 and deploys back to Mac OS X 10.6 / iOS 8  
 CoreLib version 1.14 and above requires Xcode 9 and deploys back to Mac OS X 10.10 / iOS 8
 CoreLib version 1.21 and above requires Xcode 10 and deploys back to Mac OS X 10.10 / iOS 8
+CoreLib version 1.25 and above requires Xcode 10 and deploys back to Mac OS X 10.13 / iOS 11
 
 ### Initialization
 

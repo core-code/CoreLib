@@ -59,7 +59,7 @@
     self.happyView.hidden = YES;
 
 
-    if (@available(macOS 10.11, *)) // doing this directly in the NIB would warn when deploying to < 10.11
+    // TODO: should now do this in the NIB directly
     {
         for (NSButton *button in @[self.ratemacupdateButton, self.rateappstoreButton, self.notnowButton, self.happyButton, self.notsureButton, self.problemButton, self.feedbackButton])
             button.font = [NSFont systemFontOfSize:18 weight:NSFontWeightLight];

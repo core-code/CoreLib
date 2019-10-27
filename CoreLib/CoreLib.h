@@ -40,8 +40,8 @@ extern "C"
 #else
     #import <Cocoa/Cocoa.h>
 #endif
-#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
-    #error CoreLib only deploys back to Mac OS X 10.10
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13
+    #error CoreLib only deploys back to Mac OS X 10.13
 #endif
 #endif
 

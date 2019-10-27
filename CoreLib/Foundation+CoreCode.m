@@ -2030,15 +2030,7 @@ CONST_KEY(CCDirectoryObserving)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     [NSWorkspace.sharedWorkspace openURL:self];
 #else
-    if (@available(iOS 10.0, *))
-        [UIApplication.sharedApplication openURL:self options:@{} completionHandler:NULL];
-    else
-    {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations" // we get a warning despite the @available, must be a compiler bug
-        [UIApplication.sharedApplication openURL:self];
-#pragma clang diagnostic pop
-    }
+    [UIApplication.sharedApplication openURL:self options:@{} completionHandler:NULL];
 #endif
 }
 
