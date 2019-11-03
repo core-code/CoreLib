@@ -2526,6 +2526,22 @@ CONST_KEY(CCDirectoryObserving)
     return [df stringFromDate:self];
 }
 
+- (NSString *)shortDateString
+{
+    return [self stringUsingDateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+}
+
+- (NSString *)shortTimeString
+{
+    return [self stringUsingDateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
+}
+
+- (NSString *)shortDateAndTimeString
+{
+    return [self stringUsingDateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle];
+}
+
+
 @end
 
 
