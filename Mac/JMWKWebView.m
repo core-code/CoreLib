@@ -95,7 +95,7 @@
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    LOGFUNC;
+    LOGFUNC
     
     if (self.zoomFactor && !IS_FLOAT_EQUAL(self.zoomFactor.floatValue, 1.0f))
     {
@@ -109,33 +109,33 @@
 
 //- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 //{
-//    LOGFUNC;
+//    LOGFUNC
 //    decisionHandler(WKNavigationResponsePolicyAllow);
 //}
 
 //- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 //{
-//    LOGFUNC;
+//    LOGFUNC
 //}
 //
 //- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(null_unspecified WKNavigation *)navigation
 //{
-//    LOGFUNC;
+//    LOGFUNC
 //}
 //
 //- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
 //{
-//    LOGFUNC;
+//    LOGFUNC
 //}
 //
 //- (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation
 //{
-//    LOGFUNC;
+//    LOGFUNC
 //}
 
 //- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
 //{
-//    LOGFUNC;
+//    LOGFUNC
 //}
 
 @end

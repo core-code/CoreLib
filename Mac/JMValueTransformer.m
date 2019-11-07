@@ -48,7 +48,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (id)transformedValue:(id)value
 {
-    if (!value || ![value respondsToSelector:@selector(count)] || (((NSArray *) value).count))
+    if (!value || ![(NSObject *)value respondsToSelector:@selector(count)] || (((NSArray *) value).count))
         return @FALSE;
  
     return @TRUE;
@@ -61,7 +61,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (id)transformedValue:(id)value
 {
-    if (!value || ![value respondsToSelector:@selector(count)] || (!((NSArray *) value).count))
+    if (!value || ![(NSObject *)value respondsToSelector:@selector(count)] || (!((NSArray *) value).count))
         return @FALSE;
     
     return @TRUE;
