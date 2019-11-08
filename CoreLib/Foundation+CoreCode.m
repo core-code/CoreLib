@@ -1196,6 +1196,16 @@ CONST_KEY(CoreCodeAssociatedValue)
     return ((self.length <= maximumLength) ? self : [self substringToIndex:maximumLength]);
 }
 
+- (NSString *)clampByteLength:(NSUInteger)maximumLength
+{
+    NSString *clampedString = [self clamp:maximumLength];
+    
+    while ([clampedString lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > maximumLength)
+        clampedString = [clampedString slicingSubstringToIndex:-1];
+    
+    return clampedString;
+}
+
 
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements
 {
