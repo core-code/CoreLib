@@ -62,7 +62,6 @@
 - (IBAction)setUpdateCheck:(NSObject *)sender;
 - (IBAction)checkForUpdatesAction:(id)sender;
 - (void)selectCurrentUpdateIntervalMenuItem:(NSMenu *)menu;
-CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 #endif
 
 
@@ -81,3 +80,4 @@ CONST_KEY_DECLARATION(UpdatecheckMenuindex)
 
 #define kUsagesThisVersionKey makeString(@"corelib_%@_usages", cc.appVersionString)
 #define kUsagesAllVersionKey @"corelib_usages"
+CONST_KEY_DECLARATION(UpdatecheckMenuindex)
