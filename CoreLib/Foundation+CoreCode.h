@@ -80,6 +80,8 @@
 @property (readonly, nonatomic) ObjectType mostFrequentObject;
 @property (readonly, nonatomic) ObjectType randomObject;
 
+@property (readonly, nonatomic) NSRange fullRange;
+
 @end
 
 
@@ -484,6 +486,7 @@
 @property (readonly, nonatomic) NSMutableSet <ObjectType> *mutableObject;
 
 @end
+
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

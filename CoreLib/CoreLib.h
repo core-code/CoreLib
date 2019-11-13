@@ -315,9 +315,9 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define MB_TO_BYTES_NEW(x)      ((x) * (1000 * 1000))
 #define GB_TO_BYTES_NEW(x)      ((x) * (1000 * 1000 * 1000))
 #define SECONDS_PER_MINUTES(x)  ((x) * 60)
-#define SECONDS_PER_HOURS(x)    (SECONDS_PER_MINUTES(x) * 60)
-#define SECONDS_PER_DAYS(x)     (SECONDS_PER_HOURS(x) * 24)
-#define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS(x) * 7)
+#define SECONDS_PER_HOURS(x)    (SECONDS_PER_MINUTES((x)) * 60)
+#define SECONDS_PER_DAYS(x)     (SECONDS_PER_HOURS((x)) * 24)
+#define SECONDS_PER_WEEKS(x)    (SECONDS_PER_DAYS((x)) * 7)
 
     
 // !!!: SWIFTY VAR & LET SUPPORT

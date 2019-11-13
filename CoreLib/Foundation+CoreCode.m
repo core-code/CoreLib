@@ -43,8 +43,13 @@ CONST_KEY(CoreCodeAssociatedValue)
 @implementation NSArray (CoreCode)
 
 
-@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary, randomObject, joinedWithSpaces, joinedWithNewlines, joinedWithDots, joinedWithCommas;
+@dynamic mutableObject, empty, set, reverseArray, string, path, sorted, XMLData, flattenedArray, literalString, orderedSet, JSONData, mostFrequentObject, dictionary, randomObject, joinedWithSpaces, joinedWithNewlines, joinedWithDots, joinedWithCommas, fullRange;
 
+
+- (NSRange)fullRange
+{
+    return NSMakeRange(0, self.count);
+}
 
 - (NSDictionary *)dictionary
 {
