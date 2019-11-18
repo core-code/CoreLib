@@ -1181,6 +1181,17 @@ CONST_KEY(CoreCodeAssociatedValue)
     return attributedString;
 }
 
+- (NSAttributedString *)attributedStringWithFont:(NSFont *)font
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
+
+    [attributedString beginEditing];
+    [attributedString addAttribute:NSFontAttributeName value:font range:self.fullRange];
+    [attributedString endEditing];
+
+    return attributedString;
+}
+
 - (NSString *)strippedOfWhitespace
 {
     return [self stringByDeletingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];

@@ -230,6 +230,7 @@
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
 #endif
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url;
+- (NSAttributedString *)attributedStringWithFont:(NSFont *)font;
 
 - (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 - (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
