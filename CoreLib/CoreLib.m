@@ -855,12 +855,35 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
     if (buttons.count > 2)
         [alert addButtonWithTitle:buttons[2]];
 
-    NSTextView *input = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
+    NSScrollView *scrollview = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
+    NSSize contentSize = [scrollview contentSize];
+    
+    [scrollview setBorderType:NSNoBorder];
+    [scrollview setHasVerticalScroller:YES];
+    [scrollview setHasHorizontalScroller:NO];
+    [scrollview setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    
+    NSTextView *theTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, contentSize.width, contentSize.height)];
+    [theTextView setMinSize:NSMakeSize(0.0, contentSize.height)];
+    [theTextView setMaxSize:NSMakeSize((CGFloat)FLT_MAX, (CGFloat)FLT_MAX)];
+    [theTextView setVerticallyResizable:YES];
+    [theTextView setHorizontallyResizable:NO];
+    [theTextView setAutoresizingMask:NSViewWidthSizable];
 
-    alert.accessoryView = input;
+    
+    [[theTextView textContainer] setContainerSize:NSMakeSize(contentSize.width, (CGFloat)FLT_MAX)];
+    [[theTextView textContainer] setWidthTracksTextView:YES];
+    
+    [scrollview setDocumentView:theTextView];
+
+    
+    NSString *inputString = *result;
+    if (inputString.length)
+        theTextView.string = inputString;
+    
+    alert.accessoryView = scrollview;
     NSInteger selectedButton = [alert runModal];
-
-    *result = input.string;
+    *result = theTextView.string;
 
     return selectedButton;
 }
