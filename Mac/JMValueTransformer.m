@@ -12,6 +12,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "JMValueTransformer.h"
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-messaging-id"
+
 @implementation InvalidEmailValueTransformer
 
 + (BOOL)allowsReverseTransformation { return NO; }
@@ -225,3 +228,5 @@ COMPARISONTRANSFORMERS_IMPLEMENTATION(96)
 COMPARISONTRANSFORMERS_IMPLEMENTATION(97)
 COMPARISONTRANSFORMERS_IMPLEMENTATION(98)
 COMPARISONTRANSFORMERS_IMPLEMENTATION(99)
+
+#pragma clang diagnostic pop

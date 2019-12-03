@@ -510,12 +510,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (!usePollingToAvoidRunloop)
     {
         [task waitUntilExit];
-#ifdef DEBUG
-#ifndef CLI
+#if defined(DEBUG) && !defined(CLI) && !defined(SKIP_MAINTHREADWAITUNTILEXIT_WARNING)
         if ([NSThread currentThread] == [NSThread mainThread])
             cc_log(@"Warning: -[NSTask waitUntilExit] on main thread considered harmful");
-        
-#endif
 #endif
     }
     else
