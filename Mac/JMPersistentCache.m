@@ -65,6 +65,7 @@
     if (!data || error)
     {
         cc_log_error(@"Error: JMPersistentCache cannot encode cach with error %@", error.description);
+        assert_custom(0);
         [_lock unlock];
         return NO;
     }
@@ -75,6 +76,7 @@
     if (!success || error)
     {
         cc_log_error(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, error.description);
+        assert_custom(0);
         [_lock unlock];
         return NO;
     }
