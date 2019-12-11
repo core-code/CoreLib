@@ -78,7 +78,7 @@
 
 @interface NSImage (CoreCode)
 
-- (NSImage * _Nullable)resizedImage:(NSSize)newSize;
+- (NSImage * _Nullable)resizedImage:(NSSize)newSize; // NOTE: this will double the size on retina displays.
 
 @end
 
