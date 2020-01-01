@@ -75,8 +75,9 @@
 
     if (!success || error)
     {
-        cc_log_error(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, error.description);
-        assert_custom(0);
+        let errorMsg = @"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, error.description;
+        cc_log_error(errorMsg);
+        assert_custom_info(0, errorMsg);
         [_lock unlock];
         return NO;
     }
