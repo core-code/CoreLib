@@ -23,7 +23,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2019 CoreCode Limited. All rights reserved.</string>
+	<string>Copyright © 2020 CoreCode Limited. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>CrashMainMenu</string>
 	<key>NSPrincipalClass</key>

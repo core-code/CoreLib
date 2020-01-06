@@ -3,7 +3,7 @@
 //  CrashHelper
 //
 //  Created by CoreCode on 23/11/16.
-//  Copyright © 2019 CoreCode Limited. All rights reserved.
+//  Copyright © 2020 CoreCode Limited. All rights reserved.
 //
 
 #import "CrashAppDelegate.h"

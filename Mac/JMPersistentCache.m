@@ -2,8 +2,8 @@
 //  JMPersistentCache.m
 //  CoreLibTests
 //
-//  Created by Julian Mayer on 27/10/2019.
-//  Copyright © 2019 CoreCode Limited. All rights reserved.
+//  Created by CoreCode on 27/10/2019.
+//  Copyright © 2020 CoreCode Limited. All rights reserved.
 //
 
 #import "CoreLib.h"
