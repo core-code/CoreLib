@@ -97,7 +97,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                             foundNeccessaryString = TRUE;
                 }
 
-                if ([crashlog rangeOfString:@"gpusGenerateCrashLog"] != NSNotFound) // ignore GPU driver crashes
+                if ([crashlog rangeOfString:@"gpusGenerateCrashLog"].location != NSNotFound) // ignore GPU driver crashes
                     return;
 
                 if ([crashlog rangeOfString:@"Crashed Thread"].location == NSNotFound)
