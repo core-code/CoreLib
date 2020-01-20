@@ -1038,7 +1038,7 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
     
     [NSApp activateIgnoringOtherApps:YES];
     
-    cc_log_error(@"Alert: %@ - %@", title, message),
+    cc_log_error(@"Alert: %@ - %@", title, message);
     
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = title;
