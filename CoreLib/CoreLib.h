@@ -236,9 +236,6 @@ extern name ## Key *const k ## name ## Key;
 
     
 // !!!: LOGGING
-void log_to_prefs(NSString *string);
-void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit);
-
 typedef NS_ENUM(uint8_t, cc_log_type)
 {
     CC_LOG_LEVEL_DEBUG   = 7,
@@ -246,6 +243,11 @@ typedef NS_ENUM(uint8_t, cc_log_type)
     CC_LOG_LEVEL_ERROR   = 3,
     CC_LOG_LEVEL_FAULT   = 0,
 };
+
+void log_to_prefs(NSString *string);
+void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit, cc_log_type minimumLogType);
+
+
 
 void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2,3);
 #ifdef FORCE_LOG

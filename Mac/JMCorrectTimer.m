@@ -139,7 +139,7 @@
     
     if (self.timer)
     {
-        cc_log_error(@"JMCorrectTimer: receiveWakeNote but timer"); // this happens sometimes, WAKE called without SLEEP beforehand
+        cc_log(@"Error: JMCorrectTimer: receiveWakeNote but timer"); // this happens sometimes, WAKE called without SLEEP beforehand
         [self.timer invalidate];
         self.timer = nil;
     }

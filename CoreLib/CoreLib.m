@@ -1038,6 +1038,7 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
     
     [NSApp activateIgnoringOtherApps:YES];
     
+    cc_log_error(@"Alert: %@ - %@", title, message),
     
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = title;
@@ -1356,7 +1357,9 @@ __inline__ int generateRandomIntBetween(int a, int b)
 
 
 static NSFileHandle *logfileHandle;
-void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit) // ASL broken on 10.12+ and especially logging to file not working anymore
+static cc_log_type minimumLogType;
+
+void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit, cc_log_type _minimumLogType) // ASL broken on 10.12+ and especially logging to file not working anymore
 {
     assert(!logfileHandle);
 
@@ -1393,11 +1396,13 @@ void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit
     {
         cc_log_error(@"could not open file %@ for log file usage", fileURL.path);
     }
+    
+    minimumLogType = _minimumLogType;
 }
 
 void _cc_log_tologfile(int level, NSString *string)
 {
-    if (logfileHandle)
+    if (logfileHandle && (level <= minimumLogType))
     {
         static const char* levelNames[8] = {ASL_STRING_EMERG, ASL_STRING_ALERT, ASL_STRING_CRIT, ASL_STRING_ERR, ASL_STRING_WARNING, ASL_STRING_NOTICE, ASL_STRING_INFO, ASL_STRING_DEBUG};
         assert(level < 8);
