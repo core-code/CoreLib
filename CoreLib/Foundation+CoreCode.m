@@ -2751,6 +2751,17 @@ CONST_KEY(CCDirectoryObserving)
 @end
 
 
+@implementation NSMutableURLRequest (CoreCode)
+
+- (void)addBasicAuthentication:(NSString *)username password:(NSString *)password
+{
+    NSString *authStr = makeString(@"%@:%@", username, password);
+    NSString *authValue = makeString(@"Basic %@", authStr.data.base64String);
+    [self setValue:authValue forHTTPHeaderField:@"Authorization"];
+}
+
+@end
+
 
 @implementation NSFileHandle (CoreCode)
 

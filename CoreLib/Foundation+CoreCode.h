@@ -401,6 +401,12 @@
 @end
 
 
+@interface NSMutableURLRequest (CoreCode)
+
+- (void)addBasicAuthentication:(NSString *)username password:(NSString *)password;
+
+@end
+
 
 @interface NSFileHandle (CoreCode)
 
