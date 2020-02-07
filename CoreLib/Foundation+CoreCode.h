@@ -408,6 +408,15 @@
 @end
 
 
+@interface NSURLRequest (CoreCode)
+
+- (NSData *)downloadWithTimeout:(double)timeoutSeconds disableCache:(BOOL)disableCache;
+@property (readonly, nonatomic) NSData *download;
+
+@end
+
+
+
 @interface NSFileHandle (CoreCode)
 
 - (float)readFloat;

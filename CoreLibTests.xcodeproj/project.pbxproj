@@ -46,7 +46,6 @@
 		B933AB3618BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */; };
 		B933AB3918BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */; };
 		B93EC98C22C008BD00B98F3A /* JMWKWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B93EC98B22C008BD00B98F3A /* JMWKWebView.m */; };
-		B9471C9C23EE06FE00FFD0D1 /* JMHTTPDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = B9471C9B23EE06FE00FFD0D1 /* JMHTTPDownloader.m */; };
 		B97A5E951CC1536C00201C2C /* JMBlockFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */; };
 		B97FDADA1933AA1900A93E6C /* JMSlideshowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B97FDAD91933AA1900A93E6C /* JMSlideshowController.m */; };
 		B9BE71FA2366069600F75801 /* JMPersistentCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BE71F92366069600F75801 /* JMPersistentCache.m */; };
@@ -124,8 +123,6 @@
 		B933AB2618BBDFA1006E42B9 /* Foundation+CoreCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+CoreCode.m"; sourceTree = "<group>"; };
 		B93EC98A22C008BD00B98F3A /* JMWKWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWKWebView.h; sourceTree = "<group>"; };
 		B93EC98B22C008BD00B98F3A /* JMWKWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWKWebView.m; sourceTree = "<group>"; };
-		B9471C9A23EE06FD00FFD0D1 /* JMHTTPDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMHTTPDownloader.h; sourceTree = "<group>"; };
-		B9471C9B23EE06FE00FFD0D1 /* JMHTTPDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMHTTPDownloader.m; sourceTree = "<group>"; };
 		B97A5E921CC1536C00201C2C /* JMBlockFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMBlockFormatter.h; sourceTree = "<group>"; };
 		B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMBlockFormatter.m; sourceTree = "<group>"; };
 		B97FDAD81933AA1900A93E6C /* JMSlideshowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMSlideshowController.h; sourceTree = "<group>"; };
@@ -256,8 +253,6 @@
 				B9BE71F92366069600F75801 /* JMPersistentCache.m */,
 				B90E8DD91B1787B1007C0FB4 /* JMAppMovedHandler.h */,
 				B90E8DDA1B1787B1007C0FB4 /* JMAppMovedHandler.m */,
-				B9471C9A23EE06FD00FFD0D1 /* JMHTTPDownloader.h */,
-				B9471C9B23EE06FE00FFD0D1 /* JMHTTPDownloader.m */,
 				B97A5E921CC1536C00201C2C /* JMBlockFormatter.h */,
 				B97A5E931CC1536C00201C2C /* JMBlockFormatter.m */,
 				B90E8DDB1B1787B1007C0FB4 /* JMClickableImageView.h */,
@@ -434,7 +429,6 @@
 				B90E8E0C1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */,
 				B90E8E061B1787B1007C0FB4 /* JMLoginItemManager.m in Sources */,
 				B90E8E001B1787B1007C0FB4 /* JMEmailSender.m in Sources */,
-				B9471C9C23EE06FE00FFD0D1 /* JMHTTPDownloader.m in Sources */,
 				B933AB3918BBDFA1006E42B9 /* Foundation+CoreCode.m in Sources */,
 				B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
 				B97A5E951CC1536C00201C2C /* JMBlockFormatter.m in Sources */,
