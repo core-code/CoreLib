@@ -134,10 +134,16 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
                         licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
                     
+                    BOOL darkMode = NO;
+                    if (@available(macOS 10.14, *))
+                    {
+                        if (NSAppearance.currentAppearance.name == NSAppearanceNameDarkAqua)
+                            darkMode = YES;
+                    }
                     
                     NSString *subject = [NSString stringWithFormat:@"%@ v%@ (%i) Crash Report (License code: %@)", appName, cc.appVersionString, cc.appBuildNumber, licenseCode];
-                    NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@", appName,
-                                       @"Please fill in additional details here".localized, inputManagers, cc.appBuildNumber, crashlog, [NSUserDefaults.standardUserDefaults persistentDomainForName:cc.appBundleIdentifier].description];
+                    NSString *body = [NSString stringWithFormat:@"Unfortunately %@ has crashed!\n\n--%@--\n\n\nInput Managers: %@\n\nCrash Log (%d):\n\n**********\n%@\nUser Defaults:\n\n**********\n%@\n\nDarkmode: %i", appName,
+                                       @"Please fill in additional details here".localized, inputManagers, cc.appBuildNumber, crashlog, [NSUserDefaults.standardUserDefaults persistentDomainForName:cc.appBundleIdentifier].description, darkMode];
 
 
                     NSString *mailtoLink = [NSString stringWithFormat:@"mailto:%@?subject=%@&body=%@", email, subject, body];
