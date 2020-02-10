@@ -517,6 +517,7 @@
 @interface NSUserDefaults (CoreCode)
 
 - (NSString *)stringForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID;
+- (NSObject *)objectForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID;
 
 @end
 #endif

@@ -3133,6 +3133,26 @@ CONST_KEY(CCDirectoryObserving)
     
     return result;
 }
+
+- (NSObject *)objectForKey:(NSString *)defaultName ofForeignApp:(NSString *)bundleID
+{
+    if (!bundleID)
+    {
+        cc_log_error(@"Error: objectForKey:ofForeignApp: called with nil bundleID");
+        return nil;
+    }
+    NSString *result;
+    CFPropertyListRef value = CFPreferencesCopyAppValue((CFStringRef)defaultName, (CFStringRef)bundleID);
+    
+    if (value)
+    {
+        result = [(__bridge NSObject *)value copy];
+        CFRelease(value);
+    }
+    
+    return result;
+}
+
 @end
 #endif
 #endif
