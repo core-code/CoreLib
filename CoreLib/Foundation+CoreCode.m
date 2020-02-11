@@ -2768,7 +2768,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSData *)download
 {
-    return [self downloadWithTimeout:3 disableCache:YES];
+    return [self downloadWithTimeout:5 disableCache:YES];
 }
 
 - (NSData *)downloadWithTimeout:(double)timeoutSeconds disableCache:(BOOL)disableCache
