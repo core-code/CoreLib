@@ -279,7 +279,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define assert_custom_info(e, i) (__builtin_expect(!(e), 0) ? CUSTOM_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@  info: %@", @(__func__), @(__FILE__), __LINE__, @(#e), i)) : (void)0)
 #else
 #define assert_custom(e) assert(e)
-#define assert_custom_info(e, i) assert(e)
+#define assert_custom_info(e, i) assert(((e) || ((e) && (i))))
 #endif
     
 
