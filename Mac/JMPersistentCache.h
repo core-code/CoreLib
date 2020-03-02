@@ -11,7 +11,7 @@
 
 @property (readonly, class, nonatomic) JMPersistentCache *sharedCache;
 
-- (BOOL)save;
+- (BOOL)save:(NSError * __autoreleasing *)error;
 
 
 // subscripting

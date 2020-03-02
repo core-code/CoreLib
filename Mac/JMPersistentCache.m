@@ -56,29 +56,32 @@
     return self;
 }
 
-- (BOOL)save
+- (BOOL)save:(NSError * __autoreleasing *)error
 {
     [_lock lock];
-    NSError *error;
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.cache requiringSecureCoding:YES error:&error];
+    NSError *err1;
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.cache requiringSecureCoding:YES error:&err1];
 
-    if (!data || error)
+    if (!data || err1)
     {
-        cc_log_error(@"Error: JMPersistentCache cannot encode cach with error %@", error.description);
+        cc_log_error(@"Error: JMPersistentCache cannot encode cach with error %@", err1.description);
         assert_custom(0);
         [_lock unlock];
+        if (error) *error = err1;
         return NO;
     }
     
+    NSError *err2;
     NSURL *savedCacheURL = [cc.suppURL add:@"persistentCache.dict"];
-    BOOL success = [data writeToURL:savedCacheURL options:NSDataWritingAtomic error:&error];
+    BOOL success = [data writeToURL:savedCacheURL options:NSDataWritingAtomic error:&err2];
 
-    if (!success || error)
+    if (!success || err2)
     {
-        let errorMsg = makeString(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, error.description);
+        let errorMsg = makeString(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, err2.description);
         cc_log_error(@"%@", errorMsg);
         assert_custom_info(0, errorMsg);
         [_lock unlock];
+        if (error) *error = err2;
         return NO;
     }
     
