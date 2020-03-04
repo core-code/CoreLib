@@ -61,7 +61,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @dynamic appCrashLogs, appCrashLogFilenames, appBundleIdentifier, appBuildNumber, appVersionString, appName, resDir, docDir, suppDir, resURL, docURL, suppURL, deskDir, deskURL, prefsPath, prefsURL, homeURLInsideSandbox, homeURLOutsideSandbox
 #ifdef USE_SECURITY
-, appChecksumSHA;
+, appChecksumSHA, appChecksumIncludingFrameworksSHA;
 #else
 ;
 #endif
@@ -360,6 +360,24 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     return u.fileChecksumSHA;
 }
 
+- (NSString *)appChecksumIncludingFrameworksSHA
+{
+    NSURL *u = NSBundle.mainBundle.executableURL;
+    
+    NSString *checksum = [u.fileChecksumSHA clamp:10];
+    
+    for (NSURL *framework in NSBundle.mainBundle.privateFrameworksURL.directoryContents)
+    {
+        let exe = [NSBundle bundleWithURL:framework].executableURL;
+        
+        let frameworkChecksum = exe.fileChecksumSHA;
+        
+        checksum = makeString(@"%@ %@", checksum, [frameworkChecksum clamp:10]);
+    }
+    
+    return checksum;
+}
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)sendSupportRequestMail:(NSString *)text
 {
@@ -400,7 +418,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
 
     NSString *appName = cc.appName;
-    NSString *licenseCode = cc.appChecksumSHA;
+    NSString *licenseCode = cc.appChecksumIncludingFrameworksSHA;
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
     NSString *udid = @"N/A";
     
@@ -651,7 +669,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         @try
         {
             NSString *appName = cc.appName;
-            NSString *licenseCode = cc.appChecksumSHA;
+            NSString *licenseCode = cc.appChecksumIncludingFrameworksSHA;
 
             if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
                 appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
