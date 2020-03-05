@@ -29,7 +29,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
     for (size_t i = 0; i < numEvents; i++)
     {
-        if ( eventFlags[i] == kFSEventStreamEventFlagRootChanged)
+        if (eventFlags[i] == kFSEventStreamEventFlagRootChanged)
         {
          //   printf("Change %llu in %s, flags %lu\n", eventIds[i], paths[i], eventFlags[i]);
 

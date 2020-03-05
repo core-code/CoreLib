@@ -246,7 +246,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 - (IBAction)setUpdateCheck:(NSObject *)sender
 {
 #ifdef USE_SPARKLE
-    NSNumber *tagNum = [sender valueForKey:@"tag"] ;
+    NSNumber *tagNum = [sender valueForKey:@"tag"];
 	NSUInteger intervalIndex = tagNum.unsignedIntegerValue;
     NSArray <NSNumber *> *itemToDays = @[@0, @1, @2, @7, @14, @28];
 

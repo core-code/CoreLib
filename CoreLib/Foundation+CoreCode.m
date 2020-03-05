@@ -710,9 +710,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     {
         unsigned int aCharacter = (unsigned int)cstring[x];
         
-        if( 0x40 < aCharacter && aCharacter < 0x5B ) // A - Z
+        if (0x40 < aCharacter && aCharacter < 0x5B) // A - Z
             newcstring[x] = (((aCharacter - 0x41) + 0x0D) % 0x1A) + 0x41;
-        else if ( 0x60 < aCharacter && aCharacter < 0x7B ) // a-z
+        else if (0x60 < aCharacter && aCharacter < 0x7B) // a-z
             newcstring[x] = (((aCharacter - 0x61) + 0x0D) % 0x1A) + 0x61;
         else  // Not an alpha character
             newcstring[x] = (char)aCharacter;
@@ -2271,7 +2271,7 @@ CONST_KEY(CCDirectoryObserving)
 {
     size_t uncompressedSize = 0;
 
-    if( snappy_uncompressed_length(self.bytes, self.length, &uncompressedSize) != SNAPPY_OK )
+    if (snappy_uncompressed_length(self.bytes, self.length, &uncompressedSize) != SNAPPY_OK )
     {
         cc_log_error(@"Error: can't calculate the uncompressed length!\n");
         return nil;
@@ -2284,7 +2284,7 @@ CONST_KEY(CCDirectoryObserving)
 
 
     int res = snappy_uncompress(self.bytes, self.length, buf, &uncompressedSize);
-    if(res != SNAPPY_OK)
+    if (res != SNAPPY_OK)
     {
         cc_log_error(@"Error: can't uncompress the file!\n");
         free(buf);

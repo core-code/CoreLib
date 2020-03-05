@@ -346,7 +346,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
 }
 
-- ( NSURL * __nonnull)suppURL
+- (NSURL * __nonnull)suppURL
 {
     NSURL *dir = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
@@ -1152,27 +1152,29 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 
 CGFloat _attributedStringHeightForWidth(NSAttributedString *string, CGFloat width)
 {
-    NSSize answer = NSZeroSize ;
-    if ([string length] > 0) {
+    NSSize answer = NSZeroSize;
+    if ([string length] > 0)
+    {   // CREDITS: https://stackoverflow.com/questions/8945040/measure-string-height-in-cocoa
         // Checking for empty string is necessary since Layout Manager will give the nominal
         // height of one line if length is 0.  Our API specifies 0.0 for an empty string.
-        NSSize size = NSMakeSize(width, (CGFloat)FLT_MAX) ;
-        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:size] ;
-        NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:string] ;
-        NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init] ;
-        [layoutManager addTextContainer:textContainer] ;
-        [textStorage addLayoutManager:layoutManager] ;
-        [layoutManager setHyphenationFactor:0.0] ;
+        NSSize size = NSMakeSize(width, (CGFloat)FLT_MAX);
+        NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:size];
+        NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:string];
+        NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+        [layoutManager addTextContainer:textContainer];
+        [textStorage addLayoutManager:layoutManager];
+        [layoutManager setHyphenationFactor:0.0];
         
         // NSLayoutManager is lazy, so we need the following kludge to force layout:
-        [layoutManager glyphRangeForTextContainer:textContainer] ;
+        [layoutManager glyphRangeForTextContainer:textContainer];
         
-        answer = [layoutManager usedRectForTextContainer:textContainer].size ;
+        answer = [layoutManager usedRectForTextContainer:textContainer].size;
         
         // Adjust if there is extra height for the cursor
-        NSSize extraLineSize = [layoutManager extraLineFragmentRect].size ;
-        if (extraLineSize.height > 0) {
-            answer.height -= extraLineSize.height ;
+        NSSize extraLineSize = [layoutManager extraLineFragmentRect].size;
+        if (extraLineSize.height > 0)
+        {
+            answer.height -= extraLineSize.height;
         }
     }
     
