@@ -48,11 +48,15 @@ NSProcessInfo *processInfo;
 #endif
 
 
+
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
+    NSString *info = [NSString stringWithFormat:@"Date: %@ Exception: %@", NSDate.date.shortDateAndTimeString, exception.description];
+    cc_defaults_addtoarray(kExceptionInformationKey, info, 10);
+    
     alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
 }
 #endif
@@ -1514,6 +1518,22 @@ void log_to_prefs(NSString *str)
     if (lastPosition > 42)
         lastPosition = 0;
 }
+
+void cc_defaults_addtoarray(NSString *key, NSObject *entry, NSUInteger maximumEntries)
+{
+    NSArray *currentArray = [NSUserDefaults.standardUserDefaults objectForKey:key];
+    
+    if (!currentArray || ![currentArray isKindOfClass:NSArray.class])
+        currentArray = @[];
+        
+    currentArray = [currentArray arrayByAddingObject:entry];
+    
+    while (currentArray.count > maximumEntries)
+        currentArray = [currentArray arrayByDeletingObjectAtIndex:0];
+    
+    [NSUserDefaults.standardUserDefaults setObject:currentArray forKey:key];
+}
+
 
 // gcd convenience
 void dispatch_after_main(float seconds, dispatch_block_t block)

@@ -247,6 +247,7 @@ typedef NS_ENUM(uint8_t, cc_log_type)
 
 void log_to_prefs(NSString *string);
 void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long sizeLimit, cc_log_type minimumLogType);
+void cc_defaults_addtoarray(NSString *key, NSObject *entry, NSUInteger maximumEntries);
 
 
 
@@ -339,6 +340,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #else
 #define kFeedbackEmail @"feedback@corecode.io"
 #endif
+#define kExceptionInformationKey @"corelib_exception_info"
 
 
 // !!!: UNDEFS
