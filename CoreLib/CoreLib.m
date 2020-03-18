@@ -780,7 +780,9 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
-    
+   
+    cc_log_error(@"Alert Input: %@@", prompt.strippedOfNewlines);
+
     if (buttons.count > 0)
         [alert addButtonWithTitle:buttons[0]];
     if (buttons.count > 1)
@@ -797,6 +799,8 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
     alert.accessoryView = input;
     NSInteger selectedButton = [alert runModal];
 
+    cc_log_error(@"Alert Input: finished %li", (long)selectedButton);
+
     [input validateEditing];
     *result = input.stringValue;
     
@@ -812,6 +816,8 @@ NSInteger alert_checkbox(NSString *title, NSString *prompt, NSArray <NSString *>
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = title;
     alert.informativeText = prompt;
+
+    cc_log_error(@"Alert Checkbox: %@ - %@", title.strippedOfNewlines, prompt.strippedOfNewlines);
 
     if (buttons.count > 0)
         [alert addButtonWithTitle:buttons[0]];
@@ -830,6 +836,7 @@ NSInteger alert_checkbox(NSString *title, NSString *prompt, NSArray <NSString *>
 
     *checkboxStatus = (NSUInteger)input.state;
 
+    cc_log_error(@"Alert Checkbox: finished %li %lu", (long)selectedButton, (unsigned long)*checkboxStatus);
 
     return selectedButton;
 }
@@ -853,8 +860,13 @@ NSInteger alert_colorwell(NSString *prompt, NSArray <NSString *>*buttons, NSColo
     NSColorWell *input = [[NSColorWell alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
     input.color = *selectedColor;
 
+    cc_log_error(@"Alert Colorwell: %@", prompt.strippedOfNewlines);
+
+    
     alert.accessoryView = input;
     NSInteger selectedButton = [alert runModal];
+
+    cc_log_error(@"Alert Colorwell: finished %li", selectedButton);
 
     *selectedColor = input.color;
     
@@ -869,6 +881,8 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
+    
+    cc_log_error(@"Alert Inputtext: %@", prompt.strippedOfNewlines);
 
     if (buttons.count > 0)
         [alert addButtonWithTitle:buttons[0]];
@@ -907,6 +921,9 @@ NSInteger alert_inputtext(NSString *prompt, NSArray *buttons, NSString **result)
     NSInteger selectedButton = [alert runModal];
     *result = theTextView.string;
 
+    cc_log_error(@"Alert Inputtext: finished %li %@", (long)selectedButton, *result);
+
+    
     return selectedButton;
 }
 
@@ -925,6 +942,8 @@ NSInteger alert_outputtext(NSString *message, NSArray *buttons, NSString *text)
     if (buttons.count > 2)
         [alert addButtonWithTitle:buttons[2]];
     
+    cc_log_error(@"Alert Outputtext: %@", message.strippedOfNewlines);
+
     NSScrollView *scrollview = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, 310, 200)];
     NSSize contentSize = [scrollview contentSize];
     
@@ -953,7 +972,8 @@ NSInteger alert_outputtext(NSString *message, NSArray *buttons, NSString *text)
     alert.accessoryView = scrollview;
     NSInteger selectedButton = [alert runModal];
     
-    
+    cc_log_error(@"Alert Outputtext: finished %li", (long)selectedButton);
+
     return selectedButton;
 }
 
@@ -966,6 +986,8 @@ NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, 
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
+
+    cc_log_error(@"Alert Selectionpopup: %@", prompt.strippedOfNewlines);
 
     if (buttons.count > 0)
         [alert addButtonWithTitle:buttons[0]];
@@ -984,6 +1006,9 @@ NSInteger alert_selection_popup(NSString *prompt, NSArray<NSString *> *choices, 
     [input validateEditing];
     *result = (NSUInteger)input.indexOfSelectedItem;
 
+    cc_log_error(@"Alert Selectionpopup: finished %li %lu", (long)selectedButton, (unsigned long)*result);
+
+    
     return selectedButton;
 }
 
@@ -995,6 +1020,8 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = prompt;
+    
+    cc_log_error(@"Alert Selectionmatrix: %@", prompt.strippedOfNewlines);
 
     if (buttons.count > 0)
         [alert addButtonWithTitle:buttons[0]];
@@ -1033,6 +1060,8 @@ NSInteger alert_selection_matrix(NSString *prompt, NSArray<NSString *> *choices,
 //U    [[alert window] setInitialFirstResponder: thepushbuttons];
 
     *result = (NSUInteger)thepushbuttons.selectedRow;
+    
+    cc_log_error(@"Alert Selectionmatrix: finished %li %lu", (long)selectedButton, (unsigned long)*result);
 
 
     return selectedButton;
@@ -1084,6 +1113,8 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
     
     NSInteger result = [alert runModal];
     
+    cc_log_error(@"Alert: finished %li", (long)result);
+
     return result;
 }
 
@@ -1095,8 +1126,8 @@ NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)
 {
     assert(defaultButton && dontwarnButton);
-    
-       dispatch_block_t block = ^
+
+    dispatch_block_t block = ^
     {
         NSString *defaultKey = makeString(@"_%@_%@_asked", identifier, cc.appVersionString);
         if (!defaultKey.defaultInt)
@@ -1109,10 +1140,13 @@ void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString
             alert.showsSuppressionButton = YES;
             alert.suppressionButton.title = dontwarnButton;
             
-            
+            cc_log_error(@"Alert Dontwarnagain: %@ - %@", title.strippedOfNewlines, message.strippedOfNewlines);
+
             [NSApp activateIgnoringOtherApps:YES];
             [alert runModal];
             
+            cc_log_error(@"Alert Dontwarnagain: finished");
+
             defaultKey.defaultInt = alert.suppressionButton.state;
         }
     };
@@ -1138,10 +1172,13 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
             alert.showsSuppressionButton = YES;
             alert.suppressionButton.title = dontwarnButton;
             
-            
+            cc_log_error(@"Alert Dontwarnagainever: %@ - %@", title.strippedOfNewlines, message.strippedOfNewlines);
+
             [NSApp activateIgnoringOtherApps:YES];
             [alert runModal];
             
+            cc_log_error(@"Alert Dontwarnagainever: finished");
+
             defaultKey.defaultInt = alert.suppressionButton.state;
         }
     };
