@@ -134,6 +134,7 @@
 @property (readonly, nonatomic) NSURL *URL;
 // url string download
 @property (readonly, nonatomic) NSData *download;
+@property (readonly, nonatomic) NSString *downloadWithCurl;
 // path string filedata
 @property (unsafe_unretained, nonatomic) NSData *contents;
 
@@ -311,6 +312,7 @@
 @property (readonly, nonatomic) BOOL isWriteablePath;
 // url string download
 @property (readonly, nonatomic) NSData *download;
+@property (readonly, nonatomic) NSString *downloadWithCurl;
 // path string filedata
 @property (unsafe_unretained, nonatomic) NSData *contents;
 

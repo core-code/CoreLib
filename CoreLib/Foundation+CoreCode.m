@@ -675,7 +675,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed;
+@dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, downloadWithCurl, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted;
@@ -1336,6 +1336,13 @@ CONST_KEY(CoreCodeAssociatedValue)
     return d;
 }
 
+- (NSString *)downloadWithCurl
+{
+    return self.URL.downloadWithCurl;
+}
+
+
+
 
 #ifdef USE_SECURITY
 - (NSString *)SHA1
@@ -1828,7 +1835,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
+@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, downloadWithCurl, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsRegularFile, fileIsSymlink;
 
@@ -2082,10 +2089,17 @@ CONST_KEY(CCDirectoryObserving)
     if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
         LOG(@"Warning: performing blocking download on main thread");
 #endif
-    
+
     NSData *d = [NSData dataWithContentsOfURL:self];
-    
+
     return d;
+}
+
+- (NSString *)downloadWithCurl
+{
+    let res = @[@"/usr/bin/curl", @"-s", self.absoluteString].runAsTask;
+    
+    return res;
 }
 
 - (void)setContents:(NSData *)data
