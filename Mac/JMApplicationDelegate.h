@@ -55,6 +55,7 @@
 - (void)checkMASReceipt;
 #ifndef SANDBOX
 - (void)checkAndReportCrashesContaining:(NSArray <NSString *>*)neccessarySubstringsOrNil to:(NSString *)destinationMail;
+- (void)checkAndReportCrashesContaining:(NSArray <NSString *> *)neccessarySubstringsOrNil blacklistedStrings:(NSArray <NSString *> *)blacklistedStringsOrNil to:(NSString *)destinationMail;
 #endif
 
 #ifdef USE_SPARKLE

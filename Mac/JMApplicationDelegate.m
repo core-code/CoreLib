@@ -35,9 +35,13 @@
 @dynamic isRateable;
 
 #ifndef SANDBOX
+- (void)checkAndReportCrashesContaining:(NSArray <NSString *> *)neccessarySubstringsOrNil blacklistedStrings:(NSArray <NSString *> *)blacklistedStringsOrNil to:(NSString *)destinationMail
+{
+    CheckAndReportCrashes(destinationMail, neccessarySubstringsOrNil, blacklistedStringsOrNil);
+}
 - (void)checkAndReportCrashesContaining:(NSArray <NSString *> *)neccessarySubstringsOrNil to:(NSString *)destinationMail
 {
-	CheckAndReportCrashes(destinationMail, neccessarySubstringsOrNil);;
+	CheckAndReportCrashes(destinationMail, neccessarySubstringsOrNil, nil);
 }
 #endif
 

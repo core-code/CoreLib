@@ -21,7 +21,7 @@
 //    email:    email to report crashes to
 //    neccessaryStrings:    a array of strings one of which must be contained for the report to be accepted
 
-void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
+void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray *blacklistedStrings)
 {
     if ([NSUserDefaults.standardUserDefaults integerForKey:kNeverCheckCrashesKey] == 0)
     {
@@ -97,16 +97,18 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings)
                             foundNeccessaryString = TRUE;
                 }
 
+                for (NSString *bs in blacklistedStrings)
+                    if ([crashlog rangeOfString:bs].location != NSNotFound)
+                        return;
+
                 if ([crashlog rangeOfString:@"gpusGenerateCrashLog"].location != NSNotFound) // ignore GPU driver crashes
                     return;
 
-                if ([crashlog rangeOfString:@"Crashed Thread"].location == NSNotFound)
-                    foundNeccessaryString = FALSE;
+                if ([crashlog rangeOfString:@"Crashed Thread"].location == NSNotFound) // ignore fake reports
+                    return;
 
                 if (!foundNeccessaryString)
-                {
                     return;
-                }
 
                 
                 NSInteger code = alert([cc.appName stringByAppendingString:@" Crash Report"],

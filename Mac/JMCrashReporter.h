@@ -12,4 +12,4 @@
 
 #import "CoreLib.h"
 
-void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings);
+void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray *blacklistedStrings);
