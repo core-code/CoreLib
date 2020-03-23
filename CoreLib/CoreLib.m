@@ -54,10 +54,12 @@ NSString *_machineType(void);
 BOOL _isUserAdmin(void);
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
-    NSString *info = [NSString stringWithFormat:@"Date: %@ Exception: %@", NSDate.date.shortDateAndTimeString, exception.description];
-    cc_defaults_addtoarray(kExceptionInformationKey, info, 10);
+    NSString *exceptionDetails = makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols);
+    NSString *exceptionInfoToStore = [NSString stringWithFormat:@"Date: %@ Exception:%@", NSDate.date.shortDateAndTimeString, exceptionDetails];
     
-    alert_feedback_fatal(exception.name, makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols));
+    cc_defaults_addtoarray(kExceptionInformationKey, exceptionInfoToStore, 10);
+    
+    alert_feedback_fatal(exception.name, exceptionDetails);
 }
 #endif
 
@@ -255,10 +257,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 - (NSArray *)appCrashLogFilenames // doesn't do anything in sandbox!
 {
     NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.directoryContents;
-    logs1 = [logs1 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+    logs1 = [logs1 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@ AND self ENDSWITH '.crash'", self.appName]; // there is also .spin and .diag but we aren't interested in them ATM
     logs1 = [logs1 mapped:^id(NSString *input) { return [@"~/Library/Logs/DiagnosticReports/".stringByExpandingTildeInPath stringByAppendingPathComponent:input]; }];
     NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.directoryContents;
-    logs2 = [logs2 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@", self.appName];
+    logs2 = [logs2 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@ AND self ENDSWITH '.crash'", self.appName];
     logs2 = [logs2 mapped:^id(NSString *input) { return [@"/Library/Logs/DiagnosticReports/" stringByAppendingPathComponent:input]; }];
 
     
