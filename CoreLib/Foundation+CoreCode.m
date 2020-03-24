@@ -1224,6 +1224,10 @@ CONST_KEY(CoreCodeAssociatedValue)
     return clampedString;
 }
 
+- (NSString *)tail:(NSUInteger)maximumLength
+{
+    return ((self.length <= maximumLength) ? self : [self substringFromIndex:self.length - maximumLength]);
+}
 
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements
 {
