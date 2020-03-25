@@ -1786,14 +1786,13 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                                                                         @"isOnline" : @((attr.flag & 0x02) > 0 ? 1 : 0)};
                                                 }
                                             }
-
-                                            (*smartInterface)->SMARTEnableDisableAutosave(smartInterface, false);
-                                            (*smartInterface)->SMARTEnableDisableOperations(smartInterface, false);
                                         }
                                     }
                                 }
                             }
+                            (*smartInterface)->SMARTEnableDisableAutosave(smartInterface, false);
                         }
+                        (*smartInterface)->SMARTEnableDisableOperations(smartInterface, false);
                     }
 
                     (*smartInterface)->Release(smartInterface);
