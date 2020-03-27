@@ -1702,6 +1702,16 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 }
 
+- (NSString *)escapedForXML
+{
+    static NSCharacterSet *allowedChars;
+    
+    if (!allowedChars)
+        allowedChars = [NSCharacterSet characterSetWithCharactersInString:@"&\"'><"].invertedSet;
+
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:allowedChars];
+}
+
 - (NSString *)slicingSubstringToIndex:(NSInteger)location
 {
     if (location < 0)

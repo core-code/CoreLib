@@ -176,6 +176,8 @@
 @property (readonly, nonatomic) NSString *unescaped;
 @property (readonly, nonatomic) NSString *escaped; // URL escaping
 @property (readonly, nonatomic) NSString *encoded; // total encoding, wont work with OPEN anymore as it encodes everything except numbers and letters, useful for single CGI params
+@property (readonly, nonatomic) NSString *escapedForXML; // just escapes <>'"& for HTML/XML contents
+
 
 @property (readonly, nonatomic) NSMutableString *mutableObject;
 
