@@ -860,6 +860,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (unsigned long long)fileSize
 {
+    assert(fileManager);
     NSDictionary *attr = [fileManager attributesOfItemAtPath:self error:NULL];
     if (!attr) return 0;
     NSNumber *fs = attr[NSFileSize];
@@ -919,6 +920,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     if (![@"TEST" writeToFile:self atomically:YES encoding:NSUTF8StringEncoding error:NULL])
         return NO;
 
+    assert(fileManager);
     [fileManager removeItemAtPath:self error:NULL];
 
     return YES;
@@ -969,11 +971,13 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSArray <NSString *> *)directoryContents
 {
+    assert(fileManager);
     return [fileManager contentsOfDirectoryAtPath:self error:NULL];
 }
 
 - (NSArray <NSString *> *)directoryContentsRecursive
 {
+    assert(fileManager);
     return [fileManager subpathsOfDirectoryAtPath:self error:NULL];
 }
 
@@ -1117,11 +1121,13 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)resourcePath
 {
+    assert(bundle);
     return [bundle pathForResource:self ofType:nil];
 }
 
 - (NSURL *)resourceURL
 {
+    assert(bundle);
     return [bundle URLForResource:self withExtension:nil];
 }
 
@@ -1483,72 +1489,86 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSArray *)defaultArray
 {
-    return [NSUserDefaults.standardUserDefaults arrayForKey:self];
+    assert(userDefaults);
+    return [userDefaults arrayForKey:self];
 }
 
 - (void)setDefaultArray:(NSArray *)newDefault
 {
+    assert(userDefaults);
     [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
 }
 
 - (NSDictionary *)defaultDict
 {
+    assert(userDefaults);
     return [NSUserDefaults.standardUserDefaults dictionaryForKey:self];
 }
 
 - (void)setDefaultDict:(NSDictionary *)newDefault
 {
+    assert(userDefaults);
     [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
 }
 
 - (id)defaultObject
 {
-    return [NSUserDefaults.standardUserDefaults objectForKey:self];
+    assert(userDefaults);
+    return [userDefaults objectForKey:self];
 }
 
 - (void)setDefaultObject:(id)newDefault
 {
-    [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
+    assert(userDefaults);
+    [userDefaults setObject:newDefault forKey:self];
 }
 
 - (NSString *)defaultString
 {
-    return [NSUserDefaults.standardUserDefaults stringForKey:self];
+    assert(userDefaults);
+    return [userDefaults stringForKey:self];
 }
 
 - (void)setDefaultString:(NSString *)newDefault
 {
-    [NSUserDefaults.standardUserDefaults setObject:newDefault forKey:self];
+    assert(userDefaults);
+    [userDefaults setObject:newDefault forKey:self];
 }
 
 - (NSURL *)defaultURL
 {
-    return [NSUserDefaults.standardUserDefaults URLForKey:self];
+    assert(userDefaults);
+    return [userDefaults URLForKey:self];
 }
 
 - (void)setDefaultURL:(NSURL *)newDefault
 {
-    [NSUserDefaults.standardUserDefaults setURL:newDefault forKey:self];
+    assert(userDefaults);
+    [userDefaults setURL:newDefault forKey:self];
 }
 
 - (NSInteger)defaultInt
 {
-    return [NSUserDefaults.standardUserDefaults integerForKey:self];
+    assert(userDefaults);
+    return [userDefaults integerForKey:self];
 }
 
 - (void)setDefaultInt:(NSInteger)newDefault
 {
-    [NSUserDefaults.standardUserDefaults setInteger:newDefault forKey:self];
+    assert(userDefaults);
+    [userDefaults setInteger:newDefault forKey:self];
 }
 
 - (float)defaultFloat
 {
-    return [NSUserDefaults.standardUserDefaults floatForKey:self];
+    assert(userDefaults);
+    return [userDefaults floatForKey:self];
 }
 
 - (void)setDefaultFloat:(float)newDefault
 {
-    [NSUserDefaults.standardUserDefaults setFloat:newDefault forKey:self];
+    assert(userDefaults);
+    [userDefaults setFloat:newDefault forKey:self];
 }
 
 - (NSString *)stringValue
@@ -1978,6 +1998,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSArray <NSURL *> *)directoryContents
 {
+    assert(fileManager);
     if (!self.fileURL) return nil;
 
     NSString *path = self.path;
@@ -1989,6 +2010,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSArray <NSURL *> *)directoryContentsRecursive
 {
+    assert(fileManager);
     NSDirectoryEnumerator *enumerator = [fileManager
                                          enumeratorAtURL:self
                                          includingPropertiesForKeys:nil
@@ -2006,6 +2028,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (BOOL)fileExists
 {
+    assert(fileManager);
     NSString *path = self.path;
     return self.fileURL && [fileManager fileExistsAtPath:path];
 }
@@ -2048,6 +2071,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (unsigned long long)directorySize
 {
+    assert(fileManager);
     unsigned long long directorySize = 0;
     
     NSDirectoryEnumerator *enumerator = [fileManager
@@ -2085,6 +2109,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (BOOL)isWriteablePath
 {
+    assert(fileManager);
     if (self.fileExists)
         return NO;
     
