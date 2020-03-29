@@ -1724,12 +1724,15 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)escapedForXML
 {
-    static NSCharacterSet *allowedChars;
+    NSString *str = self;
     
-    if (!allowedChars)
-        allowedChars = [NSCharacterSet characterSetWithCharactersInString:@"&\"'><"].invertedSet;
-
-    return [self stringByAddingPercentEncodingWithAllowedCharacters:allowedChars];
+    str = [str stringByReplacingMultipleStrings:@{@"&" : @"&amp;",
+                                                  @"\"" : @"&quot;",
+                                                  @"'" : @"&#39;",
+                                                  @">" : @"&gt;",
+                                                  @"<" : @"&lt;"}];
+           
+    return str;
 }
 
 - (NSString *)slicingSubstringToIndex:(NSInteger)location
