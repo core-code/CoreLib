@@ -477,10 +477,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
-    return [self runAsTaskWithTerminationStatus:NULL];
+    return [self runAsTaskWithTerminationStatus:NULL usePolling:NO];
 }
 
-- (NSString *)runAsTaskWithPolling:(NSTimeInterval)timeout terminationStatus:(NSInteger *)terminationStatus
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)usePollingToAvoidRunloop
 {
     NSTask *task = [NSTask new];
     NSPipe *taskPipe = [NSPipe pipe];
@@ -505,66 +505,26 @@ CONST_KEY(CoreCodeAssociatedValue)
     }
 
     NSData *data = [file readDataToEndOfFile];
-    NSDate *killDate = [NSDate dateWithTimeIntervalSinceNow:timeout];
-    BOOL killed = NO;
+
     
-    while (task.running)
+    if (!usePollingToAvoidRunloop)
     {
-        if ([[NSDate date] laterDate:killDate] != killDate)
-        {
-            [task terminate];
-            killed = YES;
-        }
-        [NSThread sleepForTimeInterval:0.05];
-    }
-    
-
-    NSString *string = data.string;
-
-    if (terminationStatus)
-    {
-        if (killed)
-            (*terminationStatus) = 999;
-        else
-            (*terminationStatus) = task.terminationStatus;
-    }
-
-    return string;
-}
-
-- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus
-{
-    NSTask *task = [NSTask new];
-    NSPipe *taskPipe = [NSPipe pipe];
-    NSFileHandle *file = taskPipe.fileHandleForReading;
-
-    task.launchPath = self[0];
-    task.standardOutput = taskPipe;
-    task.standardError = taskPipe;
-    task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
-
-    if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
-        cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
-
-    @try
-    {
-        [task launch];
-    }
-    @catch (NSException *e)
-    {
-        cc_log_error(@"Error: got exception %@ while trying to perform task %@", e.description, [self joined:@" "]);
-        return nil;
-    }
-
-    NSData *data = [file readDataToEndOfFile];
-    
-    [task waitUntilExit];
+        [task waitUntilExit];
 #if defined(DEBUG) && !defined(CLI) && !defined(SKIP_MAINTHREADWAITUNTILEXIT_WARNING)
-    if ([NSThread currentThread] == [NSThread mainThread])
-        cc_log(@"Warning: -[NSTask waitUntilExit] on main thread considered harmful");
+        if ([NSThread currentThread] == [NSThread mainThread])
+            cc_log(@"Warning: -[NSTask waitUntilExit] on main thread considered harmful");
 #endif
+    }
+    else
+    {
+        while (task.isRunning)
+        {
+            [NSThread sleepForTimeInterval:0.05];
+        }
+    }
 
     NSString *string = data.string;
+
 
     if (terminationStatus)
         (*terminationStatus) = task.terminationStatus;
