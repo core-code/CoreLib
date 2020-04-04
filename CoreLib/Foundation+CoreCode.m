@@ -693,7 +693,9 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSCharacterSet *)characterSet
 {
-    return [NSCharacterSet characterSetWithCharactersInString:self];
+    let cs = [NSCharacterSet characterSetWithCharactersInString:self];
+    assert(cs);
+    return cs;
 }
 
 - (NSString *)rot13
@@ -874,7 +876,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)isIntegerNumber
 {
-    return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound;
+    return [self rangeOfCharacterFromSet:NSCharacterSet.decimalDigitCharacterSet].location != NSNotFound;
 }
 
 - (BOOL)isNumber
@@ -891,7 +893,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (BOOL)isIntegerNumberOnly
 {
-    return [self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet].invertedSet].location == NSNotFound;
+    return [self rangeOfCharacterFromSet:NSCharacterSet.decimalDigitCharacterSet.invertedSet].location == NSNotFound;
 }
 
 - (BOOL)isFloatNumber
@@ -907,9 +909,10 @@ CONST_KEY(CoreCodeAssociatedValue)
         [tmp addCharactersInString:groupingSeparators];
         [tmp addCharactersInString:decimalSeparators];
         cs = tmp.immutableObject;
+        assert(cs);
     }
 
-    return    ([self rangeOfCharacterFromSet:[NSCharacterSet decimalDigitCharacterSet]].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
+    return ([self rangeOfCharacterFromSet:NSCharacterSet.decimalDigitCharacterSet].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
 }
 
 - (BOOL)isWriteablePath
@@ -958,6 +961,8 @@ CONST_KEY(CoreCodeAssociatedValue)
     {
         localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
         domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
+        assert(localValid);
+        assert(domainValid);
     }
 
     if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
