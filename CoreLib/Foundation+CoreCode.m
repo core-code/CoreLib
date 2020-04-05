@@ -2259,7 +2259,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSData (CoreCode)
 
-@dynamic string, stringUTF8, hexString, base64String, mutableObject, JSONArray, JSONDictionary;
+@dynamic string, stringUTF8, hexString, base64String, mutableObject, JSONArray, JSONDictionary, fullRange;
 
 #ifdef USE_SECURITY
 @dynamic SHA1, SHA256;
@@ -2489,6 +2489,12 @@ CONST_KEY(CCDirectoryObserving)
     }
 
     return res.id;
+}
+
+
+- (NSRange)fullRange
+{
+    return NSMakeRange(0, self.length);
 }
 @end
 
