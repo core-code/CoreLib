@@ -23,6 +23,8 @@
 #ifdef USE_SPARKLE
 #if USE_SPARKLE == 2
     <SPUStandardUserDriverDelegate, SPUUpdaterDelegate>
+#elif USE_SPARKLE == 1
+    <SUUpdaterDelegate>
 #endif
 #endif
 {
