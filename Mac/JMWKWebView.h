@@ -30,8 +30,3 @@
 
 @end
 
-#warning implement basic URL browser opening
-
-#warning implement localHTMLName
-
-#warning implement openOnlyClicksInBrowser

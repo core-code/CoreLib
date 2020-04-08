@@ -693,7 +693,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSCharacterSet *)characterSet
 {
-    let cs = [NSCharacterSet characterSetWithCharactersInString:self];
+    NSCharacterSet *cs = [NSCharacterSet characterSetWithCharactersInString:self];
     assert(cs);
     return cs;
 }
@@ -2145,7 +2145,7 @@ CONST_KEY(CCDirectoryObserving)
 - (NSString *)downloadWithCurl
 {
     NSString *urlString = self.absoluteString;
-    let res = @[@"/usr/bin/curl", @"-s", urlString].runAsTask;
+    NSString *res = @[@"/usr/bin/curl", @"-s", urlString].runAsTask;
     
     return res;
 }

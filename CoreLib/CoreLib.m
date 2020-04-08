@@ -374,9 +374,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     
     for (NSURL *framework in NSBundle.mainBundle.privateFrameworksURL.directoryContents)
     {
-        let exe = [NSBundle bundleWithURL:framework].executableURL;
+        NSURL *exe = [NSBundle bundleWithURL:framework].executableURL;
         
-        let frameworkChecksum = exe.fileChecksumSHA;
+        NSString *frameworkChecksum = exe.fileChecksumSHA;
         
         checksum = makeString(@"%@ %@", checksum, [frameworkChecksum clamp:10]);
     }

@@ -1,5 +1,5 @@
 //
-//  JMWebView.m
+//  JMRTFView.m
 //  CoreLib
 //
 //  Created by CoreCode on 06.03.15.

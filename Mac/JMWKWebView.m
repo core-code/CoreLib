@@ -21,7 +21,6 @@
 {
     self.navigationDelegate = self;
     
-    
     self.layer.borderWidth = 1;
     if ([NSAppearance.currentAppearance.name contains:@"NSAppearanceNameDarkAqua"])
         self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.27 alpha:1].CGColor;
@@ -42,12 +41,8 @@
 {
     ONCE_PER_OBJECT(self, ^
     {
-        
-        
         if (self.localHTMLName && self.localHTMLName.length)
-        {
             [self loadRequest:self.localHTMLName.resourceURL.request];
-        }
         else
             self.didFinishInitialNavigation = YES; // no need to wait until local file has loaded
 
@@ -71,7 +66,6 @@
 
 #pragma mark WebViewPolicyDelegate
 
-// TODO: the fallbacl from JMWebView in didFailLoadingWithError is not implemented but preliminary results say it aint needed
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
