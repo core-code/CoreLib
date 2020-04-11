@@ -297,8 +297,15 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (int)appBuildNumber
 {
+#ifdef CLI
+#ifndef CLI_BUNDLEVERSION
+#define CLI_BUNDLEVERSION 1
+#endif
+    return @(CLI_BUNDLEVERSION).intValue;
+#else
     NSString *bundleVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
     return bundleVersion.intValue;
+#endif
 }
 
 - (NSString *)resDir
