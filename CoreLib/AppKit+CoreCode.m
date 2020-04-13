@@ -72,6 +72,14 @@ CONST_KEY(CCExtendedProgressIndicator)
     return smallImage;
 }
 
+- (NSImage *)resizedImageAccountingForScaleFactor:(NSSize)newSize
+{
+    var destinationSize = NSMakeSize(newSize.width / NSScreen.mainScreen.backingScaleFactor,
+                                     newSize.height / NSScreen.mainScreen.backingScaleFactor);
+    
+    return [self resizedImage:destinationSize];
+}
+
 @end
 
 

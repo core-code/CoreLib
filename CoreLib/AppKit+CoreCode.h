@@ -78,7 +78,8 @@
 
 @interface NSImage (CoreCode)
 
-- (NSImage * _Nullable)resizedImage:(NSSize)newSize; // NOTE: this will double the size on retina displays.
+- (NSImage * _Nullable)resizedImage:(NSSize)newSize; // NOTE: this will double the size on retina displays - good for displaying on screen
+- (NSImage * _Nullable)resizedImageAccountingForScaleFactor:(NSSize)newSize; // NOTE: this will account for retina displays - good for uploading or when your REALLY need the specified pixel amount
 
 @end
 
