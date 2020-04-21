@@ -1536,7 +1536,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (void)setDefaultString:(NSString *)newDefault
 {
-    assert(userDefaults);
     [userDefaults setObject:newDefault forKey:self];
 }
 
