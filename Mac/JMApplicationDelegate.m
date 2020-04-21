@@ -230,6 +230,26 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 #endif
 	else
 		cc_log(@"Warning: the sparkle updater is not available!");
+#else
+    let url = (NSString *)[bundle objectForInfoDictionaryKey:@"SUFeedURL"];
+    let feed = url.download.stringUTF8;
+    let version = [[feed splitAfterNull:@"sparkle:version=\""] splitBeforeNull:@"\""];
+    if ([version isIntegerNumberOnly])
+    {
+        let newestBuildNumber = version.intValue;
+        if (newestBuildNumber > cc.appBuildNumber)
+        {
+            let svs = [[feed splitAfterNull:@"sparkle:shortVersionString=\""] splitBeforeNull:@"\""];
+            if (alert(@"Update Available",
+                      makeString(@"An Update is available. You have version '%@ (%i)' but the newest version is '%@ (%i)'. Please use our 'MacUpdater' to keep to update to the newest version - it can also update your other apps!", cc.appVersionString, cc.appBuildNumber, svs, newestBuildNumber),
+                      @"Open MacUpdater Homepage", @"Cancel", nil) == NSAlertFirstButtonReturn)
+                 [@"https://www.corecode.io/macupdater/".URL open];
+        }
+        else
+            alert(@"No Update Available", @"This app is fully up-to-date.", @"Cool", nil, nil);
+    }
+    else
+        alert(@"Update Check Failed", @"The update-check failed - please check your internet connection and try again.", @"OK", nil, nil);
 #endif
 }
 
