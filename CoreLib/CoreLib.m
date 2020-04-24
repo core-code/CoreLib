@@ -1529,7 +1529,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
     else if ([str.lowercaseString hasPrefix:@"warning"])
         fprintf(stderr, "\033[93m%s\033[0m\n", str.UTF8String);
     else
-        fprintf(stderr, "%s\n", str.UTF8String);
+        fprintf(stdout, "%s\n", str.UTF8String);
 #else
     const char *utf = str.UTF8String;
 
