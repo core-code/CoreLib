@@ -36,7 +36,6 @@
 		B90E8E081B1787B1007C0FB4 /* JMRTFView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEC1B1787B1007C0FB4 /* JMRTFView.m */; };
 		B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */; };
 		B90E8E0C1B1787B1007C0FB4 /* JMVisibilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */; };
-		B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E8DF21B1787B1007C0FB4 /* JMWebView.m */; };
 		B91E230B2151683700046AF2 /* JMRatingWindow.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */; };
 		B91E230C2151683700046AF2 /* JMRatingWindow.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */; };
 		B933AB2A18BBDFA1006E42B9 /* AppKit+CoreCode.m in Sources */ = {isa = PBXBuildFile; fileRef = B933AB2018BBDFA1006E42B9 /* AppKit+CoreCode.m */; };
@@ -111,8 +110,6 @@
 		B90E8DEE1B1787B1007C0FB4 /* JMValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMValueTransformer.m; sourceTree = "<group>"; };
 		B90E8DEF1B1787B1007C0FB4 /* JMVisibilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMVisibilityManager.h; sourceTree = "<group>"; };
 		B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMVisibilityManager.m; sourceTree = "<group>"; };
-		B90E8DF11B1787B1007C0FB4 /* JMWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JMWebView.h; sourceTree = "<group>"; };
-		B90E8DF21B1787B1007C0FB4 /* JMWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JMWebView.m; sourceTree = "<group>"; };
 		B91E230A2151683700046AF2 /* JMRatingWindow.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = JMRatingWindow.xcassets; sourceTree = "<group>"; };
 		B92E88101E5DB47600A5BBCF /* CoreLibTests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CoreLibTests.xcconfig; sourceTree = "<group>"; };
 		B933AB1F18BBDFA1006E42B9 /* AppKit+CoreCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppKit+CoreCode.h"; sourceTree = "<group>"; };
@@ -279,8 +276,6 @@
 				B90E8DF01B1787B1007C0FB4 /* JMVisibilityManager.m */,
 				B93EC98A22C008BD00B98F3A /* JMWKWebView.h */,
 				B93EC98B22C008BD00B98F3A /* JMWKWebView.m */,
-				B90E8DF11B1787B1007C0FB4 /* JMWebView.h */,
-				B90E8DF21B1787B1007C0FB4 /* JMWebView.m */,
 				B90B0D331DA7F64D000CA590 /* JMURLButton.h */,
 				B90B0D341DA7F64D000CA590 /* JMURLButton.m */,
 				B9F3268D1EE6C0590020E401 /* JMRatingWindow */,
@@ -433,7 +428,6 @@
 				B90E8E0A1B1787B1007C0FB4 /* JMValueTransformer.m in Sources */,
 				B97A5E951CC1536C00201C2C /* JMBlockFormatter.m in Sources */,
 				B9F326951EE6CADF0020E401 /* JMEditableBorderlessWindow.m in Sources */,
-				B90E8E0E1B1787B1007C0FB4 /* JMWebView.m in Sources */,
 				B90B0D361DA7F64D000CA590 /* JMURLButton.m in Sources */,
 				B90E8E081B1787B1007C0FB4 /* JMRTFView.m in Sources */,
 				B90E8E021B1787B1007C0FB4 /* JMFontPopUpButton.m in Sources */,

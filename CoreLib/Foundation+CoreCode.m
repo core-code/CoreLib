@@ -1344,7 +1344,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
 #if defined(DEBUG) && !defined(SKIP_MAINTHREADDOWNLOAD_WARNING) && !defined(CLI)
     if ([NSThread currentThread] == [NSThread mainThread])
-        LOG(@"Warning: performing blocking download on main thread");
+        LOG(@"Warning: performing blocking download on main thread")
 #endif
     NSData *d = [[NSData alloc] initWithContentsOfURL:self.URL];
 
@@ -2133,7 +2133,7 @@ CONST_KEY(CCDirectoryObserving)
 {
 #if defined(DEBUG) && !defined(SKIP_MAINTHREADDOWNLOAD_WARNING) && !defined(CLI)
     if ([NSThread currentThread] == [NSThread mainThread] && !self.isFileURL)
-        LOG(@"Warning: performing blocking download on main thread");
+        LOG(@"Warning: performing blocking download on main thread")
 #endif
 
     NSData *d = [NSData dataWithContentsOfURL:self];
@@ -2141,13 +2141,15 @@ CONST_KEY(CCDirectoryObserving)
     return d;
 }
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)downloadWithCurl
 {
     NSString *urlString = self.absoluteString;
-    NSString *res = @[@"/usr/bin/curl", @"-s", urlString].runAsTask;
+    NSString *res = [@[@"/usr/bin/curl", @"-s", urlString] runAsTask];
     
     return res;
 }
+#endif
 
 - (void)setContents:(NSData *)data
 {

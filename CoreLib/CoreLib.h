@@ -273,8 +273,6 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 
     
 // !!!: ASSERTION MACROS
-#define ASSERT_MAINTHREAD       assert([NSThread currentThread] == [NSThread mainThread])
-#define ASSERT_BACKTHREAD       assert([NSThread currentThread] != [NSThread mainThread])
 #ifdef CUSTOM_ASSERT_FUNCTION   // allows clients to get more info about failures, just def CUSTOM_ASSERT_FUNCTION to a function that sends the string home
     void CUSTOM_ASSERT_FUNCTION(NSString * text);
 #define assert_custom(e) (__builtin_expect(!(e), 0) ? CUSTOM_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@", @(__func__), @(__FILE__), __LINE__, @(#e))) : (void)0)
@@ -283,7 +281,9 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define assert_custom(e) assert(e)
 #define assert_custom_info(e, i) assert(((e) || ((e) && (i))))
 #endif
-    
+#define ASSERT_MAINTHREAD       assert_custom_info([NSThread currentThread] == [NSThread mainThread], makeString(@"main thread violation: %@", [NSThread.callStackSymbols joined:@"|"]))
+#define ASSERT_BACKTHREAD       assert_custom_info([NSThread currentThread] != [NSThread mainThread], makeString(@"back thread violation: %@", [NSThread.callStackSymbols joined:@"|"]))
+
 
 // !!!: CONVENIENCE MACROS
 #define PROPERTY_STR(p)			NSStringFromSelector(@selector(p))

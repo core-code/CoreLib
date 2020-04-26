@@ -106,7 +106,7 @@
 		{
 			self.imageView.image = nil;
 			UILabel *label = [[UILabel alloc] initWithFrame:self.view.frame];
-			label.text = @"Loading…";
+			label.text = @"Loading…".localized;
 			label.textColor = [UIColor lightGrayColor];
 			label.textAlignment = NSTextAlignmentCenter;
 			[self.imageView addSubview:label];
@@ -145,7 +145,7 @@
 		{
 			self.imageView.image = nil;
 			UILabel *label = [[UILabel alloc] initWithFrame:self.view.frame];
-			label.text = @"Loading…";
+			label.text = @"Loading…".localized;
 			label.textColor = [UIColor lightGrayColor];
 			label.textAlignment = NSTextAlignmentCenter;
 			[self.imageView addSubview:label];

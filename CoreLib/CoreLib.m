@@ -1453,6 +1453,7 @@ void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit
 
             [fh seekToFileOffset:0];
             [fh writeData:data];
+            #warning TODO:  this can throw exceptions when the disk is full
             [fh truncateFileAtOffset:filesizeLimit];
             [fh synchronizeFile];
             [fh closeFile];
@@ -1492,7 +1493,10 @@ void _cc_log_tologfile(int level, NSString *string)
         NSData *data = [finalString dataUsingEncoding:NSUTF8StringEncoding];
 
         if (data)
+        {
             [logfileHandle writeData:data];
+            #warning TODO:  this can throw exceptions when the disk is full
+        }
         else
             cc_log_error(@"could not open create data from string %@ for log", finalString);
     }

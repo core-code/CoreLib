@@ -77,7 +77,7 @@
 
     if (!success || err2)
     {
-        let errorMsg = makeString(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, err2.description);
+        NSString *errorMsg = makeString(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, err2.description);
         cc_log_error(@"%@", errorMsg);
         assert_custom_info(0, errorMsg);
         [_lock unlock];

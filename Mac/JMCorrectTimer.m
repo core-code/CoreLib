@@ -72,7 +72,7 @@
 
 - (void)scheduleTimer
 {
-    LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.date, NSDate.date.description));
+    LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.date, NSDate.date.description))
     self.i2++;
     
     NSTimer *t = [[NSTimer alloc] initWithFireDate:self.date
@@ -106,7 +106,7 @@
 
 - (void)timer:(id)sender
 {
-    LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.timer.fireDate.description, NSDate.date.description));
+    LOGFUNCPARAM(makeString(@"timerDate: %@   now: %@", self.timer.fireDate.description, NSDate.date.description))
     self.i4++;
     
     __strong JMCorrectTimer *strongSelf = self;
@@ -149,7 +149,7 @@
 
     if ([[NSDate date] timeIntervalSinceDate:self.date] > 0.01)
     {
-        LOGFUNCPARAM(makeString(@"dropping Timer as we have been sleeping, missed target by: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
+        LOGFUNCPARAM(makeString(@"dropping Timer as we have been sleeping, missed target by: %f", -[[NSDate date] timeIntervalSinceDate:self.date]))
 
         self.i8++;
 
@@ -175,7 +175,7 @@
     }
     else
     {
-        LOGFUNCPARAM(makeString(@"rescheduling timer, still time left to reschedule: %f", -[[NSDate date] timeIntervalSinceDate:self.date]));
+        LOGFUNCPARAM(makeString(@"rescheduling timer, still time left to reschedule: %f", -[[NSDate date] timeIntervalSinceDate:self.date]))
 
         [self scheduleTimer];
         self.i10++;
