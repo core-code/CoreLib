@@ -1447,16 +1447,26 @@ void cc_log_enablecapturetofile(NSURL *fileURL, unsigned long long filesizeLimit
         {
             NSFileHandle *fh = [NSFileHandle fileHandleForUpdatingURL:fileURL error:nil];
 
-            [fh seekToFileOffset:(filesize - filesizeLimit)];
+            @try
+            {
 
-            NSData *data = [fh readDataToEndOfFile];
+                [fh seekToFileOffset:(filesize - filesizeLimit)];
 
-            [fh seekToFileOffset:0];
-            [fh writeData:data];
-            #warning TODO:  this can throw exceptions when the disk is full
-            [fh truncateFileAtOffset:filesizeLimit];
-            [fh synchronizeFile];
-            [fh closeFile];
+                NSData *data = [fh readDataToEndOfFile];
+
+                [fh seekToFileOffset:0];
+                [fh writeData:data];
+                [fh truncateFileAtOffset:filesizeLimit];
+                [fh synchronizeFile];
+            }
+            @catch (id)
+            {
+                cc_log_emerg(@"Fatal: your disk is full - please never let that happen again");
+            }
+            @finally
+            {
+                [fh closeFile];
+            }
         }
     }
 
