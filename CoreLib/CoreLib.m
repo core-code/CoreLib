@@ -1498,14 +1498,18 @@ void _cc_log_tologfile(int level, NSString *string)
                                            levelStr,
                                            string);
 
-        [logfileHandle seekToEndOfFile];
-
         NSData *data = [finalString dataUsingEncoding:NSUTF8StringEncoding];
-
         if (data)
         {
-            [logfileHandle writeData:data];
-            #warning TODO:  this can throw exceptions when the disk is full
+            @try
+            {
+                [logfileHandle seekToEndOfFile];
+                [logfileHandle writeData:data];
+            }
+            @catch (id)
+            {
+               cc_log_emerg(@"Fatal: your disk is full - please never let that happen again");
+            }
         }
         else
             cc_log_error(@"could not open create data from string %@ for log", finalString);
