@@ -8,6 +8,7 @@
 
 #import "CoreLib.h"
 #import "JMPersistentCache.h"
+#include <sys/errno.h>
 
 @interface JMPersistentCache()
 
@@ -70,7 +71,6 @@
         if (error) *error = err1;
         return NO;
     }
-    
     NSError *err2;
     NSURL *savedCacheURL = [cc.suppURL add:@"persistentCache.dict"];
     BOOL success = [data writeToURL:savedCacheURL options:NSDataWritingAtomic error:&err2];
@@ -79,7 +79,8 @@
     {
         NSString *errorMsg = makeString(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, err2.description);
         cc_log_error(@"%@", errorMsg);
-        assert_custom_info(err2.code == NSFileWriteOutOfSpaceError, err2.description);
+        NSError *underlyingError = err2.userInfo[NSUnderlyingErrorKey];
+        assert_custom_info(err2.code == NSFileWriteOutOfSpaceError || underlyingError.code == ENFILE, err2.description);
         [_lock unlock];
         if (error) *error = err2;
         return NO;
