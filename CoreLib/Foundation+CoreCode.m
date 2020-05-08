@@ -2420,7 +2420,7 @@ CONST_KEY(CCDirectoryObserving)
         if (self.length < 200)
             cc_log_error(@"Error: could not create UTF8 string from data %@", self);
         else
-            cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,150)]);
+            cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,666)]);
     }
     
     return s;
