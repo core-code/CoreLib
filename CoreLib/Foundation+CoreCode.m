@@ -2415,6 +2415,7 @@ CONST_KEY(CCDirectoryObserving)
 {
     NSString *s = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
     
+#ifndef CLI
     if (!s)
     {
         if (self.length < 200)
@@ -2422,6 +2423,7 @@ CONST_KEY(CCDirectoryObserving)
         else
             cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,666)]);
     }
+#endif
     
     return s;
 }
