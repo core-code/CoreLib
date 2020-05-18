@@ -264,6 +264,14 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [NSSet setWithArray:self];
 }
 
+- (NSArray *)arrayByInsertingObject:(id)anObject atIndex:(NSUInteger)index
+{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+
+    [array insertObject:anObject atIndex:index];
+
+    return [NSArray arrayWithArray:array];
+}
 
 - (NSArray *)arrayByAddingNewObject:(id)anObject
 {

@@ -33,6 +33,7 @@
 - (NSArray <ObjectType>*)arrayByDeletingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;
 - (NSArray <ObjectType>*)arrayByDeletingObjectAtIndex:(NSUInteger)index;
 - (NSArray <ObjectType>*)arrayByDeletingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray *)arrayByInsertingObject:(id)anObject atIndex:(NSUInteger)index;
 - (NSArray <ObjectType>*)arrayByReplacingObject:(ObjectType)anObject withObject:(ObjectType)newObject;
 - (ObjectType)safeObjectAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
