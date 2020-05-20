@@ -610,7 +610,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     }
 }
 
-+ (NSInteger)bootDiskBSDNum
++ (NSInteger)bootDiskBSDNum // warning: this is not thread-safe / reentrant
 {
     static NSInteger num = -100;
     

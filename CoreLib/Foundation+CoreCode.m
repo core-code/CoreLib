@@ -908,7 +908,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     static NSCharacterSet *cs = nil;
 
-    if (!cs)
+    ONCE_PER_FUNCTION(^
     {
         NSMutableCharacterSet *tmp = [NSMutableCharacterSet characterSetWithCharactersInString:@",."];
         NSString *groupingSeparators = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
@@ -918,7 +918,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         [tmp addCharactersInString:decimalSeparators];
         cs = tmp.immutableObject;
         assert(cs);
-    }
+    })
 
     return ([self rangeOfCharacterFromSet:NSCharacterSet.decimalDigitCharacterSet].location != NSNotFound) && ([self rangeOfCharacterFromSet:cs].location != NSNotFound);
 }
@@ -964,14 +964,14 @@ CONST_KEY(CoreCodeAssociatedValue)
         return FALSE;
 
     static NSCharacterSet *localValid = nil, *domainValid = nil;
-
-    if (!localValid)
+    
+    ONCE_PER_FUNCTION(^
     {
         localValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~."];
         domainValid = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-."];
         assert(localValid);
         assert(domainValid);
-    }
+    })
 
     if ([local rangeOfCharacterFromSet:localValid.invertedSet options:(NSStringCompareOptions)0].location != NSNotFound)
         return NO;
@@ -2925,7 +2925,7 @@ CONST_KEY(CCDirectoryObserving)
 {
     static NSMutableArray *languageCodes;
     
-    if (!languageCodes)
+    ONCE_PER_FUNCTION(^
     {
         languageCodes = makeMutableArray();
     
@@ -2935,7 +2935,7 @@ CONST_KEY(CCDirectoryObserving)
             NSString *twoLetterCode = d[NSLocaleLanguageCode];
             [languageCodes addObject:twoLetterCode];
         }
-    }
+    })
     
     return languageCodes;
 }
