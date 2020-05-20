@@ -2426,10 +2426,11 @@ CONST_KEY(CCDirectoryObserving)
 #ifndef CLI
     if (!s)
     {
-        if (self.length < 200)
+        let maximumStringOutput = 100;
+        if (self.length <= maximumStringOutput)
             cc_log_error(@"Error: could not create UTF8 string from data %@", self);
         else
-            cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0,666)]);
+            cc_log_error(@"Error: could not create UTF8 string from data %@", [self subdataWithRange:NSMakeRange(0, maximumStringOutput)]);
     }
 #endif
     
