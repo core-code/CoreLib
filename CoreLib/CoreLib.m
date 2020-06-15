@@ -1508,14 +1508,12 @@ void _cc_log_tologfile(int level, NSString *string)
             }
             @catch (id)
             {
-#warning this is not productive as it recurses
-               cc_log_emerg(@"Fatal: your disk is full - please never let that happen again");
+                os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%{public}s", "Fatal: your disk is full - please never let that happen again");
             }
         }
         else
         {
-            #warning this is not productive as it recurses
-            cc_log_error(@"could not open create data from string %@ for log", finalString);
+            os_log_with_type(OS_LOG_DEFAULT, OS_LOG_TYPE_FAULT, "%{public}s", makeString(@"could not open create data from string '%@' for log", finalString).UTF8String);
         }
     }
 }
