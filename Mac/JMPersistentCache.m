@@ -80,7 +80,9 @@
         NSString *errorMsg = makeString(@"Error: JMPersistentCache cannot write file %@ with error %@", savedCacheURL.path, err2.description);
         cc_log_error(@"%@", errorMsg);
         NSError *underlyingError = err2.userInfo[NSUnderlyingErrorKey];
-        assert_custom_info(err2.code == NSFileWriteOutOfSpaceError || underlyingError.code == ENFILE, err2.description);
+        
+        
+        assert_custom_info(err2.code == NSFileWriteOutOfSpaceError || err2.code == NSFileWriteNoPermissionError || underlyingError.code == ENFILE, err2.description);
         [_lock unlock];
         if (error) *error = err2;
         return NO;
