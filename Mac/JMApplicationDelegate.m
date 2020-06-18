@@ -241,7 +241,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
         {
             NSString *svs = [[feed splitAfterNull:@"sparkle:shortVersionString=\""] splitBeforeNull:@"\""];
             if (alert(@"Update Available",
-                      makeString(@"An Update is available. You have version '%@ (%i)' but the newest version is '%@ (%i)'. Please use our 'MacUpdater' to keep to update to the newest version - it can also update your other apps!", cc.appVersionString, cc.appBuildNumber, svs, newestBuildNumber),
+                      makeString(@"An Update is available! You have version '%@ (%i)' but the newest version is '%@ (%i)'. Please use our 'MacUpdater' to update to the newest version - it can also update your other apps!", cc.appVersionString, cc.appBuildNumber, svs, newestBuildNumber),
                       @"Open MacUpdater Homepage", @"Cancel", nil) == NSAlertFirstButtonReturn)
                  [@"https://www.corecode.io/macupdater/".URL open];
         }
