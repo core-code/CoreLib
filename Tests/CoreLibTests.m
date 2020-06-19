@@ -161,6 +161,34 @@ NSString *randomString(int maxLength)
 }
 #endif
 
+- (void)testBase64
+{
+    NSCharacterSet *b64cs = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=".characterSet;
+    
+    for (int i = 0; i < 1000; i++)
+    {
+        NSString *logfileString = randomString(100000);
+        NSString *logfile = logfileString.data.base64String;
+
+        
+        NSRange r = [logfile rangeOfCharacterFromSet:b64cs.invertedSet];
+        
+        XCTAssert(r.location == NSNotFound);
+    }
+    
+    for (int i = 0; i < 1000; i++)
+    {
+        NSString *logfileString = randomString(1000000);
+        logfileString = [logfileString tail:100000];
+        NSString *logfile = logfileString.data.base64String;
+
+        NSRange r = [logfile rangeOfCharacterFromSet:b64cs.invertedSet];
+        
+        XCTAssert(r.location == NSNotFound);
+    }
+
+}
+
 - (void)testStringHexRoundtrip
 {
 	NSData *data = @"/System/Library/PreferencePanes/Dock.prefPane/Contents/Resources/Dock.png".contents;
