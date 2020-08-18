@@ -305,6 +305,8 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define RANDOM_INIT             {srandom((unsigned)time(0));}
 #define RANDOM_FLOAT(a,b)       ((a) + ((b) - (a)) * (random() / (CGFloat) RAND_MAX))
 #define RANDOM_INT(a,b)         ((int)((a) + ((b) - (a) + 1) * (random() / (CGFloat) RAND_MAX)))        // this is INCLUSIVE; a and b will be part of the results
+#define OBJECT_OR3(x,y,z)       OBJECT_OR((x),OBJECT_OR((y),(z)))
+#define STRING_OR3(x,y,z)       STRING_OR((x),STRING_OR((y),(z)))
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
