@@ -294,6 +294,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define NON_NIL_ARR(x)			((x) ? (x) : @[])
 #define NON_NIL_NUM(x)          ((x) ? (x) : @(0))
 #define NON_NIL_OBJ(x)			((x) ? (x) : [NSNull null])
+#define NON_NSNULL_OBJ(x)       (([[NSNull null] isEqual:(x)]) ? nil : (x))
 #define IS_FLOAT_EQUAL(x,y)		(fabsf((x)-(y)) < 0.0001f)
 #define IS_DOUBLE_EQUAL(x,y)	(fabs((x)-(y)) < 0.000001)
 #define IS_IN_RANGE(v,l,h)		(((v) >= (l)) && ((v) <= (h)))
