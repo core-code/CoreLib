@@ -183,20 +183,20 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     {
         if (self.statusItem == nil)
         {
-            self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+            self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
 
-            [self.statusItem setHighlightMode:YES];
-            [self.statusItem setEnabled:YES];
+            self.statusItem.button.enabled = YES;
+            ((NSButtonCell *)self.statusItem.button.cell).highlightsBy = NSChangeGrayCellMask;
         }
         
-        (self.statusItem).menu = self.statusItemMenu;
-        (self.statusItem).image = _menubarIcon;
+        self.statusItem.menu = self.statusItemMenu;
+        self.statusItem.button.image = _menubarIcon;
     }
     else
     {
         if (self.statusItem)
         {
-            [[NSStatusBar systemStatusBar] removeStatusItem:_statusItem];
+            [NSStatusBar.systemStatusBar removeStatusItem:_statusItem];
             _statusItem = nil;
         }
     }
@@ -209,12 +209,12 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 - (void)setMenuTooltip:(NSString *)menuTooltip
 {
-    _statusItem.toolTip = menuTooltip;
+    _statusItem.button.toolTip = menuTooltip;
 }
 
 - (NSString *)menuTooltip
 {
-    return _statusItem.toolTip;
+    return _statusItem.button.toolTip;
 }
 
 - (void)handleAppReopen
