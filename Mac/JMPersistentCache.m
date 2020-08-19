@@ -44,8 +44,10 @@
         
         if (savedData)
         {
-            self.cache = [NSKeyedUnarchiver unarchiveObjectWithData:savedData];
-            if (!self)
+            NSError *err;
+            self.cache = [NSKeyedUnarchiver unarchivedObjectOfClasses:@[NSDictionary.class, NSDate.class].set fromData:savedData error:&err]; // weirdly we have to specify NSDate too although it isnt root - can i smell another bug in the rotten apple?
+            
+            if (!self.cache)
                 cc_log_error(@"Error: JMPersistentCache cannot read file at path %@", savedCacheURL.path);
         }
             
