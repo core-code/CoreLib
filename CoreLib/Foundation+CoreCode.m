@@ -360,6 +360,16 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self sortedArrayByKey:key ascending:YES];
 }
 
+- (NSArray *)sortedArrayByKey:(NSString *)key insensitive:(BOOL)insensitive
+{
+    if (!insensitive)
+        return [self sortedArrayByKey:key ascending:YES];
+    
+    NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:key ascending:YES selector:@selector(caseInsensitiveCompare:)];
+
+    return [self sortedArrayUsingDescriptors:@[sd]];
+    
+}
 
 - (NSArray *)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending
 {
