@@ -35,6 +35,8 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 }
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
+@property (strong, nonatomic) id globalEventMonitor;
+@property (strong, nonatomic) id localEventMonitor;
 
 @end
 
@@ -77,6 +79,18 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+    if (self.localEventMonitor)
+    {
+        [NSEvent removeMonitor:self.localEventMonitor];
+    }
+    if (self.globalEventMonitor)
+    {
+        [NSEvent removeMonitor:self.globalEventMonitor];
+    }
 }
 
 #pragma GCC diagnostic push
@@ -186,10 +200,90 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
             self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
 
             self.statusItem.button.enabled = YES;
-            ((NSButtonCell *)self.statusItem.button.cell).highlightsBy = NSChangeGrayCellMask;
+//             ((NSButtonCell *)self.statusItem.button.cell).highlightsBy = NSChangeGrayCellMask;
+//             [self.statusItem setHighlightMode:YES];
         }
         
-        self.statusItem.menu = self.statusItemMenu;
+        if (self.statusItemPopover)
+        {
+            self.statusItem.menu = nil;
+            // If statusItem.button is clicked, show/hide popup.
+            // If some other part of the app is clicked, hide the popup.
+            if (!self.localEventMonitor)
+            {
+                enum NSEventMask monitorMask = NSEventMaskLeftMouseDown | NSEventMaskKeyDown;
+                self.localEventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:monitorMask handler:^NSEvent *(NSEvent *event)
+                {
+                    // If the popover is currently shown, then let the popover handle all the clicks (pass on the event as is)
+                    if (event.type == NSEventTypeLeftMouseDown && self.statusItemPopover)
+                    {
+                        if (self.statusItemPopover.isShown && event.window == self.statusItemPopover.contentViewController.view.window)
+                        {
+                            return event;
+                        }
+                    }
+                    // If the button got a click and the popover is hidden, show it
+                    if (event.window == self.statusItem.button.window && !self.statusItemPopover.isShown)
+                    {
+                        [self.statusItem.button highlight:YES];
+                        NSView *buttonView = (NSView *)self.statusItem.button;
+                        //self.statusItemPopover.animates = NO;
+                        [self.statusItemPopover showRelativeToRect:NSZeroRect ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+                        // Setup a global event monitor to detect outside clicks so we can dismiss this popup
+                        if (self.globalEventMonitor)
+                        {
+                            [NSEvent removeMonitor:self.globalEventMonitor];
+                            self.globalEventMonitor = nil;
+                        }
+                        enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
+                        self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
+                        {
+                            [self.statusItemPopover close];
+                            [self.statusItem.button highlight:NO];
+                            // We want to tear down the global monitor right after the first
+                            // outside click is detected and the popover is hidden.
+                            if (self.globalEventMonitor)
+                            {
+                                [NSEvent removeMonitor:self.globalEventMonitor];
+                                self.globalEventMonitor = nil;
+                            }
+                        }];
+                        // Returning a nil signifies that we've consumed this event.
+                        // This has the side effect of avoiding the obnoxious NSBeep sound.
+                        return nil;
+                    }
+                    // If the popover is currently hidden and the click was in some other window in this app itself,
+                    // pass it on as it is so that the particular window / UI element can process it.
+                    if (event.type == NSEventTypeLeftMouseDown && self.statusItemPopover)
+                    {
+                        if (!self.statusItemPopover.isShown && event.window != self.statusItemPopover.contentViewController.view.window)
+                            return event;
+                    }
+                    // If we got a keystroke other than ESC, pass it on as it is, so that other UI elements can process it.
+                    if (event.type == NSEventTypeKeyDown && event.keyCode != 53) {
+                        return event;
+                    }
+                    // We're about to close the popover because all any circumstances under which we'd
+                    // keep the popup open were unfulfilled. Tear down the global event monitor that we'd
+                    // setup to detect clicks on external apps.
+                    if (self.globalEventMonitor)
+                    {
+                        [NSEvent removeMonitor:self.globalEventMonitor];
+                        self.globalEventMonitor = nil;
+                    }
+                    // Close popup and remove highlight
+                    [self.statusItemPopover close];
+                    [self.statusItem.button highlight:NO];
+                    // Returning a nil signifies that we've consumed this event.
+                    // This has the side effect of avoiding the obnoxious NSBeep sound.
+                    return nil;
+                }];
+            }
+        }
+        else
+        {
+	        self.statusItem.menu = self.statusItemMenu;
+        }
         self.statusItem.button.image = _menubarIcon;
     }
     else

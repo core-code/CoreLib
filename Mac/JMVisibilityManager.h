@@ -45,6 +45,7 @@ CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
 @property (strong, nonatomic) NSImage *dockIcon;
 @property (strong, nonatomic) NSImage *menubarIcon;
 @property (strong, nonatomic) NSMenu *statusItemMenu;
+@property (strong, nonatomic) NSPopover *statusItemPopover;
 @property (strong, nonatomic) NSString *menuTooltip;
 
 @property (readonly, nonatomic) BOOL permanentlyVisibleInDock;  // true if displaying in dock or displaying in dock and menubar
