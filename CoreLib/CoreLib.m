@@ -1520,6 +1520,7 @@ void _cc_log_tologfile(int level, NSString *string)
 
 void _cc_log_toprefs(int level, NSString *string)
 {
+#warning there is a data race here
 #ifndef CLI
 #ifndef DONTLOGTOUSERDEFAULTS
     static int lastPosition[8] = {0,0,0,0,0,0,0,0};
