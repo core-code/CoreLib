@@ -56,4 +56,6 @@ CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
 - (void)handleWindowOpened;
 - (void)handleWindowClosed;
 
+- (void)hidePopover;
+
 @end

@@ -296,6 +296,15 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
     }
 }
 
+- (void)hidePopover
+{
+    if (self.statusItemPopover)
+    {
+        [self.statusItemPopover close];
+        [self.statusItem.button highlight:NO];
+    }
+}
+
 - (NSImage *)menubarIcon
 {
     return _menubarIcon;
