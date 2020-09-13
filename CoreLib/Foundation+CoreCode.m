@@ -1965,6 +1965,13 @@ CONST_KEY(CCDirectoryObserving)
     return value.boolValue;
 }
 
+- (BOOL)fileIsBundle
+{
+    NSNumber *value;
+    [self getResourceValue:&value forKey:NSURLIsPackageKey error:NULL];
+    return value.boolValue;
+}
+
 - (NSURL *)fileAliasTarget
 {
     CFErrorRef *err = NULL;

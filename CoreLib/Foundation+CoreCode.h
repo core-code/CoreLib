@@ -292,6 +292,7 @@
 - (NSURL *)add:(NSString *)component;
 - (void)open;
 
+@property (readonly, nonatomic) BOOL fileIsBundle;
 @property (readonly, nonatomic) BOOL fileIsDirectory;
 //@property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSArray <NSURL *> *directoryContents;
