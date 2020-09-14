@@ -2500,7 +2500,9 @@ CONST_KEY(CCDirectoryObserving)
 
     if (![res isKindOfClass:[NSArray class]])
     {
+#ifndef SLIENCE_JSON_UNEXPECTEDCLASS_MESSAGES
         cc_log_error(@"Error: JSON read fails! input is class %@ instead of array", [[res class] description]);
+#endif
         return nil;
     }
 
@@ -2513,7 +2515,9 @@ CONST_KEY(CCDirectoryObserving)
 
     if (![res isKindOfClass:[NSDictionary class]])
     {
+#ifndef SLIENCE_JSON_UNEXPECTEDCLASS_MESSAGES
         cc_log_error(@"Error: JSON read fails! input is class %@ instead of dictionary", [[res class] description]);
+#endif
         return nil;
     }
 
