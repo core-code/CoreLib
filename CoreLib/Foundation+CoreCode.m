@@ -400,6 +400,17 @@ CONST_KEY(CoreCodeAssociatedValue)
         return [self subarrayToIndex:(NSUInteger)location];
 }
 
+- (NSArray *)slicingSubarrayFromIndex:(NSInteger)location
+{
+    if (location < 0)
+    {
+        NSInteger max = (NSInteger)self.count + location;
+        return [self subarrayFromIndex:(NSUInteger)max];
+    }
+    else
+        return [self subarrayFromIndex:(NSUInteger)location];
+}
+
 
 - (NSMutableArray *)mutableObject
 {

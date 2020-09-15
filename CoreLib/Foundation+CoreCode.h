@@ -50,7 +50,9 @@
 
 - (NSArray <ObjectType>*)subarrayFromIndex:(NSUInteger)index;       //  containing the characters of the receiver from the one at anIndex to the end (DOES include index)  similar to -[NSString subarrayFromIndex:]
 - (NSArray <ObjectType>*)subarrayToIndex:(NSUInteger)index;         //  containing the characters of the receiver up to, but not including, the one at anIndex. (does NOT include index) similar to -[NSString substringToIndex:]
-- (NSArray <ObjectType>*)slicingSubarrayToIndex:(NSInteger)index;
+
+- (NSArray <ObjectType>*)slicingSubarrayToIndex:(NSInteger)index;   // index should be negative and tell how many objects to remove from the end ...  -1 removes one char from the end
+- (NSArray <ObjectType>*)slicingSubarrayFromIndex:(NSInteger)index; // index should be negative and tell how many chars to include from the end .... -2 is just the last two items
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
