@@ -1239,6 +1239,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByDeletingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
+- (NSString *)strippedOfWhitespaceAndNewlines
+{
+    return [self stringByDeletingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
 - (NSString *)trimmedOfWhitespace
 {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
