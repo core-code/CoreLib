@@ -28,6 +28,7 @@
 @property (readonly, nonatomic) NSString *literalString;
 @property (readonly, nonatomic) NSDictionary *dictionary; // will yield a dictionary that has the array contents as keys and @(1) as objects
 
+- (NSArray <ObjectType>*)arrayByAddingObjectSafely:(ObjectType)anObject;            // add nil aint a prob
 - (NSArray <ObjectType>*)arrayByAddingNewObject:(ObjectType)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
 - (NSArray <ObjectType>*)arrayByDeletingObjectIdenticalTo:(ObjectType)anObject;
 - (NSArray <ObjectType>*)arrayByDeletingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;

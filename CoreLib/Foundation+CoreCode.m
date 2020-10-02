@@ -273,6 +273,14 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [NSArray arrayWithArray:array];
 }
 
+- (NSArray *)arrayByAddingObjectSafely:(id)anObject
+{
+    if (!anObject)
+        return self;
+    else
+        return [self arrayByAddingObject:anObject];
+}
+
 - (NSArray *)arrayByAddingNewObject:(id)anObject
 {
     if ([self indexOfObject:anObject] == NSNotFound)
