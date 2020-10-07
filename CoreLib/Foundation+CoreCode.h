@@ -36,6 +36,7 @@
 - (NSArray <ObjectType>*)arrayByDeletingObjectsAtIndexes:(NSIndexSet *)indexSet;
 - (NSArray *)arrayByInsertingObject:(id)anObject atIndex:(NSUInteger)index;
 - (NSArray <ObjectType>*)arrayByReplacingObject:(ObjectType)anObject withObject:(ObjectType)newObject;
+- (ObjectType)slicingObjectAtIndex:(NSInteger)index;
 - (ObjectType)safeObjectAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;

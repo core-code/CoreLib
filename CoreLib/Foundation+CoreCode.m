@@ -340,6 +340,13 @@ CONST_KEY(CoreCodeAssociatedValue)
     return mut.immutableObject;
 }
 
+- (id)slicingObjectAtIndex:(NSInteger)index
+{
+    if (index < 0)
+        return self[(NSUInteger)((NSInteger)self.count + index)];
+    else
+        return self[(NSUInteger)index];
+}
 
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
