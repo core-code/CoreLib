@@ -716,6 +716,36 @@ CONST_KEY(CoreCodeAssociatedValue)
 @end
 
 
+@implementation NSPointerArray (CoreCode)
+
+- (NSInteger)getIndexOfPointer:(void *)aPointer
+{
+    for (NSUInteger i = 0; i < self.count; i++)
+    {
+        if ([self pointerAtIndex:i] == aPointer)
+        {
+            return (NSInteger)i;
+        }
+    }
+    return -1;
+}
+
+- (void)forEach:(void (^)(void *))aCallback
+{
+    for (NSUInteger i = 0; i < self.count; i++)
+    {
+        aCallback([self pointerAtIndex:i]);
+    }
+}
+
+- (BOOL)containsPointer:(void *)aPointer
+{
+    return [self getIndexOfPointer:aPointer] != -1;
+}
+
+@end
+
+
 
 @implementation NSString (CoreCode)
 

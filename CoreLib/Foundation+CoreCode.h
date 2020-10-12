@@ -109,7 +109,12 @@
 
 @end
 
+@interface NSPointerArray (CoreCode)
 
+- (BOOL)containsPointer:(void *)aPointer;
+- (NSInteger)getIndexOfPointer:(void *)aPointer;
+- (void)forEach:(void (^)(void *))aCallback;
+@end
 
 @interface NSString (CoreCode)
 
