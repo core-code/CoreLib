@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,7 +30,7 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5" customClass="JMEditableBorderlessWindow">
             <windowStyleMask key="styleMask" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="196" y="240" width="300" height="350"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <view key="contentView" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="300" height="350"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -42,7 +42,7 @@
                             <box fixedFrame="YES" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="xZx-Vt-eum">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="350"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <view key="contentView" ambiguous="YES" id="zkx-VK-SC4">
+                                <view key="contentView" id="zkx-VK-SC4">
                                     <rect key="frame" x="1" y="1" width="298" height="348"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -121,7 +121,7 @@
                                             <rect key="frame" x="28" y="29" width="41" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="☹️" id="Jr5-4h-Wy3">
-                                                <font key="font" size="30" name=".AppleColorEmojiUI"/>
+                                                <font key="font" metaFont="system" size="30"/>
                                                 <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -130,7 +130,7 @@
                                             <rect key="frame" x="28" y="85" width="41" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="😐" id="Y7c-m8-Wrk">
-                                                <font key="font" size="30" name=".AppleColorEmojiUI"/>
+                                                <font key="font" metaFont="system" size="30"/>
                                                 <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -139,7 +139,7 @@
                                             <rect key="frame" x="28" y="141" width="41" height="48"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" enabled="NO" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" alignment="left" title="🙂" id="Rcz-Na-aCo">
-                                                <font key="font" size="30" name=".AppleColorEmojiUI"/>
+                                                <font key="font" metaFont="system" size="30"/>
                                                 <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -167,7 +167,7 @@
                             <box fixedFrame="YES" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="H2q-Pl-96o">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="350"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <view key="contentView" ambiguous="YES" id="2kw-Fo-01h">
+                                <view key="contentView" id="2kw-Fo-01h">
                                     <rect key="frame" x="1" y="1" width="298" height="348"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -237,7 +237,7 @@
                                             <rect key="frame" x="16" y="228" width="264" height="50"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="🙂" id="7p1-Pb-zoa">
-                                                <font key="font" size="35" name=".AppleColorEmojiUI"/>
+                                                <font key="font" metaFont="system" size="35"/>
                                                 <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -248,10 +248,10 @@
                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon-appstore" id="2um-dD-hxC"/>
                                         </imageView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="28" translatesAutoresizingMaskIntoConstraints="NO" id="EBI-Vh-6Tf">
-                                            <rect key="frame" x="28" y="36" width="38" height="44"/>
+                                            <rect key="frame" x="28" y="27" width="38" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="😴" id="ITz-kj-aUG">
-                                                <font key="font" size="30" name=".AppleColorEmojiUI"/>
+                                                <font key="font" metaFont="system" size="30"/>
                                                 <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -286,7 +286,7 @@
                             <box fixedFrame="YES" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="eks-ok-YiO">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="350"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <view key="contentView" ambiguous="YES" id="D2R-na-xDX">
+                                <view key="contentView" id="D2R-na-xDX">
                                     <rect key="frame" x="1" y="1" width="298" height="348"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
@@ -332,7 +332,7 @@
                                             <rect key="frame" x="19" y="229" width="264" height="50"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="☹️" id="dnY-py-Y11">
-                                                <font key="font" size="35" name=".AppleColorEmojiUI"/>
+                                                <font key="font" metaFont="system" size="35"/>
                                                 <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -369,7 +369,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="364" y="-10"/>
+            <point key="canvasLocation" x="369" y="-32"/>
         </window>
     </objects>
     <resources>
