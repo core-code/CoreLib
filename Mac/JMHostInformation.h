@@ -47,6 +47,8 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (NSString *)ipName;
 #endif
 #ifdef USE_IOKIT // requires linking IOKit.framework
++ (NSString *)serialNumber;
++ (NSString *)UUID;
 + (NSString *)macAddress;
 + (BOOL)runsOnBattery;
 + (smartStatusEnum)getDiskSMARTStatus:(int)disk;

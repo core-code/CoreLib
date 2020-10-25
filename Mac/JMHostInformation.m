@@ -401,6 +401,39 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 }
 
 #ifdef USE_IOKIT
+
++ (NSString *)serialNumber
+{
+    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
+    if (!platformExpert)  return nil;
+
+    CFTypeRef cfString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
+    IOObjectRelease(platformExpert);
+    
+    if (!cfString) return nil;
+
+    NSString *serial = CFBridgingRelease(cfString);
+
+    return serial;
+}
+
+
++ (NSString *)UUID
+{
+    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
+    if (!platformExpert)  return nil;
+
+    CFTypeRef cfString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformUUIDKey), kCFAllocatorDefault, 0);
+    IOObjectRelease(platformExpert);
+    
+    if (!cfString) return nil;
+
+    NSString *uuid = CFBridgingRelease(cfString);
+
+    return uuid;
+}
+
+
 + (NSString *)macAddress
 {
     NSString *result = @"";
