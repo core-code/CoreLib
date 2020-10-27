@@ -1518,18 +1518,22 @@ void _cc_log_tologfile(int level, NSString *string)
     }
 }
 
+static NSString *_ccLogToPrefsLock = @"_cc_log_toprefs_LOCK";
+
 void _cc_log_toprefs(int level, NSString *string)
 {
-#warning there is a data race here
 #ifndef CLI
 #ifndef DONTLOGTOUSERDEFAULTS
-    static int lastPosition[8] = {0,0,0,0,0,0,0,0};
-    assert(level < 8);
-    NSString *key = makeString(@"corelib_asl_lev%i_pos%i", level, lastPosition[level]);
-    key.defaultString = makeString(@"date: %@ message: %@", NSDate.date.description, string);
-    lastPosition[level]++;
-    if (lastPosition[level] > 9)
-        lastPosition[level] = 0;
+    @synchronized (_ccLogToPrefsLock)
+    {
+        static int lastPosition[8] = {0,0,0,0,0,0,0,0};
+        assert(level < 8);
+        NSString *key = makeString(@"corelib_asl_lev%i_pos%i", level, lastPosition[level]);
+        key.defaultString = makeString(@"date: %@ message: %@", NSDate.date.description, string);
+        lastPosition[level]++;
+        if (lastPosition[level] > 9)
+            lastPosition[level] = 0;
+    }
 #endif
 #endif
 }
