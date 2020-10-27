@@ -46,7 +46,7 @@
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
         @"icon-filehorse".namedImage.name = @"icon-macupdate";
     
-    return [super initWithWindowNibName: @"JMRatingWindow"];
+    return [super initWithWindowNibName:@"JMRatingWindow"];
 }
 
 
