@@ -211,9 +211,20 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
             // If some other part of the app is clicked, hide the popup.
             if (!self.localEventMonitor)
             {
-                enum NSEventMask monitorMask = NSEventMaskLeftMouseDown | NSEventMaskKeyDown;
+                enum NSEventMask monitorMask = NSEventMaskLeftMouseDown | NSEventMaskRightMouseDown | NSEventMaskKeyDown;
                 self.localEventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:monitorMask handler:^NSEvent *(NSEvent *event)
                 {
+                    // We want to show statusMenu if the user option clicks
+                    BOOL gotOptionKey = (event.modifierFlags & NSEventModifierFlagOption) == NSEventModifierFlagOption;
+                    BOOL gotRightClick = event.type == NSEventTypeRightMouseDown;
+                    if (event.window == self.statusItem.button.window && (gotOptionKey || gotRightClick))
+                    {
+                        [self.statusItem.button highlight:YES];
+                        // TODO: Yes, this is deprecated but I couldn't find an alternative
+                        [self.statusItem popUpStatusItemMenu:self.statusItemMenu];
+                        [self.statusItem.button highlight:NO];
+                        return nil;
+                    }
                     // If the popover is currently shown, then let the popover handle all the clicks (pass on the event as is)
                     if (event.type == NSEventTypeLeftMouseDown && self.statusItemPopover)
                     {
