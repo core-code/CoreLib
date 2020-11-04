@@ -199,7 +199,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     for (NSObject *object in array)
     {
         if ([object isKindOfClass:[NSArray class]])
-            [NSArray _addArrayContents:object.id toArray:newArray];
+            [NSArray _addArrayContents:(NSArray *)object toArray:newArray];
         else
             [newArray addObject:object];
     }
@@ -933,7 +933,6 @@ CONST_KEY(CoreCodeAssociatedValue)
     return 0;
 }
 
-
 - (unsigned long long)fileSize
 {
     assert(fileManager);
@@ -1402,9 +1401,9 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)titlecaseString
 {
-    NSArray *words = @[@"a", @"an", @"the", @"and", @"but", @"for", @"nor", @"or", @"so", @"yet", @"at", @"by", @"for", @"in", @"of", @"off", @"on", @"out", @"to", @"up", @"via", @"to", @"c", @"ca", @"etc", @"e.g.", @"i.e.", @"vs.", @"vs", @"v", @"down", @"from", @"into", @"like", @"near", @"onto", @"over", @"than", @"with", @"upon"];
+    NSArray <NSString *>*words = @[@"a", @"an", @"the", @"and", @"but", @"for", @"nor", @"or", @"so", @"yet", @"at", @"by", @"for", @"in", @"of", @"off", @"on", @"out", @"to", @"up", @"via", @"to", @"c", @"ca", @"etc", @"e.g.", @"i.e.", @"vs.", @"vs", @"v", @"down", @"from", @"into", @"like", @"near", @"onto", @"over", @"than", @"with", @"upon"];
 
-    return [self titlecaseStringWithLowercaseWords:words.id andUppercaseWords:nil];
+    return [self titlecaseStringWithLowercaseWords:words andUppercaseWords:nil];
 }
 
 - (NSString *)propercaseString
@@ -2557,7 +2556,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSArray *)JSONArray
 {
-    NSObject *res = [self JSONObject];
+    NSArray *res = (NSArray *)[self JSONObject];
 
     if (![res isKindOfClass:[NSArray class]])
     {
@@ -2567,12 +2566,12 @@ CONST_KEY(CCDirectoryObserving)
         return nil;
     }
 
-    return res.id;
+    return res;
 }
 
 - (NSDictionary *)JSONDictionary
 {
-    NSObject *res = [self JSONObject];
+    NSDictionary *res = (NSDictionary *)[self JSONObject];
 
     if (![res isKindOfClass:[NSDictionary class]])
     {
@@ -2582,7 +2581,7 @@ CONST_KEY(CCDirectoryObserving)
         return nil;
     }
 
-    return res.id;
+    return res;
 }
 
 
@@ -3107,6 +3106,11 @@ CONST_KEY(CCDirectoryObserving)
 {
     return makeString(@"-unsupportedLiteralObject: %@-", self.description);
 }
+
+//- (instancetype)non_null
+//{
+//    return self;
+//}
 @end
 
 

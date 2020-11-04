@@ -461,11 +461,17 @@
 @interface NSObject (CoreCode)
 
 @property (readonly, nonatomic) id id;
+
+@property (readonly, nonatomic) NSString *literalString;
 @property (retain, nonatomic) id associatedValue;
+
 - (id)associatedValueForKey:(const NSString *)key;
 - (void)setAssociatedValue:(id)value forKey:(const NSString *)key;
+
 + (instancetype)newWith:(NSDictionary *)dict;
-@property (readonly, nonatomic) NSString *literalString;
+
+// - (instancetype _Nonnull)non_null; // doesn't seem to work for a weird reason
+
 
 @end
 
