@@ -363,7 +363,12 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
     NSURL *dir = [NSFileManager.defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask][0];
 
-    return self.appName ? [dir add:self.appName] : nil;
+    NSString *appName = self.appName;
+    
+    if (!appName)
+        appName =  [NSProcessInfo.processInfo.arguments.firstObject split:@"/"].lastObject;
+    
+    return [dir add:appName];
 }
 
 - (NSString *)appChecksumSHA
