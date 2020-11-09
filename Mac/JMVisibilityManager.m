@@ -200,8 +200,6 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
             self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
 
             self.statusItem.button.enabled = YES;
-//             ((NSButtonCell *)self.statusItem.button.cell).highlightsBy = NSChangeGrayCellMask;
-//             [self.statusItem setHighlightMode:YES];
         }
         
         if (self.statusItemPopover)
@@ -220,13 +218,15 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
                     if (event.window == self.statusItem.button.window && (gotOptionKey || gotRightClick))
                     {
                         [self.statusItem.button highlight:YES];
-                        // TODO: Yes, this is deprecated but I couldn't find an alternative
+                    #pragma clang diagnostic push
+                    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
                         [self.statusItem popUpStatusItemMenu:self.statusItemMenu];
+                    #pragma clang diagnostic pop
                         [self.statusItem.button highlight:NO];
                         return nil;
                     }
                     // If the popover is currently shown, then let the popover handle all the clicks (pass on the event as is)
-                    if (event.type == NSEventTypeLeftMouseDown && self.statusItemPopover)
+                    if ((event.type == NSEventTypeLeftMouseDown || event.type == NSEventTypeRightMouseDown) && self.statusItemPopover)
                     {
                         if (self.statusItemPopover.isShown && event.window == self.statusItemPopover.contentViewController.view.window)
                         {
@@ -265,7 +265,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
                     }
                     // If the popover is currently hidden and the click was in some other window in this app itself,
                     // pass it on as it is so that the particular window / UI element can process it.
-                    if (event.type == NSEventTypeLeftMouseDown && self.statusItemPopover)
+                    if ((event.type == NSEventTypeLeftMouseDown || event.type == NSEventTypeRightMouseDown) && self.statusItemPopover)
                     {
                         if (!self.statusItemPopover.isShown && event.window != self.statusItemPopover.contentViewController.view.window)
                             return event;
