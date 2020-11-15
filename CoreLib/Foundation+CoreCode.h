@@ -376,6 +376,7 @@
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString;
 + (NSDate *)dateWithRFC822Date:(NSString *)rfcDateString;       // e.g. Wed, 02 Oct 2002 15:00:00 +0200
 + (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString;  // e.g. 2019-03-15T05:18:44Z
++ (NSDate *)dateWithUnformattedDate:(NSString *)dateString; // uses NSDataDetector
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone;
 - (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;

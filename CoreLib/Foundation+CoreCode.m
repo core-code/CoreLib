@@ -2658,6 +2658,21 @@ CONST_KEY(CCDirectoryObserving)
     return [self dateWithString:dateString format:dateFormat localeIdentifier:@"en_US"];
 }
 
++ (NSDate *)dateWithUnformattedDate:(NSString *)dateString
+{
+    if (!dateString) return nil;
+    
+    __block NSDate *dd;
+    NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingAllTypes error:nil];
+    
+    [detector enumerateMatchesInString:dateString
+                               options:kNilOptions
+                                 range:NSMakeRange(0, dateString.length)
+                            usingBlock:^(NSTextCheckingResult *r, NSMatchingFlags f, BOOL *s) { dd = r.date; }];
+
+    return dd;
+}
+
 + (NSDate *)dateWithPreprocessorDate:(const char *)preprocessorDateString
 {
     return [self dateWithString:@(preprocessorDateString) format:@"MMM d yyyy"];
