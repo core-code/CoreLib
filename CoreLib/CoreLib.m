@@ -811,6 +811,8 @@ NSInteger _alert_input(NSString *prompt, NSArray *buttons, NSString **result, BO
         input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 310, 24)];
 
     alert.accessoryView = input;
+    alert.window.initialFirstResponder = alert.accessoryView;
+    
     NSInteger selectedButton = [alert runModal];
 
     cc_log_error(@"Alert Input: finished %li", (long)selectedButton);
