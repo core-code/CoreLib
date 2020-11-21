@@ -601,25 +601,21 @@ NSString *makeString(NSString *format, ...)
 
 NSString *makeTempDirectory()
 {
-    NSString *bundleID = [bundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-    NSString *tempDirectoryTemplate = [[NSTemporaryDirectory() stringByAppendingPathComponent:bundleID] stringByAppendingString:@".XXXXXX"];
-    const char *tempDirectoryTemplateCString = tempDirectoryTemplate.fileSystemRepresentation;
-    if (!tempDirectoryTemplateCString) return nil;
-
-    char *tempDirectoryNameCString = (char *)malloc(strlen(tempDirectoryTemplateCString) + 1);
-    strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
-
-    char *result = mkdtemp(tempDirectoryNameCString);
-    if (!result)
-    {
-        free(tempDirectoryNameCString);
-        return nil;
-    }
-
-    NSString *tempDirectoryPath = [fileManager stringWithFileSystemRepresentation:result length:strlen(result)];
-    free(tempDirectoryNameCString);
-
-    return tempDirectoryPath;
+    NSError *error = nil;
+    NSURL *temporaryDirectoryURL =
+        [fileManager URLForDirectory:NSItemReplacementDirectory
+                            inDomain:NSUserDomainMask
+                   appropriateForURL:NSHomeDirectory().fileURL
+                              create:YES
+                               error:&error];
+    
+    assert(temporaryDirectoryURL && !error);
+    
+    return temporaryDirectoryURL.path;
+    
+    // this should return a new folder inside the 'TemporaryItems' subfolder of the tmp folder which is cleared on reboot.
+    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_muUpdateStaticHomebrewCask_89KPkg/
+    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/A Document Being Saved By muUpdateStaticHomebrewCask/
 }
 
 NSString *makeTempFilepath(NSString *extension)
