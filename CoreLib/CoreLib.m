@@ -614,8 +614,8 @@ NSString *makeTempDirectory()
     return temporaryDirectoryURL.path;
     
     // this should return a new folder inside the 'TemporaryItems' subfolder of the tmp folder which is cleared on reboot.
-    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_muUpdateStaticHomebrewCask_89KPkg/
-    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/A Document Being Saved By muUpdateStaticHomebrewCask/
+    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_#{appname}_89KPkg/
+    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/(A Document Being Saved By #{appname})
 }
 
 NSString *makeTempFilepath(NSString *extension)
