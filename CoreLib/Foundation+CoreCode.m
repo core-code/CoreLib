@@ -289,8 +289,27 @@ CONST_KEY(CoreCodeAssociatedValue)
         return self;
 }
 
+- (NSArray *)arrayByRemovingObject:(id)anObject
+{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
-- (NSArray *)arrayByDeletingObjectIdenticalTo:(id)anObject
+    [array removeObject:anObject];
+
+    return [NSArray arrayWithArray:array];
+}
+
+
+- (NSArray *)arrayByRemovingObjects:(NSArray *)objects
+{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self];
+
+    [array removeObjectsInArray:objects];
+
+    return [NSArray arrayWithArray:array];
+}
+
+
+- (NSArray *)arrayByRemovingObjectIdenticalTo:(id)anObject
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -300,7 +319,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arrayByDeletingObjectsIdenticalTo:(NSArray *)objects
+- (NSArray *)arrayByRemovingObjectsIdenticalTo:(NSArray *)objects
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -311,7 +330,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arrayByDeletingObjectsAtIndexes:(NSIndexSet *)indexSet
+- (NSArray *)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -321,7 +340,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (NSArray *)arrayByDeletingObjectAtIndex:(NSUInteger)index
+- (NSArray *)arrayByRemovingObjectAtIndex:(NSUInteger)index
 {
     NSMutableArray *array = [NSMutableArray arrayWithArray:self];
 
@@ -1275,27 +1294,27 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSString *)strippedOfNewlines
 {
-    return [self stringByDeletingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    return [self stringByDeletingCharactersInSet:NSCharacterSet.newlineCharacterSet];
 }
 
 - (NSString *)strippedOfWhitespace
 {
-    return [self stringByDeletingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    return [self stringByDeletingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
 }
 
 - (NSString *)strippedOfWhitespaceAndNewlines
 {
-    return [self stringByDeletingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [self stringByDeletingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 }
 
 - (NSString *)trimmedOfWhitespace
 {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    return [self stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
 }
 
 - (NSString *)trimmedOfWhitespaceAndNewlines
 {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [self stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 }
 
 - (NSString *)clamp:(NSUInteger)maximumLength
@@ -2864,7 +2883,7 @@ CONST_KEY(CCDirectoryObserving)
     return mutable.immutableObject;
 }
 
-- (NSDictionary *)dictionaryByDeletingKey:(id)key
+- (NSDictionary *)dictionaryByRemovingKey:(id)key
 {
     NSMutableDictionary *mutable = self.mutableObject;
 
@@ -2873,7 +2892,7 @@ CONST_KEY(CCDirectoryObserving)
     return mutable.immutableObject;
 }
 
-- (NSDictionary *)dictionaryByDeletingKeys:(NSArray <NSString *>*)keys
+- (NSDictionary *)dictionaryByRemovingKeys:(NSArray <NSString *>*)keys
 {
     NSMutableDictionary *mutable = self.mutableObject;
 

@@ -1603,7 +1603,7 @@ void cc_defaults_addtoarray(NSString *key, NSObject *entry, NSUInteger maximumEn
     currentArray = [currentArray arrayByAddingObject:entry];
     
     while (currentArray.count > maximumEntries)
-        currentArray = [currentArray arrayByDeletingObjectAtIndex:0];
+        currentArray = [currentArray arrayByRemovingObjectAtIndex:0];
     
     [NSUserDefaults.standardUserDefaults setObject:currentArray forKey:key];
 }

@@ -30,10 +30,12 @@
 
 - (NSArray <ObjectType>*)arrayByAddingObjectSafely:(ObjectType)anObject;            // add nil aint a prob
 - (NSArray <ObjectType>*)arrayByAddingNewObject:(ObjectType)anObject;			// adds the object only if it is not identical (contentwise) to existing entry
-- (NSArray <ObjectType>*)arrayByDeletingObjectIdenticalTo:(ObjectType)anObject;
-- (NSArray <ObjectType>*)arrayByDeletingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;
-- (NSArray <ObjectType>*)arrayByDeletingObjectAtIndex:(NSUInteger)index;
-- (NSArray <ObjectType>*)arrayByDeletingObjectsAtIndexes:(NSIndexSet *)indexSet;
+- (NSArray <ObjectType>*)arrayByRemovingObject:(ObjectType)anObject;            // this will also remove objects that are considered equal, i.e. strings with same content
+- (NSArray <ObjectType>*)arrayByRemovingObjects:(NSArray <ObjectType>*)objects;
+- (NSArray <ObjectType>*)arrayByRemovingObjectIdenticalTo:(ObjectType)anObject; // identical to only erases the *same* object, i.e. same memory address.
+- (NSArray <ObjectType>*)arrayByRemovingObjectsIdenticalTo:(NSArray <ObjectType>*)objects;
+- (NSArray <ObjectType>*)arrayByRemovingObjectAtIndex:(NSUInteger)index;
+- (NSArray <ObjectType>*)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
 - (NSArray *)arrayByInsertingObject:(id)anObject atIndex:(NSUInteger)index;
 - (NSArray <ObjectType>*)arrayByReplacingObject:(ObjectType)anObject withObject:(ObjectType)newObject;
 - (ObjectType)slicingObjectAtIndex:(NSInteger)index;
@@ -406,8 +408,8 @@
 @property (readonly, nonatomic) NSData *XMLData;
 @property (readonly, nonatomic) NSMutableDictionary <KeyType, ObjectType> *mutableObject;
 - (NSDictionary *)dictionaryBySettingValue:(ObjectType)value forKey:(KeyType)key; // does replace too
-- (NSDictionary *)dictionaryByDeletingKey:(KeyType)key;
-- (NSDictionary *)dictionaryByDeletingKeys:(NSArray <KeyType> *)keys;
+- (NSDictionary *)dictionaryByRemovingKey:(KeyType)key;
+- (NSDictionary *)dictionaryByRemovingKeys:(NSArray <KeyType> *)keys;
 - (NSDictionary *)dictionaryByReplacingNSNullWithEmptyStrings;
 - (BOOL)containsAny:(NSArray <NSString *>*)keys;
 - (BOOL)containsAll:(NSArray <NSString *>*)keys;
