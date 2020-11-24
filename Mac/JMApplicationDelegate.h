@@ -11,6 +11,15 @@
 
 #import "CoreLib.h"
 
+
+CC_ENUM(uint8_t, purchaseActivationType)
+{
+    kPurchaseActivationFree = 0,
+    kPurchaseActivationPaid = 1,
+    kPurchaseActivationPro = 2
+};
+
+
 #ifdef USE_SPARKLE
 #if __has_feature(modules)
 @import Sparkle;
@@ -68,14 +77,15 @@
 #endif
 
 
-// PADDLE
-- (IBAction)paddleDeactivateClicked:(id)sender;
-- (IBAction)paddleDetailsClicked:(id)sender;
-- (IBAction)paddleActivateClicked:(id)sender;
-- (IBAction)paddleRecoverClicked:(id)sender;
-@property (assign, nonatomic) BOOL paddleEnabled;
-@property (assign, nonatomic) BOOL paddleActivated;
-
+// PURCHASE
+- (IBAction)purchaseDeactivateClicked:(id)sender;
+- (IBAction)purchaseDetailsClicked:(id)sender;
+- (IBAction)purchaseActivateClicked:(id)sender;
+- (IBAction)purchaseRecoverClicked:(id)sender;
+@property (assign, nonatomic) BOOL purchaseEnabled;
+@property (assign, nonatomic) purchaseActivationType purchaseActivated;
+@property (strong, nonatomic) NSString *purchaseEmail;
+@property (strong, nonatomic) NSString *purchaseLicense;
 
 
 @end

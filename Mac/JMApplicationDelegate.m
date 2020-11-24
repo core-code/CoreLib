@@ -128,7 +128,7 @@
 
 - (void)checkBetaExpiryForDate:(const char *)preprocessorDateString days:(uint8_t)expiryDays
 {
-#if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PADDLE) && !defined(TRYOUT)
+#if !defined(APPSTORE_VALIDATERECEIPT) && !defined(PURCHASE) && !defined(TRYOUT)
 	LOGFUNC
 
 	cc_log(@"Warning: this version will expire");
@@ -366,25 +366,24 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 }
 #endif
 
-#pragma mark PADDLE
+#pragma mark PURCHASE
 
-- (IBAction)paddleDeactivateClicked:(id)sender
+- (IBAction)purchaseDeactivateClicked:(id)sender
 {
     [self doesNotRecognizeSelector:_cmd];
 }
 
-
-- (IBAction)paddleDetailsClicked:(id)sender
+- (IBAction)purchaseDetailsClicked:(id)sender
 {
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (IBAction)paddleActivateClicked:(id)sender
+- (IBAction)purchaseActivateClicked:(id)sender
 {
     [self doesNotRecognizeSelector:_cmd];
 }
 
-- (IBAction)paddleRecoverClicked:(id)sender
+- (IBAction)purchaseRecoverClicked:(id)sender
 {
     [self doesNotRecognizeSelector:_cmd];
 }
