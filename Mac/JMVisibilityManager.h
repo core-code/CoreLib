@@ -35,7 +35,7 @@ typedef NS_ENUM(uint8_t, templateSettingEnum)
 
 
 CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
-
+CONST_KEY_DECLARATION(VisibilityAlertWindowDidResignNotification)
 
 @interface VisibilityManager : NSObject
 
@@ -57,5 +57,6 @@ CONST_KEY_DECLARATION(VisibilitySettingDidChangeNotification)
 - (void)handleWindowClosed;
 
 - (void)hidePopover;
+- (void)showPopoverWithAnimation:(BOOL)shouldAnimate;
 
 @end

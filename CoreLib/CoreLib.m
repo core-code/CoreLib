@@ -520,6 +520,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @end
 
+@implementation FakeAlertWindow
+@end
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
 
@@ -1107,6 +1110,7 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
     alert.messageText = title;
     alert.informativeText = LocalizationNotNeeded(message);
     alert.icon = customIcon;
+    alert.window.level = NSScreenSaverWindowLevel;
     
     if (defaultButton)
     {
@@ -1245,7 +1249,7 @@ void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSStrin
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
     CGFloat messageHeight = (CGFloat)MAX(30.0, _attributedStringHeightForWidth(attributedString, 300));
     CGFloat height = 100 + messageHeight;
-    NSWindow *fakeAlertWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
+    FakeAlertWindow *fakeAlertWindow = [[FakeAlertWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
                                                             styleMask:NSWindowStyleMaskTitled
                                                               backing:NSBackingStoreBuffered
                                                                 defer:NO];
@@ -1286,7 +1290,7 @@ void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSStrin
     firstButton.keyEquivalent = @"\r";
     [fakeAlertWindow.contentView addSubview:firstButton];
     
-    __weak  NSWindow *weakWindow = fakeAlertWindow;
+    __weak  FakeAlertWindow *weakWindow = fakeAlertWindow;
     firstButton.actionBlock = ^(id sender)
     {
         [weakWindow close];
@@ -1311,7 +1315,7 @@ void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *butto
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
     CGFloat messageHeight = (CGFloat)MAX(50.0, _attributedStringHeightForWidth(attributedString, 300));
     CGFloat height = 120 + messageHeight;
-    NSWindow *fakeAlertWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
+    FakeAlertWindow *fakeAlertWindow = [[FakeAlertWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
                                                             styleMask:NSWindowStyleMaskTitled
                                                               backing:NSBackingStoreBuffered
                                                                 defer:NO];
@@ -1361,7 +1365,7 @@ void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *butto
 
 
     
-    __weak  NSWindow *weakWindow = fakeAlertWindow;
+    __weak  FakeAlertWindow *weakWindow = fakeAlertWindow;
     __weak  NSButton *weakCheckbox = input;
     firstButton.actionBlock = ^(id sender)
     {

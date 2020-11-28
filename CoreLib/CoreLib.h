@@ -140,6 +140,9 @@ MAKE_MAKER(MutableSet)
 #endif
 @end
 
+@interface FakeAlertWindow : NSWindow
+@end
+
 
 
 // !!!: GLOBALS

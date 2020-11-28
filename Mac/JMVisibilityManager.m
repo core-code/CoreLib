@@ -21,7 +21,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 CONST_KEY(JMVisibilityManagerValue)
 CONST_KEY(JMVisibilityManagerOptionValue)
 CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
-
+CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
 
 
 @interface VisibilityManager ()
@@ -37,7 +37,7 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 @property (strong, nonatomic) NSStatusItem *statusItem;
 @property (strong, nonatomic) id globalEventMonitor;
 @property (strong, nonatomic) id localEventMonitor;
-
+@property (strong, nonatomic) id activeSpaceChangeObserver;
 @end
 
 
@@ -204,6 +204,14 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
         
         if (self.statusItemPopover)
         {
+            if (self.activeSpaceChangeObserver)
+            {
+                [NSNotificationCenter.defaultCenter removeObserver:self.activeSpaceChangeObserver];
+            }
+            [NSWorkspace.sharedWorkspace.notificationCenter addObserverForName:NSWorkspaceActiveSpaceDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note)
+            {
+                [self hidePopover];
+            }];
             self.statusItem.menu = nil;
             // If statusItem.button is clicked, show/hide popup.
             // If some other part of the app is clicked, hide the popup.
@@ -236,29 +244,11 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
                     // If the button got a click and the popover is hidden, show it
                     if (event.window == self.statusItem.button.window && !self.statusItemPopover.isShown)
                     {
-                        [self.statusItem.button highlight:YES];
-                        NSView *buttonView = (NSView *)self.statusItem.button;
-                        //self.statusItemPopover.animates = NO;
-                        [self.statusItemPopover showRelativeToRect:NSZeroRect ofView:buttonView preferredEdge:NSRectEdgeMaxY];
-                        // Setup a global event monitor to detect outside clicks so we can dismiss this popup
-                        if (self.globalEventMonitor)
+                        [self showPopoverWithAnimation:NO];
+                        dispatch_after_main(0.75, ^
                         {
-                            [NSEvent removeMonitor:self.globalEventMonitor];
-                            self.globalEventMonitor = nil;
-                        }
-                        enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
-                        self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
-                        {
-                            [self.statusItemPopover close];
-                            [self.statusItem.button highlight:NO];
-                            // We want to tear down the global monitor right after the first
-                            // outside click is detected and the popover is hidden.
-                            if (self.globalEventMonitor)
-                            {
-                                [NSEvent removeMonitor:self.globalEventMonitor];
-                                self.globalEventMonitor = nil;
-                            }
-                        }];
+                            self.statusItemPopover.contentViewController.view.window.collectionBehavior = NSWindowCollectionBehaviorParticipatesInCycle;
+                        });
                         // Returning a nil signifies that we've consumed this event.
                         // This has the side effect of avoiding the obnoxious NSBeep sound.
                         return nil;
@@ -272,6 +262,20 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
                     }
                     // If we got a keystroke other than ESC, pass it on as it is, so that other UI elements can process it.
                     if (event.type == NSEventTypeKeyDown && event.keyCode != 53) {
+                        return event;
+                    }
+                    if ([event.window class] == [NSPanel class] || [event.window class] == [FakeAlertWindow class])
+                    {
+                        NSNotificationCenter * __weak center = [NSNotificationCenter defaultCenter];
+                        id __block token = [center addObserverForName:NSWindowDidResignKeyNotification
+                                                               object:event.window
+                                                                queue:[NSOperationQueue mainQueue]
+                                                           usingBlock:^(NSNotification *note)
+                        {
+                            [NSNotificationCenter.defaultCenter postNotificationName:kVisibilityAlertWindowDidResignNotificationKey object:nil userInfo:nil];
+                            [center removeObserver:token];
+                        }];
+                        
                         return event;
                     }
                     // We're about to close the popover because all any circumstances under which we'd
@@ -309,10 +313,40 @@ CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 
 - (void)hidePopover
 {
-    if (self.statusItemPopover)
+    if (self.statusItemPopover && self.self.statusItemPopover.isShown)
     {
         [self.statusItemPopover close];
         [self.statusItem.button highlight:NO];
+    }
+}
+
+- (void)showPopoverWithAnimation:(BOOL)shouldAnimate
+{
+    if (self.statusItemPopover && !self.statusItemPopover.isShown)
+    {
+        [self.statusItem.button highlight:YES];
+        NSView *buttonView = (NSView *)self.statusItem.button;
+        self.statusItemPopover.animates = shouldAnimate;
+        [self.statusItemPopover showRelativeToRect:NSZeroRect ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+        // Setup a global event monitor to detect outside clicks so we can dismiss this popup
+        if (self.globalEventMonitor)
+        {
+            [NSEvent removeMonitor:self.globalEventMonitor];
+            self.globalEventMonitor = nil;
+        }
+        enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
+        self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
+        {
+            [self.statusItemPopover close];
+            [self.statusItem.button highlight:NO];
+            // We want to tear down the global monitor right after the first
+            // outside click is detected and the popover is hidden.
+            if (self.globalEventMonitor)
+            {
+                [NSEvent removeMonitor:self.globalEventMonitor];
+                self.globalEventMonitor = nil;
+            }
+        }];
     }
 }
 
