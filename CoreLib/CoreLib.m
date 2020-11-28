@@ -1110,7 +1110,6 @@ NSInteger alert_customicon(NSString *title, NSString *message, NSString *default
     alert.messageText = title;
     alert.informativeText = LocalizationNotNeeded(message);
     alert.icon = customIcon;
-    alert.window.level = NSScreenSaverWindowLevel;
     
     if (defaultButton)
     {
