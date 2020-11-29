@@ -169,7 +169,6 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
 }
     
     
-
 - (void)setDockIcon:(NSImage *)newDockIcon
 {
     _dockIcon = newDockIcon;
@@ -213,6 +212,13 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
                 [self hidePopover];
             }];
             self.statusItem.menu = nil;
+            if (self.statusItemPopover.isShown)
+            {
+                dispatch_after_main(0.25f, ^{
+                    NSView *buttonView = (NSView *)self.statusItem.button;
+                    [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+                });
+            }
             // If statusItem.button is clicked, show/hide popup.
             // If some other part of the app is clicked, hide the popup.
             if (!self.localEventMonitor)
@@ -297,7 +303,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
         }
         else
         {
-	        self.statusItem.menu = self.statusItemMenu;
+            self.statusItem.menu = self.statusItemMenu;
         }
         self.statusItem.button.image = _menubarIcon;
     }
@@ -327,7 +333,11 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
         [self.statusItem.button highlight:YES];
         NSView *buttonView = (NSView *)self.statusItem.button;
         self.statusItemPopover.animates = shouldAnimate;
-        [self.statusItemPopover showRelativeToRect:NSZeroRect ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+        // I'm getting a weird bug wherein, if the statusitem icon is changed more than once,
+        // the popover shows up and then slightly slides down a pixel when the user clicks on
+        // statusitem button. The second showRelativeToRect:ofView:preferredEdge: fixs it (!).
+        [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+        [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
         // Setup a global event monitor to detect outside clicks so we can dismiss this popup
         if (self.globalEventMonitor)
         {
