@@ -61,6 +61,10 @@
                 });
             });
         }
+        else if (self.scrollToAnchor.length)
+        {
+            dispatch_after_main(0.5f, ^{ [self evaluateJavaScript:makeString(@"document.getElementById('%@').scrollIntoView(true);", self.scrollToAnchor) completionHandler:^(NSString *result, NSError *error) { }]; });
+        }
    })
 }
 
