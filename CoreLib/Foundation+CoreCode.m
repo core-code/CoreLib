@@ -2249,8 +2249,8 @@ CONST_KEY(CCDirectoryObserving)
 - (NSString *)downloadWithCurl
 {
     NSString *urlString = self.absoluteString;
-    NSString *res = [@[@"/usr/bin/curl", @"-s", urlString] runAsTask];
-    
+    NSString *res = [@[@"/usr/bin/curl", @"-m", @"30", @"-s", urlString] runAsTask];
+
     return res;
 }
 #endif
