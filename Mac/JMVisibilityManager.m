@@ -272,13 +272,13 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
                     }
                     if ([event.window class] == [NSPanel class] || [event.window class] == [FakeAlertWindow class])
                     {
-                        NSNotificationCenter * __weak center = [NSNotificationCenter defaultCenter];
-                        id __block token = [center addObserverForName:NSWindowDidResignKeyNotification
+                        __weak NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
+                        __block id token = [center addObserverForName:NSWindowDidResignKeyNotification
                                                                object:event.window
                                                                 queue:[NSOperationQueue mainQueue]
                                                            usingBlock:^(NSNotification *note)
                         {
-                            [NSNotificationCenter.defaultCenter postNotificationName:kVisibilityAlertWindowDidResignNotificationKey object:nil userInfo:nil];
+                            [center postNotificationName:kVisibilityAlertWindowDidResignNotificationKey object:nil userInfo:nil];
                             [center removeObserver:token];
                         }];
                         
