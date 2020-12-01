@@ -546,12 +546,13 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)usePollingToAvoidRunloop
 {
     NSTask *task = [NSTask new];
-    NSPipe *taskPipe = [NSPipe pipe];
-    NSFileHandle *file = taskPipe.fileHandleForReading;
 
     task.launchPath = self[0];
-    task.standardOutput = taskPipe;
-    task.standardError = taskPipe;
+    NSPipe *outputPipe = [NSPipe pipe];
+    NSPipe *errorPipe = [NSPipe pipe];
+
+    task.standardOutput = outputPipe;
+    task.standardError = errorPipe;
     task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
 
     if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
@@ -567,8 +568,9 @@ CONST_KEY(CoreCodeAssociatedValue)
         return nil;
     }
 
-    NSData *data = [file readDataToEndOfFile];
-
+    
+    NSData *data = [outputPipe.fileHandleForReading readDataToEndOfFile];
+    NSData *dataError = [errorPipe.fileHandleForReading availableData];
     
     if (!usePollingToAvoidRunloop)
     {
@@ -587,12 +589,13 @@ CONST_KEY(CoreCodeAssociatedValue)
     }
 
     NSString *string = data.string;
+    NSString *stringError = dataError.string;
 
 
     if (terminationStatus)
         (*terminationStatus) = task.terminationStatus;
 
-    return string;
+    return makeString(@"%@ %@", string, stringError);
 }
 
 - (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock
