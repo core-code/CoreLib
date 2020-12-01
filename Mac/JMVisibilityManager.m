@@ -401,7 +401,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
 {
     ProcessSerialNumber psn = {0, kCurrentProcess};
     TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
-    [NSApplication.sharedApplication activateIgnoringOtherApps:YES];
+    dispatch_after_main(0.1f,^{[NSApplication.sharedApplication activateIgnoringOtherApps:YES];});
     _dockIconIsCurrentlyVisible = foreground;
 }
 #pragma GCC diagnostic pop
