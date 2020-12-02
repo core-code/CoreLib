@@ -195,7 +195,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         NSSetUncaughtExceptionHandler(&exceptionHandler);
     #endif
 
-
+#ifndef CLI
         #if !defined(XCTEST) || !XCTEST
 
         NSString *frameworkPath = bundle.privateFrameworksPath;
@@ -233,6 +233,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #endif
         }
     #endif
+#endif
 #endif
         
         RANDOM_INIT
