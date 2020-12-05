@@ -22,6 +22,7 @@ CONST_KEY(JMVisibilityManagerValue)
 CONST_KEY(JMVisibilityManagerOptionValue)
 CONST_KEY_IMPLEMENTATION(VisibilitySettingDidChangeNotification)
 CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
+CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 
 
 @interface VisibilityManager ()
@@ -197,8 +198,9 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
         if (self.statusItem == nil)
         {
             self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
-
             self.statusItem.button.enabled = YES;
+            self.statusItem.button.target = nil;
+            self.statusItem.button.action = nil;
         }
         
         if (self.statusItemPopover)
@@ -231,10 +233,17 @@ CONST_KEY_IMPLEMENTATION(VisibilityAlertWindowDidResignNotification)
                     BOOL gotOptionKey = (event.modifierFlags & NSEventModifierFlagOption) == NSEventModifierFlagOption;
                     BOOL gotRightClick = event.type == NSEventTypeRightMouseDown;
                     BOOL gotLeftClick = event.type == NSEventTypeLeftMouseDown;
-
+                    BOOL gotShiftClick = (event.modifierFlags & NSEventModifierFlagShift) ? YES : NO;
+                    
                     if (gotLeftClick && gotCommandKey) // let the system handle re-arrangement of the icon
                         return event;
-
+                    
+                    if (gotLeftClick && gotShiftClick)
+                    {
+                        [NSNotificationCenter.defaultCenter postNotificationName:kVisibilityShiftLeftClickNotificationKey object:nil userInfo:nil];
+                        return nil;
+                    }
+                    
                     if (event.window == self.statusItem.button.window && (gotOptionKey || gotRightClick))
                     {
                         [self.statusItem.button highlight:YES];
