@@ -238,9 +238,19 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     if (gotLeftClick && gotCommandKey) // let the system handle re-arrangement of the icon
                         return event;
                     
-                    if (gotLeftClick && gotShiftClick)
+                    if (event.window == self.statusItem.button.window && gotLeftClick && gotShiftClick)
                     {
-                        [NSNotificationCenter.defaultCenter postNotificationName:kVisibilityShiftLeftClickNotificationKey object:nil userInfo:nil];
+                        // Highligting the button, even if for a split second, lets the user know
+                        // their click was detected by the app.
+                        [self.statusItem.button highlight:YES];
+                        dispatch_after_main(0.1f, ^
+                        {
+                            [self.statusItem.button highlight:NO];
+                            dispatch_after_main(0.2f, ^
+                            {
+                                [NSNotificationCenter.defaultCenter postNotificationName:kVisibilityShiftLeftClickNotificationKey object:nil userInfo:nil];
+                            });
+                        });
                         return nil;
                     }
                     
