@@ -1139,6 +1139,47 @@ NSInteger alert_apptitled(NSString *message, NSString *defaultButton, NSString *
     return alert(cc.appName, message, defaultButton, alternateButton, otherButton);
 }
 
+NSInteger _alert_dontwarnagain_prefs(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *alternateButton, NSString *dontwarnButton)
+{
+    ASSERT_MAINTHREAD;
+    
+    if (!identifier.defaultInt)
+    {
+        [NSApp activateIgnoringOtherApps:YES];
+        
+        cc_log_error(@"Alert: %@ - %@", title.strippedOfNewlines, message.strippedOfNewlines);
+        
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = title;
+        alert.informativeText = LocalizationNotNeeded(message);
+        
+        if (defaultButton)
+        {
+            NSButton *b = [alert addButtonWithTitle:LocalizationNotNeeded(defaultButton)];
+            if (defaultButton.associatedValue)
+                [b setKeyEquivalent:defaultButton.associatedValue];
+        }
+        if (alternateButton)
+        {
+            NSButton *b = [alert addButtonWithTitle:alternateButton];
+            if (alternateButton.associatedValue)
+                [b setKeyEquivalent:alternateButton.associatedValue];
+        }
+
+        alert.showsSuppressionButton = YES;
+        alert.suppressionButton.title = dontwarnButton;
+        
+        NSInteger result = [alert runModal];
+        
+        cc_log_error(@"Alert: finished %li", (long)result);
+        identifier.defaultInt = alert.suppressionButton.state;
+
+        return result;
+    }
+    else
+        return -1;
+}
+
 void alert_dontwarnagain_version(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)
 {
     assert(defaultButton && dontwarnButton);
