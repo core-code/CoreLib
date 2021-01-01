@@ -1617,7 +1617,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
 #endif
     
 #ifdef DEBUG
-    if (level <= CC_LOG_LEVEL_ERROR && ![format contains:@" launching "] && ![format contains:@"Notification: "] && ![format contains:@"OpenMainWindow"] )
+    if (level <= CC_LOG_LEVEL_ERROR && ![str containsAny:@[@" launching ", @"Notification: ", @"OpenMainWindow", @"Alert: ", @"Info: queuing update"]])
     {
         // just for breakpoints
     }
