@@ -270,7 +270,8 @@
 
 - (NSString *)removed:(NSString *)stringToRemove;
 
-- (NSString *)slicingSubstringToIndex:(NSInteger)index;  // index should be negative and tell how many chars to remove -1 removes one char from the end
+- (NSString *)slicingSubstringFromIndex:(NSInteger)index;  // get string with chars cut-off: index should be negative and tell how many chars to include from the end: -1 is just the last char
+- (NSString *)slicingSubstringToIndex:(NSInteger)index;  // get string with chars cut-off: index should be negative and tell how many chars to remove from the end: -1 removes one char from the end
 
 
 // forwards for less typing

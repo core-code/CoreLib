@@ -1839,6 +1839,19 @@ CONST_KEY(CoreCodeAssociatedValue)
     return str;
 }
 
+
+- (NSString *)slicingSubstringFromIndex:(NSInteger)location
+{
+    if (location < 0)
+    {
+        NSInteger max = (NSInteger)self.length + location;
+        return [self substringFromIndex:(NSUInteger)max];
+    }
+    else
+        return [self substringFromIndex:(NSUInteger)location];
+}
+
+
 - (NSString *)slicingSubstringToIndex:(NSInteger)location
 {
     if (location < 0)
