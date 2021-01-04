@@ -216,9 +216,13 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             self.statusItem.menu = nil;
             if (self.statusItemPopover.isShown)
             {
-                dispatch_after_main(0.25f, ^{
+                dispatch_after_main(0.25f, ^
+                {
                     NSView *buttonView = (NSView *)self.statusItem.button;
-                    [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+                    if (buttonView)
+                        [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+                    else
+                        assert_logtoserver(buttonView);
                 });
             }
             // If statusItem.button is clicked, show/hide popup.
@@ -361,32 +365,37 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         let buttonView = (NSView *)self.statusItem.button;
         let buttonBounds = buttonView.bounds;
         
-//        cc_log(@"showing popover relative to bounds %@", NSStringFromRect(buttonBounds) );
-        
-        // I'm getting a weird bug wherein, if the statusitem icon is changed more than once,
-        // the popover shows up and then slightly slides down a pixel when the user clicks on
-        // statusitem button. The second showRelativeToRect:ofView:preferredEdge: fixs it (!).
-        [self.statusItemPopover showRelativeToRect:buttonBounds ofView:buttonView preferredEdge:NSRectEdgeMaxY];
-        [self.statusItemPopover showRelativeToRect:buttonBounds ofView:buttonView preferredEdge:NSRectEdgeMaxY];
-        // Setup a global event monitor to detect outside clicks so we can dismiss this popup
-        if (self.globalEventMonitor)
+        if (buttonView)
         {
-            [NSEvent removeMonitor:self.globalEventMonitor];
-            self.globalEventMonitor = nil;
-        }
-        enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
-        self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
-        {
-            [self.statusItemPopover close];
-            [self.statusItem.button highlight:NO];
-            // We want to tear down the global monitor right after the first
-            // outside click is detected and the popover is hidden.
+    //        cc_log(@"showing popover relative to bounds %@", NSStringFromRect(buttonBounds) );
+            
+            // I'm getting a weird bug wherein, if the statusitem icon is changed more than once,
+            // the popover shows up and then slightly slides down a pixel when the user clicks on
+            // statusitem button. The second showRelativeToRect:ofView:preferredEdge: fixs it (!).
+            [self.statusItemPopover showRelativeToRect:buttonBounds ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+            [self.statusItemPopover showRelativeToRect:buttonBounds ofView:buttonView preferredEdge:NSRectEdgeMaxY];
+            // Setup a global event monitor to detect outside clicks so we can dismiss this popup
             if (self.globalEventMonitor)
             {
                 [NSEvent removeMonitor:self.globalEventMonitor];
                 self.globalEventMonitor = nil;
             }
-        }];
+            enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
+            self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
+            {
+                [self.statusItemPopover close];
+                [self.statusItem.button highlight:NO];
+                // We want to tear down the global monitor right after the first
+                // outside click is detected and the popover is hidden.
+                if (self.globalEventMonitor)
+                {
+                    [NSEvent removeMonitor:self.globalEventMonitor];
+                    self.globalEventMonitor = nil;
+                }
+            }];
+        }
+        else
+            assert_logtoserver(buttonView);
     }
 }
 
