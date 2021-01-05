@@ -222,7 +222,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     if (buttonView)
                         [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
                     else
-                        assert_logtoserver(buttonView);
+                        assert_custom(buttonView);
                 });
             }
             // If statusItem.button is clicked, show/hide popup.
@@ -395,7 +395,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             }];
         }
         else
-            assert_logtoserver(buttonView);
+            assert_custom(buttonView);
     }
 }
 
