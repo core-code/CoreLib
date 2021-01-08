@@ -41,6 +41,8 @@
 {
     ONCE_PER_OBJECT(self, ^
     {
+        dispatch_async_main(^
+        {
         if (self.localHTMLName && self.localHTMLName.length)
             [self loadRequest:self.localHTMLName.resourceURL.request];
         else
@@ -65,6 +67,7 @@
         {
             dispatch_after_main(0.5f, ^{ [self evaluateJavaScript:makeString(@"document.getElementById('%@').scrollIntoView(true);", self.scrollToAnchor) completionHandler:^(NSString *result, NSError *error) { }]; });
         }
+        });
    })
 }
 
