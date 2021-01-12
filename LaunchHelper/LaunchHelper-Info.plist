@@ -29,7 +29,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2020 CoreCode Limited. All rights reserved.</string>
+	<string>Copyright © 2021 CoreCode Limited. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>LaunchMainMenu</string>
 	<key>NSPrincipalClass</key>
