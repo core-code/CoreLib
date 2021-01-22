@@ -307,6 +307,7 @@
 
 @property (readonly, nonatomic) BOOL fileIsBundle;
 @property (readonly, nonatomic) BOOL fileIsDirectory;
+@property (readonly, nonatomic) BOOL fileIsQuarantined;
 //@property (readonly, nonatomic) NSString *path;
 @property (readonly, nonatomic) NSArray <NSURL *> *directoryContents;
 @property (readonly, nonatomic) NSArray <NSURL *> *directoryContentsRecursive;

@@ -1989,7 +1989,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, downloadWithCurl, contents, fileIsDirectory, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
+@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, downloadWithCurl, contents, fileIsDirectory, fileIsQuarantined, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsRegularFile, fileIsSymlink;
 
@@ -2051,6 +2051,13 @@ CONST_KEY(CCDirectoryObserving)
     Boolean alias = CFBooleanGetValue(aliasBool);
     
     return alias && success;
+}
+
+- (BOOL)fileIsQuarantined
+{
+    NSNumber *value;
+    [self getResourceValue:&value forKey:kCFURLQuarantinePropertiesKey error:NULL];
+    return value.boolValue;
 }
 
 - (BOOL)fileIsDirectory
