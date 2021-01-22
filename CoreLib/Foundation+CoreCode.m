@@ -2056,7 +2056,7 @@ CONST_KEY(CCDirectoryObserving)
 - (BOOL)fileIsQuarantined
 {
     NSNumber *value;
-    [self getResourceValue:&value forKey:kCFURLQuarantinePropertiesKey error:NULL];
+    [self getResourceValue:&value forKey:NSURLQuarantinePropertiesKey error:NULL];
     return value.boolValue;
 }
 
