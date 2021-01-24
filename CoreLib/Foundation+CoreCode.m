@@ -940,7 +940,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return NSMakeRange(0, self.length);
 }
 
-- (unichar)safeCharacterAtIndex:(NSUInteger)index;
+- (unichar)safeCharacterAtIndex:(NSUInteger)index
 {
     if (index < self.length)
         return [self characterAtIndex:index];
