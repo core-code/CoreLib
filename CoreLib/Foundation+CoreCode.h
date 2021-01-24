@@ -220,6 +220,8 @@
 @property (readonly, nonatomic) NSCharacterSet *characterSet;
 
 
+- (unichar)safeCharacterAtIndex:(NSUInteger)ind;
+
 - (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter;
 
 - (NSString *)stringValue;
