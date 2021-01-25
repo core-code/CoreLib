@@ -1638,6 +1638,15 @@ void log_to_prefs(NSString *str)
         lastPosition = 0;
 }
 
+void fatal(const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    vprintf(fmt, args);
+    va_end(args);
+    exit(1);
+}
+
 void cc_defaults_addtoarray(NSString *key, NSObject *entry, NSUInteger maximumEntries)
 {
     NSArray *currentArray = [NSUserDefaults.standardUserDefaults objectForKey:key];

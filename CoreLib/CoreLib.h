@@ -277,6 +277,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 
     
 // !!!: ASSERTION MACROS
+void fatal(const char *fmt, ...)__printflike(1, 2);
 #ifdef CUSTOM_ASSERT_FUNCTION   // allows clients to get more info about failures, just def CUSTOM_ASSERT_FUNCTION to a function that sends the string home
     void CUSTOM_ASSERT_FUNCTION(NSString * text);
 #define assert_custom(e) (__builtin_expect(!(e), 0) ? CUSTOM_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@", @(__func__), @(__FILE__), __LINE__, @(#e))) : (void)0)
@@ -285,6 +286,11 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 #define assert_custom(e) assert(e)
 #define assert_custom_info(e, i) assert(((e) || ((e) && (i))))
 #endif
+#define assert_red(e)  \
+    ((void) ((e) ? ((void)0) : __assert_red (#e, __FILE__, __LINE__)))
+#define __assert_red(e, file, line) \
+    ((void)fatal ("\033[91m%s:%d: failed assertion `%s'\033[0m\n", file, line, e))
+
 #define ASSERT_MAINTHREAD       assert_custom_info([NSThread currentThread] == [NSThread mainThread], makeString(@"main thread violation: %@", [NSThread.callStackSymbols joined:@"|"]))
 #define ASSERT_BACKTHREAD       assert_custom_info([NSThread currentThread] != [NSThread mainThread], makeString(@"back thread violation: %@", [NSThread.callStackSymbols joined:@"|"]))
 
