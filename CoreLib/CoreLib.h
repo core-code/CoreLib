@@ -287,8 +287,8 @@ void fatal(const char *fmt, ...)__printflike(1, 2) __attribute__((noreturn));
 #define assert_custom_info(e, i) assert(((e) || ((e) && (i))))
 #endif
 #define assert_red(e)  \
-    ((void) ((e) ? ((void)0) : __assert_red (#e, __FILE__, __LINE__)))
-#define __assert_red(e, file, line) \
+    ((void) ((e) ? ((void)0) : _assert_red (#e, __FILE__, __LINE__)))
+#define _assert_red(e, file, line) \
     ((void)fatal ("\033[91m%s:%d: failed assertion `%s'\033[0m\n", file, line, e))
 
 #define ASSERT_MAINTHREAD       assert_custom_info([NSThread currentThread] == [NSThread mainThread], makeString(@"main thread violation: %@", [NSThread.callStackSymbols joined:@"|"]))
