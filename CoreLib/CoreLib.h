@@ -277,7 +277,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...) NS_FORMAT_FUNCTION(2
 
     
 // !!!: ASSERTION MACROS
-void fatal(const char *fmt, ...)__printflike(1, 2);
+void fatal(const char *fmt, ...)__printflike(1, 2) __attribute__((noreturn));
 #ifdef CUSTOM_ASSERT_FUNCTION   // allows clients to get more info about failures, just def CUSTOM_ASSERT_FUNCTION to a function that sends the string home
     void CUSTOM_ASSERT_FUNCTION(NSString * text);
 #define assert_custom(e) (__builtin_expect(!(e), 0) ? CUSTOM_ASSERT_FUNCTION(makeString(@"%@ %@ %i %@", @(__func__), @(__FILE__), __LINE__, @(#e))) : (void)0)
