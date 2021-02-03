@@ -205,7 +205,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                 assert(bsdName);
                 assert([bsdName hasPrefix:@"disk"]);
 
-                bsdName = [bsdName replaced:@"disk" with:@""];
+                bsdName = [bsdName removed:@"disk"];
 
                 if ([bsdName contains:@"s"])
                     bsdName = [bsdName split:@"s"][0];
@@ -260,7 +260,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                 
                 assert([bsdName hasPrefix:@"disk"]);
 
-                bsdName = [bsdName replaced:@"disk" with:@""];
+                bsdName = [bsdName removed:@"disk"];
 
                 if ([bsdName contains:@"s"])
                     bsdName = [bsdName split:@"s"][0];
