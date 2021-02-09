@@ -2143,11 +2143,9 @@ CONST_KEY(CCDirectoryObserving)
     assert(fileManager);
     if (!self.fileURL) return nil;
 
-    NSString *path = self.path;
-    NSError *err;
-    NSArray *c = [fileManager contentsOfDirectoryAtPath:path error:&err];
-
-    return [c mapped:^id (NSString *input) { return [self URLByAppendingPathComponent:input]; }];
+    
+    let res = [NSFileManager.defaultManager contentsOfDirectoryAtURL:self includingPropertiesForKeys:@[] options:0 error:NULL]; // this is a LOT faster (10 times) than using contentsOfDirectoryAtPath and converting to NSURLs
+    return res;
 }
 
 - (NSArray <NSURL *> *)directoryContentsRecursive
