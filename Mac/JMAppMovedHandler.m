@@ -70,6 +70,9 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 {
     NSURL *oldVolumeURL = not.userInfo[NSWorkspaceVolumeOldURLKey];
     NSString *oldVolume = oldVolumeURL.path;
+    
+    if (!oldVolume) return;
+    
     if ([self.path hasPrefix:oldVolume])
     {
         NSURL *newVolumeURL = not.userInfo[NSWorkspaceVolumeURLKey];
