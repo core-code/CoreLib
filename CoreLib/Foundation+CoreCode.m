@@ -1949,7 +1949,7 @@ CONST_KEY(CCDirectoryObserving)
     CFAbsoluteTime latency = 2.0;
 
 
-    assert(self.fileURL.fileIsDirectory);
+    assert(self.fileURL.fileIsDirectory || self.fileURL.fileIsBundle);
     stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, fileLevelEvents ? kFSEventStreamCreateFlagFileEvents : 0);
 
     CFRelease(pathsToWatch);
