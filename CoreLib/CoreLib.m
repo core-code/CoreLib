@@ -458,17 +458,17 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
         licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
     
-    NSString *subject = makeString(@"%@ v%@ (%i) Support Request (License code: %@)",
+    NSString *subject = makeString(@"%@ v%@ (%i) Support Request",
                                    appName,
                                    cc.appVersionString,
-                                   cc.appBuildNumber,
-                                   licenseCode);
+                                   cc.appBuildNumber);
     
-    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@ UDID: %@\n%@\n%@",
+    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@ Admin: %i UDID: %@\n%@\n%@",
                                     text,
                                     _machineType(),
                                     NSProcessInfo.processInfo.operatingSystemVersionString,
-                                    udid,
+                                    _isUserAdmin(),
+                                    makeString(@"%@ %@", licenseCode, udid),
                                     encodedPrefs,
                                     crashReports);
     
@@ -694,18 +694,18 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
             if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
                 licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
             
-            mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report (License code: %@)&body=Hello\nA %@ error in %@ occurred (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ Admin: %i\n\nPreferences: %@\n",
+            mailtoLink = makeString(@"mailto:%@?subject=%@ v%@ (%i) Problem Report&body=Hello\nA %@ error in %@ occurred (%@).\n\nBye\n\nP.S. Details: %@\n\n\nP.P.S: Hardware: %@ Software: %@ UDID: %@ Admin: %i\n\nPreferences: %@\n",
                                                 kFeedbackEmail,
                                                 appName,
                                                 cc.appVersionString,
                                                 cc.appBuildNumber,
-                                                licenseCode,
                                                 fatal ? @"fatal" : @"",
                                                 cc.appName,
                                                 usermsg,
                                                 details,
                                                 _machineType(),
                                                 NSProcessInfo.processInfo.operatingSystemVersionString,
+                                                licenseCode,
                                                 _isUserAdmin(),
                                                 encodedPrefs);
 
