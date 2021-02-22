@@ -156,6 +156,19 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     return countyCode;
 }
 
++ (BOOL)isRunningUnderRosetta2
+{
+    int ret = 0;
+    size_t size = sizeof(ret);
+    if (sysctlbyname("sysctl.proctranslated", &ret, &size, NULL, 0) == -1)
+    {
+        if (errno != ENOENT)
+            cc_log_error(@"Error:    sysctl.proctranslated returned %i", errno);
+        return 0;
+    }
+    return ret > 0;
+}
+
 + (BOOL)isRunningReadonly
 {
     struct statfs statfs_info;

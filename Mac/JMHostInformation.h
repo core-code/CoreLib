@@ -28,6 +28,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 
 + (BOOL)isRunningReadonly;
 + (BOOL)isRunningTranslocated;
++ (BOOL)isRunningUnderRosetta2;
 + (BOOL)isUserAdmin;
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
