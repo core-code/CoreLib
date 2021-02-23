@@ -38,7 +38,7 @@
 - (NSArray <ObjectType>*)arrayByRemovingObjectsAtIndexes:(NSIndexSet *)indexSet;
 - (NSArray *)arrayByInsertingObject:(id)anObject atIndex:(NSUInteger)index;
 - (NSArray <ObjectType>*)arrayByReplacingObject:(ObjectType)anObject withObject:(ObjectType)newObject;
-- (ObjectType)slicingObjectAtIndex:(NSInteger)index;
+- (ObjectType)slicingObjectAtIndex:(NSInteger)index; // -1 is lastObject -2 is penultimateObject
 - (ObjectType)safeObjectAtIndex:(NSUInteger)index;
 - (BOOL)containsDictionaryWithKey:(NSString *)key equalTo:(NSString *)value;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;

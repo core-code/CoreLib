@@ -160,7 +160,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 {
     int ret = 0;
     size_t size = sizeof(ret);
-    if (sysctlbyname("sysctl.proctranslated", &ret, &size, NULL, 0) == -1)
+    if (sysctlbyname("sysctl.proc_translated", &ret, &size, NULL, 0) == -1)
     {
         if (errno != ENOENT)
             cc_log_error(@"Error:    sysctl.proctranslated returned %i", errno);
