@@ -2144,7 +2144,7 @@ CONST_KEY(CCDirectoryObserving)
     if (!self.fileURL) return nil;
 
     
-    let res = [NSFileManager.defaultManager contentsOfDirectoryAtURL:self includingPropertiesForKeys:@[] options:0 error:NULL]; // this is a LOT faster (10 times) than using contentsOfDirectoryAtPath and converting to NSURLs
+    NSArray <NSURL *>*res = [NSFileManager.defaultManager contentsOfDirectoryAtURL:self includingPropertiesForKeys:@[] options:0 error:NULL]; // this is a LOT faster (10 times) than using contentsOfDirectoryAtPath and converting to NSURLs
     return res;
 }
 
@@ -2551,7 +2551,7 @@ CONST_KEY(CCDirectoryObserving)
 #ifndef CLI
     if (!s)
     {
-        let maximumStringOutput = 100;
+        NSUInteger maximumStringOutput = 100;
         if (self.length <= maximumStringOutput)
             cc_log_error(@"Error: could not create UTF8 string from data %@", self);
         else
