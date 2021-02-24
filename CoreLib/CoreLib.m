@@ -25,12 +25,16 @@
 @import Darwin.POSIX.unistd;
 @import Darwin.POSIX.sys.types;
 @import Darwin.POSIX.pwd;
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #include <assert.h>
 #else
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <assert.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #endif
 
 
@@ -440,7 +444,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     NSString *licenseCode = cc.appChecksumIncludingFrameworksSHA;
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
     NSString *udid = @"N/A";
-    
+    NSString *architecture = @"Intel";
+
 #if defined(USE_SECURITY) && defined(USE_IOKIT)
     Class hostInfoClass = NSClassFromString(@"JMHostInformation");
     if (hostInfoClass)
@@ -453,6 +458,16 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     }
 #endif
     
+#if TARGET_CPU_ARM64
+    architecture = @"ARM (Native)";
+#else
+    int ret = 0;
+    size_t size = sizeof(ret);
+    sysctlbyname("sysctl.proc_translated", &ret, &size, NULL, 0);
+    if (ret > 0)
+        architecture = @"ARM (Rosetta)";
+#endif
+
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
         appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
@@ -463,9 +478,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                                    cc.appVersionString,
                                    cc.appBuildNumber);
     
-    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ Software: %@ Admin: %i UDID: %@\n%@\n%@",
+    NSString *content =  makeString(@"%@\n\n\n\nP.S: Hardware: %@ [%@] Software: %@ Admin: %i UDID: %@\n%@\n%@",
                                     text,
                                     _machineType(),
+                                    architecture,
                                     NSProcessInfo.processInfo.operatingSystemVersionString,
                                     _isUserAdmin(),
                                     makeString(@"%@ %@", licenseCode, udid),
