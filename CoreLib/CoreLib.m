@@ -162,6 +162,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 #ifndef CLI
+#warning replace this with macupdater.net
         if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
 
