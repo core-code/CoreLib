@@ -540,62 +540,73 @@ CONST_KEY(CoreCodeAssociatedValue)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
-    return [self runAsTaskWithTerminationStatus:NULL usePolling:NO];
+    return [self runAsTaskWithTerminationStatus:NULL usePolling:YES];
 }
 
-- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)usePollingToAvoidRunloop
+
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)useSemaphoresToAvoidRunloop
 {
-    NSTask *task = [NSTask new];
+    __block dispatch_semaphore_t sema;
+    if (useSemaphoresToAvoidRunloop)
+        sema = dispatch_semaphore_create(0);
+    NSMutableString *jobOutput = makeMutableString();
 
+    NSTask *task = [[NSTask alloc] init];
+    NSPipe *taskPipe = [NSPipe pipe];
     task.launchPath = self[0];
-    NSPipe *outputPipe = [NSPipe pipe];
-    NSPipe *errorPipe = [NSPipe pipe];
-
-    task.standardOutput = outputPipe;
-    task.standardError = errorPipe;
+    task.standardOutput = taskPipe;
+    task.standardError = taskPipe;
     task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
-
+    
     if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
         cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
-
-    @try
-    {
-        [task launch];
-    }
-    @catch (NSException *e)
-    {
-        cc_log_error(@"Error: got exception %@ while trying to perform task %@", e.description, [self joined:@" "]);
-        return nil;
-    }
-
     
-    NSData *data = [outputPipe.fileHandleForReading readDataToEndOfFile];
-    NSData *dataError = [errorPipe.fileHandleForReading availableData];
+    NSFileHandle *fileHandle = taskPipe.fileHandleForReading;
+
+    [fileHandle setReadabilityHandler:^(NSFileHandle *file)
+    {
+        NSData *data = file.availableData;
+        NSString *string = data.string;
+
+        if (string)
+            [jobOutput appendString:string];
+    }];
+
+    [task setTerminationHandler:^(NSTask *t)
+    {
+        fileHandle.readabilityHandler = nil;
+        
+        if (useSemaphoresToAvoidRunloop)
+        {
+            assert(sema);
+            dispatch_semaphore_signal(sema);
+        }
+    }];
+
+
+    [task launch];
     
-    if (!usePollingToAvoidRunloop)
+    if (!useSemaphoresToAvoidRunloop)
     {
         [task waitUntilExit];
 #if defined(DEBUG) && !defined(CLI) && !defined(SKIP_MAINTHREADWAITUNTILEXIT_WARNING)
         if ([NSThread currentThread] == [NSThread mainThread])
             cc_log(@"Warning: -[NSTask waitUntilExit] on main thread considered harmful");
 #endif
+        fileHandle.readabilityHandler = nil;
     }
     else
     {
-        while (task.isRunning)
-        {
-            [NSThread sleepForTimeInterval:0.05];
-        }
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+        sema = NULL;
     }
-
-    NSString *string = data.string;
-    NSString *stringError = dataError.string;
 
 
     if (terminationStatus)
         (*terminationStatus) = task.terminationStatus;
 
-    return makeString(@"%@ %@", string, stringError);
+
+    return jobOutput;
 }
 
 - (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock
@@ -637,7 +648,16 @@ CONST_KEY(CoreCodeAssociatedValue)
      }];
     
     
-    [task launch];
+    @try
+    {
+        [task launch];
+    }
+    @catch (NSException *e)
+    {
+        cc_log_error(@"Error: got exception %@ while trying to perform task %@", e.description, [self joined:@" "]);
+        return nil;
+    }
+
     dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
     
     sema = NULL;
