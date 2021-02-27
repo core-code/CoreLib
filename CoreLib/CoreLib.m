@@ -538,8 +538,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 @end
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @implementation FakeAlertWindow
 @end
+#endif
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-nonliteral"

@@ -251,9 +251,9 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
-#endif
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url;
 - (NSAttributedString *)attributedStringWithFont:(NSFont *)font;
+#endif
 
 - (NSString *)capitalizedStringWithUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
 - (NSString *)titlecaseStringWithLowercaseWords:(NSArray <NSString *> *)lowercaseWords andUppercaseWords:(NSArray <NSString *> *)uppercaseWords;
@@ -307,7 +307,6 @@
 - (NSURL *)add:(NSString *)component;
 - (void)open;
 
-@property (readonly, nonatomic) BOOL fileIsBundle;
 @property (readonly, nonatomic) BOOL fileIsDirectory;
 @property (readonly, nonatomic) BOOL fileIsQuarantined;
 //@property (readonly, nonatomic) NSString *path;
@@ -316,6 +315,7 @@
 @property (readonly, nonatomic) NSURL *uniqueFile;
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+@property (readonly, nonatomic) BOOL fileIsBundle;
 @property (readonly, nonatomic) BOOL fileIsRestricted;
 @property (readonly, nonatomic) BOOL fileIsAlias;
 @property (readonly, nonatomic) BOOL fileIsRegularFile;

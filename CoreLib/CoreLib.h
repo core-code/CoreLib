@@ -140,8 +140,10 @@ MAKE_MAKER(MutableSet)
 #endif
 @end
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @interface FakeAlertWindow : NSWindow
 @end
+#endif
 
 
 

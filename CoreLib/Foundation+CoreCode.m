@@ -1296,7 +1296,6 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     return attributedString;
 }
-#endif
 
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url
 {
@@ -1322,6 +1321,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     return attributedString;
 }
+#endif
 
 - (NSString *)strippedOfNewlines
 {
