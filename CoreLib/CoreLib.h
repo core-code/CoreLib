@@ -97,6 +97,7 @@ CC_ENUM(uint8_t, openChoice)
 @optional
 - (NSString *)customSupportRequestAppName;
 - (NSString *)customSupportRequestLicense;
+- (NSString *)customSupportRequestPreferences;
 @end
 
 #define MAKE_MAKER(classname) \

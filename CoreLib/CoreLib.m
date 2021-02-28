@@ -414,7 +414,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
     if (optionDown)
     {
-        encodedPrefs = makeString(@"Preferences (BASE64): %@", [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]);
+        if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestPreferences)])
+            encodedPrefs = [NSApp.delegate performSelector:@selector(customSupportRequestPreferences)];
+        else
+            encodedPrefs = makeString(@"Preferences (BASE64): %@", [self.prefsURL.contents base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]);
     }
 #ifndef SANDBOX
     if ((cc.appCrashLogFilenames).count)
