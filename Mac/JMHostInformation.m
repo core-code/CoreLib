@@ -371,7 +371,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
     CFRelease(session);
     
-    if ([resultDict[@"DABusName"] contains:@"NVMe"] || [resultDict[@"DABusPath"] contains:@"NVMe"] || [resultDict[@"DADevicePath"] contains:@"NVMe"] || [resultDict[@"DAMediaPath"] contains:@"NVMe"])
+    if ([(NSString *)resultDict[@"DABusName"] contains:@"NVMe"] ||
+        [(NSString *)resultDict[@"DABusPath"] contains:@"NVMe"] ||
+        [(NSString *)resultDict[@"DADevicePath"] contains:@"NVMe"] ||
+        [(NSString *)resultDict[@"DAMediaPath"] contains:@"NVMe"])
         resultDict = [resultDict dictionaryBySettingValue:@(YES) forKey:@"isNVME"];
 
     return resultDict;
