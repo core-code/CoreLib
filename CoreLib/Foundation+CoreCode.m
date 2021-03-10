@@ -540,71 +540,80 @@ CONST_KEY(CoreCodeAssociatedValue)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSString *)runAsTask
 {
-    return [self runAsTaskWithTerminationStatus:NULL usePolling:YES];
+    return [self runAsTaskWithTerminationStatus:NULL];
 }
 
 
-- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus usePolling:(BOOL)useSemaphoresToAvoidRunloop
+- (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus
 {
-    __block dispatch_semaphore_t sema;
-    if (useSemaphoresToAvoidRunloop)
-        sema = dispatch_semaphore_create(0);
-    NSMutableString *jobOutput = makeMutableString();
+    __block dispatch_semaphore_t readabilitySemaphore = dispatch_semaphore_create(0);
 
+    NSMutableString *jobOutput = makeMutableString();
     NSTask *task = [[NSTask alloc] init];
-    NSPipe *taskPipe = [NSPipe pipe];
+
     task.launchPath = self[0];
-    task.standardOutput = taskPipe;
-    task.standardError = taskPipe;
+    task.standardOutput = NSPipe.pipe;
+    task.standardError = NSPipe.pipe;
     task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
     
     if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
         cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
     
-    NSFileHandle *fileHandle = taskPipe.fileHandleForReading;
 
-    [fileHandle setReadabilityHandler:^(NSFileHandle *file)
-    {
-        NSData *data = file.availableData;
-        NSString *string = data.string;
-
-        if (string)
-            [jobOutput appendString:string];
+    [((NSPipe *)task.standardOutput).fileHandleForReading setReadabilityHandler:^(NSFileHandle *file)
+    { // DO NOT use -availableData in these handlers. => https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298
+          NSData *newData = [file readDataOfLength:NSUIntegerMax];
+          if (newData.length == 0)
+          {   // end of data signal is an empty data object.
+              file.readabilityHandler = nil;
+              dispatch_semaphore_signal(readabilitySemaphore);
+          }
+          else
+          {
+              @synchronized (jobOutput)
+              {
+                  NSString *string = newData.string;
+                  if (string)
+                      [jobOutput appendString:string];
+              }
+          }
     }];
-
-    [task setTerminationHandler:^(NSTask *t)
-    {
-        fileHandle.readabilityHandler = nil;
-        
-        if (useSemaphoresToAvoidRunloop)
-        {
-            assert(sema);
-            dispatch_semaphore_signal(sema);
-        }
+    [((NSPipe *)task.standardError).fileHandleForReading setReadabilityHandler:^(NSFileHandle *file)
+    { // DO NOT use -availableData in these handlers. => https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298
+          NSData *newData = [file readDataOfLength:NSUIntegerMax];
+          if (newData.length == 0)
+          {   // end of data signal is an empty data object.
+              file.readabilityHandler = nil;
+              dispatch_semaphore_signal(readabilitySemaphore);
+          }
+          else
+          {
+              @synchronized (jobOutput)
+              {
+                  NSString *string = newData.string;
+                  if (string)
+                      [jobOutput appendString:string];
+              }
+          }
     }];
-
-
-    [task launch];
     
-    if (!useSemaphoresToAvoidRunloop)
+    
+    @try
     {
-        [task waitUntilExit];
-#if defined(DEBUG) && !defined(CLI) && !defined(SKIP_MAINTHREADWAITUNTILEXIT_WARNING)
-        if ([NSThread currentThread] == [NSThread mainThread])
-            cc_log(@"Warning: -[NSTask waitUntilExit] on main thread considered harmful");
-#endif
-        fileHandle.readabilityHandler = nil;
+        [task launch];
     }
-    else
+    @catch (NSException *e)
     {
-        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-        sema = NULL;
+        cc_log_error(@"Error: got exception %@ while trying to perform task %@", e.description, [self joined:@" "]);
+        return nil;
     }
-
 
     if (terminationStatus)
         (*terminationStatus) = task.terminationStatus;
 
+    dispatch_semaphore_wait(readabilitySemaphore, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait(readabilitySemaphore, DISPATCH_TIME_FOREVER);
+    readabilitySemaphore = nil;
 
     return jobOutput;
 }
@@ -630,22 +639,22 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     [fileHandle setReadabilityHandler:^(NSFileHandle *file)
     {
-        NSData *data = file.availableData;
-        NSString *string = data.string;
-        
-        if (string)
-            [jobOutput appendString:string];
-        
-        progressBlock(string);
+        // DO NOT use -availableData in these handlers. => https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298
+        NSData *newData = [file readDataOfLength:NSUIntegerMax];
+        if (newData.length == 0)
+        {   // end of data signal is an empty data object.
+            file.readabilityHandler = nil;
+            dispatch_semaphore_signal(sema);
+        }
+        else
+        {
+            NSString *string = newData.string;
+            if (string)
+                    [jobOutput appendString:string];
+            progressBlock(string);
+        }
     }];
     
-    [task setTerminationHandler:^(NSTask *t)
-     {
-         fileHandle.readabilityHandler = nil;
-         
-         assert(sema);
-         dispatch_semaphore_signal(sema);
-     }];
     
     
     @try
