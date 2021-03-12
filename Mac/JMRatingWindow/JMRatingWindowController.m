@@ -129,7 +129,7 @@
 
 - (IBAction)ratemacupdateClicked:(id)sender
 {
-    [cc openURL:openMacupdateWebsite];
+    [cc openURL:openMacupdaternetWebsite];
 
    [self.window close];
 }

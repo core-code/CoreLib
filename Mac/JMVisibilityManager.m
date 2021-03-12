@@ -362,8 +362,8 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         [self.statusItem.button highlight:YES];
         self.statusItemPopover.animates = shouldAnimate;
         
-        let buttonView = (NSView *)self.statusItem.button;
-        let buttonBounds = buttonView.bounds;
+        NSView *buttonView = (NSView *)self.statusItem.button;
+        NSRect buttonBounds = buttonView.bounds;
         
         if (buttonView)
         {

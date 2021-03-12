@@ -185,7 +185,7 @@
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4SL-7V-PeX">
                                             <rect key="frame" x="18" y="84" width="260" height="50"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="smallSquare" title="    Rate on MacUpdate" bezelStyle="smallSquare" alignment="center" borderStyle="border" inset="2" id="LwV-Hv-qZb">
+                                            <buttonCell key="cell" type="smallSquare" title="    Rate on MacUpdater.net" bezelStyle="smallSquare" alignment="center" borderStyle="border" inset="2" id="LwV-Hv-qZb">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system" size="18"/>
                                             </buttonCell>

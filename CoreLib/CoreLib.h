@@ -90,7 +90,7 @@ CC_ENUM(uint8_t, openChoice)
 	openHomepageWebsite,		// VendorProductPage info.plist key
 	openAppStoreWebsite,		// StoreProductPage info.plist key
 	openAppStoreApp,			// StoreProductPage info.plist key
-	openMacupdateWebsite		// MacupdateProductPage info.plist key
+	openMacupdaternetWebsite	// MacupdaternetProductPage info.plist key
 };
 
 @protocol CoreLibAppDelegate

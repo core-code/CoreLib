@@ -162,12 +162,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 #ifndef CLI
-#warning replace this with macupdater.net
-        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-            cc_log_debug(@"Warning: info.plist key MacupdateProductPage not properly set");
-
-        if ([[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdateProductPage"] lowercaseString] contains:@"/find/"])
-            cc_log_debug(@"Warning: info.plist key MacupdateProductPage should be updated to proper product page");
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+            cc_log_debug(@"Warning: info.plist key MacupdaternetProductPage not properly set");
 
         if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
@@ -528,9 +524,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         if (!urlString)
             urlString = [bundle objectForInfoDictionaryKey:@"AlternativetoProductPage"];
     }
-    else if (choice == openMacupdateWebsite)
+    else if (choice == openMacupdaternetWebsite)
     {
-        urlString = [bundle objectForInfoDictionaryKey:@"MacupdateProductPage"];
+        urlString = [bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"];
         
         if (!urlString)
             urlString = [bundle objectForInfoDictionaryKey:@"FilehorseProductPage"];
