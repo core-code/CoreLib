@@ -550,17 +550,19 @@ CONST_KEY(CoreCodeAssociatedValue)
 
     NSMutableString *jobOutput = makeMutableString();
     NSTask *task = [[NSTask alloc] init];
+    NSPipe *standardOutput = NSPipe.pipe;
+    NSPipe *standardError = NSPipe.pipe;
 
     task.launchPath = self[0];
-    task.standardOutput = NSPipe.pipe;
-    task.standardError = NSPipe.pipe;
+    task.standardOutput = standardOutput;
+    task.standardError = standardError;
     task.arguments = [self subarrayWithRange:NSMakeRange(1, self.count-1)];
     
     if ([task.arguments reduce:^int(NSString *input) { return (int)input.length; }] > 200000)
         cc_log_error(@"Error: task argument size approaching or above limit, spawn will fail");
     
-
-    [((NSPipe *)task.standardOutput).fileHandleForReading setReadabilityHandler:^(NSFileHandle *file)
+    NSFileHandle *standardOutputHandle = standardOutput.fileHandleForReading;
+    [standardOutputHandle setReadabilityHandler:^(NSFileHandle *file)
     { // DO NOT use -availableData in these handlers. => https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298
           NSData *newData = [file readDataOfLength:NSUIntegerMax];
           if (newData.length == 0)
@@ -578,7 +580,8 @@ CONST_KEY(CoreCodeAssociatedValue)
               }
           }
     }];
-    [((NSPipe *)task.standardError).fileHandleForReading setReadabilityHandler:^(NSFileHandle *file)
+    NSFileHandle *standardErrorHandle = standardError.fileHandleForReading;
+    [standardErrorHandle setReadabilityHandler:^(NSFileHandle *file)
     { // DO NOT use -availableData in these handlers. => https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298
           NSData *newData = [file readDataOfLength:NSUIntegerMax];
           if (newData.length == 0)
@@ -615,6 +618,10 @@ CONST_KEY(CoreCodeAssociatedValue)
     dispatch_semaphore_wait(readabilitySemaphore, DISPATCH_TIME_FOREVER);
     readabilitySemaphore = nil;
 
+    [standardOutputHandle closeFile];
+    [standardErrorHandle closeFile];
+    
+    
     return jobOutput;
 }
 
@@ -673,6 +680,8 @@ CONST_KEY(CoreCodeAssociatedValue)
  
     if (terminationStatus)
         (*terminationStatus) = task.terminationStatus;
+    
+    [fileHandle closeFile];
 
     
     return jobOutput;
