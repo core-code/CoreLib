@@ -296,10 +296,13 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                             return event;
                     }
                     // If we got a keystroke other than ESC, pass it on as it is, so that other UI elements can process it.
-                    if (event.type == NSEventTypeKeyDown && event.keyCode != 53) {
+                    if (event.type == NSEventTypeKeyDown && event.keyCode != 53)
+                    {
                         return event;
                     }
-                    if ([event.window class] == [NSPanel class] || [event.window class] == [FakeAlertWindow class])
+
+                    Class c = event.window.class;
+                    if (c == NSPanel.class || c == FakeAlertWindow.class || [NSStringFromClass(c) isEqualToString:@"_NSAlertPanel"])
                     {
                         __weak NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
                         __block id token = [center addObserverForName:NSWindowDidResignKeyNotification
