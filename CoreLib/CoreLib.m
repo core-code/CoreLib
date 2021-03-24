@@ -706,7 +706,20 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
         {
             NSString *appName = cc.appName;
             NSString *licenseCode = cc.appChecksumIncludingFrameworksSHA;
+            NSString *udid = @"N/A";
 
+        #if defined(USE_SECURITY) && defined(USE_IOKIT)
+            Class hostInfoClass = NSClassFromString(@"JMHostInformation");
+            if (hostInfoClass)
+            {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wundeclared-selector"
+                NSString *macAddress = [hostInfoClass performSelector:@selector(macAddress)];
+        #pragma clang diagnostic pop
+                udid = macAddress.SHA1;
+            }
+        #endif
+            
             if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
                 appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
             if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
@@ -723,7 +736,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
                                                 details,
                                                 _machineType(),
                                                 NSProcessInfo.processInfo.operatingSystemVersionString,
-                                                licenseCode,
+                                                makeString(@"%@ %@", licenseCode, udid),
                                                 _isUserAdmin(),
                                                 encodedPrefs);
 
