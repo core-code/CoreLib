@@ -1,0 +1,87 @@
+
+/* Class = "NSTextFieldCell"; placeholderString = "Please enter a detailed description of the problems  you experienced or how we could improve the app for you…"; ObjectID = "4NR-iU-Euc"; */
+"4NR-iU-Euc.placeholderString" = "请详细写出您遇到的问题或者你希望我们怎么改进这个应用。";
+
+/* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "7p1-Pb-zoa"; */
+"7p1-Pb-zoa.title" = "🙂";
+
+/* Class = "NSTextFieldCell"; title = "Let us fix this!"; ObjectID = "AAC-0U-1fM"; */
+"AAC-0U-1fM.title" = "让我们解决它!";
+
+/* Class = "NSButtonCell"; title = "  I'm not sure yet"; ObjectID = "Emi-GI-rS2"; */
+"Emi-GI-rS2.title" = "我不是非常确定";
+
+/* Class = "NSWindow"; title = "Window"; ObjectID = "F0z-JX-Cv5"; */
+"F0z-JX-Cv5.title" = "Window";
+
+/* Class = "NSTextFieldCell"; title = "Do you like this app?"; ObjectID = "GKj-yG-Bf3"; */
+"GKj-yG-Bf3.title" = "你喜欢这个应用吗?";
+
+/* Class = "NSBox"; title = "Box"; ObjectID = "H2q-Pl-96o"; */
+"H2q-Pl-96o.title" = "Box";
+
+/* Class = "NSTextFieldCell"; title = "😴"; ObjectID = "ITz-kj-aUG"; */
+"ITz-kj-aUG.title" = "😴";
+
+/* Class = "NSTextFieldCell"; title = "☹️"; ObjectID = "Jr5-4h-Wy3"; */
+"Jr5-4h-Wy3.title" = "☹️";
+
+/* Class = "NSButtonCell"; title = "    Rate on MacUpdate"; ObjectID = "LwV-Hv-qZb"; */
+"LwV-Hv-qZb.title" = "       评价MacUpdate应用";
+
+/* Class = "NSTextFieldCell"; title = "Awesome! Please consider taking \n5 seconds to rate this app to help ensure continued development."; ObjectID = "O6M-er-LTG"; */
+"O6M-er-LTG.title" = "你可以花几秒钟评价一下这个应用吗？\n这将会是我们持续开发的动力！";
+
+/* Class = "NSButtonCell"; title = "  I am quite happy"; ObjectID = "P54-oP-5jj"; */
+"P54-oP-5jj.title" = "  来啦老弟！";
+
+/* Class = "NSButtonCell"; title = "    Not now"; ObjectID = "PTB-nS-Po4"; */
+"PTB-nS-Po4.title" = "    稍后提醒";
+
+/* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "Rcz-Na-aCo"; */
+"Rcz-Na-aCo.title" = "🙂";
+
+/* Class = "NSTextFieldCell"; title = "😐"; ObjectID = "Y7c-m8-Wrk"; */
+"Y7c-m8-Wrk.title" = "😐";
+
+/* Class = "NSTextFieldCell"; title = "You've used [APPNAME] to successfully perform 20 operations on your data without a single crash."; ObjectID = "YDE-L1-1IO"; */
+"YDE-L1-1IO.title" = "你好像已经用[APPNAME]成功操作了20次，目前还没有发生过一次崩溃！";
+
+/* Class = "NSButtonCell"; title = "x"; ObjectID = "buM-bg-HHr"; */
+"buM-bg-HHr.title" = "x";
+
+/* Class = "NSTextFieldCell"; title = "☹️"; ObjectID = "dnY-py-Y11"; */
+"dnY-py-Y11.title" = "☹️";
+
+/* Class = "NSTextFieldCell"; title = "Thank you!"; ObjectID = "e1K-uB-2F2"; */
+"e1K-uB-2F2.title" = "谢谢老板！";
+
+/* Class = "NSBox"; title = "Box"; ObjectID = "eks-ok-YiO"; */
+"eks-ok-YiO.title" = "Box";
+
+/* Class = "NSButtonCell"; title = "Send feedback"; ObjectID = "fTv-hr-fms"; */
+"fTv-hr-fms.title" = "意见反馈";
+
+/* Class = "NSTextFieldCell"; title = "Don't show this dialog again."; ObjectID = "gUX-7Y-0hh"; */
+"gUX-7Y-0hh.title" = "不要再显示这个窗口。";
+
+/* Class = "NSButtonCell"; title = "  I have problems"; ObjectID = "it8-NT-MCb"; */
+"it8-NT-MCb.title" = "  我有一些问题需要解决";
+
+/* Class = "NSButtonCell"; title = "    Rate on App Store"; ObjectID = "kUt-Ng-7sO"; */
+"kUt-Ng-7sO.title" = "     在App Store上评价";
+
+/* Class = "NSTextFieldCell"; title = "Don't show this dialog again."; ObjectID = "oXj-r2-0zQ"; */
+"oXj-r2-0zQ.title" = "不要再显示这个窗口。";
+
+/* Class = "NSTextFieldCell"; title = "★"; ObjectID = "vtz-ES-u1W"; */
+"vtz-ES-u1W.title" = "★";
+
+/* Class = "NSTextFieldCell"; title = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away."; ObjectID = "w0X-fV-N7L"; */
+"w0X-fV-N7L.title" = "啊这！这波我的我的！对不起！你快点告诉我们我们可以怎样改进这个应用，我们会第一时间改进开发！谢谢！";
+
+/* Class = "NSTextFieldCell"; title = "Info: this will open an email to <feedback@corecode.io>"; ObjectID = "xFv-za-LX7"; */
+"xFv-za-LX7.title" = "注意: 这个选项会打开一封发送到macupdater@corecode.io的电子邮件";
+
+/* Class = "NSBox"; title = "Box"; ObjectID = "xZx-Vt-eum"; */
+"xZx-Vt-eum.title" = "Box";
