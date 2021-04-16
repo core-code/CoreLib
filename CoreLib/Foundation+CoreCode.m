@@ -611,8 +611,6 @@ CONST_KEY(CoreCodeAssociatedValue)
         return nil;
     }
 
-    if (terminationStatus)
-        (*terminationStatus) = task.terminationStatus;
 
     dispatch_semaphore_wait(readabilitySemaphore, DISPATCH_TIME_FOREVER);
     dispatch_semaphore_wait(readabilitySemaphore, DISPATCH_TIME_FOREVER);
@@ -621,6 +619,9 @@ CONST_KEY(CoreCodeAssociatedValue)
     [standardOutputHandle closeFile];
     [standardErrorHandle closeFile];
     
+    
+    if (terminationStatus)
+        (*terminationStatus) = task.terminationStatus;
     
     return jobOutput;
 }
