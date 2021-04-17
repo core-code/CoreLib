@@ -1630,7 +1630,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
 #ifdef CLI
     if (level <= CC_LOG_LEVEL_ERROR)
         fprintf(stderr, "\033[91m%s\033[0m\n", str.UTF8String);
-    else if ([str.lowercaseString hasPrefix:@"warning"])
+    else if ([str.lowercaseString.trimmedOfWhitespaceAndNewlines hasPrefix:@"warning"])
         fprintf(stderr, "\033[93m%s\033[0m\n", str.UTF8String);
     else
         fprintf(stdout, "%s\n", str.UTF8String);
