@@ -396,6 +396,10 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     self.globalEventMonitor = nil;
                 }
             }];
+            
+            // hack https://stackoverflow.com/questions/34913405/how-do-i-prevent-the-menu-bar-from-moving-down-when-my-popover-is-open
+            NSWindow *popoverWindow = self.statusItemPopover.contentViewController.view.window;
+            [popoverWindow.parentWindow removeChildWindow:popoverWindow];
         }
         else
             assert_custom(buttonView);
