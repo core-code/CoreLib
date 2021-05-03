@@ -1,6 +1,6 @@
 
 /* Class = "NSTextFieldCell"; placeholderString = "Please enter a detailed description of the problems  you experienced or how we could improve the app for you…"; ObjectID = "4NR-iU-Euc"; */
-"4NR-iU-Euc.placeholderString" = "请详细写出您遇到的问题或者你希望我们怎么改进这个应用。";
+"4NR-iU-Euc.placeholderString" = "请详细写出您遇到的问题或者您希望我们怎么改进这个应用。";
 
 /* Class = "NSTextFieldCell"; title = "🙂"; ObjectID = "7p1-Pb-zoa"; */
 "7p1-Pb-zoa.title" = "🙂";
@@ -15,7 +15,7 @@
 "F0z-JX-Cv5.title" = "Window";
 
 /* Class = "NSTextFieldCell"; title = "Do you like this app?"; ObjectID = "GKj-yG-Bf3"; */
-"GKj-yG-Bf3.title" = "你喜欢这个应用吗?";
+"GKj-yG-Bf3.title" = "您喜欢这个应用吗?";
 
 /* Class = "NSBox"; title = "Box"; ObjectID = "H2q-Pl-96o"; */
 "H2q-Pl-96o.title" = "Box";
@@ -30,7 +30,7 @@
 "LwV-Hv-qZb.title" = "       评价MacUpdate应用";
 
 /* Class = "NSTextFieldCell"; title = "Awesome! Please consider taking \n5 seconds to rate this app to help ensure continued development."; ObjectID = "O6M-er-LTG"; */
-"O6M-er-LTG.title" = "你可以花几秒钟评价一下这个应用吗？\n这将会是我们持续开发的动力！";
+"O6M-er-LTG.title" = "您可以花几秒钟评价一下这个应用吗？\n这将会是我们持续开发的动力！";
 
 /* Class = "NSButtonCell"; title = "  I am quite happy"; ObjectID = "P54-oP-5jj"; */
 "P54-oP-5jj.title" = "  来啦老弟！";
@@ -45,7 +45,7 @@
 "Y7c-m8-Wrk.title" = "😐";
 
 /* Class = "NSTextFieldCell"; title = "You've used [APPNAME] to successfully perform 20 operations on your data without a single crash."; ObjectID = "YDE-L1-1IO"; */
-"YDE-L1-1IO.title" = "你好像已经用[APPNAME]成功操作了20次，目前还没有发生过一次崩溃！";
+"YDE-L1-1IO.title" = "您好像已经用[APPNAME]成功操作了20次，目前还没有发生过一次崩溃！";
 
 /* Class = "NSButtonCell"; title = "x"; ObjectID = "buM-bg-HHr"; */
 "buM-bg-HHr.title" = "x";
@@ -78,7 +78,7 @@
 "vtz-ES-u1W.title" = "★";
 
 /* Class = "NSTextFieldCell"; title = "Sorry! Please let us know what we can do to improve the app for you and we will work on it straight away."; ObjectID = "w0X-fV-N7L"; */
-"w0X-fV-N7L.title" = "啊这！这波我的我的！对不起！你快点告诉我们我们可以怎样改进这个应用，我们会第一时间改进开发！谢谢！";
+"w0X-fV-N7L.title" = "啊这！这波我的我的！对不起！您快点告诉我们我们可以怎样改进这个应用，我们会第一时间改进开发！谢谢！";
 
 /* Class = "NSTextFieldCell"; title = "Info: this will open an email to <feedback@corecode.io>"; ObjectID = "xFv-za-LX7"; */
 "xFv-za-LX7.title" = "注意: 这个选项会打开一封发送到macupdater@corecode.io的电子邮件";
