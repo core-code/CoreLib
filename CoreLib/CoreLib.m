@@ -25,8 +25,8 @@
 @import Darwin.POSIX.unistd;
 @import Darwin.POSIX.sys.types;
 @import Darwin.POSIX.pwd;
-#include <sys/types.h>
-#include <sys/sysctl.h>
+@import Darwin.POSIX.sys.types;
+@import Darwin.sys.sysctl;
 #include <assert.h>
 #else
 #include <unistd.h>
