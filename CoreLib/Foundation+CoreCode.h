@@ -131,6 +131,7 @@
 @property (readonly, nonatomic) BOOL fileIsRestricted;
 @property (readonly, nonatomic) BOOL fileIsAlias;
 @property (readonly, nonatomic) BOOL fileIsSymlink;
+@property (readonly, nonatomic) BOOL fileHasSymlinkInPath;
 @property (readonly, nonatomic) NSString *fileAliasTarget;
 #endif
 @property (readonly, nonatomic) unsigned long long fileSize;

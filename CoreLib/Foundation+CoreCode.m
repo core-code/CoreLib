@@ -813,7 +813,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 @dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, downloadWithCurl, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-@dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted;
+@dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted, fileHasSymlinkInPath;
 #endif
 
 #ifdef USE_SECURITY
@@ -913,6 +913,15 @@ CONST_KEY(CoreCodeAssociatedValue)
     Boolean alias = CFBooleanGetValue(aliasBool);
     
     return alias && success;
+}
+
+- (BOOL)fileHasSymlinkInPath
+{
+    NSString *p = self;
+    if ([p hasSuffix:@"/"])
+        p = [p slicingSubstringToIndex:-1];
+    NSString *pr = p.stringByResolvingSymlinksInPath;
+    return ![pr isEqualToString:p];
 }
 
 - (NSString *)stringByResolvingSymlinksInPathFixed
