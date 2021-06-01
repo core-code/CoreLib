@@ -138,6 +138,7 @@
 @property (readonly, nonatomic) unsigned long long directorySize;
 @property (readonly, nonatomic) BOOL isWriteablePath;
 @property (readonly, nonatomic) NSString *stringByResolvingSymlinksInPathFixed;
+@property (readonly, nonatomic) NSString *reverseString;
 
 
 
@@ -248,6 +249,8 @@
 - (NSString *)splitAfterNull:(NSString *)sep;
 
 - (NSString *)between:(NSString *)sep1 and:(NSString *)sep2; // returns string part between 1 and 2, nil if not possible
+
+- (NSString *)commonSuffixWithString:(NSString *)str options:(NSStringCompareOptions)mask; // complementary to the commonPrefix... method in Foundation
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

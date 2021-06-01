@@ -810,7 +810,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, downloadWithCurl, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed;
+@dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, downloadWithCurl, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed, reverseString;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted, fileHasSymlinkInPath;
@@ -831,6 +831,42 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSCharacterSet *cs = [NSCharacterSet characterSetWithCharactersInString:self];
     assert(cs);
     return cs;
+}
+
+- (NSString *)commonSuffixWithString:(NSString *)str options:(NSStringCompareOptions)mask
+{
+    NSString *reversedSelf = self.reverseString;
+    NSString *reversedOther = str.reverseString;
+    NSString *common = [reversedSelf commonPrefixWithString:reversedOther options:mask];
+    
+    return common.reverseString;
+}
+
+- (NSString *)reverseString
+{
+    NSUInteger length = [self length];
+    if (length < 2) {
+        return self;
+    } // thanks @ https://stackoverflow.com/questions/6720191/reverse-nsstring-text
+
+    NSStringEncoding encoding = NSHostByteOrder() == NS_BigEndian ? NSUTF32BigEndianStringEncoding : NSUTF32LittleEndianStringEncoding;
+    NSUInteger utf32ByteCount = [self lengthOfBytesUsingEncoding:encoding];
+    uint32_t *characters = malloc(utf32ByteCount);
+    if (!characters) {
+        return nil;
+    }
+
+    [self getBytes:characters maxLength:utf32ByteCount usedLength:NULL encoding:encoding options:0 range:NSMakeRange(0, length) remainingRange:NULL];
+
+    NSUInteger utf32Length = utf32ByteCount / sizeof(uint32_t);
+    NSUInteger halfwayPoint = utf32Length / 2;
+    for (NSUInteger i = 0; i < halfwayPoint; ++i) {
+        uint32_t character = characters[utf32Length - i - 1];
+        characters[utf32Length - i - 1] = characters[i];
+        characters[i] = character;
+    }
+
+    return [[NSString alloc] initWithBytesNoCopy:characters length:utf32ByteCount encoding:encoding freeWhenDone:YES];
 }
 
 - (NSString *)rot13
