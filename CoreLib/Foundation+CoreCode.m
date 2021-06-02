@@ -621,7 +621,16 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     
     if (terminationStatus)
-        (*terminationStatus) = task.terminationStatus;
+    {
+        @try
+        {
+            (*terminationStatus) = task.terminationStatus;
+        }
+        @catch (NSException *e)
+        {
+            cc_log_error(@"Error: got exception %@ while trying to get terminationStatus %@", e.description, [self joined:@" "]);
+        }
+    }
     
     return jobOutput;
 }
@@ -679,8 +688,18 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     sema = NULL;
  
+    
     if (terminationStatus)
-        (*terminationStatus) = task.terminationStatus;
+    {
+        @try
+        {
+            (*terminationStatus) = task.terminationStatus;
+        }
+        @catch (NSException *e)
+        {
+            cc_log_error(@"Error: got exception %@ while trying to get terminationStatus %@", e.description, [self joined:@" "]);
+        }
+    }
     
     [fileHandle closeFile];
 
