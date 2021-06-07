@@ -407,7 +407,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     NSString *crashReports = @"";
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-    BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+    BOOL optionDown = (NSEvent.modifierFlags & NSEventModifierFlagOption) != 0;
     if (optionDown)
     {
         if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestPreferences)])

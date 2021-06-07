@@ -69,7 +69,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         _templateSetting = kTemplateNever;
         _visibilityOption = (visibilityOptionEnum) kJMVisibilityManagerOptionValueKey.defaultInt;
 
-        BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+        BOOL optionDown = (NSEvent.modifierFlags & NSEventModifierFlagOption) != 0;
         visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
 
         if (storedSetting == kVisibleNowhere && optionDown)
@@ -423,7 +423,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 
 - (void)handleAppReopen
 {
-    BOOL optionDown = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+    BOOL optionDown = (NSEvent.modifierFlags & NSEventModifierFlagOption) != 0;
 
     if (self.visibilitySetting == kVisibleNowhere && optionDown)
         self.visibilitySetting = kVisibleDock;
