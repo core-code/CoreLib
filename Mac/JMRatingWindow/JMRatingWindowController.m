@@ -49,6 +49,7 @@
     return [super initWithWindowNibName:@"JMRatingWindow"];
 }
 
+#warning finish port to macupdater.net
 
 - (void)windowDidLoad
 {
