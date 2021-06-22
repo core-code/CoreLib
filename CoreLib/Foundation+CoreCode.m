@@ -2616,15 +2616,48 @@ CONST_KEY(CCDirectoryObserving)
 }
 #endif
 
+- (NSData *)xorWith:(NSData *)key
+{ // credits to Leszek S / LSCategories under the MIT license.
+    if (key.length == 0)
+        return self;
+    
+    NSMutableData *result = self.mutableCopy;
+    
+    unsigned char *bytes = (unsigned char *)result.mutableBytes;
+    const unsigned char *keyStart = (const unsigned char *)key.bytes;
+    const unsigned char *keyEnd = keyStart + key.length;
+    const unsigned char *keyBytes = keyStart;
+    NSUInteger length = result.length;
+    
+    for (NSUInteger i = 0; i < length; i++)
+    {
+        *bytes = *bytes ^ *keyBytes;
+        bytes++;
+        keyBytes++;
+        if (keyBytes == keyEnd)
+            keyBytes = keyStart;
+    }
+    return result.copy;
+}
+
 - (NSString *)string
 {
+    if (!self.length) return nil;
+    
     NSString *result;
     
     // warning, stringEncodingForData can crash, rdar://45371868
-    [NSString stringEncodingForData:self encodingOptions:nil convertedString:&result usedLossyConversion:nil];
+    BOOL lossy;
+    NSDictionary *opt = @{ NSStringEncodingDetectionSuggestedEncodingsKey:@[ @(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUnicodeStringEncoding)] };
+    NSStringEncoding enc = [NSString stringEncodingForData:self encodingOptions:opt convertedString:&result usedLossyConversion:&lossy]; // we pass default options so that it won't offer 'NSUTF7StringEncoding' which is almost always wrong but often detected as 'best'
 
     if (result)
+    {
+        if (lossy)
+            cc_log_error(@"Error: used lossy conversion %li data %@ => %@", enc, self, result);
+
         return result;
+    }
     
     static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
     int encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));

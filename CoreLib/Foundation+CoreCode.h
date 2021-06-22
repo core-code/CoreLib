@@ -370,7 +370,7 @@
 @property (readonly, nonatomic) NSString *SHA256;
 #endif
 @property (readonly, nonatomic) NSRange fullRange;
-
+- (NSData *)xorWith:(NSData *)key;
 
 @end
 

@@ -1764,6 +1764,7 @@ id dispatch_async_to_sync(BasicBlock block)
     return copy;
 }
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 // private
 NSString *_machineType()
 {
@@ -1799,3 +1800,4 @@ BOOL _isUserAdmin()
     }
     return YES;
 }
+#endif
