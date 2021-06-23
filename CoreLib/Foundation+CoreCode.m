@@ -2645,21 +2645,37 @@ CONST_KEY(CCDirectoryObserving)
     if (!self.length) return nil;
     
     NSString *result;
+    unsigned long long magic;
+    [self getBytes:&magic length:sizeof(unsigned long long)];
+
+    // ok so stringEncodingForData sounds great, but sucks:
+    // 1.) it can crash rdar://45371868
+    // 2.) if we don't provide 'suggested encodings' it will often detect 'NSUTF7StringEncoding' which is nonsense so we have to provide it
+    // 3.) however if we provide 'suggested encodings' it will misdetect Unicode as UTF8. we fix it by reading the magic marker
     
-    // warning, stringEncodingForData can crash, rdar://45371868
     BOOL lossy;
     NSDictionary *opt = @{ NSStringEncodingDetectionSuggestedEncodingsKey:@[ @(NSUTF8StringEncoding), @(NSISOLatin1StringEncoding), @(NSASCIIStringEncoding), @(NSUnicodeStringEncoding)] };
-    NSStringEncoding enc = [NSString stringEncodingForData:self encodingOptions:opt convertedString:&result usedLossyConversion:&lossy]; // we pass default options so that it won't offer 'NSUTF7StringEncoding' which is almost always wrong but often detected as 'best'
-
+    if (magic == 0x78003F003CFEFF)
+        opt = @{ NSStringEncodingDetectionSuggestedEncodingsKey:@[@(NSUnicodeStringEncoding)]};
+    
+#ifndef CLI
+    NSStringEncoding enc =
+#endif
+    [NSString stringEncodingForData:self encodingOptions:opt convertedString:&result usedLossyConversion:&lossy];
+    
     if (result)
     {
         if (lossy)
-            cc_log_error(@"Error: used lossy conversion %li data %@ => %@", enc, self, result);
+        {
+#ifndef CLI
+            cc_log_error(@"Error: used lossy conversion %li data %@ => %lu / %@", enc, self, (unsigned long)result.length, [result clamp:20]);
+#endif
+        }
 
         return result;
     }
     
-    static const NSStringEncoding encodingsToTry[] = {NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding, NSUnicodeStringEncoding};
+    static const NSStringEncoding encodingsToTry[] = {NSUTF32StringEncoding, NSUnicodeStringEncoding, NSUTF8StringEncoding, NSISOLatin1StringEncoding, NSASCIIStringEncoding};
     int encodingCount = (sizeof(encodingsToTry) / sizeof(NSStringEncoding));
     
     for (unsigned char i = 0; i < encodingCount; i++)
@@ -2668,6 +2684,8 @@ CONST_KEY(CCDirectoryObserving)
 
         if (!s)
             continue;
+
+        cc_log_error(@"Error: used fallback conversion %li data %@ => %lu / %@", encodingsToTry[i], self, (unsigned long)s.length, [s clamp:20]);
 
         return s;
     }
