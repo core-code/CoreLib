@@ -505,7 +505,8 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 //
 //    for (i = 0; i < [a count]; i++)
 //    {
-//        if ([[a objectAtIndex:i] rangeOfString:ipv6 ? @":" : @"."].location != NSNotFound)
+//       id bla = [a objectAtIndex:i];
+//        if (bla && [bla rangeOfString:ipv6 ? @":" : @"."].location != NSNotFound)
 //            [b addObject:[a objectAtIndex:i]];
 //    }
 //

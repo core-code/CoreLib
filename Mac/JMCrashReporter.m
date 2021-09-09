@@ -85,6 +85,9 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
                 crashlog = [crashlog stringByReplacingOccurrencesOfString:@"&" withString:@"ß"];
                 crashlog = [crashlog stringByReplacingOccurrencesOfString:@"?" withString:@"¿"];
 
+                if (!crashlog)
+                    return;
+                
                 BOOL foundNeccessaryString = FALSE;
 
 
