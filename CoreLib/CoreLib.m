@@ -162,12 +162,17 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 #ifndef CLI
-        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] contains:self.appName.lowercaseString] && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
+            cc_log_debug(@"Info: info.plist key MacupdaternetProductPage not properly set - will fall back to FileHorse");
+        else if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] contains:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key MacupdaternetProductPage not properly set");
 
-        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
-            cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@", [(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString] && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
+            cc_log_debug(@"Info: info.plist key StoreProductPage not properly set - will fall back to AlternativeTo");
+        else if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+            cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@)", [(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
+        
         if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
             LOG(@"Warning: LSApplicationCategoryType not properly set")
 #endif
@@ -178,7 +183,9 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             NSProcessInfo.processInfo.environment[@"XCInjectBundleInto"] != nil)
         {
             assert(@"icon-appstore".namedImage);
-            assert(@"icon-macupdate".namedImage);
+            assert(@"icon-macupdater".namedImage);
+            assert(@"icon-filehorse".namedImage);
+            assert(@"icon-alternativeto".namedImage);
             assert(@"JMRatingWindow.nib".resourceURL);
         }
         #ifdef USE_SPARKLE

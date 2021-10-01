@@ -43,13 +43,11 @@
 {
     if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"StoreProductPage"]).length && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
         @"icon-alternativeto".namedImage.name = @"icon-appstore";
-    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
-        @"icon-filehorse".namedImage.name = @"icon-macupdate";
+    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"]).length && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
+        @"icon-filehorse".namedImage.name = @"icon-macupdater";
     
     return [super initWithWindowNibName:@"JMRatingWindow"];
 }
-
-#warning finish port to macupdater.net
 
 - (void)windowDidLoad
 {
@@ -85,7 +83,7 @@
         }
     }
 
-    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdateProductPage"]).length)
+    if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"]).length)
     {
         if (!((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
             self.ratemacupdateButton.enabled = NO;
