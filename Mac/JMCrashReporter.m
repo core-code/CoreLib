@@ -146,7 +146,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
                     BOOL darkMode = NO;
                     if (@available(macOS 10.14, *))
                     {
-                        if (NSAppearance.currentAppearance.name == NSAppearanceNameDarkAqua)
+                        if ([NSApp.effectiveAppearance.name contains:NSAppearanceNameDarkAqua])
                             darkMode = YES;
                     }
                     
