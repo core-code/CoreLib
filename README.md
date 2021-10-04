@@ -22,9 +22,9 @@ CoreLib has these components:
 CoreLib up to version 1.8 requires Xcode 6 and deploys back to Mac OS X 10.6 / iOS 6  
 CoreLib version 1.9 requires Xcode 7 and deploys back to Mac OS X 10.6 / iOS 7  
 CoreLib version 1.10 and above requires Xcode 8 and deploys back to Mac OS X 10.6 / iOS 8  
-CoreLib version 1.14 and above requires Xcode 9 and deploys back to Mac OS X 10.10 / iOS 8
-CoreLib version 1.21 and above requires Xcode 10 and deploys back to Mac OS X 10.10 / iOS 8
-CoreLib version 1.25 and above requires Xcode 10 and deploys back to Mac OS X 10.13 / iOS 11
+CoreLib version 1.14 and above requires Xcode 9 and deploys back to Mac OS X 10.10 / iOS 8  
+CoreLib version 1.21 and above requires Xcode 10 and deploys back to Mac OS X 10.10 / iOS 8  
+CoreLib version 1.25 and above requires Xcode 10 and deploys back to Mac OS X 10.13 / iOS 11  
 
 ### Initialization
 
