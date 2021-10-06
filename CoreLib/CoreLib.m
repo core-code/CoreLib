@@ -1343,7 +1343,8 @@ void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSStrin
     alertTitle.stringValue = title;
     alertMessage.string = message;
     
-    
+    cc_log_error(@"Alert: nonmodal  %@ - %@", title.strippedOfNewlines, message.strippedOfNewlines);
+
     alertTitle.font = [NSFont boldSystemFontOfSize:14];
     alertTitle.alignment = NSTextAlignmentLeft;
     alertTitle.bezeled = NO;
@@ -1408,7 +1409,9 @@ void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *butto
     
     alertTitle.stringValue = title;
     alertMessage.string = message;
-    
+  
+    cc_log_error(@"Alert: nonmodal checkbox %@ - %@", title.strippedOfNewlines, message.strippedOfNewlines);
+
     
     alertTitle.font = [NSFont boldSystemFontOfSize:14];
     alertTitle.alignment = NSTextAlignmentLeft;
