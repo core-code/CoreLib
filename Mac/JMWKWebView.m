@@ -22,10 +22,18 @@
     self.navigationDelegate = self;
     
     self.layer.borderWidth = 1;
-    if ([NSApp.effectiveAppearance.name contains:NSAppearanceNameDarkAqua])
-        self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.27 alpha:1].CGColor;
+    
+    if (@available(macOS 10.14, *))
+    {
+        if ([NSApp.effectiveAppearance.name contains:NSAppearanceNameDarkAqua])
+            self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.27 alpha:1].CGColor;
+        else
+            self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.72 alpha:1].CGColor;
+    }
     else
+    {
         self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.72 alpha:1].CGColor;
+    }
 }
 
 - (void)scrollWheel:(NSEvent *)event
