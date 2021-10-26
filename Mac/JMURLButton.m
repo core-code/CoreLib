@@ -37,7 +37,12 @@
 - (void)buttonClicked:(NSButton *)button
 {
     if (self.targetURL.length)
-        [self.targetURL.URL open];
+    {
+        var url = self.targetURL;
+        if ([url contains:@" "])
+            url = url.escaped;
+        [url.URL open];
+    }
     else if (self.escapedTargetURL.length)
         [self.escapedTargetURL.escaped.URL open];
     else if (self.resourceURL.length)
