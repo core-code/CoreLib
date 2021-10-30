@@ -446,7 +446,6 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     }
 #endif
 #endif
-
     NSString *appName = cc.appName;
     NSString *licenseCode = cc.appChecksumIncludingFrameworksSHA;
     NSString *recipient = OBJECT_OR([bundle objectForInfoDictionaryKey:@"FeedbackEmail"], kFeedbackEmail);
@@ -475,10 +474,15 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         architecture = @"ARM (Rosetta)";
 #endif
 
+    if (!text.length && [NSApp.delegate respondsToSelector:@selector(customSupportRequestText)])
+        text = [NSApp.delegate performSelector:@selector(customSupportRequestText)]; // we only let customize requests without provided content - those with a normal "contact support" button click
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestAppName)])
         appName = [NSApp.delegate performSelector:@selector(customSupportRequestAppName)];
     if ([NSApp.delegate respondsToSelector:@selector(customSupportRequestLicense)])
         licenseCode = [NSApp.delegate performSelector:@selector(customSupportRequestLicense)];
+    
+    if (!text) text = @"<Insert Support Request Here>"; // default content if none is provided.
+
     
     NSString *subject = makeString(@"%@ v%@ (%i) Support Request",
                                    appName,
@@ -507,7 +511,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
     if (choice == openSupportRequestMail)
     {
-        [self sendSupportRequestMail:@"<Insert Support Request Here>"];
+        [self sendSupportRequestMail:nil];
         return;
     }
 #endif
