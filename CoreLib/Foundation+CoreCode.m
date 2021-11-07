@@ -3126,6 +3126,17 @@ CONST_KEY(CCDirectoryObserving)
         self[key] = [NSMutableArray arrayWithObject:object];
 }
 
+- (void)addEntriesFromDictionaryWithoutOverwritingWithEmptyStrings:(NSDictionary *)otherDictionary
+{
+    NSMutableDictionary *otherDictionaryCopy = [otherDictionary mutableCopy];
+    
+    for (NSString *key in otherDictionaryCopy.allKeys)
+        if (self[key] && [otherDictionaryCopy[key] isKindOfClass:NSString.class] && !((NSString *)otherDictionaryCopy[key]).length)
+            [otherDictionaryCopy removeObjectForKey:key];
+    
+    [self addEntriesFromDictionary:otherDictionaryCopy];
+}
+
 @end
 
 

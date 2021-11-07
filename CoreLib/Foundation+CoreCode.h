@@ -432,6 +432,10 @@
 // 'default dict'
 - (void)addObject:(id)object toMutableArrayAtKey:(KeyType)key; // the point here is that it will add a mutablearray with the single object if the key doesn't exist - a poor mans 'defaultdict'
 
+
+- (void)addEntriesFromDictionaryWithoutOverwritingWithEmptyStrings:(NSDictionary<KeyType, ObjectType> *)otherDictionary;
+
+
 @end
 
 
