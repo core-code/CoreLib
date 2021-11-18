@@ -3131,7 +3131,9 @@ CONST_KEY(CCDirectoryObserving)
     NSMutableDictionary *otherDictionaryCopy = [otherDictionary mutableCopy];
     
     for (NSString *key in otherDictionaryCopy.allKeys)
-        if (self[key] && [otherDictionaryCopy[key] isKindOfClass:NSString.class] && !((NSString *)otherDictionaryCopy[key]).length)
+        if (self[key] &&
+            [((NSObject *)otherDictionaryCopy[key]) isKindOfClass:NSString.class] &&
+            !((NSString *)otherDictionaryCopy[key]).length)
             [otherDictionaryCopy removeObjectForKey:key];
     
     [self addEntriesFromDictionary:otherDictionaryCopy];
