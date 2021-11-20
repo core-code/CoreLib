@@ -129,7 +129,7 @@
 @property (readonly, nonatomic) BOOL fileExists;
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @property (readonly, nonatomic) BOOL fileIsRestricted;
-@property (readonly, nonatomic) BOOL fileIsAlias;
+@property (readonly, nonatomic) BOOL fileIsAlias; // this also returns one for symlinks - on macOS 12
 @property (readonly, nonatomic) BOOL fileIsSymlink;
 @property (readonly, nonatomic) BOOL fileHasSymlinkInPath;
 @property (readonly, nonatomic) NSString *fileAliasTarget;
