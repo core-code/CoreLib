@@ -201,7 +201,8 @@
 
 @property (readonly, nonatomic) NSString *rot13;
 #ifdef USE_SECURITY
-@property (readonly, nonatomic) NSString *SHA1;
+@property (readonly, nonatomic) NSString *SHA1;     // 20 byte - 160 bit
+@property (readonly, nonatomic) NSString *SHA256;   // 32 byte - 256 bit
 #endif
 @property (readonly, nonatomic) NSString *language;
 
@@ -363,11 +364,8 @@
 @property (readonly, nonatomic) NSData *snappyDecompressed;
 #endif
 #ifdef USE_SECURITY
-@property (readonly, nonatomic) NSString *SHA1;
-#ifdef PROVIDE_DEPRECATED_MD5
-@property (readonly, nonatomic) NSString *MD5;
-#endif
-@property (readonly, nonatomic) NSString *SHA256;
+@property (readonly, nonatomic) NSString *SHA1;		 	// 20 byte - 160 bit
+@property (readonly, nonatomic) NSString *SHA256;	 	// 32 byte - 256 bit
 #endif
 @property (readonly, nonatomic) NSRange fullRange;
 - (NSData *)xorWith:(NSData *)key;
