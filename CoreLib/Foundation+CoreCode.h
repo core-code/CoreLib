@@ -390,6 +390,8 @@
 - (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
 - (NSDate *)nextDay;
 - (NSDate *)previousDay;
+- (BOOL)isLaterThan:(NSDate *)date;
+- (BOOL)isEarlierThan:(NSDate *)date;
 @property (readonly, nonatomic) NSString *shortDateString;
 @property (readonly, nonatomic) NSString *shortTimeString;
 @property (readonly, nonatomic) NSString *shortDateAndTimeString;

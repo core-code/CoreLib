@@ -2825,6 +2825,16 @@ CONST_KEY(CCDirectoryObserving)
     return yesterday;
 }
 
+- (BOOL)isLaterThan:(NSDate *)date
+{
+    return [self laterDate:date] == self;
+}
+
+- (BOOL)isEarlierThan:(NSDate *)date
+{
+    return [self earlierDate:date] == self;
+}
+
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
     NSDateFormatter *df = [NSDateFormatter new];
