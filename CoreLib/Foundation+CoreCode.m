@@ -2837,7 +2837,7 @@ CONST_KEY(CCDirectoryObserving)
 
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat localeIdentifier:(NSString *)localeIdentifier
 {
-    NSDateFormatter *df = [NSDateFormatter new];
+    NSDateFormatter *df = NSDateFormatter.new;
     df.dateFormat = dateFormat;
     NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:localeIdentifier];
     df.locale = l;
@@ -2847,7 +2847,7 @@ CONST_KEY(CCDirectoryObserving)
 
 + (NSDate *)dateWithString:(NSString *)dateString format:(NSString *)dateFormat
 {
-    return [self dateWithString:dateString format:dateFormat localeIdentifier:@"en_US"];
+    return [self dateWithString:dateString format:dateFormat localeIdentifier:@"en_US_POSIX" ];
 }
 
 + (NSDate *)dateWithUnformattedDate:(NSString *)dateString
@@ -2901,8 +2901,8 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone
 {
-    NSDateFormatter *df = [NSDateFormatter new];
-    NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    NSDateFormatter *df = NSDateFormatter.new;
+    NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     df.locale = l;
     df.dateFormat = dateFormat;
     if (timeZone)
@@ -2913,7 +2913,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle
 {
-    NSDateFormatter *df = [NSDateFormatter new];
+    NSDateFormatter *df = NSDateFormatter.new;
 
     df.locale = [NSLocale currentLocale];
     df.dateStyle = dateStyle;
