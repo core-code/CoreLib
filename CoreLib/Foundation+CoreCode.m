@@ -102,6 +102,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     return mostFrequentObject;
 }
 
+- (NSString *)stringValue
+{
+    return self.joinedWithSpaces;   // MacUpdater: its ultra ultra rare but at least one app out there has the bundle version as an array. in any case, making stringValue something that always works is a good idea
+}
+
 - (NSArray *)sorted
 {
 #pragma clang diagnostic push
@@ -3320,6 +3325,11 @@ CONST_KEY(CCDirectoryObserving)
 - (id)id
 {
     return (id)self;
+}
+
+- (NSString *)stringValue
+{
+    return self.description;   // MacUpdater: its ultra ultra rare but at least one app out there has the bundle version as an array. in any case, making stringValue something that always works is a good idea
 }
 
 - (NSString *)literalString
