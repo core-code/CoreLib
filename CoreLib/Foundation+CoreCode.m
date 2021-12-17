@@ -82,6 +82,12 @@ CONST_KEY(CoreCodeAssociatedValue)
         return self[(NSUInteger)generateRandomIntBetween(0,(int)self.count-1)];
 }
 
+- (NSArray *)clamp:(NSUInteger)maximumLength
+{
+    return ((self.count <= maximumLength) ? self : [self subarrayToIndex:maximumLength]);
+}
+
+
 - (id)mostFrequentObject
 {
     NSCountedSet *set = [[NSCountedSet alloc] initWithArray:self];

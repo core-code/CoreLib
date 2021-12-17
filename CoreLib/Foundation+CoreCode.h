@@ -50,6 +50,7 @@
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
 - (CCIntRange1D)calculateExtentsOfValues:(int (^)(ObjectType input))block;
 
+- (NSArray <ObjectType>*)clamp:(NSUInteger)maximumLength;
 
 
 - (NSArray <ObjectType>*)subarrayFromIndex:(NSUInteger)index;       //  containing the characters of the receiver from the one at anIndex to the end (DOES include index)  similar to -[NSString subarrayFromIndex:]
