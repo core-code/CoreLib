@@ -3,7 +3,7 @@
 //  CoreLibTests
 //
 //  Created by CoreCode on 27/10/2019.
-//  Copyright © 2021 CoreCode Limited. All rights reserved.
+//  Copyright © 2022 CoreCode Limited. All rights reserved.
 //
 
 #import "CoreLib.h"
