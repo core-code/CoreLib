@@ -201,7 +201,11 @@ NSString *makeTempDirectory(void);
 NSString *makeTempFilepath(NSString *extension);
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(NSObject *sender, NSArray *args);
+#if defined(__clang_analyzer__) && __clang_analyzer__
+#define makeDictionaryOfVariables(...)  ((NSDictionary *)(@[ __VA_ARGS__ ])) // find crashes with primitive values iff in analyzer
+#else
 #define makeDictionaryOfVariables(...) _makeDictionaryOfVariables(@"" # __VA_ARGS__, __VA_ARGS__, nil) // like NSDictionaryOfVariableBindings() but safe in case of nil values
+#endif
 NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString * commaSeparatedKeysString, id firstValue, ...); // not for direct use
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a);		// params from 0..1
