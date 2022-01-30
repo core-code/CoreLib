@@ -125,12 +125,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	if (launchesAtLogin && ![self launchesAtLogin]) // add it
     {
         if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, true))
-            LOG(@"SMLoginItemSetEnabled failed.");
+            cc_log(@"SMLoginItemSetEnabled failed.");
     }
 	else if (!launchesAtLogin && [self launchesAtLogin]) // remove it
     {
         if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, false))
-            LOG(@"SMLoginItemSetEnabled failed.");
+            cc_log(@"SMLoginItemSetEnabled failed.");
     }
         
 

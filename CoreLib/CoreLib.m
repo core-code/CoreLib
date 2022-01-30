@@ -144,7 +144,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
         #endif
 
         #ifdef NDEBUG
-            LOG(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
+            cc_log(@"Warning: you are running in DEBUG mode but have disabled assertions (NDEBUG)");
         #endif
 
         #if !defined(XCTEST) || !XCTEST
@@ -174,7 +174,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         
         if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
-            LOG(@"Warning: LSApplicationCategoryType not properly set")
+            cc_log(@"Warning: LSApplicationCategoryType not properly set")
 #endif
         
         
