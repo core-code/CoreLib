@@ -174,7 +174,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
         
         if (!((NSString *)[bundle objectForInfoDictionaryKey:@"LSApplicationCategoryType"]).length)
-            cc_log(@"Warning: LSApplicationCategoryType not properly set")
+            cc_log(@"Warning: LSApplicationCategoryType not properly set");
 #endif
         
         
