@@ -903,7 +903,11 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     const char *cstring = [self cStringUsingEncoding:NSASCIIStringEncoding];
 
-    if (!cstring) return nil;
+    if (!cstring)
+    {
+        cc_log_error(@"Error: non-ascii string problem");
+        return nil;
+    }
 
     char *newcstring = malloc(self.length+1);
     
