@@ -599,17 +599,17 @@ NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparat
 
 NSString *makeDescription(NSObject *sender, NSArray *args)
 {
-    NSMutableString *tmp = [NSMutableString new];
+    NSMutableString *dsc = [NSMutableString new];
 
     for (NSString *arg in args)
     {
         NSObject *value = [sender valueForKey:arg];
         NSString *d = [value description];
 
-        [tmp appendFormat:@"\n%@: %@", arg, d];
+        [dsc appendFormat:@"\n%@: %@", arg, d];
     }
 
-    return tmp.immutableObject;
+    return dsc.immutableObject;
 }
 
 NSString *makeLocalizedString(NSString *format, ...)
@@ -647,7 +647,7 @@ NSString *makeTempDirectory()
     return temporaryDirectoryURL.path;
     
     // this should return a new folder inside the 'TemporaryItems' subfolder of the tmp folder which is cleared on reboot.
-    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_#{appname}_89KPkg/
+    // sample path on 12.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_#{appname}_89KPkg/
     // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/(A Document Being Saved By #{appname})
 }
 
