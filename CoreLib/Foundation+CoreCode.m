@@ -666,24 +666,25 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSFileHandle *fileHandle = taskPipe.fileHandleForReading;
     
     [fileHandle setReadabilityHandler:^(NSFileHandle *file)
-    {
-        // DO NOT use -availableData in these handlers. => https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298
-        NSData *newData = [file readDataOfLength:NSUIntegerMax];
-        if (newData.length == 0)
-        {   // end of data signal is an empty data object.
-            file.readabilityHandler = nil;
-            dispatch_semaphore_signal(sema);
-        }
-        else
-        {
-            NSString *string = newData.string;
-            if (string)
-                    [jobOutput appendString:string];
-            progressBlock(string);
-        }
+    { // despite allegations that using -availableData in these handlers us bad we cannot avoid it as the alternative blocks until the task exits (https://stackoverflow.com/questions/49184623/nstask-race-condition-with-readabilityhandler-block/49291298#49291298)
+        NSData *data = file.availableData;
+        NSString *string = data.string;
+        
+        if (string)
+            [jobOutput appendString:string];
+    #warning todo test
+        progressBlock(string);
     }];
+  
     
-    
+    [task setTerminationHandler:^(NSTask *t)
+    {
+        fileHandle.readabilityHandler = nil;
+
+        assert(sema);
+        dispatch_semaphore_signal(sema);
+    }];
+
     
     @try
     {
