@@ -305,6 +305,7 @@ void fatal(const char *fmt, ...)__printflike(1, 2) __attribute__((noreturn));
 
 // !!!: CONVENIENCE MACROS
 #define PROPERTY_STR(p)			NSStringFromSelector(@selector(p))
+#define OBJECTS_EQUAL(x,y)      (((x) == nil && (y) == nil) || [(x) isEqual:(y)])
 #define OBJECT_OR(x,y)			((x) ? (x) : (y))
 #define STRING_OR(x, y)			(((x) && ([x isKindOfClass:[NSString class]]) && ([((NSString *)x) length])) ? (x) : (y))
 #define VALID_STR(x)			(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
