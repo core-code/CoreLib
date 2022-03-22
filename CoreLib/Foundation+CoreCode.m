@@ -672,7 +672,7 @@ CONST_KEY(CoreCodeAssociatedValue)
         
         if (string)
             [jobOutput appendString:string];
-    #warning todo test
+
         progressBlock(string);
     }];
   

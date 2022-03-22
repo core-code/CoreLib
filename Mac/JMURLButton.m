@@ -38,7 +38,7 @@
 {
     if (self.targetURL.length)
     {
-        var url = self.targetURL;
+        NSString *url = self.targetURL;
         if ([url contains:@" "])
             url = url.escaped;
         [url.URL open];
