@@ -65,7 +65,7 @@
 - (NSString *)runAsTaskWithTerminationStatus:(NSInteger *)terminationStatus;
 
 
-- (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock;
+- (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock; // warning: the string may be nil
 - (NSString *)runAsTaskWithProgressBlock:(StringInBlock)progressBlock terminationStatus:(NSInteger *)terminationStatus;
 #endif
 - (NSArray *)mapped:(id (^)(ObjectType input))block;
