@@ -464,7 +464,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     }
 #endif
     
-#if TARGET_CPU_ARM64
+#if defined(TARGET_CPU_ARM64) && TARGET_CPU_ARM64
     architecture = @"ARM (Native)";
 #else
     int ret = 0;
