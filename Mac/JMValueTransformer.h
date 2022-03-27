@@ -13,6 +13,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #import "CoreLib.h"
 
 
+@interface KeyedColorUnarchiveFromData: NSValueTransformer @end
+
 @interface InvalidEmailValueTransformer: NSValueTransformer @end
 @interface ValidEmailValueTransformer: NSValueTransformer @end
 

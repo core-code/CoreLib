@@ -15,6 +15,37 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-messaging-id"
 
+@implementation KeyedColorUnarchiveFromData
+
++ (BOOL)allowsReverseTransformation { return YES; }
++ (Class)transformedValueClass { return [NSColor class]; }
+
+- (id)transformedValue:(id)value
+{
+    NSData *dataValue = value;
+    if (!dataValue || ![dataValue isKindOfClass:NSData.class])
+        return nil;
+
+    @try { return [NSKeyedUnarchiver unarchivedObjectOfClass:NSColor.class fromData:value error:NULL]; }
+    @catch (NSException *) {  }
+    
+    
+    return nil;
+}
+- (id)reverseTransformedValue:(id)value
+{
+    NSColor *colorValue = value;
+    if (!colorValue || ![colorValue isKindOfClass:NSColor.class])
+        return nil;
+
+    @try {  return [NSKeyedArchiver archivedDataWithRootObject:colorValue requiringSecureCoding:YES error:NULL]; }
+    @catch (NSException *) {  }
+    
+    return nil;
+}
+@end
+
+
 @implementation InvalidEmailValueTransformer
 
 + (BOOL)allowsReverseTransformation { return NO; }
