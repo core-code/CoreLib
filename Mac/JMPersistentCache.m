@@ -130,7 +130,12 @@
   }
 }
 
-
+- (void)clear
+{
+    [_lock lock];
+    _cache = makeMutableDictionary();
+    [_lock unlock];
+}
 @end
 
 #pragma GCC diagnostic pop

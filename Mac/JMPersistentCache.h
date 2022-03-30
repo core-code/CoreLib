@@ -12,7 +12,7 @@
 @property (readonly, class, nonatomic) JMPersistentCache *sharedCache;
 
 - (BOOL)save:(NSError * __autoreleasing *)error;
-
+- (void)clear;
 
 // subscripting
 - (id)objectForKeyedSubscript:(NSString *)key;
