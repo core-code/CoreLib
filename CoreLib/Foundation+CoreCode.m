@@ -841,7 +841,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 @implementation NSString (CoreCode)
 
-@dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, downloadWithCurl, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed, reverseString;
+@dynamic words, lines, strippedOfWhitespace, strippedOfNewlines, trimmedOfWhitespace, trimmedOfWhitespaceAndNewlines, URL, fileURL, download, downloadWithCurl, resourceURL, resourcePath, localized, defaultObject, defaultString, defaultInt, defaultFloat, defaultURL, directoryContents, directoryContentsRecursive, directoryContentsAbsolute, directoryContentsRecursiveAbsolute, fileExists, uniqueFile, expanded, defaultArray, defaultDict, isWriteablePath, fileSize, directorySize, contents, dataFromHexString, dataFromBase64String, unescaped, escaped, namedImage,  isIntegerNumber, isIntegerNumberOnly, isFloatNumber, data, firstCharacter, lastCharacter, fullRange, stringByResolvingSymlinksInPathFixed, literalString, isNumber, rot13, characterSet, lengthFixed, reverseString, pathsMatchingPattern;
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsSymlink, fileIsRestricted, fileHasSymlinkInPath;
@@ -850,6 +850,26 @@ CONST_KEY(CoreCodeAssociatedValue)
 #ifdef USE_SECURITY
 @dynamic SHA1, SHA256;
 #endif
+
+- (NSArray <NSString *> *)pathsMatchingPattern
+{
+    assert([self count:@"/**/"] == 1);
+    NSString *prefix = [self splitBeforeNull:@"**"];
+    NSString *suffix = [self splitAfterNull:@"**"];
+    NSMutableArray *results = makeMutableArray();
+    NSDirectoryEnumerator *filesEnumerator = [NSFileManager.defaultManager enumeratorAtPath:prefix];
+
+    NSString *file;
+    while ((file = filesEnumerator.nextObject))
+    {
+        if ([file hasSuffix:suffix])
+            [results addObject:[prefix stringByAppendingPathComponent:file]];
+    }
+    if (results.count)
+        return results;
+    else
+        return nil;
+}
 
 - (NSUInteger)lengthFixed
 {

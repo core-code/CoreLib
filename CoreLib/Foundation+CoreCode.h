@@ -146,6 +146,8 @@
 @property (readonly, nonatomic) NSRange fullRange;
 @property (readonly, nonatomic) NSString *literalString;
 
+@property (readonly, nonatomic) NSArray <NSString *> *pathsMatchingPattern; // can resolve /path/**/file.txt to all existing matches on the file system but only a single /**/ is allowed
+
 
 // path string to url
 @property (readonly, nonatomic) NSURL *fileURL;
