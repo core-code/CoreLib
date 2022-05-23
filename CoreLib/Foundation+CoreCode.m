@@ -853,7 +853,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSArray <NSString *> *)pathsMatchingPattern
 {
-    assert([self count:@"/**/"] == 1);
+    assert([self count:@"**"] == 1);
     NSString *prefix = [self splitBeforeNull:@"**"];
     NSString *suffix = [self splitAfterNull:@"**"];
     NSMutableArray *results = makeMutableArray();
