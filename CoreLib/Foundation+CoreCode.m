@@ -1222,11 +1222,20 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [fileManager contentsOfDirectoryAtPath:self error:NULL];
 }
 
+
 - (NSArray <NSString *> *)directoryContentsRecursive
 {
     assert(fileManager);
-    return [fileManager subpathsOfDirectoryAtPath:self error:NULL];
+    NSDirectoryEnumerator *filesEnumerator = [fileManager enumeratorAtPath:self];
+    NSMutableArray *results = makeMutableArray();
+    NSString *file;
+    while ((file = filesEnumerator.nextObject))
+    {
+        [results addObject:file];
+    }
+    return results;
 }
+
 
 - (NSArray <NSString *> *)directoryContentsAbsolute
 {
@@ -1236,8 +1245,15 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (NSArray <NSString *> *)directoryContentsRecursiveAbsolute
 {
-    NSArray <NSString *> *c = self.directoryContentsRecursive;
-    return [c mapped:^NSString *(NSString *input) { return [self stringByAppendingPathComponent:input]; }];
+    assert(fileManager);
+    NSDirectoryEnumerator *filesEnumerator = [fileManager enumeratorAtPath:self];
+    NSMutableArray *results = makeMutableArray();
+    NSString *file;
+    while ((file = filesEnumerator.nextObject))
+    {
+        [results addObject:[self stringByAppendingPathComponent:file]];
+    }
+    return results;
 }
 
 
