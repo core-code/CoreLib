@@ -644,7 +644,11 @@ NSString *makeTempDirectory()
     
     assert(temporaryDirectoryURL && !error);
     
-    return temporaryDirectoryURL.path;
+    let result = temporaryDirectoryURL.path;
+    
+    assert(![result hasSuffix:@"/"]);
+    
+    return result;
     
     // this should return a new folder inside the 'TemporaryItems' subfolder of the tmp folder which is cleared on reboot.
     // sample path on 12.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_#{appname}_89KPkg/
