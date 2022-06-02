@@ -1666,7 +1666,7 @@ void cc_log_level(cc_log_type level, NSString *format, ...)
 #endif
     
 #ifdef DEBUG
-    if (level <= CC_LOG_LEVEL_ERROR && ![str containsAny:@[@"Notification: ", @"Alert: ", @"Info: ",]])
+    if (level <= CC_LOG_LEVEL_ERROR && ![str containsAny:@[@"Notification: ", @"Alert: ", @"Info: ", @": modal"]])
     {
         // just for breakpoints
     }
