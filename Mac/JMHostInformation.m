@@ -131,6 +131,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
             bzero(pathBuffer, PROC_PIDPATHINFO_MAXSIZE);
             proc_pidpath(currentPid, pathBuffer, sizeof(pathBuffer));
             NSString *pathObject = @(pathBuffer);
+            pathObject.associatedValue = @(currentPid);
             [procs addObject:pathObject];
         }
     }
