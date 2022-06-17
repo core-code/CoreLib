@@ -813,11 +813,6 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
     };
 
 
-
-
-
-
-
     dispatch_sync_main(block);
 }
 
@@ -1291,6 +1286,7 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
     else
         dispatch_async_main(block);
 }
+
 #pragma clang diagnostic pop
 
 
@@ -1333,6 +1329,8 @@ void alert_nonmodal(NSString *title, NSString *message, NSString *button)
 
 void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSString *button, NSImage *customIcon, BasicBlock block)
 {
+    ASSERT_MAINTHREAD;
+
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
     CGFloat messageHeight = (CGFloat)MAX(30.0, _attributedStringHeightForWidth(attributedString, 300));
     CGFloat height = 100 + messageHeight;
@@ -1400,6 +1398,8 @@ void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *but
 
 void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *button, NSString *checkboxTitle, NSInteger checkboxStatusIn, IntInBlock resultBlock)
 {
+    ASSERT_MAINTHREAD;
+
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
     CGFloat messageHeight = (CGFloat)MAX(50.0, _attributedStringHeightForWidth(attributedString, 300));
     CGFloat height = 120 + messageHeight;
@@ -1470,6 +1470,30 @@ void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *butto
     [fakeAlertWindow makeKeyAndOrderFront:@""];
 }
 
+void alert_nonmodal_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton)
+{
+    dispatch_block_t block = ^
+    {
+        NSString *defaultKey = makeString(@"_%@_asked", identifier);
+        
+        if (!defaultKey.defaultInt)
+        {
+            cc_log_error(@"Alert Dontwarnagainever: %@ - %@", title.strippedOfNewlines, message.strippedOfNewlines);
+
+            alert_nonmodal_checkbox(title, [message stringByAppendingString:@"\n\n"], defaultButton, dontwarnButton, 0, ^(int checkboxResult)
+            {
+                 cc_log_error(@"Alert Dontwarnagainever: finished: %i", checkboxResult);
+                 if (checkboxResult)
+                     defaultKey.defaultInt = checkboxResult;
+            });
+        }
+    };
+
+    if ([NSThread currentThread] == [NSThread mainThread])
+        block();
+    else
+        dispatch_async_main(block);
+}
 
 // colors
 

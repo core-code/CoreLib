@@ -189,6 +189,7 @@ void alert_nonmodal(NSString *title, NSString *message, NSString *button);
 void alert_nonmodal_customicon(NSString *title, NSString *message, NSString *button, NSImage *customIcon);
 void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSString *button, NSImage *customIcon, BasicBlock block);
 void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *button, NSString *checkboxTitle, NSInteger checkboxStatusIn, IntInBlock resultBlock);
+void alert_nonmodal_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *message, NSString *defaultButton, NSString *dontwarnButton);
 #endif
 
     
