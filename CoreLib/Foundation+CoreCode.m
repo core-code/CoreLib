@@ -1330,6 +1330,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
 }
 
+- (BOOL)containsRegexp:(NSString *)otherString
+{
+    return ([self rangeOfString:otherString options:NSRegularExpressionSearch].location != NSNotFound);
+}
+
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings
 {
     for (NSString *otherString in otherStrings)

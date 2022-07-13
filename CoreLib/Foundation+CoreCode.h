@@ -236,6 +236,7 @@
 - (NSUInteger)count:(NSString *)str; // peviously called countOccurencesOfString
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;         // similar: rangeOfString options != NSNotFound
 - (BOOL)contains:(NSString *)otherString;                                       // similar: rangeOfString != NSNotFound
+- (BOOL)containsRegexp:(NSString *)otherString;                                       // similar: rangeOfString options != NSNotFound
 - (BOOL)hasAnyPrefix:(NSArray <NSString *>*)possiblePrefixes;
 - (BOOL)hasAnySuffix:(NSArray <NSString *>*)possibleSuffixes;
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings;
