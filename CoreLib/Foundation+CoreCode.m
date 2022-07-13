@@ -3578,6 +3578,12 @@ CONST_KEY(CCDirectoryObserving)
     return [NSSet setWithSet:self];
 }
 
+- (void)addObjectSafely:(id)anObject
+{
+    if (anObject)
+        [self addObject:anObject];
+}
+
 @end
 
 

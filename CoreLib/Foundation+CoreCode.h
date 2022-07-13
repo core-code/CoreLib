@@ -542,6 +542,8 @@
 
 @property (readonly, nonatomic) NSSet <ObjectType> *immutableObject;
 
+- (void)addObjectSafely:(ObjectType)anObject;
+
 @end
 
 
