@@ -184,8 +184,8 @@
 // string things
 @property (readonly, nonatomic) NSArray <NSString *> *lines;
 @property (readonly, nonatomic) NSArray <NSString *> *words;
-@property (readonly, nonatomic) unichar firstCharacter;
-@property (readonly, nonatomic) unichar lastCharacter;
+@property (readonly, nonatomic) unichar firstChar;
+@property (readonly, nonatomic) unichar lastChar;
 @property (readonly, nonatomic) NSUInteger lengthFixed;     // string length that doesn't fuck up for emoji
 
 @property (readonly, nonatomic) NSString *expanded;						// shortcut = stringByExpandingTildeInPath
