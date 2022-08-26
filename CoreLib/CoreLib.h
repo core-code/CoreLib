@@ -198,7 +198,7 @@ NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 NSString *makeLocalizedString(NSString *format, ...)  NS_FORMAT_FUNCTION(1,2);
     
 NSValue *makeRectValue(CGFloat x, CGFloat y, CGFloat width, CGFloat height);
-NSString *makeTempDirectory(void);
+NSString *makeTempDirectory(BOOL useReplacementDirectory); // if YES folder inside "replacement directory" ($(TMPDIR)/TemporaryItems), otherwise folder inside $(TMPDIR). previously it would default to YES
 NSString *makeTempFilepath(NSString *extension);
 NSPredicate *makePredicate(NSString *format, ...);
 NSString *makeDescription(NSObject *sender, NSArray *args);

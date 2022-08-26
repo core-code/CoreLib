@@ -598,7 +598,12 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     return ipv6 ? @"::1" : @"127.0.0.1";
 }
 #pragma clang diagnostic pop
++ (BOOL)hasFullDiskAccess
+{
+    BOOL haveFDA = @"~/Library/Safari/CloudTabs.db".expanded.contents.length || @"~/Library/Safari/Bookmarks.plist".expanded.contents.length || @"/Library/Application Support/com.apple.TCC/TCC.db".contents.length || @"/Library/Preferences/com.apple.TimeMachine.plist".contents.length;
 
+    return haveFDA;
+}
 #ifdef USE_SYSTEMCONFIGURATION
 + (BOOL)isOnline
 {

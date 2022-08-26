@@ -632,32 +632,50 @@ NSString *makeString(NSString *format, ...)
     return str;
 }
 
-NSString *makeTempDirectory()
+NSString *makeTempDirectory(BOOL useReplacementDirectory)
 {
     NSError *error = nil;
-    NSURL *temporaryDirectoryURL =
-        [fileManager URLForDirectory:NSItemReplacementDirectory
-                            inDomain:NSUserDomainMask
-                   appropriateForURL:NSHomeDirectory().fileURL
-                              create:YES
-                               error:&error];
-    
-    assert(temporaryDirectoryURL && !error);
-    
-    let result = temporaryDirectoryURL.path;
-    
-    assert(![result hasSuffix:@"/"]);
-    
-    return result;
-    
-    // this should return a new folder inside the 'TemporaryItems' subfolder of the tmp folder which is cleared on reboot.
-    // sample path on 12.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_#{appname}_89KPkg/
-    // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/(A Document Being Saved By #{appname})
+
+    if (useReplacementDirectory)
+    {
+        NSURL *temporaryDirectoryURL =
+            [fileManager URLForDirectory:NSItemReplacementDirectory
+                                inDomain:NSUserDomainMask
+                       appropriateForURL:NSHomeDirectory().fileURL
+                                  create:YES
+                                   error:&error];
+        
+        assert(temporaryDirectoryURL && !error);
+        
+        let result = temporaryDirectoryURL.path;
+        
+        assert(![result hasSuffix:@"/"]);
+        
+        return result;
+        
+        // this should return a new folder inside the 'TemporaryItems' subfolder of the tmp folder which is cleared on reboot.
+        // sample path on 12.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/NSIRD_#{appname}_89KPkg/
+        // sample path on 11.0 /var/folders/9c/bdxcbnjd29d1ql3h9zfsflp80000gn/T/TemporaryItems/(A Document Being Saved By #{appname})
+    }
+    else
+    {
+        NSString *result = @[NSTemporaryDirectory(), NSProcessInfo.processInfo.globallyUniqueString].path;
+        result = result.uniqueFile;
+        BOOL succ = [fileManager createDirectoryAtPath:result withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        assert(result && succ && !error);
+
+        assert(![result hasSuffix:@"/"]);
+        
+        return result;
+        
+        // this should return a new folder inside the '$(TMPDIR)' folder which is ??
+    }
 }
 
 NSString *makeTempFilepath(NSString *extension)
 {
-    NSString *tempDir = makeTempDirectory();
+    NSString *tempDir = makeTempDirectory(YES);
     if (!tempDir)
         return nil;
     NSString *fileName = [@"1." stringByAppendingString:extension];
