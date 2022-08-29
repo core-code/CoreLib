@@ -259,6 +259,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 #if USE_SPARKLE == 2
     userDriver = [[SPUStandardUserDriver alloc] initWithHostBundle:bundle delegate:self];
     updater = [[SPUUpdater alloc] initWithHostBundle:bundle applicationBundle:bundle userDriver:userDriver delegate:self];
+    [updater startUpdater:nil];
 #else
     updater = [SUUpdater new];
     updater.delegate = self;
