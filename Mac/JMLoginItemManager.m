@@ -68,7 +68,52 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC
 
-	NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
+    if (@available(macOS 13.0, *))
+    {
+        return [[SMAppService mainAppService] status] == SMAppServiceStatusEnabled;
+    }
+    else
+    {
+        return [self legacyHelperLaunchesAtLogin];
+    }
+}
+
+- (void)setLaunchesAtLogin:(BOOL)launchesAtLogin
+{
+	LOGFUNC
+
+    //[self willChangeValueForKey:@"launchesAtLogin"];
+
+    if (@available(macOS 13.0, *))
+    {
+        NSError *error;
+        if (launchesAtLogin)
+        {
+            [[SMAppService mainAppService] registerAndReturnError:&error];
+            if (error)
+                cc_log_error(@"Error registering mainAppService: %@", error);
+        }
+        else
+        {
+            [[SMAppService mainAppService] unregisterAndReturnError:&error];
+            if (error)
+                cc_log_error(@"Error unregistering mainAppService: %@", error);
+        }
+    }
+    else
+    {
+        [self setLegacyHelperLaunchesAtLogin:launchesAtLogin];
+    }
+
+	[self didChangeValueForKey:@"launchesAtLogin"];
+}
+
+// MARK: - Legacy helper launcher
+
+- (BOOL)legacyHelperLaunchesAtLogin
+{
+    NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
+
 #if defined(DEBUG) && !defined(SKIP_LAUNCHHELPERCHECK)
     NSString *infoPath = [[bundle bundlePath] stringByAppendingPathComponent:
                           makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])];
@@ -83,13 +128,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     NSArray *jobDicts = (__bridge NSArray *)SMCopyAllJobDictionaries(kSMDomainUserLaunchd); // this is deprecated but probably should not be: rdar://20510672
 #pragma clang diagnostic pop
 
-	if (jobDicts != nil)
+    if (jobDicts != nil)
     {
         BOOL onDemand = NO;
-        
+
         for (NSDictionary * job in jobDicts)
         {
-			NSString *label = [job objectForKey:@"Label"];
+            NSString *label = [job objectForKey:@"Label"];
 
             if ([helperBundleIdentifier isEqualToString:label])
             {
@@ -99,21 +144,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                 break;
             }
         }
-        
+
         CFRelease((__bridge CFArrayRef)jobDicts);
         jobDicts = nil;
         return onDemand;
-        
+
     }
     return NO;
 }
 
-- (void)setLaunchesAtLogin:(BOOL)launchesAtLogin
+- (void)setLegacyHelperLaunchesAtLogin:(BOOL)launchesAtLogin
 {
-	LOGFUNC
-
-	//[self willChangeValueForKey:@"launchesAtLogin"];
-
     NSString *helperBundleIdentifier = [[LoginItemManager appIDCleaned] stringByAppendingString:@"LaunchHelper"];
 #if defined(DEBUG) && !defined(SKIP_LAUNCHHELPERCHECK)
     NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:[[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app/Contents/Info.plist", [LoginItemManager appNameCleaned])]];
@@ -122,20 +163,31 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #endif
 
 
-	if (launchesAtLogin && ![self launchesAtLogin]) // add it
+    if (launchesAtLogin && ![self launchesAtLogin]) // add it
     {
-        if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, true))
+        if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, YES))
             cc_log(@"SMLoginItemSetEnabled failed.");
     }
-	else if (!launchesAtLogin && [self launchesAtLogin]) // remove it
+    else if (!launchesAtLogin && [self launchesAtLogin]) // remove it
     {
-        if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, false))
+        if (!SMLoginItemSetEnabled((__bridge CFStringRef)helperBundleIdentifier, NO))
             cc_log(@"SMLoginItemSetEnabled failed.");
     }
-        
-
-	//[self didChangeValueForKey:@"launchesAtLogin"];
 }
+
+- (void)migrateToSMAppServiceIfNeeded
+{
+    NSString *key = @"migratedToSMAppService";
+    if ([userDefaults boolForKey: key]) return;
+
+    if ([self legacyHelperLaunchesAtLogin])
+    {
+        [self setLegacyHelperLaunchesAtLogin:NO];
+        [self setLaunchesAtLogin:YES];
+    }
+    [userDefaults setBool:YES forKey:key];
+}
+
 @end
 
 
