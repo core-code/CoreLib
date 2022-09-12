@@ -68,11 +68,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC
 
+#if defined(MAC_OS_X_VERSION_13_0) && defined(__MAC_OS_X_VERSION_MAX_ALLOWED) &&  __MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_13_0
     if (@available(macOS 13.0, *))
     {
         return [[SMAppService mainAppService] status] == SMAppServiceStatusEnabled;
     }
     else
+#endif
     {
         return [self legacyHelperLaunchesAtLogin];
     }
@@ -84,6 +86,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
     //[self willChangeValueForKey:@"launchesAtLogin"];
 
+#if defined(MAC_OS_X_VERSION_13_0) && defined(__MAC_OS_X_VERSION_MAX_ALLOWED) &&  __MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_13_0
     if (@available(macOS 13.0, *))
     {
         NSError *error;
@@ -101,6 +104,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         }
     }
     else
+#endif
     {
         [self setLegacyHelperLaunchesAtLogin:launchesAtLogin];
     }
