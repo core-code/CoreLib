@@ -68,7 +68,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC
 
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_13_0
+#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
     if (@available(macOS 13.0, *))
     {
         return [[SMAppService mainAppService] status] == SMAppServiceStatusEnabled;
@@ -86,7 +86,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
     //[self willChangeValueForKey:@"launchesAtLogin"];
 
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_13_0
+#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
     if (@available(macOS 13.0, *))
     {
         NSError *error;
