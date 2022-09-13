@@ -181,15 +181,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 - (void)migrateToSMAppServiceIfNeeded
 {
-    NSString *key = @"migratedToSMAppService";
-    if ([userDefaults boolForKey: key]) return;
-
-    if ([self legacyHelperLaunchesAtLogin])
+    if (@available(macOS 13.0, *))
     {
-        [self setLegacyHelperLaunchesAtLogin:NO];
-        [self setLaunchesAtLogin:YES];
+        NSString *key = @"migratedToSMAppService";
+        if ([userDefaults boolForKey: key]) return;
+        
+        if ([self legacyHelperLaunchesAtLogin])
+        {
+            [self setLegacyHelperLaunchesAtLogin:NO];
+            [self setLaunchesAtLogin:YES];
+        }
+        [userDefaults setBool:YES forKey:key];
     }
-    [userDefaults setBool:YES forKey:key];
 }
 
 @end
