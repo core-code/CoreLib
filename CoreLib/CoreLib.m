@@ -663,7 +663,10 @@ NSString *makeTempDirectory(BOOL useReplacementDirectory)
     {
         NSString *result = @[NSTemporaryDirectory(), NSProcessInfo.processInfo.globallyUniqueString].path;
         result = result.uniqueFile;
-        BOOL succ = [fileManager createDirectoryAtPath:result withIntermediateDirectories:YES attributes:nil error:nil];
+#ifdef DEBUG
+        BOOL succ =
+#endif
+        [fileManager createDirectoryAtPath:result withIntermediateDirectories:YES attributes:nil error:nil];
         
         assert(result && succ && !error);
 

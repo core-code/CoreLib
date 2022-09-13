@@ -615,8 +615,13 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 #pragma clang diagnostic pop
 + (BOOL)hasFullDiskAccess
 {
-    BOOL haveFDA = @"~/Library/Safari/CloudTabs.db".expanded.contents.length || @"~/Library/Safari/Bookmarks.plist".expanded.contents.length || @"/Library/Application Support/com.apple.TCC/TCC.db".contents.length || @"/Library/Preferences/com.apple.TimeMachine.plist".contents.length;
+    let l1 = @"~/Library/Safari/CloudTabs.db".expanded.contents.length;
+    let l2 = @"~/Library/Safari/Bookmarks.plist".expanded.contents.length;
+    let l3 = @"/Library/Application Support/com.apple.TCC/TCC.db".contents.length;
+    let l4 = @"/Library/Preferences/com.apple.TimeMachine.plist".contents.length;
 
+    BOOL haveFDA = l1 > 0 || l2 > 0 || l3 > 0 || l4 > 0;
+    
     return haveFDA;
 }
 #ifdef USE_SYSTEMCONFIGURATION
