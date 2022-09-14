@@ -668,9 +668,10 @@ NSString *makeTempDirectory(BOOL useReplacementDirectory)
 #endif
         [fileManager createDirectoryAtPath:result withIntermediateDirectories:YES attributes:nil error:nil];
         
+#ifdef DEBUG
         assert(result && succ && !error);
-
         assert(![result hasSuffix:@"/"]);
+#endif
         
         return result;
         
