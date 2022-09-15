@@ -10,6 +10,7 @@
  */
 
 
+
 #import "JMApplicationDelegate.h"
 #import "JMCrashReporter.h"
 #ifndef SKIP_RATINGWINDOW
@@ -19,6 +20,7 @@
 #if defined(APPSTORE_VALIDATERECEIPT) || defined(APPSTORE)
 #import "JMReceiptValidation.h"
 #endif
+
 
 
 @interface JMApplicationDelegate ()
@@ -316,56 +318,7 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
 #endif
 }
 
-#if defined(USE_SPARKLE) && USE_SPARKLE == 1
-- (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)item
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description), 30);
-}
-- (void)updater:(SUUpdater *)updater didDismissUpdateAlertPermanently:(BOOL)permanently forItem:(SUAppcastItem *)item
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@ %i", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description, permanently), 30);
-}
-- (void)updaterDidNotFindUpdate:(SUUpdater *)updater
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__)), 30);
-}
-- (void)updater:(SUUpdater *)updater userDidSkipThisVersion:(SUAppcastItem *)item
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description), 30);
-}
-- (void)updater:(SUUpdater *)updater didDownloadUpdate:(SUAppcastItem *)item
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description), 30);
-}
-- (void)updater:(SUUpdater *)updater failedToDownloadUpdate:(SUAppcastItem *)item error:(NSError *)error
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description, error.description), 30);
-}
-- (void)userDidCancelDownload:(SUUpdater *)updater
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__)), 30);
-}
-- (void)updater:(SUUpdater *)updater didExtractUpdate:(SUAppcastItem *)item
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description), 30);
-}
-- (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)item
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), item.description), 30);
-}
-- (void)updaterWillRelaunchApplication:(SUUpdater *)updater
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__)), 30);
-}
-- (void)updaterDidShowModalAlert:(SUUpdater *)updater
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__)), 30);
-}
-- (void)updater:(SUUpdater *)updater didAbortWithError:(NSError *)error
-{
-    cc_defaults_addtoarray(@"CC_SPARKLE_EVENTS", makeString(@"%@ %@ %@", NSDate.date.shortDateAndTimeString, @(__PRETTY_FUNCTION__), error.description), 30);
-}
-#endif
+
 
 
 #pragma mark PURCHASE
