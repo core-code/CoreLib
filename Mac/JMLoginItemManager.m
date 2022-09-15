@@ -12,6 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifdef USE_SERVICEMANAGEMENT
 
 #import "JMLoginItemManager.h"
+#import "CoreLib.h"
 #if __has_feature(modules)
 @import ServiceManagement;
 #else
@@ -25,8 +26,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #endif
 
 @implementation LoginItemManager
-
-@dynamic launchesAtLogin;
 
 + (NSString *)appIDCleaned
 {
@@ -68,12 +67,28 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC
 
+#ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
     if (@available(macOS 13.0, *))
     {
-        return [[SMAppService mainAppService] status] == SMAppServiceStatusEnabled;
+        switch (SMAppService.mainAppService.status)
+        {
+            case SMAppServiceStatusEnabled:
+                return YES;
+            case SMAppServiceStatusNotRegistered:
+            case SMAppServiceStatusRequiresApproval:
+                return NO;
+            case SMAppServiceStatusNotFound:
+            default:
+            {
+                NSString *info = [NSString stringWithFormat:@"Unexpected status code returned from SMAppService.mainAppService.status: %ld", (long)SMAppService.mainAppService.status];
+                assert_custom_info(0, info);
+                return NO;
+            }
+        }
     }
     else
+#endif
 #endif
     {
         return [self legacyHelperLaunchesAtLogin];
@@ -84,32 +99,53 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC
 
-    //[self willChangeValueForKey:@"launchesAtLogin"];
-
+#ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
 #if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
     if (@available(macOS 13.0, *))
     {
         NSError *error;
         if (launchesAtLogin)
         {
-            [[SMAppService mainAppService] registerAndReturnError:&error];
+            [SMAppService.mainAppService registerAndReturnError:&error];
             if (error)
-                cc_log_error(@"Error registering mainAppService: %@", error);
+            {
+                switch (error.code)
+                {
+                    case kSMErrorAlreadyRegistered:
+                        break;
+                    case kSMErrorLaunchDeniedByUser:
+                    default:
+                    {
+                        NSString *info = [NSString stringWithFormat:@"Error registering mainAppService: %@", error.userInfo];
+                        assert_custom_info(0, info);
+                    }
+                }
+            }
         }
         else
         {
-            [[SMAppService mainAppService] unregisterAndReturnError:&error];
+            [SMAppService.mainAppService unregisterAndReturnError:&error];
             if (error)
-                cc_log_error(@"Error unregistering mainAppService: %@", error);
+            {
+                switch (error.code)
+                {
+                    case kSMErrorJobNotFound: // Already unregistered
+                        break;
+                    default:
+                    {
+                        NSString *info = [NSString stringWithFormat:@"Error unregistering mainAppService: %@", error.userInfo];
+                        assert_custom_info(0, info);
+                    }
+                }
+            }
         }
     }
     else
 #endif
+#endif
     {
         [self setLegacyHelperLaunchesAtLogin:launchesAtLogin];
     }
-
-	[self didChangeValueForKey:@"launchesAtLogin"];
 }
 
 // MARK: - Legacy helper launcher
