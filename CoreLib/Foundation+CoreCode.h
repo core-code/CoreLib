@@ -236,7 +236,7 @@
 - (NSUInteger)count:(NSString *)str; // peviously called countOccurencesOfString
 - (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive;         // similar: rangeOfString options != NSNotFound
 - (BOOL)contains:(NSString *)otherString;                                       // similar: rangeOfString != NSNotFound
-- (BOOL)containsRegexp:(NSString *)otherString;                                       // similar: rangeOfString options != NSNotFound
+- (BOOL)containsRegexp:(NSString *)otherString;                                 // similar: rangeOfString options != NSNotFound
 - (BOOL)hasAnyPrefix:(NSArray <NSString *>*)possiblePrefixes;
 - (BOOL)hasAnySuffix:(NSArray <NSString *>*)possibleSuffixes;
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings;
@@ -284,6 +284,7 @@
 
 - (NSString *)slicingSubstringFromIndex:(NSInteger)index;  // get string with chars cut-off: index should be negative and tell how many chars to include from the end: -1 is just the last char
 - (NSString *)slicingSubstringToIndex:(NSInteger)index;  // get string with chars cut-off: index should be negative and tell how many chars to remove from the end: -1 removes one char from the end
+- (NSString *)substringWithRegexp:(NSString *)otherString; 
 
 
 // forwards for less typing

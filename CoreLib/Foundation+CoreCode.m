@@ -1334,6 +1334,14 @@ CONST_KEY(CoreCodeAssociatedValue)
     return ([self rangeOfString:otherString options:NSRegularExpressionSearch].location != NSNotFound);
 }
 
+- (NSString *)substringWithRegexp:(NSString *)otherString
+{
+    let regexpRange = [self rangeOfString:otherString options:NSRegularExpressionSearch];
+    if (regexpRange.location == NSNotFound) return nil;
+    return [self substringWithRange:regexpRange];
+}
+
+
 - (BOOL)containsAny:(NSArray <NSString *>*)otherStrings
 {
     for (NSString *otherString in otherStrings)
