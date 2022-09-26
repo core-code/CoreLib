@@ -81,7 +81,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             case SMAppServiceStatusNotFound:
             default:
             {
-                NSString *info = [NSString stringWithFormat:@"Unexpected status code returned from SMAppService.mainAppService.status: %ld", (long)SMAppService.mainAppService.status];
+                NSString *info = [NSString stringWithFormat:@"Unexpected status code returned from SMAppService.mainAppService.status: %ld\n%@", (long)SMAppService.mainAppService.status, NSProcessInfo.processInfo.operatingSystemVersionString];
                 assert_custom_info(0, info);
                 return NO;
             }
@@ -116,7 +116,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                     case kSMErrorLaunchDeniedByUser:
                     default:
                     {
-                        NSString *info = [NSString stringWithFormat:@"Error registering mainAppService: %@", error.userInfo];
+                        NSString *info = [NSString stringWithFormat:@"Error registering mainAppService: %@\n%@", error.userInfo, NSProcessInfo.processInfo.operatingSystemVersionString];
                         assert_custom_info(0, info);
                     }
                 }
