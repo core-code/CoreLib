@@ -81,7 +81,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             case SMAppServiceStatusNotFound:
             default:
             {
-                let info = makeString(@"SMAppService.mainAppService.status: %ld  %@  %i", (long)SMAppService.mainAppService.status, NSProcessInfo.processInfo.operatingSystemVersionString, kUsages2.defaultInt);
+                let info = makeString(@"SMAppService.mainAppService.status: %ld  %@  %li", (long)SMAppService.mainAppService.status, NSProcessInfo.processInfo.operatingSystemVersionString, (long)@"corelib_usages".defaultInt);
                 assert_custom_info(0, info);
                 return NO;
             }
