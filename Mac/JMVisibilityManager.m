@@ -279,6 +279,8 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     // If the button got a click and the popover is hidden, show it
                     if (event.window == self.statusItem.button.window && !self.statusItemPopover.isShown)
                     {
+                        let info = makeString(@"%p %p %@", event.window, self.statusItem.button.window, event.description);
+                        assert_custom_info(self.statusItem.button, info);
                         [self showPopoverWithAnimation:NO];
                         dispatch_after_main(0.75, ^
                         {
