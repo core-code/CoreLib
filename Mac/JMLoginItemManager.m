@@ -77,14 +77,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                 return YES;
             case SMAppServiceStatusNotRegistered:
             case SMAppServiceStatusRequiresApproval:
-                return NO;
             case SMAppServiceStatusNotFound:
-            default:
-            {
-                let info = makeString(@"SMAppService.mainAppService.status: %ld  %@  %li", (long)SMAppService.mainAppService.status, NSProcessInfo.processInfo.operatingSystemVersionString, (long)@"corelib_usages".defaultInt);
-                assert_custom_info(0, info);
+            // This happens when there's no BTM record yet, i.e. on first launch etc. It's not an error
                 return NO;
-            }
         }
     }
     else
