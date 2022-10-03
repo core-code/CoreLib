@@ -241,6 +241,10 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     
                     if (gotLeftClick && gotCommandKey) // let the system handle re-arrangement of the icon
                         return event;
+
+                    // Pass on events that don't have a window
+                    if (event.window == nil)
+                        return event;
                     
                     if (event.window == self.statusItem.button.window && gotLeftClick && gotShiftClick)
                     {
