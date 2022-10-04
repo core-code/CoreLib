@@ -262,6 +262,8 @@ CONST_KEY_IMPLEMENTATION(UpdatecheckMenuindex)
     userDriver = [[SPUStandardUserDriver alloc] initWithHostBundle:bundle delegate:self];
     updater = [[SPUUpdater alloc] initWithHostBundle:bundle applicationBundle:bundle userDriver:userDriver delegate:self];
     [updater startUpdater:nil];
+    assert_custom(userDriver);
+    assert_custom(updater);
 #else
     updater = [SUUpdater new];
     updater.delegate = self;
