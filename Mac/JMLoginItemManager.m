@@ -139,6 +139,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                 }
             }
         }
+        
+        [self setLegacyHelperLaunchesAtLogin:NO]; // prevent issue where the would be started both in the old and the new way
     }
     else
 #endif
