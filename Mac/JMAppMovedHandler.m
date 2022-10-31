@@ -15,7 +15,23 @@
 
 static int bundleFileDescriptor;
 
+void RestartAppAtURL(NSURL *url)
+{
+    alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
+    
+    NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:url
+                                                                                    options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
+                                                                              configuration:@{} error:NULL];
+    
+    if (newInstance)
+        [NSApp terminate:nil];
+    else
+    {
+        alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
 
+        [NSApp terminate:nil];
+    }
+}
 
 void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
                           void *clientCallBackInfo,
@@ -41,22 +57,9 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 
             //    printf("new path: %s\n", newPath);
 
-            alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
-            NSURL *url = @(newPath).fileURL;
-            NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:url
-                                                                                            options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
-                                                                                      configuration:@{} error:NULL];
-
-            free(newPath);
-            
-            if (newInstance)
-                [NSApp terminate:nil];
-            else
-            {
-                alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
-
-                [NSApp terminate:nil];
-            }
+            NSURL *newAppURL = @(newPath).fileURL;
+            free(newPath); // pretty pointless a few milliseconds before quitting
+            RestartAppAtURL(newAppURL);
         }
     }
 }
@@ -73,29 +76,16 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
     
     if (!oldVolume) return;
     
-    if ([self.path hasPrefix:oldVolume])
+    if ([self.path hasPrefix:oldVolume] &&  // we are really on the renamed volume
+        ![oldVolume isEqualToString:@"/"])  // renaming the boot value doesn't break things since its path always stays '/'
     {
         NSURL *newVolumeURL = not.userInfo[NSWorkspaceVolumeURLKey];
         NSString *newVolume = newVolumeURL.path;
         
         cc_log(@"Info: volume rename detection triggered, offering to restart app");
 
-        
-        alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
-        NSString *newAppPath = [self.path replaced:oldVolume with:newVolume];
-        NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:newAppPath.fileURL
-                                                                                        options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance)
-                                                                                  configuration:@{} error:NULL];
-        
-        
-        if (newInstance)
-            [NSApp terminate:nil];
-        else
-        {
-            alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
-            
-            [NSApp terminate:nil];
-        }
+        let newAppURL = [self.path replaced:oldVolume with:newVolume].fileURL;
+        RestartAppAtURL(newAppURL);
     }
 }
 @end
