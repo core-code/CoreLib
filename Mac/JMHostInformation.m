@@ -77,6 +77,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #endif
 #endif
 
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= 120400
+#define POLITICALLY_CORRECT_PORT_AT_EVERY_TIME kIOMainPortDefault
+#else
+#define POLITICALLY_CORRECT_PORT_AT_EVERY_TIME kIOMasterPortDefault
+#endif
 
 #ifdef USE_DISKARBITRATION
 #ifdef FORCE_LOG
@@ -436,7 +441,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 + (NSString *)serialNumber
 {
-    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
+    io_service_t platformExpert = IOServiceGetMatchingService(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, IOServiceMatching("IOPlatformExpertDevice"));
     if (!platformExpert)  return nil;
 
     CFTypeRef cfString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
@@ -452,7 +457,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 + (NSString *)UUID
 {
-    io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
+    io_service_t platformExpert = IOServiceGetMatchingService(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, IOServiceMatching("IOPlatformExpertDevice"));
     if (!platformExpert)  return nil;
 
     CFTypeRef cfString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformUUIDKey), kCFAllocatorDefault, 0);
@@ -1341,17 +1346,9 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
 {
     kern_return_t kernResult;
-    mach_port_t masterPort;
     CFMutableDictionaryRef matchingDict;
     CFMutableDictionaryRef propertyMatchDict;
 
-    // Retrieve the Mach port used to initiate communication with I/O Kit
-    kernResult = IOMasterPort(MACH_PORT_NULL, &masterPort);
-    if (KERN_SUCCESS != kernResult)
-    {
-        cc_log_error(@"Error:    IOMasterPort returned %d", kernResult);
-        return kernResult;
-    }
 
     // Ethernet interfaces are instances of class kIOEthernetInterfaceClass.
     // IOServiceMatching is a convenience function to create a dictionary with the key kIOProviderClassKey and
@@ -1409,7 +1406,7 @@ static kern_return_t FindEthernetInterfaces(io_iterator_t *matchingServices)
     // IOServiceGetMatchingServices retains the returned iterator, so release the iterator when we're done with it.
     // IOServiceGetMatchingServices also consumes a reference on the matching dictionary so we don't need to release
     // the dictionary explicitly.
-    kernResult = IOServiceGetMatchingServices(masterPort, matchingDict, matchingServices);
+    kernResult = IOServiceGetMatchingServices(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, matchingDict, matchingServices);
 
     if (KERN_SUCCESS != kernResult)
         cc_log_error(@"Error:    IOServiceGetMatchingServices returned %d", kernResult);
@@ -1559,7 +1556,7 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
     *smart = kSMARTStatusUnknown;
 
 
-    object = IOServiceGetMatchingService(kIOMasterPortDefault, IOBSDNameMatching(kIOMasterPortDefault, 0, makeString(@"disk%i", bsdDeviceNumber).UTF8String));
+    object = IOServiceGetMatchingService(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, IOBSDNameMatching(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, 0, makeString(@"disk%i", bsdDeviceNumber).UTF8String));
     if (object == MACH_PORT_NULL)
         return kIOReturnNoResources;
 
@@ -1747,7 +1744,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     IOReturn err = kIOReturnError;
 
 
-    object = IOServiceGetMatchingService(kIOMasterPortDefault, IOBSDNameMatching(kIOMasterPortDefault, 0, makeString(@"disk%i", bsdDeviceNumber).UTF8String));
+    object = IOServiceGetMatchingService(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, IOBSDNameMatching(POLITICALLY_CORRECT_PORT_AT_EVERY_TIME, 0, makeString(@"disk%i", bsdDeviceNumber).UTF8String));
     if (object == MACH_PORT_NULL)
         return kIOReturnNoResources;
 
