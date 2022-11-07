@@ -1327,7 +1327,7 @@ CGFloat _attributedStringHeightForWidth(NSAttributedString *string, CGFloat widt
         NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
         [layoutManager addTextContainer:textContainer];
         [textStorage addLayoutManager:layoutManager];
-        [layoutManager setHyphenationFactor:0.0];
+        //[layoutManager setHyphenationFactor:0.0]; // deprecated and not needed anyway
         
         // NSLayoutManager is lazy, so we need the following kludge to force layout:
         [layoutManager glyphRangeForTextContainer:textContainer];
