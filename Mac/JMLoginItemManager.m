@@ -52,23 +52,31 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 + (void)restartApp
 {
-	NSString *appPath = [[bundle bundlePath] stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app", [LoginItemManager appNameCleaned])];
-	int pid = [NSProcessInfo.processInfo processIdentifier];
+#if defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
+    let config = [NSWorkspaceOpenConfiguration new];
+    config.createsNewApplicationInstance = YES;
+    [workspace openApplicationAtURL:bundle.bundleURL configuration:config completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error)
+    {
+        if (app)
+            [NSApp terminate:nil];
+    }];
+#else
+     NSString *appPath = [bundle.bundlePath stringByAppendingPathComponent:makeString(@"Contents/Library/LoginItems/%@LaunchHelper.app", [LoginItemManager appNameCleaned])];
+     int pid = NSProcessInfo.processInfo.processIdentifier;
 
-	[NSWorkspace.sharedWorkspace launchApplicationAtURL:appPath.fileURL
-												  options:NSWorkspaceLaunchDefault
-											configuration:@{@"NSWorkspaceLaunchConfigurationArguments" : @[@(pid).stringValue]}
-													error:NULL];
-
-	[NSApp terminate:nil];
+     [workspace launchApplicationAtURL:appPath.fileURL
+                               options:NSWorkspaceLaunchDefault
+                         configuration:@{@"NSWorkspaceLaunchConfigurationArguments" : @[@(pid).stringValue]}
+                                 error:NULL];
+    [NSApp terminate:nil];
+#endif
 }
 
 - (BOOL)launchesAtLogin
 {
 	LOGFUNC
 
-#ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
+#if defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
     if (@available(macOS 13.0, *))
     {
         switch (SMAppService.mainAppService.status)
@@ -89,7 +97,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     }
     else
 #endif
-#endif
     {
         return [self legacyHelperLaunchesAtLogin];
     }
@@ -99,8 +106,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 {
 	LOGFUNC
 
-#ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
-#if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
+#if defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
     if (@available(macOS 13.0, *))
     {
         NSError *error;
@@ -143,7 +149,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         [self setLegacyHelperLaunchesAtLogin:NO]; // prevent issue where the would be started both in the old and the new way
     }
     else
-#endif
 #endif
     {
         [self setLegacyHelperLaunchesAtLogin:launchesAtLogin];
