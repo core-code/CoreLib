@@ -1712,6 +1712,22 @@ CONST_KEY(CoreCodeAssociatedValue)
 //    return resultLanguage;
 }
 
+- (NSString *)removedPrefix:(NSString *)stringToRemove
+{
+    if ([self hasPrefix:stringToRemove])
+        return [self substringFromIndex:stringToRemove.length];
+    else
+        return self;
+}
+
+- (NSString *)removedSuffix:(NSString *)stringToRemove
+{
+    if ([self hasSuffix:stringToRemove])
+        return [self substringToIndex:self.length-stringToRemove.length];
+    else
+        return self;
+}
+
 - (NSString *)removed:(NSString *)stringToRemove
 {
     return [self stringByReplacingOccurrencesOfString:stringToRemove withString:@""];

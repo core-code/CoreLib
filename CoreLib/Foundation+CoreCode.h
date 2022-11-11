@@ -280,14 +280,16 @@
 - (void)stopObserving:(NSValue *)token;
 #endif
 
-- (NSString *)removed:(NSString *)stringToRemove;
+- (NSString *)removed:(NSString *)stringToRemove;                       // similar: stringByReplacingOccurrencesOfString:stringToRemove withString:@""];
+- (NSString *)removedSuffix:(NSString *)stringToRemove;
+- (NSString *)removedPrefix:(NSString *)stringToRemove;
 
 - (NSString *)slicingSubstringFromIndex:(NSInteger)index;  // get string with chars cut-off: index should be negative and tell how many chars to include from the end: -1 is just the last char
 - (NSString *)slicingSubstringToIndex:(NSInteger)index;  // get string with chars cut-off: index should be negative and tell how many chars to remove from the end: -1 removes one char from the end
 - (NSString *)substringWithRegexp:(NSString *)otherString; 
 
 
-// forwards for less typing
+// forwards for less typing - equivalent to AppKit methods and only shorter
 - (NSString *)replaced:(NSString *)str1 with:(NSString *)str2;			// shortcut = stringByReplacingOccurencesOfString:withString:
 - (NSArray <NSString *> *)split:(NSString *)sep;						// shortcut = componentsSeparatedByString:
 - (NSString *)appended:(NSString *)str;                                 // shortcut = stringByAppendingString
