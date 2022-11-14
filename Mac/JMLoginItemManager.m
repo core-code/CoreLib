@@ -52,7 +52,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 + (void)restartApp
 {
-#if defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000
+#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 130000
     let config = [NSWorkspaceOpenConfiguration new];
     config.createsNewApplicationInstance = YES;
     [workspace openApplicationAtURL:bundle.bundleURL configuration:config completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error)
