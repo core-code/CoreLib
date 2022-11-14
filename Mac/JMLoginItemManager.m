@@ -139,7 +139,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                         break;
                     default:
                     {
-                        NSString *info = [NSString stringWithFormat:@"Error unregistering mainAppService: %@", error.userInfo];
+                        NSString *info = [NSString stringWithFormat:@"Error %li unregistering mainAppService: %@", (long)error.code, error.userInfo];
                         assert_custom_info(0, info);
                     }
                 }
