@@ -2875,7 +2875,7 @@ CONST_KEY(CCDirectoryObserving)
 - (id)JSONObject
 {
     NSError *err;
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self options:(NSJSONReadingOptions)0 error:&err];
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:self options:(NSJSONReadingOptions)0 error:&err]; // on 10.15 this can crash ( +[NSJSONSerialization JSONObjectWithData:options:error:] + 94 => -[_NSJSONReader parseData:options:] + 240 => -[_NSJSONReader parseUTF8JSONData:skipBytes:options:] + 284 => newJSONValue + 1672 => newJSONValue + 3429 => __NSDictionaryI_new + 358 => objc_msgSend + 41 )
 
     if (!dict || err)
     {
