@@ -25,8 +25,11 @@ void RestartAppAtURL(NSURL *url)
     [workspace openApplicationAtURL:bundle.bundleURL configuration:config completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error)
     {
         if (!app)
-            alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
-        [NSApp terminate:nil];
+            dispatch_async_main(^
+            {
+                alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
+                [NSApp terminate:nil];
+            });
     }];
 #else
     NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:url options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance) configuration:@{} error:NULL];
