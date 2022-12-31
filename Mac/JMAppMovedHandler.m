@@ -22,7 +22,7 @@ void RestartAppAtURL(NSURL *url)
 #if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 110000
     let config = [NSWorkspaceOpenConfiguration new];
     config.createsNewApplicationInstance = YES;
-    [workspace openApplicationAtURL:bundle.bundleURL configuration:config completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error)
+    [workspace openApplicationAtURL:url configuration:config completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error)
     {
         if (!app)
             dispatch_async_main(^
@@ -30,6 +30,8 @@ void RestartAppAtURL(NSURL *url)
                 alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
                 [NSApp terminate:nil];
             });
+        else
+            [NSApp terminate:nil];
     }];
 #else
     NSRunningApplication *newInstance = [NSWorkspace.sharedWorkspace launchApplicationAtURL:url options:(NSWorkspaceLaunchOptions)(NSWorkspaceLaunchAsync | NSWorkspaceLaunchNewInstance) configuration:@{} error:NULL];
