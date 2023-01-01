@@ -98,7 +98,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     else
 #endif
     {
+#ifdef HAVE_LEGACY_HELPER
         return [self legacyHelperLaunchesAtLogin];
+#else
+        return 0;
+#endif
     }
 }
 
@@ -146,15 +150,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             }
         }
         
+#ifdef HAVE_LEGACY_HELPER
         [self setLegacyHelperLaunchesAtLogin:NO]; // prevent issue where the would be started both in the old and the new way
+#endif
     }
     else
 #endif
     {
+#ifdef HAVE_LEGACY_HELPER
         [self setLegacyHelperLaunchesAtLogin:launchesAtLogin];
+#endif
     }
 }
 
+#ifdef HAVE_LEGACY_HELPER
 // MARK: - Legacy helper launcher
 
 - (BOOL)legacyHelperLaunchesAtLogin
@@ -237,8 +246,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         [userDefaults setBool:YES forKey:key];
     }
 }
+#endif
 
 @end
-
 
 #endif
