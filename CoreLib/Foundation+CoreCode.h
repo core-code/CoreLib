@@ -247,6 +247,7 @@
 - (NSString *)clamp:(NSUInteger)maximumLength;
 - (NSString *)clampByteLength:(NSUInteger)maximumLength; // normal clamp clamps to number of chars. however with multi-byte chars, the upper bound for the number of bytes in UTF8 is (maximumLength * 4)
 - (NSString *)tail:(NSUInteger)maximumLength;
+- (NSString *)shortened:(NSUInteger)maximumLength; // so clamp gives you the beginning and cuts the end, tail cuts the beginning and gives you the end, but SHORTENED gives you "beginning…end" and cuts the middle
 
 // split a string at a splitter - return part before or after splitter - two variants, return either full string or null in case the seperator doesn't occur
 - (NSString *)splitBeforeFull:(NSString *)sep;
