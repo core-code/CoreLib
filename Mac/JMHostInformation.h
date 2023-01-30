@@ -31,6 +31,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (BOOL)isRunningUnderRosetta2;
 + (BOOL)isUserAdmin;
 + (BOOL)hasFullDiskAccess;
++ (BOOL)haveAutomationPermissions; // for apple events to finder basically
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
 + (NSString *)machineType;

@@ -403,6 +403,28 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 #endif
 
 
++ (BOOL)haveAutomationPermissions
+{
+    static BOOL cachedReturn = 0;
+
+    if (!cachedReturn)
+    {
+        OSStatus status;
+        NSAppleEventDescriptor *targetAppEventDescriptor;
+        for (NSString *bid in @[@"com.apple.systemuiserver", /*@"com.apple.systemevents",*/ @"com.apple.finder"])
+        {
+            targetAppEventDescriptor = [NSAppleEventDescriptor descriptorWithBundleIdentifier:bid];
+            status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, false);
+            if (status != noErr)
+                return NO;
+        }
+        
+        cachedReturn = YES;
+    }
+    
+    return YES;
+}
+
 + (BOOL)isUserAdmin
 {
     uid_t current_user_id = getuid();
