@@ -1515,6 +1515,18 @@ CONST_KEY(CoreCodeAssociatedValue)
     return ((self.length <= maximumLength) ? self : [self substringFromIndex:self.length - maximumLength]);
 }
 
+- (NSString *)shortened:(NSUInteger)maximumLength
+{
+    if (self.length <= maximumLength)
+        return self;
+    else
+    {
+        let halflength = (maximumLength - 1) / 2; // lets ignore rounding issues
+        return makeString(@"%@…%@", [self clamp:halflength], [self tail:halflength]);
+    }
+}
+
+
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements
 {
     NSString *ret = self;
