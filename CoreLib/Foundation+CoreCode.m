@@ -633,13 +633,24 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     if (terminationStatus)
     {
-        @try
+        if (task.isRunning)
         {
-            (*terminationStatus) = task.terminationStatus;
+            cc_log(@"Info: sleeping in order to be able to get terminationStatus for: %@", [self joined:@" "]);
+            [NSThread sleepForTimeInterval:0.05];
         }
-        @catch (NSException *e)
+
+        if (task.isRunning)
+            cc_log_error(@"Error: task is still running, avoiding to try to obtain terminationStatus for: %@", [self joined:@" "]);
+        else
         {
-            cc_log_error(@"Error: got exception %@ while trying to get terminationStatus %@", e.description, [self joined:@" "]);
+            @try
+            {
+                (*terminationStatus) = task.terminationStatus;
+            }
+            @catch (NSException *e)
+            {
+                cc_log_error(@"Error: got exception '%@' while trying to get terminationStatus for: %@", e.description, [self joined:@" "]);
+            }
         }
     }
     
@@ -703,13 +714,24 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     if (terminationStatus)
     {
-        @try
+        if (task.isRunning)
         {
-            (*terminationStatus) = task.terminationStatus;
+            cc_log(@"Info: sleeping in order to be able to get terminationStatus for: %@", [self joined:@" "]);
+            [NSThread sleepForTimeInterval:0.05];
         }
-        @catch (NSException *e)
+
+        if (task.isRunning)
+            cc_log_error(@"Error: task is still running, avoiding to try to obtain terminationStatus %@", [self joined:@" "]);
+        else
         {
-            cc_log_error(@"Error: got exception %@ while trying to get terminationStatus %@", e.description, [self joined:@" "]);
+            @try
+            {
+                (*terminationStatus) = task.terminationStatus;
+            }
+            @catch (NSException *e)
+            {
+                cc_log_error(@"Error: got exception '%@' while trying to get terminationStatus for: %@", e.description, [self joined:@" "]);
+            }
         }
     }
     
@@ -2798,7 +2820,7 @@ CONST_KEY(CCDirectoryObserving)
         if (lossy)
         {
 #ifndef CLI
-            cc_log_error(@"Error: used lossy conversion %li data %@ => %lu / %@", enc, self, (unsigned long)result.length, [result clamp:20]);
+            cc_log_error(@"Error: used lossy conversion %li data %@ => %lu / %@", enc, self, (unsigned long)result.length, [result clamp:20].strippedOfNewlines);
 #endif
         }
 
