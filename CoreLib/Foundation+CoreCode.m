@@ -1101,11 +1101,27 @@ CONST_KEY(CoreCodeAssociatedValue)
     return NSMakeRange(0, self.length);
 }
 
-- (unichar)safeCharacterAtIndex:(NSUInteger)index
+- (unichar)safeCharacterAtIndex:(NSUInteger)ind
 {
-    if (index < self.length)
-        return [self characterAtIndex:index];
+    if (ind < self.length)
+        return [self characterAtIndex:ind];
     return 0;
+}
+
+- (unichar)slicingCharacterAtIndex:(NSInteger)ind
+{
+    if (ind < 0)
+        return [self characterAtIndex:self.length+ind];
+    else
+        return [self characterAtIndex:ind];
+}
+
+- (unichar)safeSlicingCharacterAtIndex:(NSInteger)ind
+{
+    if (ind < 0)
+        return [self safeCharacterAtIndex:self.length+ind];
+    else
+        return [self safeCharacterAtIndex:ind];
 }
 
 - (unichar)firstChar

@@ -227,6 +227,8 @@
 @property (readonly, nonatomic) NSCharacterSet *characterSet;
 
 
+- (unichar)slicingCharacterAtIndex:(NSInteger)ind;
+- (unichar)safeSlicingCharacterAtIndex:(NSInteger)ind;
 - (unichar)safeCharacterAtIndex:(NSUInteger)ind;
 
 - (NSArray <NSArray <NSString *> *> *)parsedDSVWithDelimiter:(NSString *)delimiter;
