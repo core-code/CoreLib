@@ -1111,17 +1111,17 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (unichar)slicingCharacterAtIndex:(NSInteger)ind
 {
     if (ind < 0)
-        return [self characterAtIndex:self.length+ind];
+        return [self characterAtIndex:(NSUInteger)(((NSInteger)(self.length))+ind)];
     else
-        return [self characterAtIndex:ind];
+        return [self characterAtIndex:(NSUInteger)ind];
 }
 
 - (unichar)safeSlicingCharacterAtIndex:(NSInteger)ind
 {
     if (ind < 0)
-        return [self safeCharacterAtIndex:self.length+ind];
+        return [self safeCharacterAtIndex:(NSUInteger)(((NSInteger)(self.length))+ind)];
     else
-        return [self safeCharacterAtIndex:ind];
+        return [self safeCharacterAtIndex:(NSUInteger)ind];
 }
 
 - (unichar)firstChar
