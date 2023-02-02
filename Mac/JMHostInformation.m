@@ -403,7 +403,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 #endif
 
 
-+ (BOOL)haveAutomationPermissions
++ (BOOL)haveAutomationPermissions:(BOOL)allowAskingNow
 {
     static BOOL cachedReturn = 0;
 
@@ -411,18 +411,18 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     {
         OSStatus status;
         NSAppleEventDescriptor *targetAppEventDescriptor;
-        for (NSString *bid in @[@"com.apple.systemuiserver", /*@"com.apple.systemevents",*/ @"com.apple.finder"])
+        for (NSString *bid in @[@"com.apple.systemuiserver", @"com.apple.systemevents", @"com.apple.finder"])
         {
             targetAppEventDescriptor = [NSAppleEventDescriptor descriptorWithBundleIdentifier:bid];
-            status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, false);
-            if (status != noErr)
+            status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, allowAskingNow ? true : false);
+            if (status == errAEEventNotPermitted)
                 return NO;
         }
         
         cachedReturn = YES;
     }
     
-    return YES;
+    return YES; // NOTE: if allowAskingNow == FALSE, then a return value of YES doesn't mean we have permissions. it could also mean we haven't asked the user yet. it just means the permissions haven't been denied
 }
 
 + (BOOL)isUserAdmin

@@ -31,7 +31,7 @@ CC_ENUM(uint8_t, smartStatusEnum)
 + (BOOL)isRunningUnderRosetta2;
 + (BOOL)isUserAdmin;
 + (BOOL)hasFullDiskAccess;
-+ (BOOL)haveAutomationPermissions; // for apple events to finder basically
++ (BOOL)haveAutomationPermissions:(BOOL)allowAskingNow; // for apple events to finder basically  -NOTE: if allowAskingNow == FALSE, then a return value of YES doesn't mean we have permissions. it could also mean we haven't asked the user yet. it just means the permissions haven't been denied
 + (NSURL *)growlInstallURL;
 + (NSString *)ipAddress:(bool)ipv6;
 + (NSString *)machineType;
