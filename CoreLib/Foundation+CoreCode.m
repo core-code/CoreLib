@@ -1564,6 +1564,16 @@ CONST_KEY(CoreCodeAssociatedValue)
     }
 }
 
+- (NSString *)shortenedLinewise:(NSUInteger)maximumLines
+{
+    if (self.lines.count <= maximumLines)
+        return self;
+    else
+    {
+        long halflength = (maximumLines - 1) / 2; // lets ignore rounding issues
+        return makeString(@"%@\n…\n%@", [self.lines subarrayToIndex:(uint)halflength].joinedWithNewlines, [self.lines slicingSubarrayFromIndex:-halflength].joinedWithNewlines);
+    }
+}
 
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements
 {
@@ -2221,6 +2231,20 @@ CONST_KEY(CoreCodeAssociatedValue)
         r = [new rangeOfCharacterFromSet:characterSet];
     }
     return new;
+}
+
+- (NSString *)stringByDeduplicatingSuccessiveIdenticalLines
+{
+    let lines = self.lines;
+    let array = (NSMutableArray <NSString *> *)[NSMutableArray arrayWithCapacity:lines.count];
+    
+    for (NSString *line in lines)
+    {
+        let lastLine = array.lastObject;
+        if (![line isEqualToString:lastLine])
+            [array addObject:line];
+    }
+    return array.joinedWithNewlines;
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
