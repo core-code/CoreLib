@@ -90,22 +90,43 @@ CONST_KEY(CoreCodeAssociatedValue)
 
 - (id)mostFrequentObject
 {
-    NSCountedSet *set = [[NSCountedSet alloc] initWithArray:self];
-    id mostFrequentObject = nil;
-    NSUInteger highestCount = 0;
+//    NSCountedSet *set = [[NSCountedSet alloc] initWithArray:self]; // this seems to be slower than a two-loop solution, at least for small arrays
+//    id mostFrequentObject = nil;
+//    NSUInteger highestCount = 0;
+//
+//    for (id obj in set)
+//    {
+//        NSUInteger count = [set countForObject:obj];
+//
+//        if (count > highestCount)
+//        {
+//            highestCount = count;
+//            mostFrequentObject = obj;
+//        }
+//    }
+
     
-    for (id obj in set)
+    let objToCount = makeMutableDictionary();
+    for (id obj in self)
     {
-        NSUInteger count = [set countForObject:obj];
-        
-        if (count > highestCount)
-        {
-            highestCount = count;
-            mostFrequentObject = obj;
-        }
+        objToCount[obj] = @([objToCount[obj] intValue] + 1);
     }
     
-    return mostFrequentObject;
+    int highestCount = 0;
+    id highestObj;
+    
+    for (id obj in self)
+    {
+        int thisCount = [objToCount[obj] intValue];
+        
+        if (thisCount > highestCount)
+        {
+            highestCount = thisCount;
+            highestObj = obj;
+        }
+    }
+
+    return highestObj;
 }
 
 - (NSString *)stringValue
@@ -3108,10 +3129,15 @@ CONST_KEY(CCDirectoryObserving)
 
 + (NSDate *)dateWithISO8601Date:(NSString *)iso8601DateString
 {   // there is the NSISO8601DateFormatter but its 10.12+
-    NSDateFormatter *df = NSDateFormatter.new;
     
-    df.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
-    df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    static NSDateFormatter *df;
+    
+    ONCE_PER_FUNCTION(^
+    {
+        df = NSDateFormatter.new;
+        df.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
+        df.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    });
     
     NSDate *result = [df dateFromString:iso8601DateString];
     
@@ -3125,8 +3151,14 @@ CONST_KEY(CCDirectoryObserving)
 
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone
 {
+    static NSLocale *l;
+    
+    ONCE_PER_FUNCTION(^
+    {
+        l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    });
+
     NSDateFormatter *df = NSDateFormatter.new;
-    NSLocale *l = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     df.locale = l;
     df.dateFormat = dateFormat;
     if (timeZone)

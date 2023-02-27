@@ -194,6 +194,7 @@ void alert_nonmodal_dontwarnagain_ever(NSString *identifier, NSString *title, NS
 
     
 // !!!: OBJECT CREATION FUNCTIONS
+NSString *makeStringC(const char * __restrict, ...);
 NSString *makeString(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 NSString *makeLocalizedString(NSString *format, ...)  NS_FORMAT_FUNCTION(1,2);
     

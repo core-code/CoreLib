@@ -624,6 +624,22 @@ NSString *makeLocalizedString(NSString *format, ...)
     return str;
 }
 
+NSString *makeStringC(const char * __restrict format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    
+    char *resC;
+    vasprintf(&resC, format, args);
+    NSString *resOBJC = @(resC);
+    
+    free(resC);
+    va_end(args);
+
+    return resOBJC;
+}
+
 NSString *makeString(NSString *format, ...)
 {
     va_list args;
