@@ -3167,15 +3167,21 @@ CONST_KEY(CCDirectoryObserving)
     return [df stringFromDate:self];
 }
 
-- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle locale:(NSLocale *)locale
 {
     NSDateFormatter *df = NSDateFormatter.new;
 
-    df.locale = [NSLocale currentLocale];
+    df.locale = locale;
     df.dateStyle = dateStyle;
     df.timeStyle = timeStyle;
 
     return [df stringFromDate:self];
+}
+
+
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle
+{
+    return [self stringUsingDateStyle:dateStyle timeStyle:timeStyle locale:[NSLocale currentLocale]];
 }
 
 - (NSString *)shortDateString
@@ -3193,6 +3199,20 @@ CONST_KEY(CCDirectoryObserving)
     return [self stringUsingDateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle];
 }
 
+- (NSString *)shortDateStringPosix
+{
+    return [self stringUsingDateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle locale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+}
+
+- (NSString *)shortTimeStringPosix
+{
+    return [self stringUsingDateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle locale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+}
+
+- (NSString *)shortDateAndTimeStringPosix
+{
+    return [self stringUsingDateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle locale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+}
 
 @end
 

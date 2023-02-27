@@ -401,15 +401,18 @@
 + (NSDate *)dateWithUnformattedDate:(NSString *)dateString; // uses NSDataDetector
 - (NSString *)stringUsingFormat:(NSString *)dateFormat;
 - (NSString *)stringUsingFormat:(NSString *)dateFormat timeZone:(NSTimeZone *)timeZone;
-- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle; // warning: this uses currentLocale and thus uses different output formats on different Macs
+- (NSString *)stringUsingDateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle locale:(NSLocale *)locale;
 - (NSDate *)nextDay;
 - (NSDate *)previousDay;
 - (BOOL)isLaterThan:(NSDate *)date;
 - (BOOL)isEarlierThan:(NSDate *)date;
-@property (readonly, nonatomic) NSString *shortDateString;
-@property (readonly, nonatomic) NSString *shortTimeString;
-@property (readonly, nonatomic) NSString *shortDateAndTimeString;
-
+@property (readonly, nonatomic) NSString *shortDateString;				// warning: this uses currentLocale and thus uses different output formats on different Macs
+@property (readonly, nonatomic) NSString *shortTimeString; 				// warning: this uses currentLocale and thus uses different output formats on different Macs
+@property (readonly, nonatomic) NSString *shortDateAndTimeString;		// warning: this uses currentLocale and thus uses different output formats on different Macs
+@property (readonly, nonatomic) NSString *shortDateStringPosix;
+@property (readonly, nonatomic) NSString *shortTimeStringPosix;
+@property (readonly, nonatomic) NSString *shortDateAndTimeStringPosix;
 
 @end
 
