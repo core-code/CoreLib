@@ -399,6 +399,16 @@ CONST_KEY(CoreCodeAssociatedValue)
         return self[(NSUInteger)index];
 }
 
+- (id)safeSlicingObjectAtIndex:(NSInteger)index
+{
+    if (index < 0)
+        return [self safeObjectAtIndex:(NSUInteger)((NSInteger)self.count + index)];
+    else
+        return [self safeObjectAtIndex:(NSUInteger)index];
+}
+
+
+
 - (id)safeObjectAtIndex:(NSUInteger)index
 {
     if (self.count > index)
