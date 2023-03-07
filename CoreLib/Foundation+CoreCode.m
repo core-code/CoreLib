@@ -106,7 +106,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 //    }
 
     
-    let objToCount = makeMutableDictionary();
+    let objToCount = (NSMutableDictionary <NSObject *, NSNumber *> *) makeMutableDictionary();
     for (id obj in self)
     {
         objToCount[obj] = @([objToCount[obj] intValue] + 1);
