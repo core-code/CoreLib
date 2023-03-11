@@ -310,6 +310,7 @@ void fatal(const char *fmt, ...)__printflike(1, 2) __attribute__((noreturn));
 #define OBJECTS_EQUAL(x,y)      (((x) == nil && (y) == nil) || [(x) isEqual:(y)])
 #define OBJECT_OR(x,y)			((x) ? (x) : (y))
 #define STRING_OR(x, y)			(((x) && ([x isKindOfClass:[NSString class]]) && ([((NSString *)x) length])) ? (x) : (y))
+#define ARRAY_OR(x, y)          (((x) && ([x isKindOfClass:[NSArray class]]) && ([((NSArray *)x) count])) ? (x) : (y))
 #define VALID_STR(x)			(((x) && ([x isKindOfClass:[NSString class]])) ? (x) : @"")
 #define NON_NIL_STR(x)			((x) ? (x) : @"")
 #define NON_NIL_ARR(x)			((x) ? (x) : @[])
