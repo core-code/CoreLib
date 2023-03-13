@@ -84,7 +84,10 @@
         NSError *underlyingError = err2.userInfo[NSUnderlyingErrorKey];
         
         
-        assert_custom_info(err2.code == NSFileWriteOutOfSpaceError || err2.code == NSFileWriteNoPermissionError || underlyingError.code == ENFILE, err2.description);
+        assert_custom_info(err2.code == NSFileWriteOutOfSpaceError ||
+                           err2.code == NSFileWriteNoPermissionError ||
+                           err2.code == NSFileNoSuchFileError ||
+                           underlyingError.code == ENFILE, err2.description);
         [_lock unlock];
         if (error) *error = err2;
         return NO;
