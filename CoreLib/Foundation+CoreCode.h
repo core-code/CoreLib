@@ -46,6 +46,7 @@
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key insensitive:(BOOL)insensitive;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
 - (BOOL)contains:(ObjectType)object;                                // shortcut = containsObject
+- (BOOL)containsString:(NSString *)str insensitive:(BOOL)insensitive;
 - (BOOL)containsObjectIdenticalTo:(ObjectType)object;               // similar: indexOfObjectIdenticalTo != NSNotFound
 
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
@@ -252,6 +253,8 @@
 - (NSString *)tail:(NSUInteger)maximumLength;
 - (NSString *)shortened:(NSUInteger)maximumLength; // so clamp gives you the beginning and cuts the end, tail cuts the beginning and gives you the end, but SHORTENED gives you "beginning…end" and cuts the middle
 - (NSString *)shortenedLinewise:(NSUInteger)maximumLines; // same as above but linewise. problematic if lines are super long
+
+- (NSArray <NSString *> *)misspelledWords:(NSArray <NSString *> *)wordsToIgnore;
 
 // split a string at a splitter - return part before or after splitter - two variants, return either full string or null in case the seperator doesn't occur
 - (NSString *)splitBeforeFull:(NSString *)sep;

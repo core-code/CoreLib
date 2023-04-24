@@ -275,6 +275,17 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self containsObject:object];
 }
 
+- (BOOL)containsString:(NSString *)str insensitive:(BOOL)insensitive
+{
+    for (NSString *string in self)
+    {
+        if ([string contains:str insensitive:insensitive] && str.length && string.length)
+            return YES;
+    }
+    return NO;
+}
+
+
 - (BOOL)containsObjectIdenticalTo:(id)object
 {
     return [self indexOfObjectIdenticalTo:object] != NSNotFound;
@@ -1004,6 +1015,26 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSString *rotString = @(newcstring);
     free(newcstring);
     return rotString;
+}
+
+- (NSArray <NSString *> *)misspelledWords:(NSArray <NSString *> *)wordsToIgnore
+{
+    NSUInteger startPosition = 0;
+    let foundOffenders = makeMutableArray();
+    
+    while (startPosition != NSNotFound)
+    {
+        let range = [NSSpellChecker.sharedSpellChecker checkSpellingOfString:self startingAt:startPosition language:nil wrap:NO inSpellDocumentWithTag:0 wordCount:NULL];
+        
+        if (range.location != NSNotFound)
+        {
+            let offendingWord = [self substringWithRange:range];
+            if (![wordsToIgnore containsString:offendingWord insensitive:YES])
+                [foundOffenders addObject:offendingWord];
+        }
+        startPosition = range.location + range.length;
+    }
+    return foundOffenders.count ? foundOffenders : nil;
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
