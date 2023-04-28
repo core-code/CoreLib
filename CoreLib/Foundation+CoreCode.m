@@ -1017,6 +1017,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return rotString;
 }
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSArray <NSString *> *)misspelledWords:(NSArray <NSString *> *)wordsToIgnore
 {
     NSUInteger startPosition = 0;
@@ -1037,7 +1038,6 @@ CONST_KEY(CoreCodeAssociatedValue)
     return foundOffenders.count ? foundOffenders : nil;
 }
 
-#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (NSImage *)namedImage
 {
     NSImage *image = [NSImage imageNamed:self];

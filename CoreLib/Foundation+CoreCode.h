@@ -254,7 +254,6 @@
 - (NSString *)shortened:(NSUInteger)maximumLength; // so clamp gives you the beginning and cuts the end, tail cuts the beginning and gives you the end, but SHORTENED gives you "beginning…end" and cuts the middle
 - (NSString *)shortenedLinewise:(NSUInteger)maximumLines; // same as above but linewise. problematic if lines are super long
 
-- (NSArray <NSString *> *)misspelledWords:(NSArray <NSString *> *)wordsToIgnore;
 
 // split a string at a splitter - return part before or after splitter - two variants, return either full string or null in case the seperator doesn't occur
 - (NSString *)splitBeforeFull:(NSString *)sep;
@@ -268,6 +267,7 @@
 
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+- (NSArray <NSString *> *)misspelledWords:(NSArray <NSString *> *)wordsToIgnore;
 - (NSAttributedString *)attributedStringWithColor:(NSColor *)color;
 - (NSAttributedString *)attributedStringWithHyperlink:(NSURL *)url;
 - (NSAttributedString *)attributedStringWithFont:(NSFont *)font;
