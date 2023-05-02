@@ -2934,7 +2934,7 @@ CONST_KEY(CCDirectoryObserving)
         if (lossy)
         {
 #ifndef CLI
-            cc_log_error(@"Error: used lossy conversion %li data %@ => %lu / %@", enc, self, (unsigned long)result.length, [result clamp:20].strippedOfNewlines);
+            cc_log(@"Warning: used lossy conversion %li data %@ => %lu / %@", enc, self, (unsigned long)result.length, [result clamp:20].strippedOfNewlines);
 #endif
         }
 
