@@ -1025,7 +1025,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     while (startPosition != NSNotFound)
     {
-        let range = [NSSpellChecker.sharedSpellChecker checkSpellingOfString:self startingAt:startPosition language:nil wrap:NO inSpellDocumentWithTag:0 wordCount:NULL];
+        let range = [NSSpellChecker.sharedSpellChecker checkSpellingOfString:self startingAt:(NSInteger)startPosition language:nil wrap:NO inSpellDocumentWithTag:0 wordCount:NULL];
         
         if (range.location != NSNotFound)
         {
