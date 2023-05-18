@@ -191,6 +191,7 @@
 @property (readonly, nonatomic) NSUInteger lengthFixed;     // string length that doesn't fuck up for emoji
 
 @property (readonly, nonatomic) NSString *expanded;						// shortcut = stringByExpandingTildeInPath
+@property (readonly, nonatomic) NSString *expandedWithCareForSudo;      // this will be able to expand tildes even if a CLI tools is called with sudo
 @property (readonly, nonatomic) NSString *strippedOfNewlines;               // deletes from interior of string too, in contrast to TRIMMING which deletes only from front and back ... shortcut for stringByDeletingCharactersInSet:newlineCharacterSet
 @property (readonly, nonatomic) NSString *strippedOfWhitespace;             // deletes from interior of string too, in contrast to TRIMMING which deletes only from front and back ... shortcut for stringByDeletingCharactersInSet:whitespaceCharacterSet
 @property (readonly, nonatomic) NSString *strippedOfWhitespaceAndNewlines;
