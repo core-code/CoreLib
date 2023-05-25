@@ -2353,8 +2353,8 @@ CONST_KEY(CCDirectoryObserving)
     stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, fileLevelEvents ? kFSEventStreamCreateFlagFileEvents : 0);
 
     CFRelease(pathsToWatch);
-    FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-
+    dispatch_queue_t fileEventsObservationQueue = dispatch_queue_create("fileEventsObservationQueue", NULL);
+    FSEventStreamSetDispatchQueue(stream, fileEventsObservationQueue);
     FSEventStreamStart(stream);
 
     NSValue *token = [NSValue valueWithPointer:stream];

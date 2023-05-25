@@ -51,8 +51,6 @@ NSWorkspace *workspace;
 NSProcessInfo *processInfo;
 #endif
 
-
-
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 NSString *_machineType(void);
 BOOL _isUserAdmin(void);
@@ -1847,7 +1845,6 @@ id dispatch_async_to_sync(BasicBlock block)
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-// private
 NSString *_machineType()
 {
     Class hostInfoClass = NSClassFromString(@"JMHostInformation");

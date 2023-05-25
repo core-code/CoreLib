@@ -121,8 +121,8 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
                                  kFSEventStreamCreateFlagWatchRoot
                                  );
     CFRelease(pathsToWatch);
-    FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-
+    dispatch_queue_t MoveObservationQueue = dispatch_queue_create("MoveObservationQueue", NULL);
+    FSEventStreamSetDispatchQueue(stream, MoveObservationQueue);
     FSEventStreamStart(stream);
     
     
