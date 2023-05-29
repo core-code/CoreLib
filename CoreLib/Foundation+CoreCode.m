@@ -1521,6 +1521,15 @@ CONST_KEY(CoreCodeAssociatedValue)
     return self.stringByExpandingTildeInPath;
 }
 
+- (NSString *)expandedWithCareForSudo
+{
+    if ([self hasPrefix:@"~/"])
+        return makeString(@"%@%@", NSProcessInfo.processInfo.environment[@"HOME"], [self substringFromIndex:1]);
+    else
+        return self;
+}
+
+
 - (NSArray <NSString *> *)words
 {
     return [self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
