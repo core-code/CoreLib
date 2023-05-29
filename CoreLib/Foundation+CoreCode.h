@@ -82,6 +82,7 @@
 - (NSString *)joined:(NSString *)sep;							// shortcut = componentsJoinedByString:
 
 @property (readonly, nonatomic) NSString *joinedWithSpaces;
+@property (readonly, nonatomic) NSString *joinedWithCommasAndSpaces;
 @property (readonly, nonatomic) NSString *joinedWithNewlines;
 @property (readonly, nonatomic) NSString *joinedWithDots;
 @property (readonly, nonatomic) NSString *joinedWithCommas;

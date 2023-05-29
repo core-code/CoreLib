@@ -579,6 +579,11 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self componentsJoinedByString:@","];
 }
 
+- (NSString *)joinedWithCommasAndSpaces
+{
+    return [self componentsJoinedByString:@", "];
+}
+
 - (NSArray *)filteredUsingPredicateString:(NSString *)format, ...
 {
     va_list args;
