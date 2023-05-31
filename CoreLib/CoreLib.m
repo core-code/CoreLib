@@ -1845,7 +1845,7 @@ id dispatch_async_to_sync(BasicBlock block)
 }
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-NSString *_machineType()
+NSString *_machineType(void)
 {
     Class hostInfoClass = NSClassFromString(@"JMHostInformation");
     
@@ -1859,7 +1859,7 @@ NSString *_machineType()
     }
     return @"";
 }
-BOOL _isUserAdmin()
+BOOL _isUserAdmin(void)
 {
     Class hostInfoClass = NSClassFromString(@"JMHostInformation");
     
