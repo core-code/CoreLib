@@ -2316,7 +2316,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     
     for (NSString *line in lines)
     {
-        let lastLine = array.lastObject;
+        NSString *lastLine = array.lastObject; // false-positive in compiler warning with Xcode 14.3 when using var/let
         if (![line isEqualToString:lastLine])
             [array addObject:line];
     }
