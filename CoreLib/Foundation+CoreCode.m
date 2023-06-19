@@ -1609,6 +1609,17 @@ CONST_KEY(CoreCodeAssociatedValue)
     return [self stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 }
 
+- (NSString *)paddedWithSpaces:(NSUInteger)minimumLength
+{
+    var tmpString = self;
+    
+    while (tmpString.length < minimumLength)
+        tmpString = [tmpString appended:@" "];
+    
+    return tmpString;
+}
+
+
 - (NSString *)clamp:(NSUInteger)maximumLength
 {
     return ((self.length <= maximumLength) ? self : [self substringToIndex:maximumLength]);

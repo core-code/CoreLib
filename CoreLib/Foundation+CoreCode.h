@@ -250,6 +250,7 @@
 - (BOOL)containsAll:(NSArray <NSString *>*)otherStrings;
 - (BOOL)equalsAny:(NSArray <NSString *>*)otherStrings;
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements;
+- (NSString *)paddedWithSpaces:(NSUInteger)minimumLengh; // pads with spaces
 - (NSString *)clamp:(NSUInteger)maximumLength;
 - (NSString *)clampByteLength:(NSUInteger)maximumLength; // normal clamp clamps to number of chars. however with multi-byte chars, the upper bound for the number of bytes in UTF8 is (maximumLength * 4)
 - (NSString *)tail:(NSUInteger)maximumLength;
