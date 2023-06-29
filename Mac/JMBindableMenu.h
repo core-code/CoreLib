@@ -15,6 +15,6 @@
 
 @interface JMBindableMenu : NSMenu
 
-@property (strong, atomic) IBInspectable NSArray <NSString *> *menuTitles;
+@property (strong, nonatomic) IBInspectable NSString *firstMenuItemName;  // set only if you want a a fixed item above all those dynamic ones below
 
 @end

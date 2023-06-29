@@ -11,14 +11,27 @@
 
 #import "JMBindableMenu.h"
 
+@interface JMBindableMenu ()
+
+@property (strong, atomic) NSArray <NSString *> *menuTitles;
+
+@end
 
 
 @implementation JMBindableMenu
 
-- (void)awakeFromNib
+- (instancetype)initWithCoder:(NSCoder *)coder
 {
-    [self addObserver:self forKeyPath:@"menuTitles" options:NSKeyValueObservingOptionNew context:nil];
+    self = [super initWithCoder:coder];
+    if (self)
+    {
+        [self addObserver:self forKeyPath:@"menuTitles" options:NSKeyValueObservingOptionNew context:nil];
+    }
+    return self;
 }
+
+
+
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -30,7 +43,63 @@
 
 - (void)refreshMenu
 {
+    [self removeAllItems];
+    
+    NSMenu *sm = self.supermenu;
+    NSMenuItem *aboveParent;
+    NSMenuItem *parent;
+    for (NSMenuItem *it in sm.itemArray)
+    {
+        if (it.submenu == self)
+        {
+            parent = it;
+            break;
+        }
+        aboveParent = it;
+    }
+    
+    int i = 1;
+    
+    if (self.firstMenuItemName.length)
+    {
+        NSMenuItem *item = [NSMenuItem new];
+        item.title = self.firstMenuItemName;
+        [self addItem:item];
+    }
+        
+    for (NSString *name in self.menuTitles)
+    {
+        
+        NSMenuItem *item = [NSMenuItem new];
+        item.title = name;
+        item.enabled = YES;
+        
+        // implicit behaviour: if the item above our menu has a numbered shortcut, continue with subsequent numbers
+        if (aboveParent.keyEquivalent.intValue > 0 && aboveParent.keyEquivalent.intValue < 10)
+        {
+            let higherNumber = aboveParent.keyEquivalent.intValue + i;
+            if (higherNumber < 10)
+            {
+                item.keyEquivalent = @(higherNumber).stringValue;
+                item.keyEquivalentModifierMask = aboveParent.keyEquivalentModifierMask;
+            }
+        }
 
+        
+        // implicit behaviour: use action from parent
+        item.action = parent.action;
+        item.target = parent.target;
+        
+        // implicit behaviour: use subsequent tags to parent for our menu items
+        item.tag = parent.tag + i++;
+        
+
+        [self addItem:item];
+    }
+    
+    // disabling the menu will only work in case the supermenu has autoenables false
+    let shouldBeEnabled = self.menuTitles.count > 0;
+    parent.enabled = shouldBeEnabled;
 }
 
 
