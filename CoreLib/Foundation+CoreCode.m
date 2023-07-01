@@ -2357,7 +2357,7 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
     }
 
     void (^block)(id input) = (__bridge void (^)(id))(clientCallBackInfo);
-    block(tmp);
+    dispatch_async_main(^{ block(tmp); });
 //
 //    void (^block)(void) = (__bridge void (^)(void))(clientCallBackInfo);
 //    block();

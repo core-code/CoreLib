@@ -288,8 +288,9 @@
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (CGSize)sizeUsingFont:(NSFont *)font maxWidth:(CGFloat)maxWidth;
+
 // FSEvents directory observing
-- (NSValue *)startObserving:(ObjectInBlock)block withFileLevelEvents:(BOOL)fileLevelEvents;
+- (NSValue *)startObserving:(ObjectInBlock)block withFileLevelEvents:(BOOL)fileLevelEvents; // the block is guaranteed to be executed in the main thread
 - (void)stopObserving:(NSValue *)token;
 #endif
 
