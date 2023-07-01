@@ -98,7 +98,7 @@
     }
     
     // disabling the menu will only work in case the supermenu has autoenables false
-    let shouldBeEnabled = self.menuTitles.count > 0;
+    let shouldBeEnabled = (BOOL)(self.menuTitles.count > 0);
     parent.enabled = shouldBeEnabled;
 }
 
