@@ -266,10 +266,10 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 - (NSArray *)appCrashLogFilenames // doesn't do anything in sandbox!
 {
     NSArray <NSString *> *logs1 = @"~/Library/Logs/DiagnosticReports/".expanded.directoryContents;
-    logs1 = [logs1 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@ AND self ENDSWITH '.crash'", self.appName]; // there is also .spin and .diag but we aren't interested in them ATM
+    logs1 = [logs1 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@ AND (self ENDSWITH '.crash' OR self ENDSWITH '.ips')", self.appName]; // there is also .spin and .diag but we aren't interested in them ATM
     logs1 = [logs1 mapped:^id(NSString *input) { return [@"~/Library/Logs/DiagnosticReports/".stringByExpandingTildeInPath stringByAppendingPathComponent:input]; }];
     NSArray <NSString *> *logs2 = @"/Library/Logs/DiagnosticReports/".expanded.directoryContents;
-    logs2 = [logs2 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@ AND self ENDSWITH '.crash'", self.appName];
+    logs2 = [logs2 filteredUsingPredicateString:@"self BEGINSWITH[cd] %@ AND (self ENDSWITH '.crash' OR self ENDSWITH '.ips')", self.appName];
     logs2 = [logs2 mapped:^id(NSString *input) { return [@"/Library/Logs/DiagnosticReports/" stringByAppendingPathComponent:input]; }];
 
     

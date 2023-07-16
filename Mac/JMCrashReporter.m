@@ -107,12 +107,16 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
                 if ([crashlog rangeOfString:@"gpusGenerateCrashLog"].location != NSNotFound) // ignore GPU driver crashes
                     return;
 
-                if ([crashlog rangeOfString:@"Crashed Thread"].location == NSNotFound) // ignore fake reports
-                    return;
-
-                if ([crashlog containsAll:@[@"KERN_MEMORY_ERROR", @"EXC_CORPSE_NOTIFY", @"Bus error: 10", @"Namespace SIGNAL, Code 0xa", @"exc handler"]]) // this seems to be no real crash and possibly connted to the volume where the app has been launched disappearing
-                    return;
-
+                BOOL isNewIPSLog = [crashlog contains:@"\"bug_type\":\"309\""];
+                
+                if (!isNewIPSLog)
+                {
+                    if ([crashlog rangeOfString:@"Crashed Thread"].location == NSNotFound) // ignore fake reports
+                        return;
+                    
+                    if ([crashlog containsAll:@[@"KERN_MEMORY_ERROR", @"EXC_CORPSE_NOTIFY", @"Bus error: 10", @"Namespace SIGNAL, Code 0xa", @"exc handler"]]) // this seems to be no real crash and possibly connted to the volume where the app has been launched disappearing
+                        return;
+                }
                     
                 if (!foundNeccessaryString)
                     return;
