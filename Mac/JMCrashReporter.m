@@ -106,12 +106,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
 
                 if ([crashlog rangeOfString:@"gpusGenerateCrashLog"].location != NSNotFound) // ignore GPU driver crashes
                     return;
-                
-                BOOL isAppleMemoryCorruptionIssue = [crashlog containsAll:@[@"macOS 13.4", @"22F82", @"tiny_"]] ||
-                                                     [crashlog containsAll:@[@"macOS 13.4", @"22F77", @"tiny_"]];
-                if (isAppleMemoryCorruptionIssue)
-                    return;
-                                                      
+                                 
 
                 BOOL isNewIPSLog = [crashlog contains:@"\"bug_type\":\"309\""];
                 
