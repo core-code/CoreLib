@@ -1798,6 +1798,13 @@ void dispatch_async_back(dispatch_block_t block)
     dispatch_async(queue, block);
 }
 
+
+void dispatch_async_back_hp(dispatch_block_t block)
+{
+    dispatch_queue_t queue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0);
+    dispatch_async(queue, block);
+}
+
 void dispatch_sync_main(dispatch_block_t block)
 {
     if ([NSThread currentThread] == [NSThread mainThread])

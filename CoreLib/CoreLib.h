@@ -226,6 +226,7 @@ void dispatch_after_main(float seconds, dispatch_block_t block);
 void dispatch_after_back(float seconds, dispatch_block_t block);
 void dispatch_async_main(dispatch_block_t block);
 void dispatch_async_back(dispatch_block_t block);
+void dispatch_async_back_hp(dispatch_block_t block);
 void dispatch_sync_main(dispatch_block_t block);
 void dispatch_sync_back(dispatch_block_t block);
 BOOL dispatch_sync_back_timeout(dispatch_block_t block, float timeoutSeconds); // returns 0 on succ
