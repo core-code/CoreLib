@@ -2357,10 +2357,8 @@ void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clie
     }
 
     void (^block)(id input) = (__bridge void (^)(id))(clientCallBackInfo);
-    dispatch_async_main(^{ block(tmp); });
-//
-//    void (^block)(void) = (__bridge void (^)(void))(clientCallBackInfo);
-//    block();
+    block(tmp);
+    // dispatch_async_main(^{ block(tmp); });
 }
 
 CONST_KEY(CCDirectoryObserving)
@@ -2378,8 +2376,9 @@ CONST_KEY(CCDirectoryObserving)
     stream = FSEventStreamCreate(NULL, &directoryObservingEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, latency, fileLevelEvents ? kFSEventStreamCreateFlagFileEvents : 0);
 
     CFRelease(pathsToWatch);
-    dispatch_queue_t fileEventsObservationQueue = dispatch_queue_create("fileEventsObservationQueue", NULL);
-    FSEventStreamSetDispatchQueue(stream, fileEventsObservationQueue);
+    FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    //dispatch_queue_t fileEventsObservationQueue = dispatch_queue_create("fileEventsObservationQueue", NULL);
+    //FSEventStreamSetDispatchQueue(stream, fileEventsObservationQueue); NOTE when uncommenting this, we'll be called on the back thread which must be properly handled
     FSEventStreamStart(stream);
 
     NSValue *token = [NSValue valueWithPointer:stream];

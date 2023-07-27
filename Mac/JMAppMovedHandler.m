@@ -17,7 +17,7 @@ static int bundleFileDescriptor;
 
 void RestartAppAtURL(NSURL *url)
 {
-    dispatch_async_main(^
+  //  dispatch_async_main(^
     {
         alert_apptitled(makeLocalizedString(@"%@ has been moved, but applications should never be moved while they are running.", cc.appName), makeLocalizedString(@"Restart %@", cc.appName), nil, nil);
         
@@ -40,7 +40,8 @@ void RestartAppAtURL(NSURL *url)
             alert_apptitled(makeLocalizedString(@"%@ could not restart itself. Please do so yourself.", cc.appName), @"Quit".localized, nil, nil);
         [NSApp terminate:nil];
 #endif
-    });
+    }
+//    );
 }
 
 void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
@@ -122,8 +123,9 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
                                  kFSEventStreamCreateFlagWatchRoot
                                  );
     CFRelease(pathsToWatch);
-    dispatch_queue_t MoveObservationQueue = dispatch_queue_create("MoveObservationQueue", NULL);
-    FSEventStreamSetDispatchQueue(stream, MoveObservationQueue);
+    FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    //dispatch_queue_t MoveObservationQueue = dispatch_queue_create("MoveObservationQueue", NULL);
+    //FSEventStreamSetDispatchQueue(stream, MoveObservationQueue); NOTE when uncommenting this, we'll be called on the back thread which must be properly handled
     FSEventStreamStart(stream);
     
     
