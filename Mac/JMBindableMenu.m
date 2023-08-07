@@ -39,7 +39,10 @@
 {
     if (object == self && [keyPath isEqualToString:@"menuTitles"])
     {
-        [self refreshMenu];
+        dispatch_async_main(^ // we could be called on-non-main depending on where the value is changed
+        {
+            [self refreshMenu];
+        });
     }
 }
 
