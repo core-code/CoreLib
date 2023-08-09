@@ -57,7 +57,10 @@ BOOL _isUserAdmin(void);
 __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 {
     NSString *exceptionDetails = makeString(@" %@ %@ %@ %@", exception.description, exception.reason, exception.userInfo.description, exception.callStackSymbols);
-    NSString *exceptionInfoToStore = [NSString stringWithFormat:@"Date: %@ Exception:%@", NSDate.date.shortDateAndTimeString, exceptionDetails];
+    NSString *versionDetails = makeString(@"%@ (%@)",
+                                          [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
+                                          [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"]);
+    NSString *exceptionInfoToStore = [NSString stringWithFormat:@"Date: %@ Version: %@ Exception:%@", NSDate.date.shortDateAndTimeStringPosix, versionDetails, exceptionDetails];
     
     cc_defaults_addtoarray(kExceptionInformationKey, exceptionInfoToStore, 10);
     
