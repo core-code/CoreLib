@@ -14,6 +14,7 @@
 @interface JMBindableMenu ()
 
 @property (strong, atomic) NSArray <NSString *> *menuTitles;
+@property (assign, atomic) BOOL isBound;
 
 @end
 
@@ -30,10 +31,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [self removeObserver:self forKeyPath:@"menuTitles"];
-}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -107,5 +104,29 @@
     parent.enabled = shouldBeEnabled;
 }
 
+- (void)bindToObject:(id)observable withKeyPath:(NSString *)keyPath options:(nullable NSDictionary<NSBindingOption, id> *)options
+{
+    [self bind:@"menuTitles" toObject:observable withKeyPath:keyPath options:options];
+    self.isBound = YES;
+}
+
+- (void)unbind
+{
+    [self unbind:@"menuTitles"];
+    self.isBound = NO;
+}
+
+- (void)dealloc
+{
+    LOGFUNC
+    
+    [self removeObserver:self forKeyPath:@"menuTitles"];
+    
+    if (self.isBound)
+    {
+        assert_custom_info(!self.isBound, self.description);
+        [self unbind:@"menuTitles"];
+    }
+}
 
 @end

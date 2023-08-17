@@ -15,6 +15,11 @@
 
 @interface JMBindableMenu : NSMenu
 
-@property (strong, nonatomic) IBInspectable NSString *firstMenuItemName;  // set only if you want a a fixed item above all those dynamic ones below
+@property (strong, nonatomic) IBInspectable NSString * _Nullable firstMenuItemName;  // set only if you want a a fixed item above all those dynamic ones below
+
+
+// better to use just those binding methods instead of -[NSObject bind:toObject:withKeyPath:options:] and -[NSObject unbind:] with @"menuTitles" so that possible forgotten unbinds can be tracked and fixed automatically
+- (void)bindToObject:(id _Nonnull)observable withKeyPath:(NSString * _Nonnull)keyPath options:(nullable NSDictionary<NSBindingOption, id> *)options;
+- (void)unbind;
 
 @end
