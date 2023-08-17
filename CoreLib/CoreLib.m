@@ -224,7 +224,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             NSString *versionsPath = makeString(@"%@/%@/Versions", frameworkPath, framework);
             for (NSString *versionsEntry in versionsPath.directoryContents)
             {
-                if ((![versionsEntry isEqualToString:@"A"]) && (![versionsEntry isEqualToString:@"B"]) && (![versionsEntry isEqualToString:@"Current"]))
+                if ((![versionsEntry isEqualToString:@"A"]) && (![versionsEntry isEqualToString:@"B"]) && (![versionsEntry isEqualToString:@"Current"]) && (![versionsEntry isEqualToString:@"0.0.0"]))
                 {
                     cc_log_error(@"The frameworks are damaged probably by lowercasing. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.");
                     exit(1);
