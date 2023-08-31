@@ -46,7 +46,6 @@ typedef enum MusicEShM MusicEShM;
 
 enum MusicESrc {
 	MusicESrcLibrary = 'kLib',
-	MusicESrcIPod = 'kPod',
 	MusicESrcAudioCD = 'kACD',
 	MusicESrcMP3CD = 'kMCD',
 	MusicESrcRadioTuner = 'kTun',
@@ -62,7 +61,7 @@ enum MusicESrA {
 	MusicESrAArtists = 'kSrR' /* artists only */,
 	MusicESrAComposers = 'kSrC' /* composers only */,
 	MusicESrADisplayed = 'kSrV' /* visible text fields */,
-	MusicESrASongs = 'kSrS' /* song names only */
+	MusicESrANames = 'kSrS' /* track names only */
 };
 typedef enum MusicESrA MusicESrA;
 
@@ -110,10 +109,20 @@ enum MusicEClS {
 	MusicEClSError = 'kErr',
 	MusicEClSDuplicate = 'kDup',
 	MusicEClSSubscription = 'kSub',
+	MusicEClSPrerelease = 'kPrR',
 	MusicEClSNoLongerAvailable = 'kRev',
 	MusicEClSNotUploaded = 'kUpP'
 };
 typedef enum MusicEClS MusicEClS;
+
+enum MusicEExF {
+	MusicEExFPlainText = 'kTXT',
+	MusicEExFUnicodeText = 'kUCT',
+	MusicEExFXML = 'kXML',
+	MusicEExFM3U = 'kM3U',
+	MusicEExFM3U8 = 'kM38'
+};
+typedef enum MusicEExF MusicEExF;
 
 @protocol MusicGenericMethods
 
@@ -159,14 +168,14 @@ typedef enum MusicEClS MusicEClS;
 @property (copy) MusicEncoder *currentEncoder;  // the currently selected encoder (MP3, AIFF, WAV, etc.)
 @property (copy) MusicEQPreset *currentEQPreset;  // the currently selected equalizer preset
 @property (copy, readonly) MusicPlaylist *currentPlaylist;  // the playlist containing the currently targeted track
-@property (copy, readonly) NSString *currentStreamTitle;  // the name of the current song in the playing stream (provided by streaming server)
+@property (copy, readonly) NSString *currentStreamTitle;  // the name of the current track in the playing stream (provided by streaming server)
 @property (copy, readonly) NSString *currentStreamURL;  // the URL of the playing stream or streaming web site (provided by streaming server)
 @property (copy, readonly) MusicTrack *currentTrack;  // the current targeted track
 @property (copy) MusicVisual *currentVisual;  // the currently selected visual plug-in
 @property BOOL EQEnabled;  // is the equalizer enabled?
 @property BOOL fixedIndexing;  // true if all AppleScript track indices should be independent of the play order of the owning playlist.
 @property BOOL frontmost;  // is this the active application?
-@property BOOL fullScreen;  // are visuals displayed using the entire screen?
+@property BOOL fullScreen;  // is the application using the entire screen?
 @property (copy, readonly) NSString *name;  // the name of the application
 @property BOOL mute;  // has the sound output been muted?
 @property double playerPosition;  // the player’s position within the currently playing track in seconds.
@@ -209,6 +218,7 @@ typedef enum MusicEClS MusicEClS;
 @property (copy) NSDictionary *properties;  // every property of the item
 
 - (void) download;  // download a cloud track or playlist
+- (NSString *) exportAs:(MusicEExF)as to:(NSURL *)to;  // export a source or playlist
 - (void) reveal;  // reveal and select a track or playlist
 
 @end
@@ -237,7 +247,7 @@ typedef enum MusicEClS MusicEClS;
 @property (readonly) BOOL downloaded;  // was this artwork downloaded by Music?
 @property (copy, readonly) NSNumber *format;  // the data format for this piece of artwork
 @property NSInteger kind;  // kind or purpose of this piece of artwork
-@property (copy) NSData *rawData;  // data for this artwork, in original format
+@property (copy) id rawData;  // data for this artwork, in original format
 
 
 @end
@@ -270,7 +280,7 @@ typedef enum MusicEClS MusicEClS;
 
 @end
 
-// a list of songs/streams
+// a list of tracks/streams
 @interface MusicPlaylist : MusicItem
 
 - (SBElementArray<MusicTrack *> *) tracks;
@@ -278,13 +288,13 @@ typedef enum MusicEClS MusicEClS;
 
 @property (copy) NSString *objectDescription;  // the description of the playlist
 @property BOOL disliked;  // is this playlist disliked?
-@property (readonly) NSInteger duration;  // the total length of all songs (in seconds)
+@property (readonly) NSInteger duration;  // the total length of all tracks (in seconds)
 @property (copy) NSString *name;  // the name of the playlist
 @property BOOL loved;  // is this playlist loved?
 @property (copy, readonly) MusicPlaylist *parent;  // folder which contains this playlist (if any)
-@property (readonly) NSInteger size;  // the total size of all songs (in bytes)
+@property (readonly) NSInteger size;  // the total size of all tracks (in bytes)
 @property (readonly) MusicESpK specialKind;  // special playlist kind
-@property (copy, readonly) NSString *time;  // the length of all songs in MM:SS format
+@property (copy, readonly) NSString *time;  // the length of all tracks in MM:SS format
 @property (readonly) BOOL visible;  // is this playlist visible in the Source list?
 
 - (void) moveTo:(SBObject *)to;  // Move playlist(s) to a new location
@@ -308,7 +318,7 @@ typedef enum MusicEClS MusicEClS;
 
 @end
 
-// the master library playlist
+// the main library playlist
 @interface MusicLibraryPlaylist : MusicPlaylist
 
 - (SBElementArray<MusicFileTrack *> *) fileTracks;
@@ -391,7 +401,7 @@ typedef enum MusicEClS MusicEClS;
 @property (copy) NSString *genre;  // the music/audio genre (category) of the track
 @property (copy) NSString *grouping;  // the grouping (piece) of the track. Generally used to denote movements within a classical work.
 @property (copy, readonly) NSString *kind;  // a text description of the track
-@property (copy) NSString *longDescription;
+@property (copy) NSString *longDescription;  // the long description of the track
 @property BOOL loved;  // is this track loved?
 @property (copy) NSString *lyrics;  // the lyrics of the track
 @property MusicEMdK mediaKind;  // the media kind of the track
@@ -508,7 +518,7 @@ typedef enum MusicEClS MusicEClS;
 // the main window
 @interface MusicBrowserWindow : MusicWindow
 
-@property (copy, readonly) SBObject *selection;  // the selected songs
+@property (copy, readonly) SBObject *selection;  // the selected tracks
 @property (copy) MusicPlaylist *view;  // the playlist currently displayed in the window
 
 
@@ -529,7 +539,7 @@ typedef enum MusicEClS MusicEClS;
 // a sub-window showing a single playlist
 @interface MusicPlaylistWindow : MusicWindow
 
-@property (copy, readonly) SBObject *selection;  // the selected songs
+@property (copy, readonly) SBObject *selection;  // the selected tracks
 @property (copy, readonly) MusicPlaylist *view;  // the playlist displayed in the window
 
 
