@@ -26,8 +26,8 @@ CC_ENUM(uint8_t, smartStatusEnum)
 
 @interface JMHostInformation : NSObject
 
-+ (BOOL)isRunningReadonly;
-+ (BOOL)isRunningTranslocated;
++ (BOOL)isRunningTranslocatedOrReadonly;
++ (BOOL)isRunningFromDiskImage;
 + (BOOL)isRunningUnderRosetta2;
 + (BOOL)isUserAdmin;
 + (BOOL)hasFullDiskAccess;

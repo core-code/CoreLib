@@ -31,6 +31,8 @@
 
 #if __has_feature(modules)
 @import Darwin.POSIX.sys.stat;
+@import Darwin.POSIX.sys.xattr;
+//@import Darwin.POSIX.sys.time;
 #else
 #include <sys/stat.h>
 #endif
@@ -2421,7 +2423,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSURL (CoreCode)
 
-@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, downloadWithCurl, contents, fileIsDirectory, fileIsQuarantined, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
+@dynamic directoryContents, directoryContentsRecursive, fileExists, uniqueFile, request, mutableRequest, fileSize, directorySize, isWriteablePath, download, downloadWithCurl, contents, fileIsDirectory, fileIsQuarantined, fileIsQuarantinedRV, fileIsQuarantinedXA, fileOrDirectorySize, fileChecksumSHA, fileCreationDate, fileModificationDate; // , path
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 @dynamic fileIsAlias, fileAliasTarget, fileIsRestricted, fileIsRegularFile, fileIsSymlink;
 
@@ -2487,10 +2489,25 @@ CONST_KEY(CCDirectoryObserving)
 
 - (BOOL)fileIsQuarantined
 {
-    NSNumber *value;
-    [self getResourceValue:&value forKey:NSURLQuarantinePropertiesKey error:NULL];
-    return value.boolValue;
+    return self.fileIsQuarantinedRV || self.fileIsQuarantinedXA; // buggy apple shit returns random results so we gotta check two ways
 }
+
+- (BOOL)fileIsQuarantinedRV
+{
+    NSDictionary *properties;
+    [self getResourceValue:&properties forKey:NSURLQuarantinePropertiesKey error:NULL];
+    return properties != nil;
+}
+
+- (BOOL)fileIsQuarantinedXA
+{
+    char cpath[PATH_MAX] = {0};
+    BOOL succ = [self.path getFileSystemRepresentation:cpath maxLength:sizeof(cpath)];
+    if (!succ) return FALSE;
+    ssize_t attr = getxattr(cpath, "com.apple.quarantine", NULL, 0, 0, XATTR_NOFOLLOW);
+    return attr >= 0;
+}
+
 
 - (BOOL)fileIsDirectory
 {

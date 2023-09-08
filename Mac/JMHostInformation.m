@@ -192,20 +192,40 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     return ret > 0;
 }
 
-+ (BOOL)isRunningReadonly
++ (BOOL)isRunningFromDiskImage
 {
-    struct statfs statfs_info;
-    statfs(bundle.bundlePath.fileSystemRepresentation, &statfs_info);
-    BOOL readonly = (statfs_info.f_flags & MNT_RDONLY) != 0;
+    if (![JMHostInformation isRunningTranslocatedOrReadonly]) // basically our clients should never call this method unless TranslocatedOrReadonly has already returned YES, but since we are in an uncommon branch the additional check is not problematic
+        return NO;
     
-    return readonly;
+    let bur = bundle.bundleURL;
+    let fiq = bur.fileIsQuarantinedRV;
+    let cqc = bur.fileIsQuarantinedXA;
+    
+    if (fiq == 1 && cqc == 0) // running from DMG and these results should also be the same for all paths within the bundle - tested on 13.5.2
+        return YES;
+    else if ((fiq == 0 && cqc == 1) ||
+             (fiq == 1 && cqc == 1))    // running from quarantine (downloads?) and while cqc should be 1 for all paths within the bundle, fiq is basically random - tested on 13.5.2
+        return NO;
+    else // if (fiq == 0 && cqc == 0)
+    {
+        let info = makeString(@"%@ %i %i %@", bur, fiq, cqc, NSProcessInfo.processInfo.operatingSystemVersionString);
+        assert_custom_info(fiq||cqc, info);
+
+        return NO;
+    }
 }
 
-+ (BOOL)isRunningTranslocated
++ (BOOL)isRunningTranslocatedOrReadonly
 { // could also use kCFURLQuarantinePropertiesKey?
     BOOL isTranslocated = [bundle.bundlePath contains:@"AppTranslocation"];
+        
+    struct statfs statfs_info;
+    statfs(bundle.bundlePath.fileSystemRepresentation, &statfs_info);
+    BOOL isReadonly = (statfs_info.f_flags & MNT_RDONLY) != 0;
     
-    return isTranslocated;
+   	if (isTranslocated) 	assert_custom(isReadonly);
+
+    return isTranslocated || isReadonly;
 }
 
 #ifdef USE_DISKARBITRATION
