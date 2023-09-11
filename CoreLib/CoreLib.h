@@ -249,7 +249,8 @@ name ## Key *const k ## name ## Key = ( name ## Key *) @ #name;
 #define CONST_KEY_ENUM_DECLARATION(name, enumname) \
 @interface name ## Key : NSString @property (assign, nonatomic) enumname defaultInt; @end \
 extern name ## Key *const k ## name ## Key;
-
+#define CONST_KEY_IMPLEMENTATION_RENAMED(name, userDefaultsKey) \
+NSString *const k ## name ## Key = @ #userDefaultsKey;
     
 // !!!: LOGGING
 typedef NS_ENUM(uint8_t, cc_log_type)
