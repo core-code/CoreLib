@@ -35,6 +35,7 @@
 //@import Darwin.POSIX.sys.time;
 #else
 #include <sys/stat.h>
+#include <sys/xattr.h>
 #endif
 
 
