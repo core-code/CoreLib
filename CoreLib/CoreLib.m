@@ -368,7 +368,12 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
 - (NSString *)suppDir
 {
-    return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:self.appName];
+    NSString *appName = self.appName;
+    
+    if (!appName)
+        appName =  [NSProcessInfo.processInfo.arguments.firstObject split:@"/"].lastObject;
+    
+    return [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:appName];
 }
 
 - (NSURL * __nonnull)suppURL
