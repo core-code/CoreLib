@@ -49,6 +49,7 @@ CONST_KEY_DECLARATION(VisibilityShiftLeftClickNotification)
 @property (strong, nonatomic) NSPopover *statusItemPopover;
 @property (strong, nonatomic) NSString *menuTooltip;
 
+@property (readonly, nonatomic) NSStatusItem *statusItem;       // shouldn't really be messed with expect things like changing accessibility values on the button
 @property (readonly, nonatomic) BOOL permanentlyVisibleInDock;  // true if displaying in dock or displaying in dock and menubar
 @property (readonly, nonatomic) BOOL currentlyVisibleInDock; // true if permanetly visible in dock or currently visible because the window is open
 @property (readonly, nonatomic) BOOL visibleInMenubar;
