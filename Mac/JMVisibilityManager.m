@@ -451,8 +451,10 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
     
 - (void)_transform:(BOOL)foreground
 {
+    // todo, try this newer call instead of TransformProcessType() which seems to work just as good (with the same menubar-not-clickable-bug:     [NSApp setActivationPolicy:foreground ? NSApplicationActivationPolicyRegular : NSApplicationActivationPolicyAccessory];
     ProcessSerialNumber psn = {0, kCurrentProcess};
     TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
+
     dispatch_after_main(0.1f,^{[NSApplication.sharedApplication activateIgnoringOtherApps:YES];});
     _dockIconIsCurrentlyVisible = foreground;
 }
