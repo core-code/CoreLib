@@ -206,7 +206,8 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     else if ((fiq == 0 && cqc == 1) ||
              (fiq == 1 && cqc == 1))    // running from quarantine (downloads?) and while cqc should be 1 for all paths within the bundle, fiq is basically random - tested on 13.5.2
         return NO;
-    else if ([bur.path hasPrefix:makeString(@"/Volumes/%@/", [bundle objectForInfoDictionaryKey:@"CFBundleName"])]) // no idea how we could be on the image but not translocated, maybe SIP-less systems
+    else if ([bur.path hasPrefix:makeString(@"/Volumes/%@/", [bundle objectForInfoDictionaryKey:@"CFBundleName"])] ||  // no idea how we could be on the image but not translocated, maybe SIP-less systems
+             [bur.path hasPrefix:makeString(@"/Volumes/%@ ", [bundle objectForInfoDictionaryKey:@"CFBundleName"])])
         return YES;
     else // if (fiq == 0 && cqc == 0)
     {
