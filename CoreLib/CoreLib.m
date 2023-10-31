@@ -507,10 +507,18 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
                                     encodedPrefs,
                                     crashReports);
     
-    
-    urlString = makeString(@"mailto:%@?subject=%@&body=%@", recipient, subject, content);
-    
-    [urlString.escaped.URL open];
+    BOOL shiftDown = (NSEvent.modifierFlags & NSEventModifierFlagShift) != 0;
+    if (shiftDown)
+    {
+        NSString *finalString = makeString(@"RECIPIENT: %@\n\nSUBJECT: %@\n\nCONTENT: %@", recipient, subject, content);
+        [NSPasteboard.generalPasteboard declareTypes:@[NSPasteboardTypeString] owner:nil];
+        [NSPasteboard.generalPasteboard setString:finalString forType:NSPasteboardTypeString];
+    }
+    else
+    {
+        urlString = makeString(@"mailto:%@?subject=%@&body=%@", recipient, subject, content);
+        [urlString.escaped.URL open];
+    }
 }
 #endif
 
