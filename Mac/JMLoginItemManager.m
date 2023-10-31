@@ -126,7 +126,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                     case kSMErrorLaunchDeniedByUser:
                     default:
                     {
-                        NSString *info = [NSString stringWithFormat:@"Error %li registering mainAppService: %@\n%@", (long)error.code, error.userInfo, NSProcessInfo.processInfo.operatingSystemVersionString];
+                        let bt = [NSThread.callStackSymbols joined:@"|"];
+                        NSString *info = [NSString stringWithFormat:@"Error %li registering mainAppService: %@ - %@ - %@", (long)error.code, error.userInfo, NSProcessInfo.processInfo.operatingSystemVersionString, bt];
                         assert_custom_info(0, info);
                     }
                 }
@@ -143,7 +144,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
                         break;
                     default:
                     {
-                        NSString *info = [NSString stringWithFormat:@"Error %li unregistering mainAppService: %@", (long)error.code, error.userInfo];
+                        let bt = [NSThread.callStackSymbols joined:@"|"];
+                        NSString *info = [NSString stringWithFormat:@"Error %li unregistering mainAppService: %@ - %@", (long)error.code, error.userInfo, bt];
                         assert_custom_info(0, info);
                     }
                 }
