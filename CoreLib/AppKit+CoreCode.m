@@ -406,7 +406,16 @@ CONST_KEY(CCExtendedProgressIndicator)
 {
     __kindof NSView *view = [self viewWithTag:tag];
     
+
+#ifdef DEBUG
     assert(view);
+    int viewsWithThisTag = 0;
+    let allSubviews = [self allSubviews];
+    for (NSView *sv in allSubviews)
+        if (sv.tag == tag) viewsWithThisTag++;
+    assert(viewsWithThisTag == 1);
+#endif
+    
     
     return view;
 }
