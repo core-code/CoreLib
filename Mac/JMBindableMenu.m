@@ -65,7 +65,7 @@
     if (self.firstMenuItemName.length)
     {
         NSMenuItem *item = [NSMenuItem new];
-        item.title = self.firstMenuItemName;
+        item.title = self.firstMenuItemName.localized;
         [self addItem:item];
     }
         
