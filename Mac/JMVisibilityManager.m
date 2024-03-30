@@ -186,7 +186,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 - (void)setMenubarIcon:(NSImage *)newMenubarIcon
 {
     if ((self.templateSetting == kTemplateAlways) ||
-        ((self.templateSetting == kTemplateWhenDarkMenubar) && [NSApp.effectiveAppearance.name contains:@"NSAppearanceNameVibrantDark"]))
+        ((self.templateSetting == kTemplateWhenDarkMenubar) && [NSApp.effectiveAppearance.name.lowercaseString contains:@"dark"]))
         newMenubarIcon.template = YES;
     else
         newMenubarIcon.template = NO;

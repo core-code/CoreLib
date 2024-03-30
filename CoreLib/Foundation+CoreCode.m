@@ -2618,7 +2618,7 @@ CONST_KEY(CCDirectoryObserving)
 
 - (unsigned long long)fileOrDirectorySize
 {
-    return (self.fileIsDirectory ? self.directorySize : self.fileSize);
+    return (self.fileIsDirectory || self.fileIsBundle) ? self.directorySize : self.fileSize;
 }
 
 - (NSDate *)fileCreationDate
