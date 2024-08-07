@@ -80,9 +80,9 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
 @end
 
 @implementation JMAppVolumeRenamedObserver
-- (void)watch:(NSNotification *)not
+- (void)watch:(NSNotification *)inputNotification
 {
-    NSURL *oldVolumeURL = not.userInfo[NSWorkspaceVolumeOldURLKey];
+    NSURL *oldVolumeURL = inputNotification.userInfo[NSWorkspaceVolumeOldURLKey];
     NSString *oldVolume = oldVolumeURL.path;
     
     if (!oldVolume) return;
@@ -90,7 +90,7 @@ void MoveCallbackFunction(ConstFSEventStreamRef streamRef,
     if ([self.path hasPrefix:oldVolume] &&  // we are really on the renamed volume
         ![oldVolume isEqualToString:@"/"])  // renaming the boot value doesn't break things since its path always stays '/'
     {
-        NSURL *newVolumeURL = not.userInfo[NSWorkspaceVolumeURLKey];
+        NSURL *newVolumeURL = inputNotification.userInfo[NSWorkspaceVolumeURLKey];
         NSString *newVolume = newVolumeURL.path;
         
         cc_log(@"Info: volume rename detection triggered, offering to restart app");
