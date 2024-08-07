@@ -50,7 +50,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
     
 + (void)initialize
 {
-    NSMutableDictionary <NSString *, NSObject *> *defaultValues = [NSMutableDictionary dictionary];
+    let defaultValues = (NSMutableDictionary <NSString *, NSObject *> *)makeMutableDictionary();
 
     defaultValues[kJMVisibilityManagerValueKey] = @(kVisibleDock);
 

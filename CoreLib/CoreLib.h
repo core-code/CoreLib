@@ -102,11 +102,16 @@ CC_ENUM(uint8_t, openChoice)
 
 #define MAKE_MAKER(classname) \
 static inline NS ## classname * make ## classname (void) { return (NS ## classname *)[NS ## classname new];}
-MAKE_MAKER(MutableArray)
-MAKE_MAKER(MutableIndexSet)
 MAKE_MAKER(MutableString)
-MAKE_MAKER(MutableSet)
+MAKE_MAKER(MutableIndexSet)
+// MAKE_MAKER(MutableArray) # we have a safer special version now
 // MAKE_MAKER(MutableDictionary) # we have a safer special version now
+static inline NSMutableOrderedSet <NSObject *>*makeMutableOrderedSet(void) { return [NSMutableOrderedSet new]; }
+static inline NSMutableSet <NSObject *>*makeMutableSet(void) { return [NSMutableSet new]; }
+static inline NSMutableArray <NSObject *>*makeMutableArray(void) { return [NSMutableArray new]; }
+static inline NSMutableDictionary <NSObject *, NSObject *>*makeMutableDictionary(void) { return [NSMutableDictionary new]; }
+
+
 
 // !!!: CORELIB OBJ INTERFACE
 @interface CoreLib : NSObject
@@ -214,7 +219,6 @@ NSColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);	// params fro
 UIColor *makeColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a);
 UIColor *makeColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a);
 #endif
-NSMutableDictionary <NSObject *, NSObject *>*makeMutableDictionary(void);
 CGFloat generateRandomFloatBetween(CGFloat a, CGFloat b);
 int generateRandomIntBetween(int a, int b);
 

@@ -776,7 +776,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
     if (!found)
     {
-        NSMutableDictionary <NSString *, NSObject *> *diskDict = [NSMutableDictionary dictionary];
+        let diskDict = (NSMutableDictionary <NSString *, NSObject *> *)makeMutableDictionary();
 
         diskDict[kDiskNumberKey] = num;
         diskDict[kDiskNameKey] = ((detail) ? makeString(@"%@ (%@)", name, detail) : name);
@@ -888,7 +888,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                             LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match %@", (__bridge NSString *)data);
 
 
-                                            NSMutableDictionary <NSString *, NSNumber *> *diskDict2 = [NSMutableDictionary dictionary];
+                                            let diskDict2 = (NSMutableDictionary <NSString *, NSNumber *> *)makeMutableDictionary();
                                             
                                             
                                             if ([(__bridge NSString *)data hasPrefix:@"disk"] && (((__bridge NSString *)data).length >= 5))
@@ -1050,7 +1050,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                                     {
                                                         
                                                         CFTypeRef    data = NULL;
-                                                        NSMutableDictionary <NSString *, NSNumber *> *diskDict2 = [NSMutableDictionary dictionary];
+                                                        let diskDict2 = (NSMutableDictionary <NSString *, NSNumber *> *)makeMutableDictionary();
                                                         
                                                         
                                                         data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);
@@ -1119,7 +1119,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
-    NSMutableArray  *nonRemovableVolumes = [NSMutableArray array];
+    NSMutableArray  *nonRemovableVolumes = makeMutableArray()
 
 
     DASessionRef session = DASessionCreate(kCFAllocatorDefault);
@@ -1282,7 +1282,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     DASessionRef session = DASessionCreate(kCFAllocatorDefault);
     
     int subsequentNil = 0;
-    NSMutableArray *disks = [NSMutableArray array];
+    let disks = makeMutableArray();
     for (int i = 0; i < 64 && subsequentNil < 5; i++)
     {
         NSString *bsdname = [NSString stringWithFormat:@"/dev/disk%i", i];

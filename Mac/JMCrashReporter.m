@@ -131,7 +131,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
 
                 if (code == NSAlertFirstButtonReturn)
                 {
-                    NSMutableString *inputManagers = [NSMutableString string];
+                    NSMutableString *inputManagers = makeMutableString();
                     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask, YES);
                     for (NSString *libPath in paths)
                     {

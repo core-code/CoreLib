@@ -1024,7 +1024,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSArray <NSString *> *)misspelledWords:(NSArray <NSString *> *)wordsToIgnore
 {
     NSUInteger startPosition = 0;
-    let foundOffenders = makeMutableArray();
+    let foundOffenders = (NSMutableArray <NSString *> *)makeMutableArray();
     
     while (startPosition != NSNotFound)
     {
@@ -2340,7 +2340,7 @@ void directoryObservingReleaseCallback(const void *info)
 
 void directoryObservingEventCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
 {
-    NSMutableArray <NSDictionary *> *tmp = makeMutableArray();
+    let tmp = (NSMutableArray <NSDictionary *> *)makeMutableArray();
     char **paths = eventPaths;
     for (NSUInteger i = 0; i < numEvents; i++)
     {

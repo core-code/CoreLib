@@ -392,7 +392,7 @@ CONST_KEY(CCExtendedProgressIndicator)
 
 - (NSArray <NSView *> *)allSubviews
 {
-    NSMutableArray *allSubviews = [NSMutableArray arrayWithObject:self];
+    NSMutableArray <NSView *> *allSubviews = [NSMutableArray arrayWithObject:self];
 
     NSArray *subviews = self.subviews;
 
