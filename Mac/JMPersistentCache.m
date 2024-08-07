@@ -12,7 +12,7 @@
 
 @interface JMPersistentCache()
 
-@property (nonatomic, strong) NSMutableDictionary *cache;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSObject *> *cache;
 @property (nonatomic, strong) NSLock *lock;
 
 @end
@@ -52,7 +52,7 @@
         }
             
         if (!self.cache) // error, or first launch
-            self.cache = makeMutableDictionary();
+            self.cache = (id)makeMutableDictionary();
             
         self.lock = [[NSLock alloc] init];
     }
@@ -136,7 +136,7 @@
 - (void)clear
 {
     [_lock lock];
-    _cache = makeMutableDictionary();
+    _cache = (id)makeMutableDictionary();
     [_lock unlock];
 }
 @end

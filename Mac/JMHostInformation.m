@@ -776,7 +776,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
     if (!found)
     {
-        NSMutableDictionary *diskDict = [NSMutableDictionary dictionary];
+        NSMutableDictionary <NSString *, NSObject *> *diskDict = [NSMutableDictionary dictionary];
 
         diskDict[kDiskNumberKey] = num;
         diskDict[kDiskNameKey] = ((detail) ? makeString(@"%@ (%@)", name, detail) : name);
@@ -888,7 +888,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                             LOGMOUNTEDHARDDISK(@"mountedHarddisks ZFS found match %@", (__bridge NSString *)data);
 
 
-                                            NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
+                                            NSMutableDictionary <NSString *, NSNumber *> *diskDict2 = [NSMutableDictionary dictionary];
                                             
                                             
                                             if ([(__bridge NSString *)data hasPrefix:@"disk"] && (((__bridge NSString *)data).length >= 5))
@@ -1050,7 +1050,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                                     {
                                                         
                                                         CFTypeRef    data = NULL;
-                                                        NSMutableDictionary *diskDict2 = [NSMutableDictionary dictionary];
+                                                        NSMutableDictionary <NSString *, NSNumber *> *diskDict2 = [NSMutableDictionary dictionary];
                                                         
                                                         
                                                         data = IORegistryEntrySearchCFProperty(ggparent, kIOServicePlane, CFSTR("BSD Name"), kCFAllocatorDefault, kIORegistryIterateRecursively | kIORegistryIterateParents);

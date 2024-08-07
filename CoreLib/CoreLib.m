@@ -613,6 +613,11 @@ NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparat
     return dict;
 }
 
+NSMutableDictionary <NSObject *, NSObject *>*makeMutableDictionary(void)
+{
+    return [NSMutableDictionary new];
+}
+
 NSString *makeDescription(NSObject *sender, NSArray *args)
 {
     NSMutableString *dsc = [NSMutableString new];
