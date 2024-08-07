@@ -45,7 +45,6 @@
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key insensitive:(BOOL)insensitive;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
-- (BOOL)contains:(ObjectType)object;                                // shortcut = containsObject
 - (BOOL)containsString:(NSString *)str insensitive:(BOOL)insensitive;
 - (BOOL)containsObjectIdenticalTo:(ObjectType)object;               // similar: indexOfObjectIdenticalTo != NSNotFound
 

@@ -273,11 +273,6 @@ CONST_KEY(CoreCodeAssociatedValue)
 }
 
 
-- (BOOL)contains:(id)object
-{
-    return [self containsObject:object];
-}
-
 - (BOOL)containsString:(NSString *)str insensitive:(BOOL)insensitive
 {
     for (NSString *string in self)
