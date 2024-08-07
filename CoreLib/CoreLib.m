@@ -593,7 +593,7 @@ NSDictionary<NSString *, id> * _makeDictionaryOfVariables(NSString *commaSeparat
     
     if (!argumentNames.count) return nil;
     
-    NSMutableDictionary *dict = makeMutableDictionary();
+    let dict = (NSMutableDictionary<NSString *, NSObject *> *)makeMutableDictionary();
     va_list args;
     va_start(args, firstValue);
     

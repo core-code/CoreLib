@@ -123,7 +123,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 + (NSArray <NSString *> *)runningProcesses
 {
-    NSMutableArray *procs = makeMutableArray();
+    let procs = (NSMutableArray <NSString *> *) makeMutableArray();
     int pidCount = proc_listpids(PROC_ALL_PIDS, 0, NULL, 0);
     unsigned long pidsBufSize = sizeof(pid_t) * (unsigned long)pidCount;
     pid_t * pids = malloc(pidsBufSize);

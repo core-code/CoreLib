@@ -923,7 +923,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     assert([self count:@"**"] == 1);
     NSString *prefix = [self splitBeforeNull:@"**"];
     NSString *suffix = [self splitAfterNull:@"**"];
-    NSMutableArray *results = makeMutableArray();
+    NSMutableArray *results = (NSMutableArray <NSString *> *) makeMutableArray();
     NSDirectoryEnumerator *filesEnumerator = [NSFileManager.defaultManager enumeratorAtPath:prefix];
 
     NSString *file;
@@ -1328,9 +1328,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSArray <NSString *> *)directoryContentsRecursive
 {
     assert(fileManager);
-    NSDirectoryEnumerator *filesEnumerator = [fileManager enumeratorAtPath:self];
-    NSMutableArray *results = makeMutableArray();
+    let filesEnumerator = [fileManager enumeratorAtPath:self];
+    let results = (NSMutableArray <NSString *> *) makeMutableArray();
     NSString *file;
+    
     while ((file = filesEnumerator.nextObject))
     {
         [results addObject:file];
@@ -1348,9 +1349,10 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSArray <NSString *> *)directoryContentsRecursiveAbsolute
 {
     assert(fileManager);
-    NSDirectoryEnumerator *filesEnumerator = [fileManager enumeratorAtPath:self];
-    NSMutableArray *results = makeMutableArray();
+    let filesEnumerator = [fileManager enumeratorAtPath:self];
+    let results = (NSMutableArray <NSString *> *) makeMutableArray();
     NSString *file;
+    
     while ((file = filesEnumerator.nextObject))
     {
         [results addObject:[self stringByAppendingPathComponent:file]];
