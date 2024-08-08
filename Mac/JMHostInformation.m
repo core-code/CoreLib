@@ -112,8 +112,8 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     NSString *currentUser = [@[@"/usr/bin/whoami"] runAsTask].trimmedOfWhitespaceAndNewlines;
     NSString *loggedUsersString = [@[@"/usr/bin/who"] runAsTask];
     NSArray *loggedUsersArray = loggedUsersString.lines;
-    NSArray *loggedUsersGuiArray = [loggedUsersArray filtered:^BOOL(NSString *input) { return [input contains:@"console"];}];
-    NSArray *loggedUsersGuiExceptUsArray = [loggedUsersGuiArray filtered:^BOOL(NSString *input) { return ![input contains:currentUser];}];
+    NSArray *loggedUsersGuiArray = [loggedUsersArray filtered:^BOOL(NSString *input) { return [input containsString:@"console"];}];
+    NSArray *loggedUsersGuiExceptUsArray = [loggedUsersGuiArray filtered:^BOOL(NSString *input) { return ![input containsString:currentUser];}];
     NSArray *loggedUsersGuiExceptUsCleanArray = [loggedUsersGuiExceptUsArray mapped:^NSString *(NSString *input) { return [input split:@" "].firstObject;}];
 
     
@@ -154,7 +154,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     NSString *url = lastUpdate[@"url"];
     NSString *countyCode;
     
-    if ([url contains:@"itunes.apple.com/"])
+    if ([url containsString:@"itunes.apple.com/"])
     {
         NSString *laterPart = [url split:@"itunes.apple.com/"][1];
         
@@ -220,7 +220,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 + (BOOL)isRunningTranslocatedOrReadonly
 { // could also use kCFURLQuarantinePropertiesKey?
-    BOOL isTranslocated = [bundle.bundlePath contains:@"AppTranslocation"];
+    BOOL isTranslocated = [bundle.bundlePath containsString:@"AppTranslocation"];
         
     struct statfs statfs_info;
     statfs(bundle.bundlePath.fileSystemRepresentation, &statfs_info);
@@ -266,7 +266,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
                 bsdName = [bsdName removed:@"disk"];
 
-                if ([bsdName contains:@"s"])
+                if ([bsdName containsString:@"s"])
                     bsdName = [bsdName split:@"s"][0];
 
                 assert(bsdName.isIntegerNumberOnly);
@@ -321,7 +321,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
                 bsdName = [bsdName removed:@"disk"];
 
-                if ([bsdName contains:@"s"])
+                if ([bsdName containsString:@"s"])
                     bsdName = [bsdName split:@"s"][0];
 
                 assert(bsdName.isIntegerNumberOnly);
@@ -417,10 +417,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
     CFRelease(session);
     
-    if ([(NSString *)resultDict[@"DABusName"] contains:@"NVMe"] ||
-        [(NSString *)resultDict[@"DABusPath"] contains:@"NVMe"] ||
-        [(NSString *)resultDict[@"DADevicePath"] contains:@"NVMe"] ||
-        [(NSString *)resultDict[@"DAMediaPath"] contains:@"NVMe"])
+    if ([(NSString *)resultDict[@"DABusName"] containsString:@"NVMe"] ||
+        [(NSString *)resultDict[@"DABusPath"] containsString:@"NVMe"] ||
+        [(NSString *)resultDict[@"DADevicePath"] containsString:@"NVMe"] ||
+        [(NSString *)resultDict[@"DAMediaPath"] containsString:@"NVMe"])
         resultDict = [resultDict dictionaryBySettingValue:@(YES) forKey:@"isNVME"];
 
     return resultDict;
@@ -997,7 +997,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                                     {
                                         NSString *numStr = [(NSString *)name substringFromIndex:4];
                                         NSInteger num;
-                                        if ([numStr contains:@"s"])
+                                        if ([numStr containsString:@"s"])
                                             num = [numStr componentsSeparatedByString:@"s"][0].integerValue;
                                         else
                                             num = numStr.integerValue;

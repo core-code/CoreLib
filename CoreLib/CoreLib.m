@@ -135,7 +135,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
 
     #ifdef DEBUG
         #ifndef XCTEST
-            BOOL isSandbox = [@"~/Library/".expanded contains:@"/Library/Containers/"];
+            BOOL isSandbox = [@"~/Library/".expanded containsString:@"/Library/Containers/"];
 
             #ifdef SANDBOX
                 assert(isSandbox);
@@ -163,14 +163,14 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             cc_log_debug(@"Warning: app can hide dock symbol but has no fixed principal class");
 
 #ifndef CLI
-        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] contains:self.appName.lowercaseString] && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] containsString:self.appName.lowercaseString] && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"FilehorseProductPage"]).length)
             cc_log_debug(@"Info: info.plist key MacupdaternetProductPage not properly set - will fall back to FileHorse");
-        else if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+        else if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"MacupdaternetProductPage"] lowercaseString] containsString:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key MacupdaternetProductPage not properly set");
 
-        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString] && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
+        if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] containsString:self.appName.lowercaseString] && ((NSString *)[NSBundle.mainBundle objectForInfoDictionaryKey:@"AlternativetoProductPage"]).length)
             cc_log_debug(@"Info: info.plist key StoreProductPage not properly set - will fall back to AlternativeTo");
-        else if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] contains:self.appName.lowercaseString])
+        else if (![[(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString] containsString:self.appName.lowercaseString])
             cc_log_debug(@"Warning: info.plist key StoreProductPage not properly set (%@ NOT CONTAINS %@)", [(NSString *)[bundle objectForInfoDictionaryKey:@"StoreProductPage"] lowercaseString], self.appName.lowercaseString);
 
         

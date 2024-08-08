@@ -39,7 +39,7 @@
     if (self.targetURL.length)
     {
         NSString *url = self.targetURL;
-        if ([url contains:@" "])
+        if ([url containsString:@" "])
             url = url.escaped;
         [url.URL open];
     }

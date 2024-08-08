@@ -25,7 +25,7 @@
     
     if (@available(macOS 10.14, *))
     {
-        if ([NSApp.effectiveAppearance.name contains:NSAppearanceNameDarkAqua])
+        if ([NSApp.effectiveAppearance.name containsString:NSAppearanceNameDarkAqua])
             self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.27 alpha:1].CGColor;
         else
             self.layer.borderColor = [NSColor colorWithCalibratedWhite:0.72 alpha:1].CGColor;

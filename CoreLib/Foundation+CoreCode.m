@@ -277,7 +277,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     for (NSString *string in self)
     {
-        if ([string contains:str insensitive:insensitive] && str.length && string.length)
+        if ([string containsString:str insensitive:insensitive] && str.length && string.length)
             return YES;
     }
     return NO;
@@ -1296,7 +1296,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     NSString *local = portions[0];
     NSString *domain = portions[1];
 
-    if (![domain contains:@"."])
+    if (![domain containsString:@"."])
         return FALSE;
 
     static NSCharacterSet *localValid = nil, *domainValid = nil;
@@ -1424,12 +1424,7 @@ CONST_KEY(CoreCodeAssociatedValue)
     return NO;
 }
 
-- (BOOL)contains:(NSString *)otherString
-{
-    return ([self rangeOfString:otherString].location != NSNotFound);
-}
-
-- (BOOL)contains:(NSString *)otherString insensitive:(BOOL)insensitive
+- (BOOL)containsString:(NSString *)otherString insensitive:(BOOL)insensitive
 {
     return ([self rangeOfString:otherString options:insensitive ? NSCaseInsensitiveSearch : 0].location != NSNotFound);
 }
@@ -1665,7 +1660,7 @@ CONST_KEY(CoreCodeAssociatedValue)
 - (NSString *)stringByReplacingMultipleStrings:(NSDictionary <NSString *, NSString *>*)replacements
 {
     NSString *ret = self;
-    assert(![self contains:@"k9BBV15zFYi44YyB"]);
+    assert(![self containsString:@"k9BBV15zFYi44YyB"]);
 
     for (NSString *key in replacements)
     {
@@ -2746,7 +2741,7 @@ CONST_KEY(CCDirectoryObserving)
 + (NSURL *)URLWithHost:(NSString *)host path:(NSString *)path query:(NSString *)query user:(NSString *)user password:(NSString *)password fragment:(NSString *)fragment scheme:(NSString *)scheme port:(NSNumber *)port
 {
     assert([path hasPrefix:@"/"]);
-    assert(![query contains:@"k9BBV15zFYi44YyB"]);
+    assert(![query containsString:@"k9BBV15zFYi44YyB"]);
     query = [query replaced:@"+" with:@"k9BBV15zFYi44YyB"];
     NSURLComponents *urlComponents = [NSURLComponents new];
     urlComponents.scheme = scheme;

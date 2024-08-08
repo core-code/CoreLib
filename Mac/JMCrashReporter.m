@@ -108,7 +108,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
                     return;
                                  
 
-                BOOL isNewIPSLog = [crashlog contains:@"\"bug_type\":\"309\""];
+                BOOL isNewIPSLog = [crashlog containsString:@"\"bug_type\":\"309\""];
                 
                 if (!isNewIPSLog)
                 {
@@ -151,7 +151,7 @@ void CheckAndReportCrashes(NSString *email, NSArray *neccessaryStrings, NSArray 
                     BOOL darkMode = NO;
                     if (@available(macOS 10.14, *))
                     {
-                        if ([NSApp.effectiveAppearance.name contains:NSAppearanceNameDarkAqua])
+                        if ([NSApp.effectiveAppearance.name containsString:NSAppearanceNameDarkAqua])
                             darkMode = YES;
                     }
                     
