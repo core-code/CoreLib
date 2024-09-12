@@ -295,6 +295,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     {
                         let info = makeString(@"%p %p %@", eventWindow, buttonWindow, event.description);
                         assert_custom_info(self.statusItem.button, info);
+                        [self _clearDebugBits];
                         [self showPopoverWithAnimation:NO];
                         dispatch_after_main(0.75, ^
                                             {
@@ -303,10 +304,10 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                         // Returning a nil signifies that we've consumed this event.
                         // This has the side effect of avoiding the obnoxious NSBeep sound.
                         
-                        [self _clearDebugBits];
                         dispatch_after_main(3.0, ^{
                             BOOL finishedBit = [self _getDebugBit:7];
-                            assert_custom_info(finishedBit, makeString(@"CLICKFAILED (LOG:%@) (BITS:%@)", self.debugLog, [self _debugBitString]));
+                            if (!finishedBit)
+                                assert_custom_info(finishedBit, makeString(@"CLICKFAILED (LOG:%@) (BITS:%@)", self.debugLog, [self _debugBitString]));
                         });
                         return nil;
                     }
