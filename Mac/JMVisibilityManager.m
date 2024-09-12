@@ -39,6 +39,9 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 @property (strong, nonatomic) id globalEventMonitor;
 @property (strong, nonatomic) id localEventMonitor;
 @property (strong, nonatomic) id activeSpaceChangeObserver;
+@property (strong, nonatomic) NSString *debugLog;
+@property (assign, nonatomic) BOOL _debugOptionLogPopover;
+@property (assign, nonatomic) unsigned int _debugBits;
 @end
 
 
@@ -47,13 +50,13 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 
 @dynamic visibilitySetting, visibilityOption, dockIcon, menubarIcon, menuTooltip, currentlyVisibleInDock, permanentlyVisibleInDock, visibleInMenubar;
 
-    
+
 + (void)initialize
 {
     let defaultValues = (NSMutableDictionary <NSString *, NSObject *> *)makeMutableDictionary();
-
+    
     defaultValues[kJMVisibilityManagerValueKey] = @(kVisibleDock);
-
+    
     [NSUserDefaults.standardUserDefaults registerDefaults:defaultValues];
 }
 
@@ -68,17 +71,19 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         _visibilitySetting = kVisibleNowhere;
         _templateSetting = kTemplateNever;
         _visibilityOption = (visibilityOptionEnum) kJMVisibilityManagerOptionValueKey.defaultInt;
-
+        
+        self._debugOptionLogPopover = @"debugOptionLogPopover".defaultInt;
+        
         BOOL optionDown = (NSEvent.modifierFlags & NSEventModifierFlagOption) != 0;
         visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
-
+        
         if (storedSetting == kVisibleNowhere && optionDown)
             self.visibilitySetting = kVisibleDock;
         else
             self.visibilitySetting = storedSetting;
         
     }
-
+    
     return self;
 }
 
@@ -104,7 +109,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
     self.menubarIcon = _menubarIcon;
     self.dockIcon = _dockIcon;
 }
-    
+
 - (void)_showOrHideDockIcon
 {
     if (_dockIconIsCurrentlyVisible && ![self currentlyVisibleInDock])
@@ -112,33 +117,33 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
     else if (!_dockIconIsCurrentlyVisible && [self currentlyVisibleInDock])
         [self _transform:YES];
 }
-    
+
 - (void)setVisibilityOption:(visibilityOptionEnum)newOption
 {
     _visibilityOption = newOption;
-
+    
     [self _redisplay];
     
-
+    
     kJMVisibilityManagerOptionValueKey.defaultInt = newOption;
     [NSUserDefaults.standardUserDefaults synchronize];
-
+    
     [notificationCenter postNotificationName:kVisibilitySettingDidChangeNotificationKey object:self];
 }
-    
+
 - (visibilityOptionEnum)visibilityOption
 {
     return _visibilityOption;
 }
-    
+
 - (void)setVisibilitySetting:(visibilitySettingEnum)newSetting
 {
     //[self willChangeValueForKey:@"visibilitySetting"];
     _visibilitySetting = newSetting;
     //[self didChangeValueForKey:@"visibilitySetting"];
-
+    
     [self _redisplay];
-
+    
     kJMVisibilityManagerValueKey.defaultInt = newSetting;
     [NSUserDefaults.standardUserDefaults synchronize];
     
@@ -168,12 +173,12 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
     
     return visible;
 }
-    
-    
+
+
 - (void)setDockIcon:(NSImage *)newDockIcon
 {
     _dockIcon = newDockIcon;
-
+    
     if ([self currentlyVisibleInDock] && _dockIcon)
         NSApp.applicationIconImage = _dockIcon;
 }
@@ -190,7 +195,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         newMenubarIcon.template = YES;
     else
         newMenubarIcon.template = NO;
-
+    
     _menubarIcon = newMenubarIcon;
     
     if ([self visibleInMenubar])
@@ -210,14 +215,14 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                 [NSNotificationCenter.defaultCenter removeObserver:self.activeSpaceChangeObserver];
             }
             [NSWorkspace.sharedWorkspace.notificationCenter addObserverForName:NSWorkspaceActiveSpaceDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note)
-            {
+             {
                 [self hidePopover];
             }];
             self.statusItem.menu = nil;
             if (self.statusItemPopover.isShown)
             {
                 dispatch_after_main(0.25f, ^
-                {
+                                    {
                     NSView *buttonView = (NSView *)self.statusItem.button;
                     if (buttonView)
                         [self.statusItemPopover showRelativeToRect:[buttonView bounds] ofView:buttonView preferredEdge:NSRectEdgeMaxY];
@@ -231,74 +236,85 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             {
                 enum NSEventMask monitorMask = NSEventMaskLeftMouseDown | NSEventMaskRightMouseDown | NSEventMaskKeyDown;
                 self.localEventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:monitorMask handler:^NSEvent *(NSEvent *event)
-                {
+                                          {
                     // We want to show statusMenu if the user option clicks
                     BOOL gotCommandKey = (event.modifierFlags & NSEventModifierFlagCommand) == NSEventModifierFlagCommand;
                     BOOL gotOptionKey = (event.modifierFlags & NSEventModifierFlagOption) == NSEventModifierFlagOption;
                     BOOL gotRightClick = event.type == NSEventTypeRightMouseDown;
                     BOOL gotLeftClick = event.type == NSEventTypeLeftMouseDown;
                     BOOL gotShiftClick = (event.modifierFlags & NSEventModifierFlagShift) ? YES : NO;
+                    let eventWindow = event.window;
+                    let buttonWindow = self.statusItem.button.window;
+                    let popoverIsShown = self.statusItemPopover.isShown;
+                    
+                    [self _addDebugLog:makeString(@"gotclick%i%i%i%i%i %p %p %i %@", gotCommandKey, gotOptionKey, gotRightClick, gotLeftClick, gotShiftClick,eventWindow, buttonWindow, popoverIsShown, event.description)];
                     
                     if (gotLeftClick && gotCommandKey) // let the system handle re-arrangement of the icon
                         return event;
-
+                    
                     // Pass on events that don't have a window
-                    if (event.window == nil)
+                    if (eventWindow == nil)
                         return event;
                     
-                    if (event.window == self.statusItem.button.window && gotLeftClick && gotShiftClick)
+                    if (eventWindow == buttonWindow && gotLeftClick && gotShiftClick)
                     {
                         // Highligting the button, even if for a split second, lets the user know
                         // their click was detected by the app.
                         [self.statusItem.button highlight:YES];
                         dispatch_after_main(0.1f, ^
-                        {
+                                            {
                             [self.statusItem.button highlight:NO];
                             dispatch_after_main(0.2f, ^
-                            {
+                                                {
                                 [NSNotificationCenter.defaultCenter postNotificationName:kVisibilityShiftLeftClickNotificationKey object:nil userInfo:nil];
                             });
                         });
                         return nil;
                     }
                     
-                    if (event.window == self.statusItem.button.window && (gotOptionKey || gotRightClick))
+                    if (eventWindow == buttonWindow && (gotOptionKey || gotRightClick))
                     {
                         [self.statusItem.button highlight:YES];
-                    #pragma clang diagnostic push
-                    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                         [self.statusItem popUpStatusItemMenu:self.statusItemMenu];
-                    #pragma clang diagnostic pop
+#pragma clang diagnostic pop
                         [self.statusItem.button highlight:NO];
                         return nil;
                     }
                     // If the popover is currently shown, then let the popover handle all the clicks (pass on the event as is)
                     if ((gotLeftClick || gotRightClick) && self.statusItemPopover)
                     {
-                        if (self.statusItemPopover.isShown && event.window == self.statusItemPopover.contentViewController.view.window)
+                        if (popoverIsShown && eventWindow == self.statusItemPopover.contentViewController.view.window)
                         {
                             return event;
                         }
                     }
                     // If the button got a click and the popover is hidden, show it
-                    if (event.window == self.statusItem.button.window && !self.statusItemPopover.isShown)
+                    if (eventWindow == buttonWindow && !popoverIsShown) // SHOW POPOVER
                     {
-                        let info = makeString(@"%p %p %@", event.window, self.statusItem.button.window, event.description);
+                        let info = makeString(@"%p %p %@", eventWindow, buttonWindow, event.description);
                         assert_custom_info(self.statusItem.button, info);
                         [self showPopoverWithAnimation:NO];
                         dispatch_after_main(0.75, ^
-                        {
+                                            {
                             self.statusItemPopover.contentViewController.view.window.collectionBehavior = NSWindowCollectionBehaviorParticipatesInCycle;
                         });
                         // Returning a nil signifies that we've consumed this event.
                         // This has the side effect of avoiding the obnoxious NSBeep sound.
+                        
+                        [self _clearDebugBits];
+                        dispatch_after_main(3.0, ^{
+                            BOOL finishedBit = [self _getDebugBit:7];
+                            assert_custom_info(finishedBit, makeString(@"CLICKFAILED (LOG:%@) (BITS:%@)", self.debugLog, [self _debugBitString]));
+                        });
                         return nil;
                     }
                     // If the popover is currently hidden and the click was in some other window in this app itself,
                     // pass it on as it is so that the particular window / UI element can process it.
                     if ((gotLeftClick || gotRightClick) && self.statusItemPopover)
                     {
-                        if (!self.statusItemPopover.isShown && event.window != self.statusItemPopover.contentViewController.view.window)
+                        if (!popoverIsShown && eventWindow != self.statusItemPopover.contentViewController.view.window)
                             return event;
                     }
                     // If we got a keystroke other than ESC, pass it on as it is, so that other UI elements can process it.
@@ -306,8 +322,8 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                     {
                         return event;
                     }
-
-                    Class c = event.window.class;
+                    
+                    Class c = eventWindow.class;
                     if (c == NSPanel.class || c == FakeAlertWindow.class || [NSStringFromClass(c) isEqualToString:@"_NSAlertPanel"])
                     {
                         __weak NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
@@ -315,13 +331,15 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
                                                                object:event.window
                                                                 queue:[NSOperationQueue mainQueue]
                                                            usingBlock:^(NSNotification *note)
-                        {
+                                            {
                             [center postNotificationName:kVisibilityAlertWindowDidResignNotificationKey object:nil userInfo:nil];
                             [center removeObserver:token];
                         }];
                         
                         return event;
                     }
+                    
+                    // HIDE POPOVER
                     // We're about to close the popover because all any circumstances under which we'd
                     // keep the popup open were unfulfilled. Tear down the global event monitor that we'd
                     // setup to detect clicks on external apps.
@@ -366,8 +384,11 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 
 - (void)showPopoverWithAnimation:(BOOL)shouldAnimate
 {
+    [self _setDebugBit:0];
+    
     if (self.statusItemPopover && !self.statusItemPopover.isShown)
     {
+        [self _setDebugBit:1];
         [self.statusItem.button highlight:YES];
         self.statusItemPopover.animates = shouldAnimate;
         
@@ -376,7 +397,8 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         
         if (buttonView)
         {
-    //        cc_log(@"showing popover relative to bounds %@", NSStringFromRect(buttonBounds) );
+            [self _setDebugBit:2];
+            //        cc_log(@"showing popover relative to bounds %@", NSStringFromRect(buttonBounds) );
             
             // I'm getting a weird bug wherein, if the statusitem icon is changed more than once,
             // the popover shows up and then slightly slides down a pixel when the user clicks on
@@ -391,7 +413,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             }
             enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
             self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
-            {
+                                       {
                 [self.statusItemPopover close];
                 [self.statusItem.button highlight:NO];
                 // We want to tear down the global monitor right after the first
@@ -406,6 +428,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             // hack https://stackoverflow.com/questions/34913405/how-do-i-prevent-the-menu-bar-from-moving-down-when-my-popover-is-open
             NSWindow *popoverWindow = self.statusItemPopover.contentViewController.view.window;
             [popoverWindow.parentWindow removeChildWindow:popoverWindow];
+            [self _setDebugBit:3];
         }
         else
             assert_custom(buttonView);
@@ -430,33 +453,62 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 - (void)handleAppReopen
 {
     BOOL optionDown = (NSEvent.modifierFlags & NSEventModifierFlagOption) != 0;
-
+    
     if (self.visibilitySetting == kVisibleNowhere && optionDown)
         self.visibilitySetting = kVisibleDock;
 }
-    
+
 - (void)handleWindowOpened
 {
     _windowIsOpen = YES;
     [self _redisplay];
 }
-    
+
 - (void)handleWindowClosed
 {
     _windowIsOpen = NO;
     [self _redisplay];
 }
-    
-    
-    
+
+
+
 - (void)_transform:(BOOL)foreground
 {
     // todo, try this newer call instead of TransformProcessType() which seems to work just as good (with the same menubar-not-clickable-bug:     [NSApp setActivationPolicy:foreground ? NSApplicationActivationPolicyRegular : NSApplicationActivationPolicyAccessory];
     ProcessSerialNumber psn = {0, kCurrentProcess};
     TransformProcessType(&psn, foreground ? kProcessTransformToForegroundApplication : kProcessTransformToUIElementApplication);
-
+    
     dispatch_after_main(0.1f,^{[NSApplication.sharedApplication activateIgnoringOtherApps:YES];});
     _dockIconIsCurrentlyVisible = foreground;
 }
 #pragma GCC diagnostic pop
+
+
+- (void)_addDebugLog:(NSString *)log
+{
+    self.debugLog = makeString(@"%@ %@", self.debugLog, log);
+    if (self._debugOptionLogPopover)
+        cc_log_error(@"%@", log);
+}
+- (BOOL)_getDebugBit:(unsigned char)bitPosition
+{
+    if (bitPosition < 8)
+        return (self._debugBits >> bitPosition) & (unsigned int)1;
+    
+    return 0;
+}
+- (void)_clearDebugBits
+{
+    self._debugBits = 0;
+}
+
+- (void)_setDebugBit:(unsigned char)bitPosition
+{
+    if (bitPosition < 8)
+        self._debugBits = self._debugBits | (1 << bitPosition);
+}
+- (NSString *)_debugBitString
+{
+    return makeString(@"%i%i%i%i%i%i%i%i", [self _getDebugBit:0], [self _getDebugBit:1], [self _getDebugBit:2], [self _getDebugBit:3], [self _getDebugBit:4], [self _getDebugBit:5], [self _getDebugBit:6], [self _getDebugBit:7]);
+}
 @end

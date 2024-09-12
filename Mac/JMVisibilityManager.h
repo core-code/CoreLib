@@ -60,5 +60,6 @@ CONST_KEY_DECLARATION(VisibilityShiftLeftClickNotification)
 
 - (void)hidePopover;
 - (void)showPopoverWithAnimation:(BOOL)shouldAnimate;
+- (void)_setDebugBit:(unsigned char)bitPosition;
 
 @end
