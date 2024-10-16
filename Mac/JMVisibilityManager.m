@@ -72,7 +72,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
         _templateSetting = kTemplateNever;
         _visibilityOption = (visibilityOptionEnum) kJMVisibilityManagerOptionValueKey.defaultInt;
         
-        self._debugOptionLogPopover = @"debugOptionLogPopover".defaultInt;
+        self._debugOptionLogPopover = (BOOL)@"debugOptionLogPopover".defaultInt;
         
         BOOL optionDown = (NSEvent.modifierFlags & NSEventModifierFlagOption) != 0;
         visibilitySettingEnum storedSetting = (visibilitySettingEnum) kJMVisibilityManagerValueKey.defaultInt;
