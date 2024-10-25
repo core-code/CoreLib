@@ -434,16 +434,49 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
     if (!cachedReturn)
     {
-        OSStatus status;
+        __block BOOL done = NO;
+        
+        if (!allowAskingNow)
+        {
+            dispatch_after_back(10, ^
+            {
+                if (!done)
+                {
+                    let __unused r = @[@"/usr/bin/osascript", @"-e", makeString(@"display dialog \"%@ is frozen due to a malfunction with a macOS System API. Please reboot before trying to launch %@ again.\"", cc.appName, cc.appName)].runAsTask;
+                }
+            });
+        }
+
+        
+        OSStatus status = 0;
         NSAppleEventDescriptor *targetAppEventDescriptor;
         for (NSString *bid in @[@"com.apple.systemuiserver", @"com.apple.systemevents", @"com.apple.finder"])
         {
-            targetAppEventDescriptor = [NSAppleEventDescriptor descriptorWithBundleIdentifier:bid];
-            status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, allowAskingNow ? true : false);
+            {
+                targetAppEventDescriptor = [NSAppleEventDescriptor descriptorWithBundleIdentifier:bid];
+                status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, allowAskingNow ? true : false);
+            }
+            
+//          { // we'd prefer this code path as it is less prone to be frozen (*) during AEDetermine...(), but address sanitizer says AECreateDesc is bad bad bad
+//              let arg = bid.UTF8String;
+//              AEAddressDesc addDesc;
+//              OSErr err = AECreateDesc(typeApplicationBundleID, &arg, (Size)strlen(arg), &addDesc);
+//              if (!err)
+//              {
+//                  status = AEDeterminePermissionToAutomateTarget(&addDesc, typeWildCard, typeWildCard, false);
+//              }
+//              else
+//                  cc_log_error(@"Error:    AECreateDesc returned err %i", err);
+//          }   // [*] https://stackoverflow.com/questions/59125192/authorization-by-aedeterminepermissiontoautomatetarget-waits-infinit-time
+            
+            
             if (status == errAEEventNotPermitted)
                 return NO;
         }
         
+        
+  
+        done = YES;
         cachedReturn = YES;
     }
     
