@@ -2827,7 +2827,7 @@ CONST_KEY(CCDirectoryObserving)
 
 @implementation NSData (CoreCode)
 
-@dynamic string, stringUTF8, hexString, base64String, mutableObject, JSONArray, JSONDictionary, fullRange;
+@dynamic string, stringUTF8, hexStringLowercase, base64String, mutableObject, JSONArray, JSONDictionary, fullRange;
 
 #ifdef USE_SECURITY
 @dynamic SHA1, SHA256;
@@ -3021,7 +3021,7 @@ CONST_KEY(CCDirectoryObserving)
     return [self base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0];
 }
 
-- (NSString *)hexString
+- (NSString *)hexStringLowercase
 {
     const unsigned char *dataBuffer = (const unsigned char *)self.bytes;
 

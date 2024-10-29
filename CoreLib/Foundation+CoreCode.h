@@ -45,7 +45,7 @@
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key insensitive:(BOOL)insensitive;
 - (NSArray <ObjectType>*)sortedArrayByKey:(NSString *)key ascending:(BOOL)ascending;
-- (BOOL)containsString:(NSString *)str insensitive:(BOOL)insensitive;
+- (BOOL)containsString:(NSString *)str insensitive:(BOOL)insensitive; // renamed due to collision starting with macOS 15 (beta 5)
 - (BOOL)containsObjectIdenticalTo:(ObjectType)object;               // similar: indexOfObjectIdenticalTo != NSNotFound
 
 - (CCIntRange2D)calculateExtentsOfPoints:(CCIntPoint (^)(ObjectType input))block;
@@ -186,8 +186,8 @@
 // string things
 @property (readonly, nonatomic) NSArray <NSString *> *lines;
 @property (readonly, nonatomic) NSArray <NSString *> *words;
-@property (readonly, nonatomic) unichar firstChar;
-@property (readonly, nonatomic) unichar lastChar;
+@property (readonly, nonatomic) unichar firstChar;          // renamed due to collision starting with macOS 13 (beta 5)
+@property (readonly, nonatomic) unichar lastChar;           // renamed due to collision starting with macOS 13 (beta 5)
 @property (readonly, nonatomic) NSUInteger lengthFixed;     // string length that doesn't fuck up for emoji
 
 @property (readonly, nonatomic) NSString *expanded;						// shortcut = stringByExpandingTildeInPath
@@ -378,7 +378,7 @@
 @property (readonly, nonatomic) NSMutableData *mutableObject;
 @property (readonly, nonatomic) NSString *string;
 @property (readonly, nonatomic) NSString *stringUTF8;
-@property (readonly, nonatomic) NSString *hexString;
+@property (readonly, nonatomic) NSString *hexStringLowercase; // renamed because potential collesion starting with macOS 15.2
 @property (readonly, nonatomic) NSString *base64String;
 @property (readonly, nonatomic) NSDictionary *JSONDictionary;
 @property (readonly, nonatomic) NSArray *JSONArray;

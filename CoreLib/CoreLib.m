@@ -822,7 +822,7 @@ void alert_feedback(NSString *usermsg, NSString *details, BOOL fatal)
             mailtoLink  = [mailtoLink clamp:100000]; // will expand to twice the size and kern.argmax: 262144 causes NSTask with too long arguments to 'silently' fail with a posix spawn error 7
             NSDictionary *dict = @{@"title" : title, @"message" : message, @"mailto" : mailtoLink};
             NSData *dictjsondata = dict.JSONData;
-            NSString *dictjsondatahexstring = dictjsondata.hexString;
+            NSString *dictjsondatahexstring = dictjsondata.hexStringLowercase;
             NSString *crashhelperpath = @[cc.resDir, @"CrashHelper.app/Contents/MacOS/CrashHelper"].path;
             NSTask *taskApp = [[NSTask alloc] init];
 
