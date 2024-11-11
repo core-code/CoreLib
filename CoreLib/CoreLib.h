@@ -143,6 +143,7 @@ static inline NSMutableDictionary <NSObject *, NSObject *>*makeMutableDictionary
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)sendSupportRequestMail:(NSString *)text;
 #endif
++ (void)initializeGlobals;
 @end
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE

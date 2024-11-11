@@ -82,6 +82,20 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     
 }
 
++ (void)initializeGlobals
+{
+    userDefaults = NSUserDefaults.standardUserDefaults;
+    fileManager = NSFileManager.defaultManager;
+    notificationCenter = NSNotificationCenter.defaultCenter;
+    bundle = NSBundle.mainBundle;
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
+    fontManager = NSFontManager.sharedFontManager;
+    distributedNotificationCenter = NSDistributedNotificationCenter.defaultCenter;
+    workspace = NSWorkspace.sharedWorkspace;
+    application = NSApplication.sharedApplication;
+    processInfo = NSProcessInfo.processInfo;
+#endif
+}
 - (instancetype)init
 {
     assert(!cc);
@@ -89,19 +103,8 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
     if ((self = [super init]))
     {
         cc = self;
-
-        userDefaults = NSUserDefaults.standardUserDefaults;
-        fileManager = NSFileManager.defaultManager;
-        notificationCenter = NSNotificationCenter.defaultCenter;
-        bundle = NSBundle.mainBundle;
-    #if defined(TARGET_OS_MAC) && TARGET_OS_MAC && !TARGET_OS_IPHONE
-        fontManager = NSFontManager.sharedFontManager;
-        distributedNotificationCenter = NSDistributedNotificationCenter.defaultCenter;
-        workspace = NSWorkspace.sharedWorkspace;
-        application = NSApplication.sharedApplication;
-        processInfo = NSProcessInfo.processInfo;
-    #endif
-
+        [CoreLib initializeGlobals];
+        
 #ifndef SKIP_CREATE_APPSUPPORT_DIRECTORY
         if (self.appName)
         {
