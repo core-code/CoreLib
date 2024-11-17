@@ -477,7 +477,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
         
         
   
-        done = YES;
+       // done = YES;
         cachedReturn = YES;
     }
     
