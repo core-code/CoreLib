@@ -337,6 +337,7 @@ void fatal(const char *fmt, ...)__printflike(1, 2) __attribute__((noreturn));
 #define STRING_OR3(x,y,z)       ({ NSString *_x = (x); NSString *_y = (y); NSString *_z = (z); (_x && [_x isKindOfClass:[NSString class]] && [((NSString *)_x) length]) ? _x : ((_y && [_y isKindOfClass:[NSString class]] && [((NSString *)_y) length]) ? _y : _z); })
 #define MAX3(x,y,z)				(MAX(MAX((x),(y)),(z)))
 #define MIN3(x,y,z)				(MIN(MIN((x),(y)),(z)))
+#define INT_OR(x,y)             ((x) ? (x) : (y))
 #define BYTES_TO_KB(x)			((double)(x) / (1024.0))
 #define BYTES_TO_MB(x)			((double)(x) / (1024.0 * 1024.0))
 #define BYTES_TO_GB(x)			((double)(x) / (1024.0 * 1024.0 * 1024.0))

@@ -219,6 +219,7 @@ __attribute__((noreturn)) void exceptionHandler(NSException *exception)
             {
 #ifdef DEBUG
                 if ([framework hasPrefix:@"libclang"]) continue;
+                if ([framework hasPrefix:@"libXCTest"]) continue;
 #endif
                 alert_apptitled(makeString(@"This application is damaged. Either your download was damaged or you used a faulty program to extract the ZIP archive. Please re-download and make sure to use the ZIP decompression built into Mac OS X.\n\nOffending Path: %@", smylinkToBinaryPath), @"OK", nil, nil);
                 exit(1);
