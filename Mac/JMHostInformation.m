@@ -1153,7 +1153,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
 + (NSMutableArray *)mountedHarddisks:(BOOL)includeRAIDBackingDevices
 {
-    NSMutableArray  *nonRemovableVolumes = makeMutableArray()
+    NSMutableArray  *nonRemovableVolumes = makeMutableArray();
 
 
     DASessionRef session = DASessionCreate(kCFAllocatorDefault);
