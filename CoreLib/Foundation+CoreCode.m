@@ -2187,70 +2187,53 @@ CONST_KEY(CoreCodeAssociatedValue)
 {
     NSString *str = self;
     
-    str = [str stringByReplacingMultipleStrings:@{@"À":@"&Agrave;",
-                                                  @"Á":@"&Aacute;",
-                                                  @"Â":@"&Acirc;",
-                                                  @"Ã":@"&Atilde;",
-                                                  @"Ä":@"&Auml;",
-                                                  @"Å":@"&Aring;",
-                                                  @"Æ":@"&AElig;",
-                                                  @"Ç":@"&Ccedil;",
-                                                  @"È":@"&Egrave;",
-                                                  @"É":@"&Eacute;",
-                                                  @"Ê":@"&Ecirc;",
-                                                  @"Ë":@"&Euml;",
-                                                  @"Ì":@"&Igrave;",
-                                                  @"Í":@"&Iacute;",
-                                                  @"Î":@"&Icirc;",
-                                                  @"Ï":@"&Iuml;",
-                                                  @"Ð":@"&ETH;",
-                                                  @"Ñ":@"&Ntilde;",
-                                                  @"Ò":@"&Ograve;",
-                                                  @"Ó":@"&Oacute;",
-                                                  @"Ô":@"&Ocirc;",
-                                                  @"Õ":@"&Otilde;",
-                                                  @"Ö":@"&Ouml;",
-                                                  @"Ø":@"&Oslash;",
-                                                  @"Ù":@"&Ugrave;",
-                                                  @"Ú":@"&Uacute;",
-                                                  @"Û":@"&Ucirc;",
-                                                  @"Ü":@"&Uuml;",
-                                                  @"Ý":@"&Yacute;",
-                                                  @"Þ":@"&THORN;",
-                                                  @"ß":@"&szlig;",
-                                                  @"à":@"&agrave;",
-                                                  @"á":@"&aacute;",
-                                                  @"â":@"&acirc;",
-                                                  @"ã":@"&atilde;",
-                                                  @"ä":@"&auml;",
-                                                  @"å":@"&aring;",
-                                                  @"æ":@"&aelig;",
-                                                  @"ç":@"&ccedil;",
-                                                  @"è":@"&egrave;",
-                                                  @"é":@"&eacute;",
-                                                  @"ê":@"&ecirc;",
-                                                  @"ë":@"&euml;",
-                                                  @"ì":@"&igrave;",
-                                                  @"í":@"&iacute;",
-                                                  @"î":@"&icirc;",
-                                                  @"ï":@"&iuml;",
-                                                  @"ð":@"&eth;",
-                                                  @"ñ":@"&ntilde;",
-                                                  @"ò":@"&ograve;",
-                                                  @"ó":@"&oacute;",
-                                                  @"ô":@"&ocirc;",
-                                                  @"õ":@"&otilde;",
-                                                  @"ö":@"&ouml;",
-                                                  @"ø":@"&oslash;",
-                                                  @"ù":@"&ugrave;",
-                                                  @"ú":@"&uacute;",
-                                                  @"û":@"&ucirc;",
-                                                  @"ü":@"&uuml;",
-                                                  @"ý":@"&yacute;",
-                                                  @"þ":@"&thorn;",
-                                                  @"ÿ":@"&yuml;"}];
-           
-    return str;
+    str = [str stringByReplacingMultipleStrings:@{
+        @"&": @"&amp;"
+    }];
+    
+    NSMutableString *result = [NSMutableString string];
+    NSUInteger length = str.length;
+    BOOL inTag = NO;
+    BOOL inQuotes = NO;
+    
+    for (NSUInteger i = 0; i < length; i++)
+    {
+        unichar c = [str characterAtIndex:i];
+        
+        if (c == '<')
+        {
+            inTag = YES;
+            [result appendFormat:@"%@", @"<"];
+        }
+        else if (c == '>')
+        {
+            inTag = NO;
+            inQuotes = NO;
+            [result appendFormat:@"%@", @">"];
+        }
+        else if (c == '\'' || c == '"')
+        {
+            if (inTag)
+            {
+                inQuotes = !inQuotes;
+            }
+            [result appendFormat:@"%C", c];
+        }
+        else if (inTag || inQuotes)
+        {
+            [result appendFormat:@"%C", c];
+        }
+        else if (c < 128)
+        {
+            [result appendFormat:@"%C", c];
+        }
+        else
+        {
+            [result appendFormat:@"&#%d;", c];
+        }
+    }
+    
+    return result;
 }
 
 
