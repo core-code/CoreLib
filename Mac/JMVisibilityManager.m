@@ -494,7 +494,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
 - (BOOL)_getDebugBit:(unsigned char)bitPosition
 {
     if (bitPosition < 8)
-        return (self._debugBits >> bitPosition) & (unsigned int)1;
+        return (BOOL)((self._debugBits >> bitPosition) & (unsigned int)1);
     
     return 0;
 }
