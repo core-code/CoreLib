@@ -212,7 +212,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
     else // if (fiq == 0 && cqc == 0)
     {
         let info = makeString(@"%@ %i %i %@", bur, fiq, cqc, NSProcessInfo.processInfo.operatingSystemVersionString);
-        assert_custom_info(fiq||cqc, info);
+        assert_custom_info(fiq||cqc, info); // assertion is triggered when launched from a nonconforming (=cracked) disk image
 
         return NO;
     }
