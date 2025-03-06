@@ -434,19 +434,20 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
 
     if (!cachedReturn)
     {
-//        __block BOOL done = NO;
-//
-//        if (!allowAskingNow)
-//        {
-//            dispatch_after_back(60, ^
-//            {
-//                if (!done)
-//                {
-//                    let __unused r = @[@"/usr/bin/osascript", @"-e", makeString(@"display dialog \"%@ is frozen due to a malfunction with a macOS System API. Please //reboot before trying to launch %@ again.\"", cc.appName, cc.appName)].runAsTask;
-//                }
-//            });
-//        }
-#warning re-add the warning message but with less false-positives
+        __block BOOL done = NO;
+
+        if (!allowAskingNow)
+        {
+            dispatch_after_back(60, ^
+            {
+                if (!done)
+                {
+                    //let __unused r = @[@"/usr/bin/osascript", @"-e", makeString(@"display dialog \"%@ is frozen due to a malfunction with a macOS System API. Please //reboot before trying to launch %@ again.\"", cc.appName, cc.appName)].runAsTask;
+                    //#warning re-add the warning message but with less false-positives
+                    assert_custom_info(allowAskingNow, @"corelib_usages".defaultString);
+                }
+            });
+        }
 
         
         OSStatus status = 0;
@@ -477,7 +478,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
         
         
   
-       // done = YES;
+        done = YES;
         cachedReturn = YES;
     }
     
