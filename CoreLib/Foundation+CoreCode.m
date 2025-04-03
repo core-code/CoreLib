@@ -3567,8 +3567,14 @@ CONST_KEY(CCDirectoryObserving)
         for (NSString *l in NSLocale.preferredLanguages)
         {
             NSDictionary *d = [NSLocale componentsFromLocaleIdentifier:l];
-            NSString *twoLetterCode = d[NSLocaleLanguageCode];
-            [languageCodes addObject:twoLetterCode];
+            if (d)
+            {
+                NSString *twoLetterCode = d[NSLocaleLanguageCode];
+                if (twoLetterCode)
+                {
+                    [languageCodes addObject:twoLetterCode];
+                }
+            }
         }
     })
     
