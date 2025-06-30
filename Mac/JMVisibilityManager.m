@@ -389,6 +389,7 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
     
     if (self.statusItemPopover && !self.statusItemPopover.isShown)
     {
+        NSDate *openDate = NSDate.date;
         [self _setDebugBit:1];
         [self.statusItem.button highlight:YES];
         self.statusItemPopover.animates = shouldAnimate;
@@ -414,15 +415,21 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             }
             enum NSEventMask globalMonitorMask = NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDown;
             self.globalEventMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:globalMonitorMask handler:^(NSEvent *_event)
-                                       {
-                [self.statusItemPopover close];
-                [self.statusItem.button highlight:NO];
-                // We want to tear down the global monitor right after the first
-                // outside click is detected and the popover is hidden.
-                if (self.globalEventMonitor)
+            {
+                NSDate *clickDate = NSDate.date;
+                
+                float diff = [clickDate timeIntervalSinceDate:openDate];
+                if (diff > 0.25) // work around bug in Tahoe beta 1&2 where the popup would close if you click in the topmost two pixels to open the menu, clicks directly on the icon would be fine
                 {
-                    [NSEvent removeMonitor:self.globalEventMonitor];
-                    self.globalEventMonitor = nil;
+                    [self.statusItemPopover close];
+                    [self.statusItem.button highlight:NO];
+                    // We want to tear down the global monitor right after the first
+                    // outside click is detected and the popover is hidden.
+                    if (self.globalEventMonitor)
+                    {
+                        [NSEvent removeMonitor:self.globalEventMonitor];
+                        self.globalEventMonitor = nil;
+                    }
                 }
             }];
             
