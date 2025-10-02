@@ -459,10 +459,10 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
  //               status = AEDeterminePermissionToAutomateTarget(targetAppEventDescriptor.aeDesc, typeWildCard, typeWildCard, allowAskingNow ? true : false);
  //           } // experimentally enable less broken path
             
-          { // we'd prefer this code path as it is less prone to be frozen (*) during AEDetermine...(), but address sanitizer says AECreateDesc is bad bad bad
+          { // we'd prefer this code path as it is less prone to be frozen (*) during AEDetermine...(), but address sanitizer says AECreateDesc is bad bad bad: FB15852861
               let arg = bid.UTF8String;
               AEAddressDesc addDesc;
-              OSErr err = AECreateDesc(typeApplicationBundleID, &arg, (Size)strlen(arg), &addDesc);
+              OSErr err = AECreateDesc(typeApplicationBundleID, &arg, (Size)strlen(arg), &addDesc); // we actually saw this crash once: FB20472201
               if (!err)
               {
                   status = AEDeterminePermissionToAutomateTarget(&addDesc, typeWildCard, typeWildCard, false);
