@@ -2416,7 +2416,7 @@ CONST_KEY(CCDirectoryObserving)
         
         for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
         {
-            [ms appendFormat: @"%02x", (int)(result [i])];
+            [ms appendFormat: @"%02i", (int)(result [i])];
         }
         
         return [ms copy];
@@ -2951,7 +2951,7 @@ CONST_KEY(CCDirectoryObserving)
         if (lossy)
         {
 #ifndef CLI
-            cc_log(@"Warning: used lossy conversion %li data %@ => %lu / %@", enc, self, (unsigned long)result.length, [result clamp:20].strippedOfNewlines);
+            cc_log(@"Warning: used lossy conversion %lu data %@ => %lu / %@", (unsigned long)enc, self, (unsigned long)result.length, [result clamp:20].strippedOfNewlines);
 #endif
         }
 
@@ -2968,7 +2968,7 @@ CONST_KEY(CCDirectoryObserving)
         if (!s)
             continue;
 
-        cc_log_error(@"Error: used fallback conversion %li data %@ => %lu / %@", encodingsToTry[i], self, (unsigned long)s.length, [s clamp:20]);
+        cc_log_error(@"Error: used fallback conversion %li data %@ => %lu / %@", (long)encodingsToTry[i], self, (unsigned long)s.length, [s clamp:20]);
 
         return s;
     }

@@ -1348,7 +1348,7 @@ void alert_dontwarnagain_ever(NSString *identifier, NSString *title, NSString *m
 #pragma clang diagnostic pop
 
 
-CGFloat _attributedStringHeightForWidth(NSAttributedString *string, CGFloat width)
+CGFloat ccAttributedStringHeightForWidth(NSAttributedString *string, CGFloat width)
 {
     NSSize answer = NSZeroSize;
     if ([string length] > 0)
@@ -1390,7 +1390,7 @@ void alert_nonmodal_customicon_block(NSString *title, NSString *message, NSStrin
     ASSERT_MAINTHREAD;
 
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
-    CGFloat messageHeight = (CGFloat)MAX(30.0, _attributedStringHeightForWidth(attributedString, 300));
+    CGFloat messageHeight = (CGFloat)MAX(30.0, ccAttributedStringHeightForWidth(attributedString, 300));
     CGFloat height = 100 + messageHeight;
     FakeAlertWindow *fakeAlertWindow = [[FakeAlertWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
                                                             styleMask:NSWindowStyleMaskTitled
@@ -1459,7 +1459,7 @@ void alert_nonmodal_checkbox(NSString *title, NSString *message, NSString *butto
     ASSERT_MAINTHREAD;
 
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:@{NSFontAttributeName : [NSFont systemFontOfSize:11]}];
-    CGFloat messageHeight = (CGFloat)MAX(50.0, _attributedStringHeightForWidth(attributedString, 300));
+    CGFloat messageHeight = (CGFloat)MAX(50.0, ccAttributedStringHeightForWidth(attributedString, 300));
     CGFloat height = 120 + messageHeight;
     FakeAlertWindow *fakeAlertWindow = [[FakeAlertWindow alloc] initWithContentRect:NSMakeRect(0.0, 0.0, 420.0, height)
                                                             styleMask:NSWindowStyleMaskTitled

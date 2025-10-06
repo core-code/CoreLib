@@ -418,8 +418,8 @@ CONST_KEY_IMPLEMENTATION(VisibilityShiftLeftClickNotification)
             {
                 NSDate *clickDate = NSDate.date;
                 
-                float diff = [clickDate timeIntervalSinceDate:openDate];
-                if (diff > 0.25) // work around bug in Tahoe beta 1&2 where the popup would close if you click in the topmost two pixels to open the menu, clicks directly on the icon would be fine
+                float diff = (float)[clickDate timeIntervalSinceDate:openDate];
+                if (diff > 0.25f) // work around bug in Tahoe beta 1&2 where the popup would close if you click in the topmost two pixels to open the menu, clicks directly on the icon would be fine
                 {
                     [self.statusItemPopover close];
                     [self.statusItem.button highlight:NO];

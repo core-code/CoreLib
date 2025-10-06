@@ -1720,17 +1720,17 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
                             }
                             else
                             {
-                                cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReturnStatus() failed with %x",  bsdDeviceNumber, err);
+                                cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReturnStatus() failed with %i",  bsdDeviceNumber, err);
                             }
                         }
                         else
                         {
-                            cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableAutosave() failed with %x",  bsdDeviceNumber, err);
+                            cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableAutosave() failed with %i",  bsdDeviceNumber, err);
                         }
                     }
                     else
                     {
-                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableOperations() failed with %x",  bsdDeviceNumber, err);
+                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTEnableDisableOperations() failed with %i",  bsdDeviceNumber, err);
                     }
 
                     (*smartInterface)->Release(smartInterface);
@@ -1739,14 +1739,14 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
                 else
                 {
                     err = herr;
-                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
+                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %i", bsdDeviceNumber, err);
                 }
 
                 IODestroyPlugInInterface(cfPlugInInterface);
             }
             else
             {
-                cc_log_debug(@"S.M.A.R.T. check disk: %i  IOCreatePlugInInterfaceForService() failed with %x",  bsdDeviceNumber, err);
+                cc_log_debug(@"S.M.A.R.T. check disk: %i  IOCreatePlugInInterfaceForService() failed with %i",  bsdDeviceNumber, err);
             }
 
             found = true;
@@ -1785,7 +1785,7 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
                     }
                     else
                     {
-                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReadData() failed with %x",  bsdDeviceNumber, err);
+                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReadData() failed with %i",  bsdDeviceNumber, err);
                     }
                     (*smartInterface)->Release(smartInterface);
                     smartInterface = NULL;
@@ -1793,7 +1793,7 @@ static IOReturn getSMARTStatusForDisk(const int bsdDeviceNumber, smartStatusEnum
                 else
                 {
                     err = herr;
-                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
+                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %i", bsdDeviceNumber, err);
                 }
                 
                 IODestroyPlugInInterface(cfPlugInInterface);
@@ -2057,7 +2057,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                     }
                     else
                     {
-                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReadData() failed with %x",  bsdDeviceNumber, err);
+                        cc_log_debug(@"S.M.A.R.T. check disk: %i  SMARTReadData() failed with %i",  bsdDeviceNumber, err);
                     }
                     (*smartInterface)->Release(smartInterface);
                     smartInterface = NULL;
@@ -2065,7 +2065,7 @@ static IOReturn getSMARTAttributesForDisk(const int bsdDeviceNumber, NSMutableDi
                 else
                 {
                     err = herr;
-                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %x", bsdDeviceNumber, err);
+                    cc_log_debug(@"S.M.A.R.T. check disk: %i QueryInterface() failed with %i", bsdDeviceNumber, err);
                 }
                 
                 IODestroyPlugInInterface(cfPlugInInterface);

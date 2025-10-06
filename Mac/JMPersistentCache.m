@@ -26,13 +26,13 @@
 
 + (instancetype)sharedCache
 {
-  static JMPersistentCache *__sharedCache = nil;
+  static JMPersistentCache *theSharedCache = nil;
   static dispatch_once_t once;
   dispatch_once(&once, ^
   {
-    __sharedCache = [[[self class] alloc] init];
+      theSharedCache = [[[self class] alloc] init];
   });
-  return __sharedCache;
+  return theSharedCache;
 }
 
 - (instancetype)init
